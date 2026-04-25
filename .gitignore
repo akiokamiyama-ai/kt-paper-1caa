@@ -6,6 +6,12 @@ news_profile.md
 # Future runtime artifacts
 logs/
 
+# Local experimentation — scripts and outputs that should not deploy
+experiment/
+
+# Backup files from local edits
+*.backup
+
 # Local Claude Code settings (in case any are added later)
 .claude/
 
