@@ -7,7 +7,7 @@
 <title>Kamiyama Tribune — Saturday, April 25, 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,400&family=Noto+Serif+JP:wght@400;500;700;900&family=Old+Standard+TT:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,400&family=Noto+Serif+JP:wght@400;500;700;900&family=Old+Standard+TT:wght@400;700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
 <style>
   :root {
     --paper: #f6f1e7;
@@ -26,8 +26,8 @@
     background: #d9d2bf;
     color: var(--ink);
     font-family: 'Merriweather', 'Noto Serif JP', Georgia, serif;
-    font-size: 14px;
-    line-height: 1.55;
+    font-size: 15.5px;
+    line-height: 1.6;
   }
 
   .paper {
@@ -53,9 +53,15 @@
     padding-bottom: 6px; margin-bottom: 10px;
   }
   .masthead h1 {
-    font-family: 'Playfair Display', 'Old Standard TT', serif;
-    font-weight: 900; font-size: 92px; margin: 4px 0 0;
-    letter-spacing: -0.01em; line-height: 0.95; font-variant: small-caps;
+    font-family: 'UnifrakturMaguntia', 'Old English Text MT', 'Old Standard TT', serif;
+    font-weight: 400;
+    font-size: 104px;
+    margin: 8px 0 4px;
+    letter-spacing: 0;
+    line-height: 0.98;
+    color: var(--ink);
+    text-rendering: geometricPrecision;
+    font-feature-settings: "liga" 1, "dlig" 1;
   }
   .masthead .latin-motto {
     font-family: 'Old Standard TT', serif; font-style: italic;
@@ -199,7 +205,7 @@
   }
   .briefing-row .insight {
     background: #efe9da; border-left: 3px solid var(--accent);
-    padding: 12px 14px; font-size: 13px; line-height: 1.5;
+    padding: 14px 16px; font-size: 14px; line-height: 1.55;
   }
   .briefing-row .insight .label {
     display: block;
@@ -208,15 +214,39 @@
     letter-spacing: 0.18em; text-transform: uppercase;
     color: var(--accent); margin-bottom: 4px;
   }
-  [lang="ja"] .briefing-row .insight { line-height: 1.75; font-size: 12.5px; font-family: 'Noto Serif JP', serif; }
+  [lang="ja"] .briefing-row .insight { line-height: 1.85; font-size: 14px; font-family: 'Noto Serif JP', serif; }
   [lang="ja"] .briefing-row .insight .label { font-family: 'Old Standard TT', serif; }
 
-  .general-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 22px; }
-  .general-grid .item { border-left: 1px solid #c9c2ad; padding-left: 14px; }
-  .general-grid .item:first-child { border-left: 0; padding-left: 0; }
-  .general-grid .item h5 { font-size: 16px; }
-  .general-grid .item p { font-size: 12.5px; line-height: 1.5; }
-  [lang="ja"].item p, .item[lang="ja"] p { font-size: 12.5px; line-height: 1.8; }
+  .general-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 0;
+    row-gap: 0;
+  }
+  .general-grid .item {
+    padding: 0 22px 22px;
+    margin-bottom: 22px;
+    border-bottom: 1px dotted #b9b1a0;
+    border-right: 1px solid #c9c2ad;
+  }
+  .general-grid .item:nth-child(3n+1) { padding-left: 0; }
+  .general-grid .item:nth-child(3n) {
+    padding-right: 0;
+    border-right: 0;
+  }
+  .general-grid .item:nth-child(n+4) {
+    border-bottom: 0;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+  .general-grid .item:last-child { border-right: 0; }
+  .general-grid .item .kicker { font-size: 12px; }
+  .general-grid .item h5 { font-size: 18px; line-height: 1.3; margin-bottom: 6px; }
+  .general-grid .item p { font-size: 14px; line-height: 1.65; }
+  [lang="ja"].general-grid .item p,
+  .general-grid .item[lang="ja"] p { font-size: 14px; line-height: 1.9; }
+  [lang="ja"].general-grid .item h5,
+  .general-grid .item[lang="ja"] h5 { font-size: 17px; line-height: 1.5; }
 
   .arts-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 28px; }
   .concept-of-week {
@@ -237,9 +267,9 @@
   .concept-of-week .body { columns: 2; column-gap: 22px; column-rule: 1px solid #c9c2ad; }
   .concept-of-week .further {
     margin-top: 14px; padding-top: 12px; border-top: 1px solid #c9c2ad;
-    font-size: 12px; line-height: 1.5;
+    font-size: 13px; line-height: 1.6;
   }
-  [lang="ja"] .concept-of-week .further { font-size: 12.5px; line-height: 1.8; }
+  [lang="ja"] .concept-of-week .further { font-size: 13.5px; line-height: 1.85; }
   .concept-of-week .further strong {
     font-family: 'Old Standard TT', serif; font-style: italic;
     text-transform: uppercase; letter-spacing: 0.14em;
@@ -264,8 +294,8 @@
     font-size: 11px; color: var(--muted); margin-bottom: 6px;
   }
   [lang="ja"] .leisure-card .meta { font-family: 'Noto Serif JP', serif; font-style: normal; }
-  .leisure-card p { font-size: 12.5px; line-height: 1.5; }
-  [lang="ja"] .leisure-card p { line-height: 1.8; }
+  .leisure-card p { font-size: 14px; line-height: 1.55; }
+  [lang="ja"] .leisure-card p { font-size: 14px; line-height: 1.85; }
 
   .columns-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
   .columns-grid .col {
