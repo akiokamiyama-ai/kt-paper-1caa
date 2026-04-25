@@ -1,0 +1,19 @@
+# Personal design and profile documents — local only, never publish
+CLAUDE.md
+design_spec.md
+news_profile.md
+
+# Future runtime artifacts
+logs/
+
+# Local Claude Code settings (in case any are added later)
+.claude/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
+.vscode/
+.idea/
