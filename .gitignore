@@ -2,6 +2,10 @@
 CLAUDE.md
 design_spec.md
 news_profile.md
+roadmap.md
+
+# Local session notes (prompt templates, scratch)
+archive/_*.txt
 
 # Future runtime artifacts
 logs/
