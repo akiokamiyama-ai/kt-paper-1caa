@@ -28,7 +28,7 @@ import urllib.request
 from typing import Iterable
 
 from ..source import Article, Source
-from .base import DEFAULT_TIMEOUT, SourceDriver
+from .base import DEFAULT_TIMEOUT, SourceDriver, check_url_scheme
 
 
 class HtmlScrapeDriver(SourceDriver):
@@ -84,6 +84,11 @@ class BbcArticleScraper:
         self.timeout = timeout
 
     def paragraphs(self, url: str, max_n: int) -> list[str]:
+        try:
+            check_url_scheme(url)
+        except ValueError as e:
+            print(f"  [bbc-scrape] REJECT: {e}", file=sys.stderr)
+            return []
         try:
             req = urllib.request.Request(url, headers={"User-Agent": self.user_agent})
             with urllib.request.urlopen(req, timeout=self.timeout) as resp:

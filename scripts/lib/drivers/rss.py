@@ -27,7 +27,7 @@ from email.utils import parsedate_to_datetime
 from typing import Iterable
 
 from ..source import Article, Source
-from .base import DEFAULT_TIMEOUT, SourceDriver
+from .base import DEFAULT_TIMEOUT, SourceDriver, check_url_scheme
 
 
 def _local(tag: str) -> str:
@@ -85,6 +85,11 @@ class RssDriver(SourceDriver):
         if not source.rss_url:
             return []
         url = source.rss_url
+        try:
+            check_url_scheme(url)
+        except ValueError as e:
+            print(f"  [rss] REJECT {source.name}: {e}", file=sys.stderr)
+            return []
         ua = self.site_config.user_agent_for(url)
         req = urllib.request.Request(url, headers={"User-Agent": ua})
         try:

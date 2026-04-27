@@ -28,6 +28,8 @@ lib/drivers/rss.py    ──→ lib/drivers/base.py + lib/source.py
 lib/drivers/html.py   ──→ lib/drivers/base.py + lib/source.py
 lib/dedupe.py         ──→ lib/source.py (Article)
 lib/config_loader.py  ──→ lib/drivers/base.py (SiteConfig)
+lib/llm.py            ──→ (Phase 2 で anthropic SDK を import 予定)
+lib/llm_usage.py      ──→ stdlib のみ（Phase 2 LLM呼び出しから利用）
 ```
 
 **実行コマンド**：
@@ -222,7 +224,47 @@ lib/config_loader.py  ──→ lib/drivers/base.py (SiteConfig)
 
 ---
 
-## 10. scripts/lib/drivers/html.py
+## 10. scripts/lib/llm.py（Phase 2 scaffold）
+
+**目的**：Anthropic API キーの環境変数取り込み＋Phase 2 用エントリポイント `call_claude()` のスタブ。
+
+**主要関数**
+- `get_api_key()`：`ANTHROPIC_API_KEY` 環境変数を読み、`sk-ant-` 接頭辞を検証
+- `call_claude(messages, model=DEFAULT_MODEL, **kwargs)`：Phase 2 で実装予定（現状 `NotImplementedError`、docstring に実装パターンを記述）
+
+**外部依存**：標準ライブラリのみ（`os`）。Phase 2 着手時に `anthropic` SDK を追加予定
+
+**失敗モード**
+- 環境変数未設定：`RuntimeError`（actionable メッセージで `~/.bashrc` 設定法を案内）
+- 不正な key 形式（`sk-ant-` で始まらない）：`RuntimeError`
+
+**読み書きするファイル**：なし（環境変数のみ）
+
+---
+
+## 11. scripts/lib/llm_usage.py（Phase 2 scaffold）
+
+**目的**：Anthropic API 呼び出しの日次トークン・コスト記録＋暴走防止のキャップ機構。Anthropic Console の月額予算（一次防御）を補う二次防御。
+
+**主要関数**
+- `estimate_cost(model, input_tokens, output_tokens)`：USD コスト推定（Sonnet 4.6 / Opus 4.7 / Haiku 4.5 の単価をハードコード）
+- `check_caps(today)` → `CapStatus`：呼び出し前に確認、`ok=False` なら停止
+- `record_call(model, input_tokens, output_tokens, today)`：呼び出し後に追記
+- `daily_summary(today)`：今日の totals 取得
+
+**キャップ値**：`DAILY_COST_CAP_USD = 0.50`（設計予測の5倍）、`DAILY_CALLS_CAP = 200`（設計予測の10倍）
+
+**外部依存**：標準ライブラリのみ（`json`、`datetime`、`pathlib`）
+
+**失敗モード**
+- ログファイル破損（不正JSON）：silently 空ログから再開（pipeline 停止より優先）
+- 未知モデル（`MODEL_PRICING` に未登録）：コスト 0 として記録（致命ではないが、新モデル採用時はテーブル更新必須）
+
+**読み書きするファイル**：読込・書込 `logs/llm_usage_YYYY-MM-DD.json`
+
+---
+
+## 12. scripts/lib/drivers/html.py
 
 **目的**：(a) HtmlScrapeDriver の placeholder スタブ、(b) BBC記事ページからの本文抽出。
 

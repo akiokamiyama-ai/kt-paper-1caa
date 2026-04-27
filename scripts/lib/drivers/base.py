@@ -18,6 +18,21 @@ from ..source import Article, Source
 DEFAULT_USER_AGENT = "kt-tribune/0.6 (+local)"
 DEFAULT_TIMEOUT = 15
 
+# Allowed URL schemes for any urlopen() in the fetch layer. urllib accepts
+# file:// by default, which would let a malicious feed exfiltrate local
+# files into the public archive (see docs/security_review_v1.md §3).
+ALLOWED_URL_SCHEMES = ("http://", "https://")
+
+
+def check_url_scheme(url: str) -> None:
+    """Reject non-HTTP(S) URLs before urlopen().
+
+    Raises ValueError if the URL does not start with http:// or https://.
+    Apply at every fetch boundary that takes a URL from a feed item.
+    """
+    if not isinstance(url, str) or not url.startswith(ALLOWED_URL_SCHEMES):
+        raise ValueError(f"Refused non-HTTP(S) URL: {url!r:.80}")
+
 
 @dataclass
 class SiteConfig:
