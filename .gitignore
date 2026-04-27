@@ -19,6 +19,17 @@ experiment/
 # Local Claude Code settings (in case any are added later)
 .claude/
 
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
 # OS / editor cruft
 .DS_Store
 Thumbs.db

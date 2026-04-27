@@ -1,0 +1,70 @@
+# Per-host fetch overrides for Kamiyama Tribune drivers.
+#
+# Loaded by scripts/lib/drivers/base.py:SiteConfig. Keys under [sites.<host>]
+# are consulted by the RSS / HTML drivers when building HTTP requests.
+#
+# Three classes of overrides are recorded today:
+#   1. user_agent  - sites that 403 default UAs (Reactor, CleverHiker)
+#   2. notes       - documenting non-obvious feed paths and known failures,
+#                    so the next maintainer doesn't re-discover them
+#
+# The actual unusual feed paths (rockinon /news.rss, cookpad /feeds/news.rss,
+# 春秋社 /rss/news/, HBR /harvardbusiness, NBER back.nber.org) live in the
+# sources/*.md files themselves — the parser already extracts them from the
+# **RSS** field. This config is for things that *can't* be expressed in the
+# Markdown source registry (UA-based bot defenses, redirects, gotchas).
+
+# --- User-Agent overrides (sites that 403 default UAs) -------------------
+
+[sites."reactormag.com"]
+user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+note = "Tor.com → Reactor rebrand 2024. Default UA returns 403; Chrome UA OK."
+
+[sites."www.cleverhiker.com"]
+user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+note = "403 on default UA, 200 on browser UA."
+
+# --- Documented notes for sites with non-obvious behavior ----------------
+
+[sites."feeds.hbr.org"]
+note = "FeedBurner-hosted: /harvardbusiness with no .rss suffix. HTTPS broken (SSL_ERROR_SYSCALL); use http://."
+
+[sites."back.nber.org"]
+note = "Original www.nber.org/rss/new.xml issues 301 here. Apache + mod_perl."
+
+[sites."rockinon.com"]
+note = "Unusual feed path /news.rss; /feed and /news/feed both 404."
+
+[sites."news.cookpad.com"]
+note = "Unusual feed path /feeds/news.rss; /feed 404."
+
+[sites."www.shunjusha.co.jp"]
+note = "Unusual feed path /rss/news/; /feed 404."
+
+[sites."assets.wor.jp"]
+user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+note = "Third-party Nikkei mirror. Personal-run; monitor for outages and have Yahoo!ニュース as fallback. Started UA-blocking 2026-04 — requires browser UA (third UA-override case after Reactor and CleverHiker)."
+
+[sites."wordswithoutborders.org"]
+note = "Apex domain only; www.wordswithoutborders.org issues 301."
+
+# --- Sites known to be programmatically blocked --------------------------
+# These sources are flagged Status.FAILED in their sources/*.md entries; they
+# are recorded here for documentation so the orchestrator can show "blocked"
+# in reports rather than re-attempting the fetch.
+
+[sites."www.bcg.com"]
+blocked = true
+note = "Akamai 403 even with browser UA. No public RSS endpoint."
+
+[sites."www.nbr.org"]
+blocked = true
+note = "Imperva-class WAF 403 across all UAs."
+
+[sites."thequietus.com"]
+blocked = true
+note = "Imperva-class WAF 403 across UAs and Feedly bot."
+
+[sites."philpapers.org"]
+blocked = true
+note = "Cloudflare-class WAF 403 across UAs."

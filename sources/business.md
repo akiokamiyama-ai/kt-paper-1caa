@@ -18,7 +18,11 @@
 
 ### 1. 日本経済新聞（電子版） ⚠️
 - **URL**: https://www.nikkei.com/
-- **RSS**: 公式RSSは廃止（`/rss/`、`/news/feed/`、`/rss/index.rdf` 全て404）。**サードパーティミラー** `https://assets.wor.jp/rss/rdf/nikkei/{business,economy,international,sports}.rdf` が稼働（RDF形式、検証時に最新18件取得確認）。`world.rdf`/`politics.rdf` は 403
+- **RSS**: 公式RSSは廃止（`/rss/`、`/news/feed/`、`/rss/index.rdf` 全て404）。**サードパーティミラー** `assets.wor.jp` 経由で稼働（RDF 形式、検証時に最新18件取得確認）。`world.rdf`/`politics.rdf` は 403。**2026-04 以降ブラウザUA必須**（site_overrides.toml に登録済）
+  - https://assets.wor.jp/rss/rdf/nikkei/business.rdf
+  - https://assets.wor.jp/rss/rdf/nikkei/economy.rdf
+  - https://assets.wor.jp/rss/rdf/nikkei/international.rdf
+  - https://assets.wor.jp/rss/rdf/nikkei/sports.rdf
 - **形式**: RSS 1.0 (RDF)（ミラー経由）
 - **対象**: 国内ビジネス・経済・国際ニュース全般。本紙の国内軸の中核
 - **位置付け**: **本紙第1面・第3面の国内軸の中核**。日経電子版本体は有料記事多数だが、**見出し・冒頭3〜4文は無料表示**されるため、見出し+リード文の取得で十分多くのケースに対応できる。ミラー経由のため Nikkei が静止画認証を強化すると破綻リスクあり、フェーズ1で日経本体の Atom 配信再開有無を継続監視
