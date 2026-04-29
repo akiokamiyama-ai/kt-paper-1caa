@@ -55,10 +55,32 @@ DAILY_CALLS_CAP = 200        # design predicts ~10-20 calls/day; 10x cushion
 
 # Model pricing (USD per 1M tokens). Snapshot of 2026-04 published rates;
 # update when Anthropic revises pricing or a new model is adopted.
+#
+# cache_write_per_mtok / cache_read_per_mtok cover the 5-minute ephemeral
+# prompt caching used by Stage 2. Anthropic charges:
+#   cache write  = 1.25× base input rate (5min TTL)
+#   cache read   = 0.10× base input rate
+# Models that don't surface cache token counts back to the SDK still work —
+# their cache_*_per_mtok entries simply go unused.
 MODEL_PRICING: dict[str, dict[str, float]] = {
-    "claude-sonnet-4-6": {"input_per_mtok": 3.0, "output_per_mtok": 15.0},
-    "claude-opus-4-7":   {"input_per_mtok": 15.0, "output_per_mtok": 75.0},
-    "claude-haiku-4-5":  {"input_per_mtok": 0.80, "output_per_mtok": 4.0},
+    "claude-sonnet-4-6": {
+        "input_per_mtok": 3.0,
+        "output_per_mtok": 15.0,
+        "cache_write_per_mtok": 3.75,
+        "cache_read_per_mtok": 0.30,
+    },
+    "claude-opus-4-7": {
+        "input_per_mtok": 15.0,
+        "output_per_mtok": 75.0,
+        "cache_write_per_mtok": 18.75,
+        "cache_read_per_mtok": 1.50,
+    },
+    "claude-haiku-4-5": {
+        "input_per_mtok": 0.80,
+        "output_per_mtok": 4.0,
+        "cache_write_per_mtok": 1.0,
+        "cache_read_per_mtok": 0.08,
+    },
 }
 
 
@@ -100,14 +122,29 @@ def _load_today(d: date) -> dict:
     return data
 
 
-def estimate_cost(model: str, input_tokens: int, output_tokens: int) -> float:
-    """Return the estimated cost in USD for one call. Unknown models cost 0."""
+def estimate_cost(
+    model: str,
+    input_tokens: int,
+    output_tokens: int,
+    *,
+    cache_creation_tokens: int = 0,
+    cache_read_tokens: int = 0,
+) -> float:
+    """Return the estimated cost in USD for one call. Unknown models cost 0.
+
+    ``input_tokens`` is the count of *non-cached* input tokens (i.e. what
+    the Anthropic SDK reports as ``usage.input_tokens``). Cache tokens are
+    accounted for separately at their reduced rate. Existing callers that
+    don't pass cache counts default to 0 and behave exactly as before.
+    """
     rates = MODEL_PRICING.get(model)
     if not rates:
         return 0.0
     return (
         (input_tokens / 1_000_000) * rates["input_per_mtok"]
         + (output_tokens / 1_000_000) * rates["output_per_mtok"]
+        + (cache_creation_tokens / 1_000_000) * rates.get("cache_write_per_mtok", 0.0)
+        + (cache_read_tokens / 1_000_000) * rates.get("cache_read_per_mtok", 0.0)
     )
 
 
@@ -144,16 +181,32 @@ def record_call(
     input_tokens: int,
     output_tokens: int,
     today: date | None = None,
+    *,
+    cache_creation_tokens: int = 0,
+    cache_read_tokens: int = 0,
 ) -> dict:
-    """Append one call's usage to today's log and return updated totals."""
+    """Append one call's usage to today's log and return updated totals.
+
+    Cache token fields are keyword-only with default 0, so existing callers
+    keep working unchanged. Stage 2 passes them so the cost estimate reflects
+    Anthropic's tiered cache pricing.
+    """
     d = today or date.today()
     data = _load_today(d)
-    cost = estimate_cost(model, input_tokens, output_tokens)
+    cost = estimate_cost(
+        model,
+        input_tokens,
+        output_tokens,
+        cache_creation_tokens=cache_creation_tokens,
+        cache_read_tokens=cache_read_tokens,
+    )
     entry = {
         "ts": datetime.now().isoformat(timespec="seconds"),
         "model": model,
         "input_tokens": int(input_tokens),
         "output_tokens": int(output_tokens),
+        "cache_creation_tokens": int(cache_creation_tokens),
+        "cache_read_tokens": int(cache_read_tokens),
         "cost_usd": round(cost, 6),
     }
     data["calls"].append(entry)
@@ -161,6 +214,10 @@ def record_call(
     t["calls"] = t.get("calls", 0) + 1
     t["input_tokens"] = t.get("input_tokens", 0) + int(input_tokens)
     t["output_tokens"] = t.get("output_tokens", 0) + int(output_tokens)
+    t["cache_creation_tokens"] = (
+        t.get("cache_creation_tokens", 0) + int(cache_creation_tokens)
+    )
+    t["cache_read_tokens"] = t.get("cache_read_tokens", 0) + int(cache_read_tokens)
     t["cost_usd"] = round(t.get("cost_usd", 0.0) + cost, 6)
     LOG_DIR.mkdir(parents=True, exist_ok=True)
     _log_path(d).write_text(
