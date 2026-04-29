@@ -18,6 +18,7 @@
 - **URL**: https://smash-jpn.com/
 - **RSS**: **未提供**（`/feed/` 404、HTML内に `feed`/`rss` リンクなし）。サイト本体は 200
 - **形式**: HTML スクレイピング（トップページの NEWS セクションをパース）
+- **mainstream**: false
 - **対象**: フジロック・朝霧JAM 両方の公式情報。ラインナップ発表、チケット販売、タイムテーブル、設営/撤収告知
 - **位置付け**: **通っている3フェスのうち2フェスを束ねる最重要ソース**。RSSがないのは痛いが、フェス前後の情報密度を考えれば High 確定。「次のフェスまで X日」のカレンダー要素（news_profile.md §4.6 設計含意）の **データ起点** にもなる
 
@@ -25,6 +26,7 @@
 - **URL**: https://greenroom.jp/
 - **RSS**: https://greenroom.jp/feed/
 - **形式**: RSS 2.0
+- **mainstream**: false
 - **対象**: グリーンルームフェス（横浜赤レンガ）の公式情報。サーフカルチャー寄りのラインナップ、関連イベント
 - **位置付け**: 通っている3フェスの最後の1つ。RSS稼働で取得コスト最低。**自然・場所・文化が結びついたフェス体験**（§4.6 哲学）を最も体現する横浜のロケーション軸
 
@@ -32,6 +34,7 @@
 - **URL**: https://www.summersonic.com/
 - **RSS**: https://www.summersonic.com/feed/
 - **形式**: RSS 2.0
+- **mainstream**: false
 - **対象**: サマソニ公式情報。ラインナップ、チケット、ステージ構成
 - **位置付け**: news_profile.md §4.6 の **興味があるが行っていないフェス** の筆頭。海外大物来日のプラットフォームとして、たとえ参加せずとも **「今年のラインナップ」** は知っておきたい。神山さんの好むアーティスト（Radiohead、Arcade Fire、Stone Roses 等のUK系）の出演察知に重要
 
@@ -39,6 +42,7 @@
 - **URL**: https://rsr.wess.co.jp/
 - **RSS**: **未提供**（`/feed/`、`/news/feed/` ともに 404）。サイト本体は 302 リダイレクト
 - **形式**: HTML スクレイピング
+- **mainstream**: false
 - **対象**: RISING SUN ROCK FESTIVAL（北海道石狩湾）の公式情報
 - **位置付け**: §4.6 **興味があるが行っていないフェス** のもう一つ。北海道という **ロケーション軸** が他フェスと差別化（Greenroom が海、フジが山、ライジングが大地）。神山さんの「自然・場所・文化」哲学に合う構造のため、HTMLスクレイピングのコストを払ってでも追う価値あり
 
@@ -50,6 +54,7 @@
 - **URL**: https://festival-life.com/
 - **RSS**: https://festival-life.com/feed
 - **形式**: RSS 2.0
+- **mainstream**: true
 - **対象**: 国内フェス情報の網羅的まとめ。大型フェスから **地方小規模フェスまで** カバー
 - **位置付け**: news_profile.md §4.6 の **「地方小規模フェスへの情報感度を高く」** という設計含意の中核。SMASH/GREENROOM/サマソニ/ライジングサンの **「外」** を拾う。RSS稼働のため取得コスト最低、Medium だが運用後に High 昇格の可能性あり
 
@@ -61,6 +66,7 @@
 - **URL**: https://natalie.mu/music
 - **RSS**: https://natalie.mu/music/feed/news（Atom 1.0、21KB、2026-04-27 10:50 更新）
 - **形式**: Atom 1.0
+- **mainstream**: false
 - **対象**: 国内音楽ニュース最頻ハブ。新譜リリース、ライブ告知、フェス出演情報、アーティスト関連ニュース全般
 - **位置付け**: **国内音楽ニュースの最頻更新ソース**。サカナクション・くるり・三浦大知（§4.6 好むアーティスト 日本枠）の動向を最も網羅的に拾える。フェス公式が出さない「アーティスト個別の出演辞退/追加」もここで察知
 
@@ -68,6 +74,7 @@
 - **URL**: https://rockinon.com/
 - **RSS**: https://rockinon.com/news.rss（**異色パス、`/feed`、`/news/feed` ともに 404**）
 - **形式**: RSS 2.0
+- **mainstream**: false
 - **対象**: 邦洋ロック総合。新譜レビュー、ライブレポート、インタビュー
 - **位置付け**: **フジロック主催と密接な関係**（ロッキング・オン社が JAPAN/FES 系イベント主催元、フジロックの編集方針とも近接）。神山さんの好む UK ロック中核（Radiohead、OASIS、Stone Roses）系の取り扱いが厚い。**`/news.rss` の異色パスはフェッチ層に明示登録必須**（companies.md HBR.org 末尾`.rss`なし、books.md Reactor のbrowser UAと並ぶ「サイト別フェッチ調整」事例）
 
@@ -75,6 +82,7 @@
 - **URL**: https://www.cinra.net/
 - **RSS**: **廃止**（`/feed`、`/rss`、`/news/feed` いずれも 302 → `/news` HTMLページにリダイレクト、RSS 配信を停止）
 - **形式**: HTML スクレイピング
+- **mainstream**: false
 - **対象**: 音楽・アート・カルチャー。インディー・実験的アーティスト、フェス特集、海外フェス紹介
 - **位置付け**: ナタリー/ロッキング・オンが「商業ロック・大物」軸なら、CINRA は「**カルチャー・インディー・周縁**」軸。news_profile.md §4.6 **「目利き発掘」枠の新しいアーティスト紹介** の主力。RSS廃止が痛いが HTMLスクレイピングで継続採用
 
@@ -86,6 +94,7 @@
 - **URL**: https://www.nme.com/
 - **RSS**: https://www.nme.com/feed
 - **形式**: RSS 2.0
+- **mainstream**: true
 - **対象**: UK音楽メディアの代表格。新譜・ライブ・フェス・インタビュー（英語原文）
 - **位置付け**: **神山さんの好む UK ロック中核**（Radiohead、Stone Roses、Kula Shaker、OASIS、Arcade Fire — §4.6）の **祖国メディア**。Glastonbury / Reading & Leeds 等の海外フェス（**興味があるが行っていない**）の現地レポートもここで読める
 
@@ -93,6 +102,7 @@
 - **URL**: https://pitchfork.com/
 - **RSS**: https://pitchfork.com/feed/feed-news/rss（旧 `/rss/news/` は 301 リダイレクト）
 - **形式**: RSS（CloudFront 配信、21KB）
+- **mainstream**: false
 - **対象**: 米インディー音楽の権威メディア。新譜レビュー（10点満点採点が看板）、コーチェラ等の海外フェスレポート
 - **位置付け**: NME が UK 中心なら Pitchfork は **米インディー中心**。Arcade Fire の評価軸はここが最重要。**コーチェラ**（§4.6 海外フェス興味）の現地カバレッジが厚い
 
@@ -100,6 +110,7 @@
 - **URL**: https://thequietus.com/
 - **RSS**: **未検証完了**（`/feed/`、`/feed.rss` ともに 403、ブラウザUA・Feedly bot UA・Feedburner UA すべて遮断）。Imperva 系 WAF で完全に閉じている
 - **形式**: ❌ プログラマティック取得不可
+- **mainstream**: false
 - **対象**: UK alternative/avant rock メディア。商業性より目利き重視のレビュー、実験音楽・アンビエント・ポストロックも扱う
 - **位置付け**: **目利き枠の本命候補だったが配信インフラが完全閉鎖**。代替候補としてフェーズ2で **Stereogum**（米インディー）、**DIY Mag**（UK）、**The Wire**（UK 実験音楽）の検証を予定。重要記事は Twitter/X 経由で察知して手動URL取得運用
 

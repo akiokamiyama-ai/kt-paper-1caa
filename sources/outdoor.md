@@ -20,6 +20,7 @@
 - **URL**: https://www.yamatomichi.com/journals
 - **RSS**: **未提供**（`/journals/feed`、`/feed/` ともに 308 → 404、Shopify ベースのストアフロント上に WordPress 風記事が乗る構成。HTML内に RSS リンクなし）
 - **形式**: HTML スクレイピング（`/journals` インデックスページから新着記事抽出）
+- **mainstream**: false
 - **対象**: 日本UL系の最重要ブランド「山と道」自社メディア。製品開発思想、ハイカーインタビュー、フィールドレポート、UL縦走記
 - **位置付け**: **国内UL思想の中核ソース**。news_profile.md §4.7 既知ブランド筆頭、嗜好の本質「**UL思想・職人プロダクト**」を最も体現。Journals の長文記事は **読み物としての価値も高い**（製品紹介に留まらない哲学的記事）。RSS不在は痛いが High 確定
 
@@ -27,6 +28,7 @@
 - **URL**: https://hikersdepot.jp/
 - **RSS**: **未提供**（`/feed/`、`/blog/feed`、`/news/feed` すべて 404、Shopify ベース、HTML内 RSS リンクなし）
 - **形式**: HTML スクレイピング
+- **mainstream**: true
 - **対象**: 国内UL系セレクトショップの目利き発信。海外UL系ブランド（Hyperlite Mountain Gear、Zpacks、Pa'lante 等）の **国内取り扱い情報**、新作レビュー、ハイク記事
 - **位置付け**: **海外UL系ブランドの日本語入り口**。news_profile.md §4.7 設計含意「**海外UL系ブランドの紹介・解説（Hyperlite、Zpacks、Pa'lante 等）**」の起点。Pa'lante Packs V3 が本紙第5面ダミーで紹介された経緯（archive/2026-04-25.html）も、ハイカーズデポを情報源として想定したもの
 
@@ -34,6 +36,7 @@
 - **URL**: https://www.yamatomichi.com/hikelife
 - **RSS**: **未提供**（同 yamatomichi.com 配下、ストアフロント上のメディア枠）
 - **形式**: HTML スクレイピング
+- **mainstream**: false
 - **対象**: 山と道が運営する **ハイカーカルチャー誌**。ロングディスタンスハイク、UL思想の哲学的展開、海外ハイカー紹介
 - **位置付け**: 山と道 Journals が「**製品起点**」とすれば Hike Life は「**カルチャー起点**」。神山さんの **「ソロキャンプ・縦走への興味」** に対する読み物的な入り口。山と道 Journals と同じドメインのため、フェッチ層では `/journals` と `/hikelife` を **同一スクレイパ** で扱うのが合理的
 
@@ -45,6 +48,7 @@
 - **URL**: https://yamap.com/magazine
 - **RSS**: **未提供**（`/feed` 500 サーバエラー、`/magazine/feed` 404、HTML内 RSS リンクなし、SNSのみ：YouTube/X/Instagram/Facebook/note）
 - **形式**: HTML スクレイピング
+- **mainstream**: true
 - **対象**: YAMAP（登山GPS/SNSアプリ）運営のハイクメディア。ルート紹介、季節情報、ギアレビュー、初心者向けハウツー
 - **位置付け**: news_profile.md §4.7 設計含意「**高尾山周辺・東京近郊の実用情報（季節情報、隣接ルート等）**」の中核。ヤマケイオンラインが「山岳雑誌系」、YAMAP マガジンが「**SNS時代のライト層向け**」。実用情報が中心で哲学的論考は薄いため Medium
 
@@ -52,6 +56,7 @@
 - **URL**: https://www.yamakei-online.com/
 - **RSS**: **未提供**（`/feed`、`/news/feed` ともに 404、HTML内 RSS リンクなし）
 - **形式**: HTML スクレイピング
+- **mainstream**: false
 - **対象**: 山と渓谷社（**山岳雑誌の老舗**）のオンライン版。月刊『山と溪谷』『岳人』『ワンダーフォーゲル』の Web 連携記事、登山ニュース、ギア・登山道情報
 - **位置付け**: news_profile.md §4.7 **「いつかやりたい」領域への入り口** の中で **縦走・最初の一歩** に最も貢献するソース。ただし山と道/ハイカーズデポ系の UL 思想とは別系統（伝統的山岳文化寄り）のため Medium。**「ハードコア登山者向け技術論」（§4.7 弾くもの）の判定** がフィルタに必要
 
@@ -63,6 +68,7 @@
 - **URL**: https://backpackinglight.com/
 - **RSS**: https://backpackinglight.com/feed/（Cloudflare 配信）
 - **形式**: RSS 2.0
+- **mainstream**: true
 - **対象**: **米UL業界の総本山**。ギアレビュー、ロングトレイル記、UL哲学の論考、有料フォーラム
 - **位置付け**: news_profile.md §4.7 嗜好の本質「**UL思想**」「**とがった本質的なプロダクト**」の英語圏での最重要ソース。Hyperlite/Zpacks/Pa'lante 等の **メーカー直接取材記事** が定期的に出る。**英語原文のまま採用**（§5 編集ポリシー）
 
@@ -70,6 +76,7 @@
 - **URL**: https://thetrek.co/
 - **RSS**: https://thetrek.co/feed/（Cloudflare 配信）
 - **形式**: RSS 2.0
+- **mainstream**: false
 - **対象**: 米長距離縦走（Appalachian Trail / Pacific Crest Trail / Continental Divide Trail）の専門メディア。**ハイカー本人による日記形式の記事** が中心
 - **位置付け**: news_profile.md §4.7 「**未踏で興味のある領域：縦走**」への **入り口の入り口**。「最初の縦走をどう準備するか」「装備リスト」「水場情報」等の **入門記事も豊富**。専門用語は多いがハードコア技術論ではなく、**個人の物語として読める** 点が神山さんの嗜好に合う
 
@@ -77,6 +84,7 @@
 - **URL**: https://sectionhiker.com/
 - **RSS**: https://sectionhiker.com/feed/（Cloudflare 配信）
 - **形式**: RSS 2.0
+- **mainstream**: false
 - **対象**: 米個人ハイカー Philip Werner 運営のブログ。**ガレージブランド製品の徹底レビュー**、ロングトレイル記、UL ノウハウ
 - **位置付け**: news_profile.md §4.7 嗜好の本質「**個人がやっているような小さなブランド**」への **個人ブログ視点でのアクセス**。Backpacking Light が「業界誌」、Section Hiker が「**個人の目利き**」。長年の運営で記事数が膨大、**美意識2（目利き感覚で主流外の本質）** との親和性が極めて高い
 
@@ -84,6 +92,7 @@
 - **URL**: https://www.cleverhiker.com/
 - **RSS**: https://www.cleverhiker.com/feed/（**ブラウザUA必須**、デフォルトUAでは 403。books.md Reactor、music.md なし、と並ぶ「サイト別フェッチ調整」事例）
 - **形式**: RSS 2.0
+- **mainstream**: false
 - **対象**: 米ギアレビューサイト。テント・バックパック・スリーピング系の比較レビュー、UL寄り
 - **位置付け**: Backpacking Light が「**論考・哲学**」、Section Hiker が「**個人視点のレビュー**」、CleverHiker は「**比較レビューに特化**」した三本柱の最後の1つ。神山さんが新しいギアを検討する際の参考情報として。フェッチ層には **User-Agent 設定の永続化が必須**
 
@@ -95,6 +104,7 @@
 - **URL**: https://hapicamper.jp/
 - **RSS**: **未提供**（`/feed`、`/rss`、`/atom`、`/feed.xml`、`/rss.xml`、`/?feed=rss2` すべて応答なし、HTML内 RSS リンクなし）。サイト本体は 200
 - **形式**: HTML スクレイピング
+- **mainstream**: false
 - **対象**: 国内キャンプメディア（GMOペパボ系）。**ソロキャンプ入門**、キャンプ場レビュー、簡単キャンプ料理、初心者向けギア紹介
 - **位置付け**: news_profile.md §4.7 「**未踏で興味のある領域：ソロキャンプ**」への入り口。**ハードコアソロキャン論ではなくライト層向け** で、「やりたいが未実行」段階の神山さんに最適な視座。Reference 扱いだが、実際にソロキャン開始時には Medium に昇格
 

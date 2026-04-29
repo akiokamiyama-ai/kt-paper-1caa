@@ -21,6 +21,7 @@
 - **URL**: https://shinsho-plus.shueisha.co.jp/
 - **RSS**: https://shinsho-plus.shueisha.co.jp/feed
 - **形式**: RSS 2.0（WordPress 標準）
+- **mainstream**: true
 - **対象**: 集英社新書のWebメディア。新刊紹介、著者対談、Web連載エッセイ
 - **位置付け**: **國分功一郎の常連寄稿先**（『暇と退屈の倫理学』『中動態の世界』等）。news_profile.md §4.4 設計方針「**國分功一郎の新刊・対談・発言は確実に拾う**」の最重要ソース。集英社新書は **入門〜中級レベルの解説書** が多く、§4.4 学習段階方針と整合
 
@@ -28,6 +29,7 @@
 - **URL**: https://www.shunjusha.co.jp/
 - **RSS**: https://www.shunjusha.co.jp/rss/news/（**異色パス、`/feed` は 404**、2026-04-23 lastBuildDate）
 - **形式**: RSS 2.0
+- **mainstream**: false
 - **対象**: 春秋社の新刊・お知らせ。**仏教・哲学・心理学が看板領域**
 - **位置付け**: news_profile.md §4.4 関心領域(i) 現象学の「**仏教との共通点に関心**」に最も合致する出版社。仏教×現象学、東洋思想×哲学の架橋本を多数刊行。**`/rss/news/` の異色パスはフェッチ層に明示登録必須**（cooking.md cookpad と並ぶ事例、本ファイルで4件目の「異色RSSパス」）
 
@@ -39,6 +41,7 @@
 - **URL**: https://www.seidosha.co.jp/
 - **RSS**: **未提供**（`/feed` 404、HTML内 RSS リンクなし）
 - **形式**: HTML スクレイピング
+- **mainstream**: true
 - **対象**: 月刊『現代思想』『ユリイカ』を発行。**現象学・精神分析・哲学・批評** の特集号が定期刊行
 - **位置付け**: **国内思想誌の最重要ハブ**。『現代思想』の **特集号テーマ**（例：現象学の現在、メルロ＝ポンティ、ユクスキュルと環世界 等）は §4.4 関心三領域に直撃する。RSS不在は痛いが、月1ペースの特集発表をスクレイピング監視で十分捕捉可能。Medium 扱いだが特集号テーマ次第で High 昇格
 
@@ -46,6 +49,7 @@
 - **URL**: https://www.webchikuma.jp/ → **`webchikuma.com` に移行 → note.com パスワードゲート**にリダイレクト
 - **RSS**: **取得不可**（複数段階のリダイレクト後、note.com の閉鎖セッションに到達。プログラマティック取得不可）
 - **形式**: ❌
+- **mainstream**: false
 - **対象**: 筑摩書房Web連載。野矢茂樹・國分功一郎・竹田青嗣 等の連載・対談記事
 - **位置付け**: **本来は §4.4 重要論者の最重要寄稿先** だったが、サイト移行＋note.com の認証ゲートで取得不可。代替候補として **筑摩書房 公式お知らせページ**（`https://www.chikumashobo.co.jp/`）を次回 TODO で検証。失敗事例として記録、フェーズ2で再調査必須
 
@@ -57,6 +61,7 @@
 - **URL**: https://www.jcss.gr.jp/
 - **RSS**: **未提供**（`/feed`、`/feed/` ともに 404、サイトは静的HTML時代の構成）
 - **形式**: ❌
+- **mainstream**: false
 - **対象**: 認知科学会誌・大会発表・若手の会等の学術活動
 - **位置付け**: news_profile.md §4.4 関心領域(ii) 認知言語学・(iii) 暗黙知の **学会一次情報源**。RSS不在のため、**代替として CiNii Articles（`https://cir.nii.ac.jp/`）の認知科学キーワード検索 RSS**、**J-STAGE 認知科学誌**（`https://www.jstage.jst.go.jp/browse/jcss/`）の検証を次回TODO化。学会公式は望み薄
 
@@ -73,6 +78,7 @@
 - **URL**: https://philosophynow.org/
 - **RSS**: https://philosophynow.org/rss
 - **形式**: RSS 2.0（隔月刊誌、現在号の記事を配信）
+- **mainstream**: true
 - **対象**: 英国の哲学雑誌。**入門〜中級者向けの哲学入門** に定評、フッサール・メルロ＝ポンティ・哲学者特集号が定期刊行
 - **位置付け**: §4.4 学習段階方針「**入門〜中級**」と最も整合する英語哲学誌。Stanford SEP が「百科事典」、PhilPapers が「論文」とすれば Philosophy Now は **「読み物としての哲学」**。神山さんの嗜好（**学問領域を架橋する論考**、§4.4 設計方針）に最適
 
@@ -80,6 +86,7 @@
 - **URL**: https://plato.stanford.edu/
 - **RSS**: https://plato.stanford.edu/rss/sep.xml（新項目・改訂項目通知）
 - **形式**: RSS 2.0
+- **mainstream**: true
 - **対象**: スタンフォード大学運営の **哲学百科事典**。専門家による項目別の包括的解説。新項目追加・既存項目改訂の通知 RSS
 - **位置付け**: **概念単位での深掘り** が必要な「**今週の概念」コラム**（本紙第4面、design_spec.md）の **構造的バックボーン**。新項目通知 RSS により「現象学」「環世界」「中動態」「暗黙知」等のコラムテーマ候補が **学術的お墨付き付き** で得られる。Reference 扱いだがコラム制作時には High 化
 
@@ -92,6 +99,7 @@
 - **URL**: https://philpapers.org/
 - **RSS**: **未検証完了**（`/feed/` 403、ブラウザUAでも 403、Cloudflare 系 bot 対策で完全閉鎖）
 - **形式**: ❌
+- **mainstream**: false
 - **対象**: 哲学論文・書籍の総合インデックス（学術検索データベース）
 - **位置付け**: 本来は **論者別フォロー**（フッサール研究、野中郁次郎の海外受容、中動態論等の最新論文）に最適だったが、配信インフラが閉鎖。代替候補として **PhilArchive**（`https://philarchive.org/`、PhilPapers の論文プレプリントサーバ）の検証、または **OpenAIRE**（EU の学術メタデータAPI）の活用を次回TODO
 

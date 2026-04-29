@@ -20,6 +20,7 @@
 - **URL**: https://www.fsight.jp/
 - **RSS**: https://www.fsight.jp/list/feed/rss
 - **形式**: RSS 2.0（検証時 2026-04-26 配信「『危険すぎるAI』の『持てる者と持たざる者』」を取得確認、カテゴリ「経済・ビジネス」「テック」付与）
+- **mainstream**: true
 - **対象**: 国際情勢、地政学、経済安全保障、技術覇権、エネルギー、米中関係（日本語の構造分析）
 - **位置付け**: **日本語の国際情勢分析の最重要ソース**。news_profile.md §4.3 の論者である **鈴木一人** が頻繁に寄稿する場の一つ。**会員制（有料）** だが、RSSには無料公開記事＋有料記事のリード文が混在配信される。本紙では「日本人筆者による日本語論考」を優先する方針（§5 編集ポリシー）と最も親和性が高い
 
@@ -27,6 +28,7 @@
 - **URL**: https://www.foreignaffairs.com/
 - **RSS**: https://www.foreignaffairs.com/rss.xml
 - **形式**: RSS（13KB、Cloudflare 配信）
+- **mainstream**: true
 - **対象**: 国際関係論、地政学、外交政策、軍事戦略、グローバル経済秩序（英語原文）
 - **位置付け**: **英語圏の国際情勢論考の本丸**。Council on Foreign Relations（CFR）の機関誌で、ジョセフ・ナイ・ヘンリー・キッシンジャー級の論者が執筆。news_profile.md §4.3 の「**構造的・長期視点（10-20年スパン）**」「**分析・論考軸**」に最も合致。**英語原文のまま採用**（§5 編集ポリシー）
 
@@ -34,6 +36,7 @@
 - **URL**: https://www.project-syndicate.org/
 - **RSS**: https://www.project-syndicate.org/rss
 - **形式**: RSS（32KB、cache無効ヘッダで常に最新）
+- **mainstream**: false
 - **対象**: 国際関係、経済、政治、社会のオピニオンコラム配信（150カ国以上のメディアにシンジケーション）
 - **位置付け**: **ジョセフ・ナイの定期コラム配信元**。news_profile.md §4.3 で名指しされている論者にダイレクトにアクセスできる唯一のソース。同じくジョセフ・スティグリッツ・ヌリエル・ルビーニ・ケネス・ロゴフ等の経済学者・国際関係学者のコラムが日次で配信される。**論者名でフィルタ運用**（フェーズ2の選定ロジック実装時）
 
@@ -41,6 +44,7 @@
 - **URL**: https://www.reuters.com/world/
 - **RSS**: **公式RSS廃止**（business.md と同じ事情）。代替として **Google News RSS プロキシ** `https://news.google.com/rss/search?q=site:reuters.com+world&hl=en-US&gl=US&ceid=US:en` で間接取得可（200確認）
 - **形式**: RSS 2.0（Google News 経由）
+- **mainstream**: false
 - **対象**: グローバル速報（紛争・選挙・外交・首脳会談）
 - **位置付け**: news_profile.md §4.3 の「**速報は軽く押さえる程度**」方針に従い、**事実関係の裏取り** として運用。論考軸（Foreign Affairs、Project Syndicate）の記事内容を Reuters の事実報道で確認する用途。プロキシ運用リスクは business.md と共通
 
@@ -52,6 +56,7 @@
 - **URL**: https://foreignpolicy.com/
 - **RSS**: https://foreignpolicy.com/feed/
 - **形式**: RSS 2.0（Cloudflare 配信、CORS 全開放）
+- **mainstream**: false
 - **対象**: 外交政策、地政学、グローバル経済、テクノロジー外交（Foreign Affairs より速報＋論考の中間層）
 - **位置付け**: **Foreign Affairs と相補的**。Foreign Affairs が「学術寄りの長文論考」なら Foreign Policy は「実務家向けの中尺解説」。news_profile.md §4.3 の **「複数視点比較」**（読み方好みの4位）の素材として、同じ事象に対する Foreign Affairs と Foreign Policy の論調差を見せる運用が可能
 
@@ -62,6 +67,7 @@
   - トピック別（外交政策）: https://www.brookings.edu/topic/foreign-policy/feed
   - ブログ「Order from Chaos」: https://www.brookings.edu/blog/order-from-chaos/feed
 - **形式**: RSS 2.0
+- **mainstream**: false
 - **対象**: 米シンクタンク Brookings の研究レポート・コラム（外交、経済、ガバナンス、技術政策）
 - **位置付け**: **シンクタンク3点セット**（Brookings／CSIS／RAND）の中で **政策提言の具体性が最も高い**。トピック別RSSが提供されているため、外交政策に絞った購読が可能。フェーズ2では `/topic/asia/feed` `/topic/economics/feed` 等への拡張を検討
 
@@ -69,6 +75,7 @@
 - **URL**: https://www.csis.org/
 - **RSS**: https://www.csis.org/rss.xml（`/analysis/feed` は 404、サイトルートのみ稼働）
 - **形式**: RSS 2.0
+- **mainstream**: false
 - **対象**: 安全保障、防衛、サイバー、宇宙、技術と安全保障の交差領域
 - **位置付け**: **軍事・経済・テクノロジーの交差領域**（news_profile.md §4.3 の「好む論者の共通項」）に最も近い米シンクタンク。中国・台湾・北朝鮮・ロシア関連レポートの質が高い。**全体RSSのみで分野別がないため、タイトル/著者でフィルタ必要**
 
@@ -76,6 +83,7 @@
 - **URL**: https://warontherocks.com/
 - **RSS**: https://warontherocks.com/feed/
 - **形式**: RSS（Cloudflare、text/xml）
+- **mainstream**: false
 - **対象**: 軍事・国家安全保障・外交の長文論考（現役・退役軍人、研究者、ジャーナリストが執筆）
 - **位置付け**: news_profile.md §4.3 の **小泉悠**（ロシア軍事、現代の戦争論）の英語圏での近接ソース。**「軍事・経済・テクノロジーが交差する境界領域」** の具体例として最適。学術紀要より読みやすく、防衛白書より深い論考が日次で出る。優先度を Medium → High に引き上げる選択肢もあり、運用してから判断
 
@@ -87,6 +95,7 @@
 - **URL**: https://www.rand.org/
 - **RSS**: https://www.rand.org/pubs/commentary.xml（旧 `/blog.xml`、`/news/rss.xml` は 301、現行は `/pubs/commentary.xml` で配信、17.8KB）
 - **形式**: RSS（CloudFront 配信）
+- **mainstream**: false
 - **対象**: 国家安全保障、テクノロジーと社会、健康、教育、労働政策の研究レポート＋コメンタリー
 - **位置付け**: **政策研究の老舗**（1948年設立、米空軍系起源）。月数本ペースだが、**長期構造分析**（news_profile.md §4.3 の「10-20年スパン」）の代表格。中国軍事力評価、AI と国家安全保障、宇宙ガバナンス等のテーマで定期的に重要レポートを出す
 
@@ -94,6 +103,7 @@
 - **URL**: https://www.nbr.org/
 - **RSS**: **未検証完了**（`/feed/`、`/publication-feed/` ともに 403、複数UAでも遮断、WebFetch も 403）。Imperva 系のbot対策で完全に閉じている可能性大
 - **形式**: ❌ プログラマティック取得不可
+- **mainstream**: false
 - **対象**: アジア太平洋地域の戦略・経済・安全保障研究（米中、インド太平洋、東南アジア）
 - **位置付け**: **アジア軸の専門シンクタンク** として価値は高いが、配信インフラが閉じている。フェーズ1では断念。代替として CSIS のアジア関連研究、Brookings の `/topic/asia/feed`（フェーズ2拡張時）でアジア軸をカバーする方針。重要レポートは Twitter/LinkedIn 経由で察知して手動 URL 取得
 
@@ -101,6 +111,7 @@
 - **URL**: https://www.pp.u-tokyo.ac.jp/
 - **RSS**: https://www.pp.u-tokyo.ac.jp/feed/
 - **形式**: RSS 2.0（WordPress 標準、検証時に最新10件取得確認、TECUSE/INPEX 寄付講座「エネルギー危機と現実的な脱炭素の道筋」、SSU Forum「中東欧の民主化の波」等の本物）
+- **mainstream**: false
 - **対象**: 公共政策、国際関係、経済安全保障、エネルギー政策、防災・危機管理（シンポジウム・研究セミナー告知が中心）
 - **位置付け**: **鈴木一人 教授の在籍機関**。news_profile.md §4.3 で名指しされている論者の **講演・シンポジウム情報をリアルタイムに察知** できる。記事配信ではなくイベント告知のため Reference 扱い。本紙では「今週の講演・シンポジウム」枠（フェーズ2で導入検討）に流す想定
 
