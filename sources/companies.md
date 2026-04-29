@@ -193,6 +193,8 @@
 - **RSS**: 未提供（Cocolomi 生成AIタグと同じく、タグ単位のフィードはなし）
 - **形式**: Web Fetch（HTML一覧）
 - **mainstream**: false
+- **status**: rss_unavailable_pending_html_scraper
+- **note**: Sprint 3 以降で HTML scraper 実装を検討
 - **対象**: 新店出店、FC契約締結、海外展開、加盟店募集、新業態リリース
 - **位置付け**: **新規開店・新業態の網羅性が最も高い**。FC本部・加盟者双方の動きを日次で捉える
 
@@ -201,6 +203,8 @@
 - **RSS**: 未提供（日経電子版の購読者向け配信。日経MJ単独のRSSはなし）
 - **形式**: 紙面購読 + Web Fetch（電子版）
 - **mainstream**: true
+- **status**: rss_unavailable_pending_html_scraper
+- **note**: Sprint 3 以降で HTML scraper 実装を検討
 - **対象**: 流通・消費・マーケティング全般、FC・チェーンストア、ヒット商品分析
 - **位置付け**: 流通系で最も権威ある専門紙（月・水・金発行）。FC業界誌の中で経営判断材料としての価値が最も高い。**有料**だが見出しだけでも変化を察知できる
 
@@ -209,8 +213,18 @@
 - **RSS**: 未提供（公式に提供なし確認済み。トップページ・報道発表ページとも `link rel="alternate"` 不在、フッターにRSSアイコン無し。SNS（X/Facebook/YouTube）連携のみ）
 - **形式**: Web Fetch（年度別インデックス → 個別リリース）
 - **mainstream**: false
+- **status**: rss_unavailable_pending_html_scraper
+- **note**: Sprint 3 以降で HTML scraper 実装を検討
 - **対象**: 独占禁止法、優越的地位濫用、フランチャイズガイドライン、下請取引、フリーランス法
 - **位置付け**: **フランチャイズ業界の規制リスク**を最も早期に捉える。FCガイドライン改訂、優越的地位濫用の摘発事例は事業判断に直結。**スクレイパは「主要報道発表資料(令和N年)」「最近の報道発表資料(令和N年)」のインデックスページから新着を抽出**
+
+#### 4. ビジネスチャンス ✅
+- **URL**: https://www.bc01.net/
+- **RSS**: https://www.bc01.net/feed/（WordPress 標準、検証時 RSS 2.0 / 58KB / Content-Type: application/rss+xml で取得確認）
+- **形式**: RSS 2.0
+- **mainstream**: false
+- **対象**: フランチャイズ業界専門情報誌、月刊
+- **位置付け**: **業界専門誌の中核**。ニッチだが Web-Repo 事業との整合性が最も高い。FC本部・加盟者・業界規制の動向を専門メディアの目線で報じる。Sprint 2 Step C で companies.md Web-Repo High に追加（同時に既存3ソースは HTML scraper 実装待ちとしてマーク）
 
 ### Medium Priority（候補が薄い日に拾う）
 

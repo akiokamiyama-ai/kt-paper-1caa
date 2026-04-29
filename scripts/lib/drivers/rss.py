@@ -35,6 +35,22 @@ def _local(tag: str) -> str:
     return tag.rsplit("}", 1)[-1] if "}" in tag else tag
 
 
+# XML 1.0 disallows control characters U+0000-U+0008, U+000B, U+000C, and
+# U+000E-U+001F (only TAB / LF / CR are permitted in this range). Some CMS
+# feeds (encountered: bc01.net WordPress export) leak literal U+0007 BEL
+# bytes into article HTML. Strip these defensively before XML parsing — for
+# well-formed feeds this is a no-op.
+_INVALID_XML_BYTES = bytes(
+    [c for c in range(0x20) if c not in (0x09, 0x0A, 0x0D)]
+)
+_INVALID_XML_TRANSLATE = bytes.maketrans(_INVALID_XML_BYTES, b" " * len(_INVALID_XML_BYTES))
+
+
+def _sanitize_for_xml(data: bytes) -> bytes:
+    """Replace XML 1.0 invalid control characters with spaces. No-op on clean feeds."""
+    return data.translate(_INVALID_XML_TRANSLATE)
+
+
 def _text_of(elem: ET.Element | None) -> str:
     if elem is None or elem.text is None:
         return ""
@@ -99,7 +115,7 @@ class RssDriver(SourceDriver):
             print(f"  [rss] FAIL {source.name}: {e}", file=sys.stderr)
             return []
         try:
-            root = ET.fromstring(xml_bytes)
+            root = ET.fromstring(_sanitize_for_xml(xml_bytes))
         except ET.ParseError as e:
             print(f"  [rss] PARSE {source.name}: {e}", file=sys.stderr)
             return []
