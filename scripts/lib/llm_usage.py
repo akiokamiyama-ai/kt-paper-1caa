@@ -50,7 +50,10 @@ LOG_DIR = Path(__file__).resolve().parent.parent.parent / "logs"
 
 # Caps. Override at runtime by editing this file (intentionally not exposed
 # via env vars — these are durable safety bounds, not per-run knobs).
-DAILY_COST_CAP_USD = 0.50   # design predicts 0.05-0.10/day; 5x cushion
+# Sprint 2 着手に伴い引き上げ（2026-04-29）
+# 平常運用 1回 $1.50想定、開発時の試行錯誤を含めて $3.00を上限とする
+# 暴走防止の最終防衛線として、無制限にはしない
+DAILY_COST_CAP_USD = 3.00
 DAILY_CALLS_CAP = 200        # design predicts ~10-20 calls/day; 10x cushion
 
 # Model pricing (USD per 1M tokens). Snapshot of 2026-04 published rates;
