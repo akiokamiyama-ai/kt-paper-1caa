@@ -1,0 +1,10 @@
+# Phase 2 Sprint 1 で導入。LLM評価（Stage 2）が anthropic SDK を使う。
+# Phase 1 の fetch / render パイプラインは標準ライブラリのみで動くため、
+# anthropic 未インストールでも fetch.py / regen_front_page.py は動作する。
+#
+# Setup（system pip がない環境向け、PEP 668 の制約をユーザーローカルで回避）:
+#   python3 -m pip install --user --break-system-packages -r requirements.txt
+#
+# venv が使える環境では以下が望ましい:
+#   python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+anthropic>=0.97,<1.0
