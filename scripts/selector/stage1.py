@@ -101,11 +101,23 @@ def run_stage1(
                 f"（hits: {', '.join(hits[:3])}）"
             )
         else:
-            region = src.category if src else None
-            hf_excluded, hf_reason = hard_filter.evaluate(title, body or desc, region)
-            if hf_excluded:
+            # Universal podcast / audio-content filter (applies regardless of
+            # region). Sprint 2 Step C: HBR IdeaCast 等の音声番組は紙面読書
+            # 体験に整合しないため hard exclude する。
+            pod_excluded, pod_reason = hard_filter.evaluate_podcast(
+                url=d.get("url"), title=title, description=desc,
+            )
+            if pod_excluded:
                 excluded = True
-                reason = hf_reason
+                reason = pod_reason
+            else:
+                region = src.category if src else None
+                hf_excluded, hf_reason = hard_filter.evaluate(
+                    title, body or desc, region
+                )
+                if hf_excluded:
+                    excluded = True
+                    reason = hf_reason
 
         d["is_excluded"] = excluded
         d["exclusion_reason"] = reason

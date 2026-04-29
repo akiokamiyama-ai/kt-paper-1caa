@@ -73,6 +73,70 @@ _OUTDOOR_HARDCORE: list[re.Pattern[str]] = [
     re.compile(r"バリエーションルート"),
 ]
 
+# ---------------------------------------------------------------------------
+# Podcast / audio content (universal hard filter, applies regardless of region)
+#
+# 動機：HBR IdeaCast 等の Podcast 記事は description に1行サマリしか含まれず、
+# 本文（番組音声）は記事として読む形式に向かない。Tribune は紙面を読む
+# 体験を前提とするため、音声番組へのリンクは hard exclude する。
+# 検出は以下の3軸：URL パス（最強）、タイトル/本文の言及、media-type 接尾辞。
+# Sprint 2 Step C で追加（2026-04-29）。
+# ---------------------------------------------------------------------------
+
+# URL に含まれていれば即除外する文字列パターン。
+_PODCAST_URL_MARKERS: tuple[str, ...] = (
+    "/podcast/",
+    "/podcasts/",
+    "podcast.fm",
+    "anchor.fm",
+    "spotify.com/episode",
+    "apple.com/podcast",
+    "podcasts.apple.com",
+)
+
+# タイトル/本文（description）に含まれていれば即除外する文字列パターン。
+# 大文字小文字無視。日本語表記と英語表記の両方を含む。
+_PODCAST_TEXT_MARKERS: tuple[str, ...] = (
+    "podcast",
+    "ポッドキャスト",
+    "[audio]",
+    "（音声）",
+    "(音声)",
+)
+
+
+def evaluate_podcast(
+    *,
+    url: str | None,
+    title: str | None,
+    description: str | None = None,
+) -> tuple[bool, str | None]:
+    """Universal hard filter: exclude podcast / audio-content articles.
+
+    Returns ``(excluded, reason)``. The reason string is the constant
+    ``"podcast_or_audio_content"`` per Sprint 2 Step C spec.
+
+    This filter runs regardless of Source.category / region — Podcast
+    articles can appear in any face of the paper, but the reading
+    experience does not match a text-first morning paper.
+    """
+    # URL 検査（最強の signal）
+    if url:
+        url_lower = url.lower()
+        for marker in _PODCAST_URL_MARKERS:
+            if marker in url_lower:
+                return True, "podcast_or_audio_content"
+
+    # タイトル/本文の言及
+    haystack_lower = " ".join(
+        (title or "", description or "")
+    ).lower()
+    for marker in _PODCAST_TEXT_MARKERS:
+        if marker.lower() in haystack_lower:
+            return True, "podcast_or_audio_content"
+
+    return False, None
+
 
 def _fire(label: str, patterns: list[re.Pattern[str]], text: str) -> str | None:
     if not text or not patterns:
