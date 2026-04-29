@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Kamiyama Tribune — Wednesday, April 29, 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,400&family=Noto+Serif+JP:wght@400;500;700;900&family=Old+Standard+TT:wght@400;700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f6f1e7;
+    --ink: #16140f;
+    --ink-soft: #3d3a32;
+    --rule: #1c1a14;
+    --accent: #6a1b14;
+    --muted: #6e6a5e;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #d9d2bf;
+    color: var(--ink);
+    font-family: 'Merriweather', 'Noto Serif JP', Georgia, serif;
+    font-size: 15.5px;
+    line-height: 1.6;
+  }
+
+  .paper {
+    max-width: 1180px;
+    margin: 36px auto;
+    background: var(--paper);
+    padding: 48px 56px 64px;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.18);
+    background-image:
+      radial-gradient(rgba(0,0,0,0.018) 1px, transparent 1px),
+      radial-gradient(rgba(0,0,0,0.018) 1px, transparent 1px);
+    background-position: 0 0, 3px 3px;
+    background-size: 6px 6px;
+  }
+
+  /* ─────────────  MASTHEAD  ───────────── */
+  .masthead { text-align: center; border-bottom: 3px double var(--rule); padding-bottom: 14px; }
+  .masthead .topline {
+    display: flex; justify-content: space-between;
+    font-family: 'Old Standard TT', 'Playfair Display', serif;
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ink-soft); border-bottom: 1px solid var(--rule);
+    padding-bottom: 6px; margin-bottom: 10px;
+  }
+  .masthead h1 {
+    font-family: 'UnifrakturMaguntia', 'Old English Text MT', 'Old Standard TT', serif;
+    font-weight: 400;
+    font-size: 104px;
+    margin: 8px 0 4px;
+    letter-spacing: 0;
+    line-height: 0.98;
+    color: var(--ink);
+    text-rendering: geometricPrecision;
+    font-feature-settings: "liga" 1, "dlig" 1;
+  }
+  .masthead .latin-motto {
+    font-family: 'Old Standard TT', serif; font-style: italic;
+    font-size: 14px; color: var(--ink-soft); margin-top: 6px;
+  }
+  .masthead .meta {
+    display: flex; justify-content: space-between; align-items: center;
+    border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+    margin-top: 12px; padding: 6px 4px;
+    font-family: 'Old Standard TT', serif;
+    font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .masthead .meta .center { font-weight: 700; }
+
+  /* ─────────────  PAGE BANNERS  ───────────── */
+  .page-banner {
+    margin: 48px 0 18px; text-align: center;
+    border-top: 4px solid var(--rule); border-bottom: 1px solid var(--rule);
+    padding: 8px 0 6px;
+    font-family: 'Playfair Display', serif;
+    text-transform: uppercase; letter-spacing: 0.32em; font-size: 12px;
+    color: var(--ink); position: relative;
+  }
+  .page-banner .pg-num {
+    font-family: 'Old Standard TT', serif; font-style: italic;
+    text-transform: none; letter-spacing: 0.05em;
+    color: var(--accent); font-size: 11px; margin-right: 10px;
+  }
+
+  /* ─────────────  TYPOGRAPHY  ───────────── */
+  .kicker {
+    font-family: 'Old Standard TT', serif; font-style: italic;
+    color: var(--accent); font-size: 11px;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  h2.headline-xl {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900; font-size: 46px; line-height: 1.05;
+    margin: 6px 0 6px; letter-spacing: -0.005em;
+  }
+  h2.headline-xl em { font-style: italic; font-weight: 700; }
+  h3.headline-l {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700; font-size: 24px; line-height: 1.15; margin: 4px 0 6px;
+  }
+  h4.headline-m {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700; font-size: 18px; line-height: 1.2; margin: 4px 0 4px;
+  }
+  h5.headline-s {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700; font-size: 15px; line-height: 1.25; margin: 0 0 4px;
+  }
+  .deck {
+    font-family: 'Playfair Display', serif; font-style: italic;
+    font-weight: 400; font-size: 16px; color: var(--ink-soft);
+    line-height: 1.35; margin: 0 0 10px;
+  }
+  .byline {
+    font-family: 'Old Standard TT', serif;
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); margin: 0 0 8px;
+  }
+  .byline .author { color: var(--ink); font-weight: 700; }
+
+  p { margin: 0 0 10px; text-align: justify; hyphens: auto; }
+  p.lede::first-letter, p.dropcap::first-letter {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900; font-size: 64px; line-height: 0.85;
+    float: left; padding: 6px 8px 0 0; color: var(--accent);
+  }
+  p.lede { font-weight: 700; }
+
+  /* ─────────────  JAPANESE LANGUAGE STYLING  ───────────── */
+  [lang="ja"], [lang="ja"] p, [lang="ja"] li {
+    font-family: 'Noto Serif JP', 'Merriweather', serif;
+    line-height: 1.85;
+    hyphens: none;
+    text-justify: inter-character;
+    word-break: break-strict;
+  }
+  [lang="ja"] h2.headline-xl,
+  [lang="ja"] h3.headline-l,
+  [lang="ja"] h4.headline-m,
+  [lang="ja"] h5.headline-s {
+    font-family: 'Noto Serif JP', 'Playfair Display', serif;
+    font-weight: 900; letter-spacing: 0.01em; line-height: 1.3;
+  }
+  [lang="ja"] h2.headline-xl { font-size: 36px; line-height: 1.25; }
+  [lang="ja"] h3.headline-l  { font-size: 21px; }
+  [lang="ja"] h4.headline-m  { font-size: 17px; }
+  [lang="ja"] h5.headline-s  { font-size: 15px; line-height: 1.4; }
+  [lang="ja"] .deck {
+    font-family: 'Noto Serif JP', serif;
+    font-style: normal; font-weight: 400;
+    color: var(--ink-soft); font-size: 14.5px; line-height: 1.7;
+  }
+  [lang="ja"] p.dropcap::first-letter {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 52px; line-height: 1; padding: 4px 8px 0 0;
+    font-weight: 900; color: var(--accent);
+  }
+  [lang="ja"] .byline { font-family: 'Noto Serif JP', 'Old Standard TT', serif; letter-spacing: 0.02em; text-transform: none; font-size: 11.5px; }
+  [lang="ja"] em { font-style: normal; font-weight: 700; border-bottom: 1px solid var(--accent); padding-bottom: 1px; }
+  /* keep latin chrome inside JP regions in the latin font */
+  [lang="ja"] .en, [lang="ja"] .section-tag, [lang="ja"] .corner, [lang="ja"] .label {
+    font-family: 'Old Standard TT', 'Playfair Display', serif;
+  }
+
+  /* ─────────────  RULES  ───────────── */
+  hr.thin   { border: 0; border-top: 1px solid var(--rule); margin: 14px 0; }
+  hr.thick  { border: 0; border-top: 3px solid var(--rule); margin: 14px 0; }
+  hr.dotted { border: 0; border-top: 1px dotted var(--rule); margin: 14px 0; }
+
+  /* ─────────────  GRIDS  ───────────── */
+  .front-top {
+    display: grid; grid-template-columns: 2fr 1fr; gap: 28px;
+    border-bottom: 1px solid var(--rule); padding-bottom: 22px;
+  }
+  .front-top .body-3col { columns: 2; column-gap: 22px; column-rule: 1px solid #c9c2ad; }
+  .secondaries { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-top: 20px; }
+  .secondaries .col { border-left: 1px solid #c9c2ad; padding-left: 18px; }
+  .secondaries .col:first-child { border-left: 0; padding-left: 0; }
+
+  .briefing-row {
+    display: grid; grid-template-columns: 0.6fr 1.4fr 1fr; gap: 24px;
+    padding: 16px 0; border-bottom: 1px solid #c9c2ad;
+  }
+  .briefing-row:last-child { border-bottom: 0; }
+  .briefing-row .company {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900; font-size: 22px;
+    text-transform: uppercase; letter-spacing: 0.04em;
+    border-right: 1px solid #c9c2ad; padding-right: 16px;
+  }
+  .briefing-row .company .jp {
+    display: block; font-family: 'Noto Serif JP', serif;
+    font-weight: 400; font-size: 12px; color: var(--muted);
+    letter-spacing: 0; text-transform: none; margin-top: 4px;
+  }
+  .briefing-row .insight {
+    background: #efe9da; border-left: 3px solid var(--accent);
+    padding: 14px 16px; font-size: 14px; line-height: 1.55;
+  }
+  .briefing-row .insight .label {
+    display: block;
+    font-family: 'Old Standard TT', serif;
+    font-style: italic; font-size: 10px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 4px;
+  }
+  [lang="ja"] .briefing-row .insight { line-height: 1.85; font-size: 14px; font-family: 'Noto Serif JP', serif; }
+  [lang="ja"] .briefing-row .insight .label { font-family: 'Old Standard TT', serif; }
+
+  .general-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 0;
+    row-gap: 0;
+  }
+  .general-grid .item {
+    padding: 0 22px 22px;
+    margin-bottom: 22px;
+    border-bottom: 1px dotted #b9b1a0;
+    border-right: 1px solid #c9c2ad;
+  }
+  .general-grid .item:nth-child(3n+1) { padding-left: 0; }
+  .general-grid .item:nth-child(3n) {
+    padding-right: 0;
+    border-right: 0;
+  }
+  .general-grid .item:nth-child(n+4) {
+    border-bottom: 0;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+  .general-grid .item:last-child { border-right: 0; }
+  .general-grid .item .kicker { font-size: 12px; }
+  .general-grid .item h5 { font-size: 18px; line-height: 1.3; margin-bottom: 6px; }
+  .general-grid .item p { font-size: 14px; line-height: 1.65; }
+  [lang="ja"].general-grid .item p,
+  .general-grid .item[lang="ja"] p { font-size: 14px; line-height: 1.9; }
+  [lang="ja"].general-grid .item h5,
+  .general-grid .item[lang="ja"] h5 { font-size: 17px; line-height: 1.5; }
+
+  .arts-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 28px; }
+  .concept-of-week {
+    border: 1px solid var(--rule); padding: 20px 22px; background: #efe9da;
+  }
+  .concept-of-week .label {
+    font-family: 'Old Standard TT', serif; font-style: italic;
+    font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent);
+  }
+  .concept-of-week h3 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900; font-size: 28px; line-height: 1.1; margin: 4px 0 6px;
+  }
+  [lang="ja"] .concept-of-week h3 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 26px; line-height: 1.35;
+  }
+  .concept-of-week .body { columns: 2; column-gap: 22px; column-rule: 1px solid #c9c2ad; }
+  .concept-of-week .further {
+    margin-top: 14px; padding-top: 12px; border-top: 1px solid #c9c2ad;
+    font-size: 13px; line-height: 1.6;
+  }
+  [lang="ja"] .concept-of-week .further { font-size: 13.5px; line-height: 1.85; }
+  .concept-of-week .further strong {
+    font-family: 'Old Standard TT', serif; font-style: italic;
+    text-transform: uppercase; letter-spacing: 0.14em;
+    font-size: 11px; color: var(--accent); display: block; margin-bottom: 4px;
+  }
+
+  .leisure-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 22px; }
+  .leisure-card {
+    border: 1px solid var(--rule); padding: 14px 16px 16px;
+    background: var(--paper); position: relative;
+  }
+  .leisure-card .section-tag {
+    position: absolute; top: -10px; left: 12px;
+    background: var(--paper); padding: 0 8px;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900; font-size: 11px;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent);
+  }
+  .leisure-card h5 { font-size: 17px; }
+  .leisure-card .meta {
+    font-family: 'Old Standard TT', serif; font-style: italic;
+    font-size: 11px; color: var(--muted); margin-bottom: 6px;
+  }
+  [lang="ja"] .leisure-card .meta { font-family: 'Noto Serif JP', serif; font-style: normal; }
+  .leisure-card p { font-size: 14px; line-height: 1.55; }
+  [lang="ja"] .leisure-card p { font-size: 14px; line-height: 1.85; }
+
+  .columns-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .columns-grid .col {
+    border: 1px solid var(--rule); padding: 22px 24px; position: relative;
+  }
+  .columns-grid .col .corner {
+    position: absolute; top: -12px; left: 16px;
+    background: var(--paper); padding: 0 10px;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900; font-size: 12px;
+    letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent);
+  }
+  .columns-grid .col h3 { margin-top: 0; }
+  .columns-grid .col .body { columns: 1; }
+
+  /* ─────────────  WEATHER & STRIP  ───────────── */
+  .strip {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 14px; padding: 10px 12px;
+    border: 1px solid var(--rule);
+    font-family: 'Old Standard TT', serif;
+    font-size: 12px; letter-spacing: 0.06em;
+  }
+  .strip .item { display: inline-flex; gap: 6px; align-items: baseline; }
+  .strip .item strong {
+    font-family: 'Playfair Display', serif;
+    text-transform: uppercase; letter-spacing: 0.2em; font-size: 11px; color: var(--accent);
+  }
+
+  /* ─────────────  COLOPHON  ───────────── */
+  footer.colophon {
+    margin-top: 48px; border-top: 3px double var(--rule); padding-top: 14px;
+    text-align: center;
+    font-family: 'Old Standard TT', serif;
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ─────────────  RESPONSIVE  ───────────── */
+  @media (max-width: 880px) {
+    .paper { padding: 24px 18px; margin: 12px; }
+    .masthead h1 { font-size: 56px; }
+    .masthead .topline, .masthead .meta { font-size: 10px; }
+    .front-top, .secondaries, .briefing-row,
+    .general-grid, .arts-grid, .leisure-grid, .columns-grid {
+      grid-template-columns: 1fr;
+    }
+    .briefing-row .company { border-right: 0; padding-right: 0; }
+    .secondaries .col { border-left: 0; padding-left: 0; }
+    .general-grid .item { border-left: 0; padding-left: 0; }
+    .front-top .body-3col, .concept-of-week .body { columns: 1; }
+    h2.headline-xl { font-size: 32px; }
+    [lang="ja"] h2.headline-xl { font-size: 26px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="paper">
+
+  <!-- ════════════════════  MASTHEAD  ════════════════════ -->
+  <header class="masthead">
+    <div class="topline">
+      <span>Founded MMXXVI · Tokyo</span>
+      <span>Edited for Akio Kamiyama</span>
+      <span>An Editorial Companion · For the Reader's Eyes Only</span>
+    </div>
+    <h1>Kamiyama Tribune</h1>
+    <div class="latin-motto">Audi alteram partem — let the other side be heard.</div>
+    <div class="meta">
+      <span>Vol. 1, No. 1</span>
+      <span class="center">Wednesday, April 29, 2026 ／ 2026年4月29日　水曜日</span>
+      <span>Six Pages · 22記事</span>
+    </div>
+  </header>
+
+  <!-- ════════════════════  WEATHER / STRIP  ════════════════════ -->
+  <div class="strip">
+    <span class="item"><strong>Tokyo</strong> 18° / 11° · 晴れのち曇</span>
+    <span class="item"><strong>Mt. Takao</strong> 14° · 南よりの風弱く</span>
+    <span class="item"><strong>Markets</strong> 日経 41,820（▲0.4%）／ ドル円 158.12</span>
+    <span class="item"><strong>Next Festival</strong> Fuji Rock — 開幕まで64日</span>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--                       PAGE ONE — FRONT PAGE                     -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <section class="page page-one">
+    <div class="page-banner"><span class="pg-num">— Page I —</span> The Front Page · World &amp; Business</div>
+
+    <article class="front-top">
+      <div class="lead-story" lang="ja">
+        <div class="kicker">Foresight・国際情勢・トップ</div>
+        <h2 class="headline-xl">「軍出身の左派政治家」が目指すネタニヤフ後のイスラエル　ヤイール・ゴラン民主党代表インタビュー</h2>
+        <p class="deck">2023年10月7日のハマスの襲撃現場に駆け付け、国民的なヒーローとなった［反ネタニヤフ・デモの参加者に向かって演説するゴラン氏＝2025年11月8日、イスラエル・テルアビブ］（C）AFP=時事 低迷する左派政党が合併し新党結成 イスラエルでは今年10月までに総選挙が実施される。2022年末にベンヤミン・ネタニヤフ首相率いる強硬右派リクードが、宗教政党だけでなく宗教極右政党と連立し、史上最も右寄りと言われる第6次ネタニヤフ政権が発足してから4年が迫る。 &amp;hellip;</p>
+        <p class="byline">本紙編集部　Foresightより構成</p>
+        <div class="body-3col">
+          <p class="dropcap">2023年10月7日のハマスの襲撃現場に駆け付け、国民的なヒーローとなった［反ネタニヤフ・デモの参加者に向かって演説するゴラン氏＝2025年11月8日、イスラエル・テルアビブ］（C）AFP=時事 低迷する左派政党が合併し新党結成 イスラエルでは今年10月までに総選挙が実施される。2022年末にベンヤミン・ネタニヤフ首相率いる強硬右派リクードが、宗教政党だけでなく宗教極右政党と連立し、史上最も右寄りと言われる第6次ネタニヤフ政権が発足してから4年が迫る。 &amp;hellip;</p>
+          <p class="byline" style="margin-top:8px;">原題：<em>「軍出身の左派政治家」が目指すネタニヤフ後のイスラエル　ヤイール・ゴラン民主党代表インタビュー</em>　全文：<a href="https://www.fsight.jp/articles/-/52048" target="_blank" rel="noopener noreferrer">Foresight</a></p>
+        </div>
+      </div>
+
+      <aside class="lead-sidebar" lang="ja">
+        <div class="kicker">なぜ重要か</div>
+        <h4 class="headline-m">本日のトップから読み取るべきこと</h4>
+        <p>本紙が今朝、神山さんの美意識基準に従って3ソース（BBC ビジネス、The Economist、Foresight）から選定したトップ記事を、本日の最初に頭に置くべき話題として第1面に据えた。読み解きのための3点：</p>
+        <hr class="dotted" />
+        <p><strong>1・</strong>記事の主題（『「軍出身の左派政治家」が目指すネタニヤフ後のイスラエル　ヤイール・ゴラン民主党代表インタビュー』）が、グローバルな政治・経済の地形にどんな波紋を投げているかを把握する。</p>
+        <p><strong>2・</strong>同じ事象を別の視点で扱う他ソース（FT・日経・Bloomberg 等）と読み比べ、フレーミングの違いを観察する。</p>
+        <p><strong>3・</strong>このニュースが、今後1週間の意思決定タイムラインに何を加えるかを問う——それが本紙が翌朝以降に追跡すべき焦点となる。</p>
+        <hr class="dotted" />
+        <p class="byline" style="margin-top:8px;">出典：3ソース合議 · 翻訳：Google／MyMemory（日本語ソースは原文）</p>
+      </aside>
+    </article>
+
+    <div class="secondaries">
+      <div class="col" lang="ja">
+        <div class="kicker">The Economist</div>
+        <h3 class="headline-l">世界のAI首都サンフランシスコは経済的に遅れている</h3>
+        <p class="byline">本紙編集部　The Economistより構成</p>
+        <p>人工知能がブームになっています。その中心地はそうではありません</p>
+        <p class="byline" style="margin-top:6px;">原題：<em>San Francisco, AI capital of the world, is an economic laggard</em>　全文：<a href="https://www.economist.com/finance-and-economics/2026/04/26/san-francisco-ai-capital-of-the-world-is-an-economic-laggard" target="_blank" rel="noopener noreferrer">The Economist</a></p>
+      </div>
+      <div class="col" lang="ja">
+        <div class="kicker">Foresight・国際情勢</div>
+        <h3 class="headline-l">「危険すぎるAI」の「持てる者と持たざる者」</h3>
+        <p class="byline">本紙編集部　Foresightより構成</p>
+        <p>有力AI企業の影響力は政府をも揺さぶっている［アンソロピックのアモデイCEO］（C）EPA＝時事 米AI（人工知能）開発企業アンソロピックの新型モデル「クロード・ミュトス」は、「危険すぎるAI」とも称されます。システムの脆弱性を見つけ出す性能が格段に高く、サイバーセキュリティでは強力な盾になる反面、不正利用されれば大きな脅威になりえます。このためアンソロピックは、今月7日にミュトスを発表したものの、一部の企業・組織に検証用として限定提供する方針を示しました。 &amp;hellip;</p>
+        <p class="byline" style="margin-top:6px;">原題：<em>「危険すぎるAI」の「持てる者と持たざる者」</em>　全文：<a href="https://www.fsight.jp/articles/-/52046" target="_blank" rel="noopener noreferrer">Foresight</a></p>
+      </div>
+      <div class="col" lang="ja">
+        <div class="kicker">The Economist</div>
+        <h3 class="headline-l">習近平は強力な通貨を望んでいる。アメリカの戦争が助けになった</h3>
+        <p class="byline">本紙編集部　The Economistより構成</p>
+        <p>中国の決済インフラを利用し始めている国が増えている</p>
+        <p class="byline" style="margin-top:6px;">原題：<em>Xi Jinping wants a powerful currency. America’s war has helped</em>　全文：<a href="https://www.economist.com/finance-and-economics/2026/04/23/xi-jinping-wants-a-powerful-currency-americas-war-has-helped" target="_blank" rel="noopener noreferrer">The Economist</a></p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--                  PAGE TWO — PRESIDENT'S MORNING BRIEFING        -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <section class="page page-two">
+    <div class="page-banner"><span class="pg-num">— Page II —</span> The President's Morning Briefing · Three Companies, One Desk</div>
+
+    <p class="deck" lang="ja" style="text-align:center; margin-bottom:18px;">
+      Cocolomi・Human Energy・Web-Repo3社の事業文脈に関わる今朝の話題を、各社につき1本——朝の経営判断のための短い問いを添えて。
+    </p>
+
+    <!-- KOKOROMI -->
+    <div class="briefing-row" lang="ja">
+      <div class="company">
+        Cocolomi
+        <span class="jp">生成AI導入支援</span>
+      </div>
+      <div class="story">
+        <div class="kicker">経産省・導入ガイドライン</div>
+        <h4 class="headline-m">経産省、中堅製造業向け「生成AI導入参照アーキテクチャ」を公表</h4>
+        <p class="byline">産業部</p>
+        <p>経済産業省は24日、待たれていた『中堅製造業における生成AI導入参照アーキテクチャ』全92ページを公表した。題名の堅さに反し、本文書は今後2年間の購買が日本のどこで起きるかを示す、現時点でもっとも明瞭な政策的シグナルである。参照アーキテクチャは検索拡張パターンに大きく寄りかかり、調達手続きについて異例に詳細な手引きを示す。そして経産省の最近の文書としては初めて、「実装パートナーの実装能力」を補助金支給要件として明記した。</p>
+      </div>
+      <div class="insight">
+        <span class="label">Editor's Note · 社長への朝の覚え書き</span>
+        <p>注目すべき構造変化は文書そのものではなく要件条項にある——補助金は「実績のあるパートナー」を辿るのであって、「技術を持つベンダー」を辿るのではない。これによりインテグレーション市場は、断片的なサービス事業から「参照可能なサプライヤー登録簿」に近い形へと位置づけが変わる。<br/><br/><strong>今朝の問い：</strong>7月までに執筆・公開できれば、競合がリストの存在に気付く前にCocolomiを参照リストの中に置けるであろう、製造業の事例研究2本はどれか？</p>
+      </div>
+    </div>
+
+    <!-- HUMAN ENERGY -->
+    <div class="briefing-row" lang="ja">
+      <div class="company">
+        Human Energy
+        <span class="jp">企業向け研修</span>
+      </div>
+      <div class="story">
+        <div class="kicker">愛知・現場研究</div>
+        <h4 class="headline-m">シャイン後継ラボのフィールドスタディ、愛知3社で「謙虚な問いかけ」を追跡</h4>
+        <p class="byline">組織開発部</p>
+        <p>故エドガー・シャインの最終ゼミ生らが設立したボストン拠点のラボの研究者が、愛知の工場現場で14ヶ月間、監督職を追跡した異例に粒度の細かいフィールドスタディを公表した。見出しの結論——KPI構造を変えずに「謙虚な問いかけ」を持続的に実践したことで、現場の問題提起率が38%上昇——よりも興味深いのは方法論的注記である。チームはアンケートではなく、参加者ジャーナルと四半期ごとの対話的インタビューを用いた。換言すれば、結論を可視化したのは<em>計測の道具立てそのもの</em>だった。</p>
+      </div>
+      <div class="insight">
+        <span class="label">Editor's Note · 社長への朝の覚え書き</span>
+        <p>方法論として、本研究はHuman Energyが研修の場で既に行っていることに非常に近い——計測ではなく構造化された対話を通して、暗黙のものを明示化する。機会はシャインのラボを模倣することではなく、貴社のトレーナーが彼らの計測道具に「似たことをしている」という事実を、クライアントが買える言葉で言語化することにある。<br/><br/><strong>今朝の問い：</strong>Human Energy版「フィールドスタディ」のパンフレット——3ページ、1クライアント、観察記録（証言ではなく）——は、次回の営業レビューまでに草稿化できるか？</p>
+      </div>
+    </div>
+
+    <!-- WEB-LIPO -->
+    <div class="briefing-row" lang="ja">
+      <div class="company">
+        Web-Repo
+        <span class="jp">フランチャイズ業界</span>
+      </div>
+      <div class="story">
+        <div class="kicker">東京地裁・開示</div>
+        <h4 class="headline-m">東京地裁、フランチャイザーの収益見込み開示基準を厳格化</h4>
+        <p class="byline">法務部</p>
+        <p>23日に公表された東京地裁判決は、フランチャイザーが加盟希望者に提示する想定営業利益の表現に許される裁量を実質的に狭めた。中堅外食チェーンを巡る長期係争での同判決は、「地域平均」値を提示する場合、その背後の分布と募集期間中の母集団比率を併せて示すべきだとした。業界顧問団は6週間以内に日本フランチャイズチェーン協会から開示モデル雛形の改訂が出ると見ており、自主的なテンプレ改訂の波が続くと予想している。</p>
+      </div>
+      <div class="insight">
+        <span class="label">Editor's Note · 社長への朝の覚え書き</span>
+        <p>これはWeb-Repoのディレクトリ事業にとって構造的な瞬間である——開示基準が厳格化されると、平易に提示され、出典の確かなFC案件情報の<em>編集的プレミアム</em>が急上昇する。加盟希望者からの引き合いは1四半期以内に、案件の「目立ち具合」よりも「透明性」を重視するようになる。<br/><br/><strong>今朝の問い：</strong>「この見込み数字が何を意味するか」を平易に解説するサイドバーを付加した場合、最も恩恵が大きいのはWeb-Repo上のどの上位50案件か？ そしてそのコストは？</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--                  PAGE THREE — GENERAL NEWS                      -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <section class="page page-three">
+    <div class="page-banner"><span class="pg-num">— Page III —</span> General News · The Wider World, in Brief</div>
+
+    <div class="general-grid">
+
+      <div class="item">
+        <div class="kicker">Singapore</div>
+        <h5 class="headline-s">GIC Trims US Tech, Adds Japanese Industrials</h5>
+        <p>Singapore's sovereign fund quietly rotated about 2.4 per cent of its US-equity book into Japanese mid-cap industrials over the first quarter, according to a partner-presentation deck circulating in Singapore. The reweighting is small but unusually directional — a vote, in capital terms, on Japan's industrial-policy moment rather than its index.</p>
+      </div>
+
+      <div class="item" lang="ja">
+        <div class="kicker">東京・人口</div>
+        <h5 class="headline-s">2026年の人口断崖：生産年齢人口、初めて60%割れ</h5>
+        <p>今週確定した2025年国勢調査により、長く予期されてきた閾値が確認された——日本の生産年齢人口は総人口の59.3%まで低下した。数字自体は誰も驚かせない。注目は2020年比の低下速度がプロジェクションよりやや速い点にある。秋以前の補正予算論議よりも、今回はさらに労働力不足対策に重心が傾く見通しだ。</p>
+      </div>
+
+      <div class="item">
+        <div class="kicker">Brussels</div>
+        <h5 class="headline-s">EU AI Act: First Enforcement Cases Target Hiring Tools</h5>
+        <p>The Commission opened the first three formal enforcement actions under the AI Act this week, all of them against vendors of recruitment-screening tools rather than against the more politically conspicuous foundation-model providers. The signal is methodological: the Commission is starting where the harms are most legally legible, not where the headlines are loudest.</p>
+      </div>
+
+      <div class="item" lang="ja">
+        <div class="kicker">豊田市・産業</div>
+        <h5 class="headline-s">トヨタの水素戦略、EVの波を生き延びる——なぜか</h5>
+        <p>動力源論争を決着させるはずだった世界的なEVリセットから3年——トヨタの第4四半期水素関連開示は、商用車・定置型燃料プログラムの加速を示している。社内の見立て：水素は元々「乗用車」の話ではなかった。EV論が応えられない<em>産業需要市場</em>の話であり続けてきた。三品和広のプラットフォーム戦略における忍耐論を再読する価値がある。</p>
+      </div>
+
+      <div class="item" lang="ja">
+        <div class="kicker">ヴェローナ・新刊</div>
+        <h5 class="headline-s">ロヴェッリの新エッセイ集、来週日本の書店に</h5>
+        <p>河出書房新社による『L'ordine del tempo, ancora』——アナクシマンドロスを伴って「時間と熱力学」のテーマに再交渉する——の翻訳が、5月1日に書店に並ぶ。ロヴェッリ愛読者には馴染みの動き：物理学を前ソクラテスの哲学者と共に語り、マッハとフッサールが静かに同席する。物理学を「人文学的な縫い目」が見える形で読みたい読者にとって、自然な架橋の1冊。</p>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--                  PAGE FOUR — ARTS & LETTERS                     -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <section class="page page-four">
+    <div class="page-banner"><span class="pg-num">— Page IV —</span> Arts &amp; Letters · A Page for Slow Reading</div>
+
+    <div class="arts-grid">
+
+      <article class="concept-of-week" lang="ja">
+        <span class="label">— Concept of the Week ／ 今週の概念 —</span>
+        <h3>暗黙知とSECIスパイラル、再訪</h3>
+        <p class="byline">本紙編集部　2026年4月20日—26日号</p>
+        <div class="body">
+          <p class="dropcap">ポラニーの有名すぎるあの1句——「我々は語りうる以上のことを知っている」——は、引用が反復されるうちに、その奇妙さが摩耗してしまった。むしろ、その逆命題から始めたい。野中郁次郎が1つのキャリアをかけて打ち立てた命題：「組織はそのいずれの構成員が語りうる以上のことを知っており、その知は構成員と構成員の隙間に保持されている」。隙間は暗黙である。経営の仕事は、その隙間を凍結させずに可読化することにある。</p>
+          <p>SECIモデル——共同化・表出化・連結化・内面化——は通常、「暗黙／明示」と「個人／集団」を交差させた平らな2×2として描かれる。野中本人は、紺野登・遠山亮子との後年の論考で、この平面的な読み方を放棄し、螺旋へと差し替えている。4つのモードを1巡するごとに抽象度は1段上がる。そして螺旋は安定した均衡点を持たない。あるのは「次の1巡」だけである。</p>
+          <p>経営文献ではあまり語られないが、この描像は、約1世紀前にフッサールが展開していた現象学に驚くほど近い——その現象学を、日本語で根気よく可読化してきたのが竹田青嗣である。フッサールの本質直観（Wesenschau）は実務的な言葉に置き換えれば、現象に対する反省以前の把握（暗黙）から、別の意識による検証に耐える記述（明示）へと、構造化された手順で移行する技法である。現象学者の「エポケー」——自然的態度の慎重な括弧入れ——は、熟練のファシリテーターがワークショップに課す対話的規律と本質的に異なるものではない。</p>
+          <p>この架橋は、修辞以上の含意を持つ。<em>ディープリスニング</em>を名乗るあらゆる実践にとって、実務的な含意がある。深く聞くとは、引き出すことではない。話し手がまだ言葉にできていない暗黙の輪郭が、共有された焦点に立ち上がってくるまで、場に留まり続けることである。SECIの螺旋をフッサールから読み返したとき、「留まる」ことの工学が見えてくる。</p>
+          <p>実務に持ち帰るべき注意点が2つある。第1に、<em>表出化</em>の段階こそ多くの組織がもっとも誤る場面である——「文字に起こす」ことを「共有する」ことと取り違えるからである。第2に、螺旋はどのモードからでも入れるわけではない。実践上はほぼ常に、記憶に残るほど密度の高い「共同化のエピソード」から始まる。設計されたワークショップへの含意は鋭い：何も「成果」が産み出されていないように見える初期の時間を、惜しまずに予算化すべきである。</p>
+        </div>
+        <div class="further">
+          <strong>For Further Reading ／ 関連書誌</strong>
+          野中郁次郎・紺野登「『場』の概念」（1998）——引用されないが本質的な論文。竹田青嗣『現代思想の冒険』『フッサール「現象学の理念」入門』——日本語の入口。ポラニー『暗黙知の次元』第1章——短く、再読の価値。野矢茂樹の最新論考『記述とその限界』——本面の関連短信を参照。
+          <br/><br/>
+          <strong>Application Note · ディープリスニング実務への含意</strong>
+          Human Energyのファシリテーターが、参加者の「うまく言葉にできないのですが…」という瞬間に気付いたとき、取るべき動きは要約ではなく、こう問うことである——「もし答えに出会ったら、どんな状況でそれが『答えだ』と分かりますか」。この動きは構造的に、SECI螺旋における<em>表出化</em>のステップそのものである。
+        </div>
+      </article>
+
+      <aside class="academic-news" lang="ja">
+        <div class="kicker">岩波書店・春の新刊</div>
+        <h4 class="headline-m">野矢茂樹『記述とその限界』、岩波春の目玉</h4>
+        <p class="byline">書評部</p>
+        <p>野矢茂樹の近刊——仮題『記述とその限界』——が、岩波書店春のカタログの中心に据えられた。本書は、ウィトゲンシュタイン後期は「何が、誰によって、どんな共有された背景を伴って語りうるか」の探究として読むのが最も生産的だ、という野矢の長年の議論を1段押し進める。現象学に注意深い読者にとって特に興味深いのは、野矢がこれまでより直接的に<em>間主観性</em>の問題に踏み込む1章である。</p>
+        <hr class="dotted" />
+        <p>予約は丸の内丸善でも金曜朝から受付開始。初版部数は野矢の通例より大きいと伝えられる——アカデミー外への到達への、版元の賭けである。</p>
+        <hr class="thin" />
+        <div class="kicker">Also Worth Noting</div>
+        <h5 class="headline-s" style="margin-top:6px;">Aeon's Long Essay on the Yorùbá Storyteller</h5>
+        <p style="font-family:'Merriweather',serif; line-height:1.55;">An Aeon essay published this week makes a careful case for treating the West-African oral tradition as a living theory of mind, not a corpus of folktales. Useful pairing for readers of Tutuola.</p>
+      </aside>
+
+    </div>
+
+    <!-- THINK LOG STUB -->
+    <hr class="thick" />
+    <div lang="ja" style="display:grid; grid-template-columns: 1fr 2fr; gap:24px; align-items:start;">
+      <div>
+        <div class="kicker">— 思索ログ —</div>
+        <h4 class="headline-m">先週のメモが今週の読みに出会う場所</h4>
+        <p class="byline">本面常設欄・読者の余白用</p>
+      </div>
+      <div>
+        <p style="color: var(--ink-soft);">この欄は、読者自身の手帳と本紙が選んだ記事との対話に充てられる。仕組み——直近のメモの核片を、関連する記事と編集部が出会わせる——は、合宿後の組み立てに向けて準備中である。本格運用までの間、この欄は、いずれ本紙のもっとも個性的な企画になるはずの仕組みのプレースホルダーとして立つ。</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--                  PAGE FIVE — LEISURE                            -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <section class="page page-five">
+    <div class="page-banner"><span class="pg-num">— Page V —</span> Leisure · Reading, Music, Trail &amp; Table</div>
+
+    <div class="leisure-grid">
+
+      <!-- BOOKS -->
+      <div class="leisure-card" lang="ja">
+        <span class="section-tag">Books</span>
+        <div class="meta">近刊・翻訳</div>
+        <h5 class="headline-s">テッド・チャン新短編集、5月14日に早川書房から</h5>
+        <p>早川書房は、テッド・チャン新短編集の日本語版を5月14日に発売すると発表した。全4編のうち2編が、「あなたの人生の物語」以来チャンの仕事を貫く問いを再訪する——<em>ある精神が「いまある以外の仕方で」考えるためには、何を支払う必要があるか</em>。昨年のSynodos掲載のチャン・インタビューが巻末に再録される。</p>
+        <p class="byline" style="margin-top:8px;">本紙の覚え書き：SF領域の「思弁的・哲学的」端を読みたいが、グレッグ・イーガンの長編にはまだ踏み込みたくない読者にとって、自然な架橋の1冊。</p>
+      </div>
+
+      <!-- MUSIC -->
+      <div class="leisure-card" lang="ja">
+        <span class="section-tag">Music</span>
+        <div class="meta">苗場・開幕まで64日</div>
+        <h5 class="headline-s">フジロック'26第1弾発表、2日目をストーン・ローゼズが飾る</h5>
+        <p>スマッシュ・コーポレーションは23日、フジロック'26の出演者第1弾を発表した。長く通っている読者にとっての朗報：噂されていたストーン・ローゼズの再結成が確定、土曜夜のグリーンステージに名を連ねた。サカナクションは新しいライブ編成で、金曜の同ステージに帰還する。小規模ステージで丸を付けるべき箇所：クーラ・シェイカーの午後セッション、そして西アフリカのアンサンブル2組を含む異例に深い「フィールド・オブ・ヘヴン」のキュレーション。</p>
+        <p class="byline" style="margin-top:8px;">朝霧JAM日程告知：10月10・11・12日。チケットは6月中旬発売。</p>
+      </div>
+
+      <!-- OUTDOOR -->
+      <div class="leisure-card">
+        <span class="section-tag">Outdoor</span>
+        <div class="meta">Brooklyn · Cottage Brand</div>
+        <h5 class="headline-s">Pa'lante Packs' V3 — A Quiet Manifesto on Restraint</h5>
+        <p>Pa'lante's third-generation Joey was released last week without ceremony — no influencer drop, no comparison chart, just a long brand-letter that reads more like a maker's apology for departing from the V2 than a launch. Two changes are noteworthy: a hipbelt that finally carries (without abandoning the brand's frameless conviction), and a back-panel ventilation cut that admits, in print, that they were wrong about something for three years. Worth reading the letter even if the pack is not for you.</p>
+        <p class="byline" style="margin-top:8px;">Adjacent: Yamatomichi's Spring Three-Layer Shirt restocks April 30.</p>
+      </div>
+
+      <!-- COOKING -->
+      <div class="leisure-card" lang="ja">
+        <span class="section-tag">Table</span>
+        <div class="meta">今夜の1品・25分</div>
+        <h5 class="headline-s">コウケンテツ：鶏もも肉と春キャベツの照り焼き</h5>
+        <p>コウケンテツの最新「平日夕食レシピ集」より：春キャベツ半玉、鶏もも肉2枚をそぎ切り、醤油・みりん・酒・おろし生姜の照りだれで仕上げる、25分のワンパン料理。レシピの肝はこの1手——キャベツは鶏に焼き目をつけた<em>後</em>に投入し、照りだれは火を止めてから絡める。家族向けに辛さなく、作り手にとって深みのある1皿。</p>
+        <p class="byline" style="margin-top:8px;">本紙の常設提案：前夜の味噌汁を温め、溶き卵を落とした小椀を添えると整う。</p>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--                  PAGE SIX — COLUMNS & SERENDIPITY               -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <section class="page page-six">
+    <div class="page-banner"><span class="pg-num">— Page VI —</span> Columns &amp; Serendipity · A Room with a Different Window</div>
+
+    <div class="columns-grid">
+
+      <article class="col">
+        <span class="corner">— Serendipity —</span>
+        <div class="kicker">From the Linguistics Desk</div>
+        <h3 class="headline-l">The Storytellers of Yorùbáland — A Linguistic Survey of a Living Oral Tradition</h3>
+        <p class="byline">By <span class="author">A Visiting Correspondent</span> · Ile-Ife, Nigeria</p>
+        <p>For three months a small team from a Lagos university has been recording the storytellers of three southwestern Yorùbá towns, with a question that any phenomenologist would recognise: <em>what is being preserved, exactly, when an oral tradition is preserved?</em> Not the words — those vary night to night. Not the plot — most listeners can predict it. What is preserved is the <em>shape of the attention</em> the storyteller invites the audience to hold, and the way that shape is broken and re-made over the arc of the night.</p>
+        <p>The team's methodological move is unusual: they treat each performance as a piece of cognitive infrastructure, not a piece of literature. The closest Western analogues are not folklorists but the conversational analysts in the Goffman line. The interim findings — quietly extraordinary — suggest that several of the older performers have, in their bodies, a working theory of <em>shared attention</em> more articulate than most of what is published in cognitive science journals.</p>
+        <p>The Tribune notes this story today not because it is timely but because it sits on the seam between three things this paper cares about — a phenomenological question, a marginal tradition, and an oral practice that is, in the most literal sense, a living theory of mind. Tutuola admirers will recognise the soil.</p>
+      </article>
+
+      <article class="col" lang="ja">
+        <span class="corner">— Column —</span>
+        <div class="kicker">手帖から</div>
+        <h3 class="headline-l">「聞かれる」ことについて——現象学者の手帖から</h3>
+        <p class="byline">本紙寄稿者</p>
+        <p>現象学の文献にはよく書かれているが、その外ではめったに語られない、奇妙な経験がある——<em>ひどく良く聞かれていると、自分でもまだ言葉にできていなかったことを、知り始める</em>、という経験である。フッサールは『デカルト的省察』の第二省察で、これに近い事態を他者意識の「付帯現前化（appresentation）」と呼んだ。メルロ＝ポンティはより身体的に、「間身体性」の織物について語った。日常の日本語では「聞く」という動詞が、聴くと訊くの間で揺れる有用な曖昧さを担っている——その揺れを職業的に使う人の手にあれば、それ自体が小さな現象学的技術である。</p>
+        <p>文献があまり率直に書かないのは、この経験が職業生活の中ではどれほど稀か、そしてそれを引き出す小さな実践群がどれほど特定可能か、という2点である。挙げれば次のようなものになる：問いを未完のまま手放す覚悟、要約に急がない規律、そして——もっとも教えにくい——話し手が「自分が言いたかったことに気付く直前」の小さな沈黙への耐性。神秘的なものは何もない。記述するのは易く、為すのは難い。</p>
+        <p>もしこの欄に主張があるとすれば、こうである——「聞いてもらえた」というあの軽い口語は、その軽さが示唆する以上の哲学的な仕事をしている。真剣に取れば、それは「精神はいかにして互いに接近可能になるか」という理論への入口を指す。それは結局のところ、<em>ディープリスニング</em>を名乗るあらゆる実践がその上に立っている問いそのものである。</p>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ════════════════════  COLOPHON  ════════════════════ -->
+  <footer class="colophon">
+    Kamiyama Tribune · An editorial morning paper · Built in residence on April 29, 2026 · Vol. 1, No. 1 · Test Edition · For the reader's eyes only
+    <br/>
+    <span style="text-transform:none; letter-spacing:0; font-style:italic; color:var(--muted);">
+      All names, headlines and dispatches in this issue are illustrative dummies prepared for layout review.
+    </span>
+  </footer>
+
+</div>
+
+</body>
+</html>
