@@ -45,6 +45,11 @@ from .render import replace_page_one
 from .selector.stage1 import run_stage1
 from .selector.stage2 import run_stage2
 from .selector.stage3 import integrate_scores
+from .selector.page2 import (
+    COMPANY_KEYS as PAGE2_COMPANY_ORDER,
+    default_fetcher as page2_default_fetcher,
+    run_page2_pipeline,
+)
 from .translate import translate
 
 # ---------------------------------------------------------------------------
@@ -67,7 +72,24 @@ SOURCE_NAME_FILTERS: tuple[str, ...] = (
 # Sources whose articles are already in Japanese — translation is skipped.
 JAPANESE_SOURCE_PATTERNS: tuple[str, ...] = (
     "Foresight",
+    "Forbes Japan",
+    "ZDNet Japan",
+    "ITmedia",
+    "PR TIMES",
 )
+
+# Sprint 2 Step B 期間中の page2.run_page2_pipeline 呼び出し時の運用 threshold。
+# scripts/selector/page2.py の DEFAULT_THRESHOLD = 40.0 を caller 側で
+# override する形（page2.py のモジュール定数は不変）。
+PAGE2_THRESHOLD = 35.0
+
+# 第2面の3社表示メタデータ：display_name + 業種ラベル。
+# archive/2026-04-25.html Page II の <div class="company"> 構造を踏襲。
+COMPANY_DISPLAY_META: dict[str, tuple[str, str]] = {
+    "cocolomi":     ("Cocolomi",     "生成AI導入支援"),
+    "human_energy": ("Human Energy", "企業向け研修"),
+    "web_repo":     ("Web-Repo",     "フランチャイズ業界"),
+}
 
 # Front page composition.
 N_TOP = 1
@@ -135,9 +157,33 @@ def _strip_html(text: str | None) -> str:
 
 
 def _is_japanese_source(source_name: str | None) -> bool:
+    """Detect whether a source's content is Japanese (so translation is skipped).
+
+    Uses two signals:
+    1. Substring match against ``JAPANESE_SOURCE_PATTERNS`` (covers EN-named
+       JA sources like "Forbes Japan", "ZDNet Japan", "ITmedia AI＋").
+    2. Heuristic: source name contains ≥2 hiragana / katakana / kanji
+       characters (covers "経済産業省ニュースリリース", "日本の人事部 プロネット",
+       "ビジネスチャンス", "DIAMONDハーバード・ビジネス・レビュー", etc.).
+
+    EN-only sources (HBR.org, MIT Sloan, Aeon, BBC, Economist) match neither
+    and fall through to translation.
+    """
     if not source_name:
         return False
-    return any(pat in source_name for pat in JAPANESE_SOURCE_PATTERNS)
+    if any(pat in source_name for pat in JAPANESE_SOURCE_PATTERNS):
+        return True
+    # Strip parenthetical metadata like "BBC Business（本紙第1面で稼働中）" or
+    # "Harvard Business Review（HBR.org）" — these annotations contain JA chars
+    # but the actual content language is determined by the rest of the name.
+    name_stripped = re.sub(r"[（(][^）)]*[）)]", "", source_name)
+    ja_chars = sum(
+        1 for c in name_stripped
+        if "぀" <= c <= "ゟ"   # hiragana
+        or "゠" <= c <= "ヿ"   # katakana
+        or "一" <= c <= "鿿"   # kanji
+    )
+    return ja_chars >= 2
 
 
 def _kicker_for(source_name: str | None, *, is_top: bool) -> str:
@@ -408,6 +454,132 @@ def build_page_one_v2(articles: list[dict]) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Rendering — Page II ("社長の朝会")
+# ---------------------------------------------------------------------------
+
+def _kicker_for_page2(source_name: str | None) -> str:
+    """Return a clean kicker label for Page II briefing rows.
+
+    Strips parenthetical metadata (e.g. ``"Foresight（新潮社）"`` →
+    ``"Foresight"``) so the kicker reads cleanly. Sprint 3 で topical kicker
+    生成（``"経産省・導入ガイドライン"`` 形式）を検討した場合は別 LLM call
+    が必要だが、Step B は source-name ベースで済ませる。
+    """
+    if not source_name:
+        return "本紙編集部"
+    name = re.sub(r"[（(][^）)]*[）)]", "", source_name).strip()
+    return name or "本紙編集部"
+
+
+def _byline_for_page2(source_name: str | None) -> str:
+    if not source_name:
+        return "本紙編集部"
+    name = re.sub(r"[（(][^）)]*[）)]", "", source_name).strip()
+    return f"本紙編集部　{name}より構成" if name else "本紙編集部"
+
+
+def _render_briefing_row(company_key: str, sel) -> str:
+    """Render one company's <div class="briefing-row"> block.
+
+    Two modes:
+    * Selected: full row with kicker / headline / description / Editor's Note
+      containing the morning question.
+    * No article (sel.article is None or sel.morning_question is None):
+      minimal placeholder per Sprint 2 Step B 設計（神山さん指定の最小形式）.
+    """
+    display_name, biz_label = COMPANY_DISPLAY_META[company_key]
+
+    # 該当なし: minimal placeholder.
+    if sel.article is None or sel.morning_question is None:
+        return f"""
+    <div class="briefing-row" lang="ja">
+      <div class="company">
+        {_esc(display_name)}
+        <span class="jp">{_esc(biz_label)}</span>
+      </div>
+      <div class="story">
+        <h4 class="headline-m" style="font-style: italic; color: #666;">本日休載</h4>
+      </div>
+    </div>""".rstrip()
+
+    article = sel.article
+    title_ja = article.get("title_ja") or article.get("title", "")
+    desc_ja = article.get("desc_ja") or article.get("description", "")
+    source_name = article.get("source_name", "")
+    url = article.get("url", "")
+    kicker = _kicker_for_page2(source_name)
+    byline = _byline_for_page2(source_name)
+    question = sel.morning_question
+
+    return f"""
+    <div class="briefing-row" lang="ja">
+      <div class="company">
+        {_esc(display_name)}
+        <span class="jp">{_esc(biz_label)}</span>
+      </div>
+      <div class="story">
+        <div class="kicker">{_esc(kicker)}</div>
+        <h4 class="headline-m"><a href="{_esc(url)}" target="_blank" rel="noopener noreferrer">{_esc(title_ja)}</a></h4>
+        <p class="byline">{_esc(byline)}</p>
+        <p>{_esc(desc_ja)}</p>
+      </div>
+      <div class="insight">
+        <span class="label">Editor's Note · 社長への朝の覚え書き</span>
+        <p><strong>今朝の問い：</strong>{_esc(question)}</p>
+      </div>
+    </div>""".rstrip()
+
+
+def build_page_two_v2(selections: dict) -> str:
+    """Assemble the full Page II <section> block from page2 pipeline selections.
+
+    ``selections`` is the ``Page2Result.selections`` dict mapping
+    ``company_key`` (cocolomi / human_energy / web_repo) → ``CompanySelection``.
+    Order is fixed (Cocolomi → Human Energy → Web-Repo) per the inaugural
+    issue's Page II layout.
+    """
+    rows: list[str] = []
+    # COMPANY_KEYS は page2.py から import 済（cocolomi → human_energy → web_repo）
+    for company_key in PAGE2_COMPANY_ORDER:
+        sel = selections.get(company_key)
+        if sel is None:
+            # Defensive: synth a stub "no article" CompanySelection.
+            from .selector.page2 import CompanySelection
+            sel = CompanySelection(
+                company_key=company_key, article=None,
+                page2_final_score=None, morning_question=None,
+                stage_used="none", threshold_passed=False,
+                fallback_reason="page2_pipeline returned no entry for this company",
+            )
+        rows.append(_render_briefing_row(company_key, sel))
+
+    rows_html = "\n".join(rows)
+    return f"""<section class="page page-two">
+    <div class="page-banner"><span class="pg-num">— Page II —</span> The President's Morning Briefing · Three Companies, One Desk</div>
+
+    <p class="deck" lang="ja" style="text-align:center; margin-bottom:18px;">
+      Cocolomi・Human Energy・Web-Repo3社の事業文脈に関わる今朝の話題を、各社につき1本——朝の経営判断のための短い問いを添えて。
+    </p>
+{rows_html}
+  </section>"""
+
+
+def replace_page_two(html_text: str, new_page_html: str) -> str:
+    """Surgical replace for Page II, parallel to ``render.replace_page_one``."""
+    start_marker = '<section class="page page-two">'
+    if html_text.count(start_marker) != 1:
+        raise RuntimeError(
+            f"Expected 1 page-two section, found {html_text.count(start_marker)}"
+        )
+    start = html_text.find(start_marker)
+    end = html_text.find("</section>", start)
+    if end == -1:
+        raise RuntimeError("Page Two section end not found")
+    end += len("</section>")
+    return html_text[:start] + new_page_html + html_text[end:]
+
+
+# ---------------------------------------------------------------------------
 # Template date manipulation
 # ---------------------------------------------------------------------------
 
@@ -524,10 +696,65 @@ def _print_dry_run_report(result: PipelineResult, fetched_by_source: dict[str, i
         print(f"  [{role}] {score:6.2f}  ({src[:20]})  {title}")
 
 
+def _run_page2_selection(target: date, *, write_log: bool, threshold: float):
+    """Fetch companies:* High → run page2 pipeline → return Page2Result.
+
+    Separated from main() for clarity; called whether dry-run or production
+    so dry-run output can show the Page II selections too.
+    """
+    print(
+        "Fetching companies.md High Priority for Page II selection…",
+        file=sys.stderr,
+    )
+    companies_scored = page2_default_fetcher(
+        category="companies:", priority="high", limit=8, no_dedupe=True,
+    )
+    print(
+        f"  got {len(companies_scored)} scored articles for Page II",
+        file=sys.stderr,
+    )
+    print("Running Page II pipeline (Step 1 + selection + Step 2)…", file=sys.stderr)
+    page2_result = run_page2_pipeline(
+        companies_scored,
+        fetcher_fn=page2_default_fetcher,
+        write_log=write_log,
+        today=target,
+        threshold=threshold,
+    )
+    return page2_result
+
+
+def _print_page2_report(page2_result) -> None:
+    print()
+    print("=== Page II selections ===")
+    print(f"  threshold: {page2_result.threshold}")
+    print(f"  cost (Step 1 + Step 2 LLM): ${page2_result.cost_usd:.4f}")
+    print(f"  errors: {len(page2_result.errors)}")
+    print()
+    for company_key in PAGE2_COMPANY_ORDER:
+        sel = page2_result.selections.get(company_key)
+        display, biz = COMPANY_DISPLAY_META[company_key]
+        if sel is None or sel.article is None:
+            reason = sel.fallback_reason if sel else "no entry"
+            print(f"  [{display:<14}] stage={(sel.stage_used if sel else 'none'):<14} → 本日休載  ({reason})")
+            continue
+        print(
+            f"  [{display:<14}] stage={sel.stage_used:<14} score={sel.page2_final_score:6.2f}  "
+            f"({sel.article.get('source_name','')[:25]})"
+        )
+        print(f"      title: {sel.article.get('title', '')[:80]}")
+        print(f"      問い:  {sel.morning_question}")
+        if sel.fallback_reason:
+            print(f"      fallback: {sel.fallback_reason[:120]}")
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(
         prog="regen_front_page_v2",
-        description="Phase 2 美意識 selection pipeline → archive/<date>.html",
+        description=(
+            "Phase 2 美意識 selection pipeline → archive/<date>.html "
+            "(Page I + Page II)"
+        ),
     )
     p.add_argument(
         "--date",
@@ -543,6 +770,17 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="also rewrite index.html to redirect to the new archive file",
     )
+    p.add_argument(
+        "--page2-threshold", type=float, default=PAGE2_THRESHOLD,
+        help=(
+            "page2_final_score threshold for Page II selection "
+            f"(default {PAGE2_THRESHOLD}, Sprint 2 Step B operational value)"
+        ),
+    )
+    p.add_argument(
+        "--skip-page2", action="store_true",
+        help="skip Page II generation entirely (Page I only, debug aid)",
+    )
     args = p.parse_args(argv)
 
     if args.date:
@@ -556,7 +794,7 @@ def main(argv: list[str] | None = None) -> int:
 
     print(f"Target date: {target.isoformat()}", file=sys.stderr)
 
-    # 1) Fetch
+    # 1) Fetch Page I sources
     print(f"Fetching candidates from {len(SOURCE_NAME_FILTERS)} sources...", file=sys.stderr)
     articles, per_source = fetch_candidates()
     if not articles:
@@ -564,38 +802,60 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     print(f"  fetched {len(articles)} articles total", file=sys.stderr)
 
-    # 2) Pipeline (Stage 1 → 2 → 3)
-    print("Running selection pipeline (Stage 1 → 2 → 3)...", file=sys.stderr)
+    # 2) Pipeline (Stage 1 → 2 → 3) for Page I
+    print("Running Page I selection pipeline (Stage 1 → 2 → 3)...", file=sys.stderr)
     result = run_pipeline(articles)
     result.fetched_by_source = per_source
 
     if len(result.selected) < N_TOP + N_SECONDARIES:
         print(
-            f"ERROR: pipeline returned {len(result.selected)} candidates, "
+            f"ERROR: Page I pipeline returned {len(result.selected)} candidates, "
             f"need {N_TOP + N_SECONDARIES}. Aborting.",
             file=sys.stderr,
         )
-        # Still print whatever ranking we have so the user can see what happened.
         _print_dry_run_report(result, per_source)
         return 1
 
+    # 3) Page II pipeline (independent fetch from companies.md High)
+    page2_result = None
+    if not args.skip_page2:
+        page2_result = _run_page2_selection(
+            target, write_log=not args.dry_run, threshold=args.page2_threshold,
+        )
+
     if args.dry_run:
         _print_dry_run_report(result, per_source)
+        if page2_result is not None:
+            _print_page2_report(page2_result)
         return 0
 
-    # 3) Translate selected
-    print("Translating selected articles...", file=sys.stderr)
+    # 4) Translate selected (Page I + Page II articles).
+    print("Translating Page I articles...", file=sys.stderr)
     translate_for_render(result.selected)
+    if page2_result is not None:
+        page2_articles = [
+            sel.article for sel in page2_result.selections.values()
+            if sel.article is not None
+        ]
+        if page2_articles:
+            print("Translating Page II articles...", file=sys.stderr)
+            translate_for_render(page2_articles)
 
-    # 4) Render Page I
+    # 5) Render Page I + Page II
     print("Building Page I HTML...", file=sys.stderr)
-    page_html = build_page_one_v2(result.selected)
+    page_one_html = build_page_one_v2(result.selected)
+    page_two_html: str | None = None
+    if page2_result is not None:
+        print("Building Page II HTML...", file=sys.stderr)
+        page_two_html = build_page_two_v2(page2_result.selections)
 
-    # 5) Load template, update dates, swap Page I, write
+    # 6) Load template, update dates, swap Page I (and II), write
     print(f"Loading template: {TEMPLATE_PATH}", file=sys.stderr)
     template = TEMPLATE_PATH.read_text(encoding="utf-8")
     dated = update_template_date_strings(template, target)
-    final_html = replace_page_one(dated, page_html)
+    final_html = replace_page_one(dated, page_one_html)
+    if page_two_html is not None:
+        final_html = replace_page_two(final_html, page_two_html)
 
     out_path = _archive_path(target)
     if out_path.exists():
@@ -616,7 +876,26 @@ def main(argv: list[str] | None = None) -> int:
         score = a.get("final_score", 0.0)
         src = a.get("source_name", "?")
         print(f"  [{role}] {score:6.2f}  ({src[:20]})  {a.get('title_ja', '')[:60]}")
-    print(f"  cost (Stage 2 LLM): ${result.stage2_cost_usd:.4f}")
+    print(f"  cost (Page I Stage 2 LLM): ${result.stage2_cost_usd:.4f}")
+
+    if page2_result is not None:
+        print()
+        print("=== Page II summary ===")
+        for company_key in PAGE2_COMPANY_ORDER:
+            sel = page2_result.selections.get(company_key)
+            display, _ = COMPANY_DISPLAY_META[company_key]
+            if sel is None or sel.article is None:
+                print(f"  [{display:<14}] 本日休載  (stage={sel.stage_used if sel else 'none'})")
+                continue
+            print(
+                f"  [{display:<14}] stage={sel.stage_used:<14} "
+                f"score={sel.page2_final_score:6.2f}  "
+                f"({sel.article.get('source_name', '')[:25]})"
+            )
+            print(f"      title: {sel.article.get('title_ja', '')[:60]}")
+            print(f"      問い:  {sel.morning_question}")
+        print(f"  cost (Page II Step 1+2 LLM): ${page2_result.cost_usd:.4f}")
+
     print(f"  output: {out_path}")
     return 0
 
