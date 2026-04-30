@@ -18,6 +18,7 @@ This avoids depending on a per-feed namespace map.
 
 from __future__ import annotations
 
+import html
 import sys
 import urllib.error
 import urllib.request
@@ -33,6 +34,25 @@ from .base import DEFAULT_TIMEOUT, SourceDriver, check_url_scheme
 def _local(tag: str) -> str:
     """Strip the namespace prefix from an XML element tag."""
     return tag.rsplit("}", 1)[-1] if "}" in tag else tag
+
+
+def _decode_html_entities(text: str | None) -> str | None:
+    """Decode HTML entities (named + numeric) to their Unicode characters.
+
+    ET decodes only the 5 XML entities (``&amp; &lt; &gt; &apos; &quot;``).
+    HTML entities like ``&hellip;`` ``&nbsp;`` ``&#8217;`` are preserved
+    literally — and would later be double-escaped by ``html.escape()`` in
+    archive HTML, rendering as ``&hellip;`` to readers. This single pass
+    of ``html.unescape()`` decodes all named + numeric HTML entities so
+    downstream rendering produces clean Unicode.
+
+    Idempotent for already-decoded text. None / empty pass through.
+    Sprint 2 Step F: Foresight feed had ``&hellip;`` leaking into Page I
+    rendering on 2026-04-29.
+    """
+    if not text:
+        return text
+    return html.unescape(text)
 
 
 # XML 1.0 disallows control characters U+0000-U+0008, U+000B, U+000C, and
@@ -54,7 +74,8 @@ def _sanitize_for_xml(data: bytes) -> bytes:
 def _text_of(elem: ET.Element | None) -> str:
     if elem is None or elem.text is None:
         return ""
-    return elem.text.strip()
+    decoded = _decode_html_entities(elem.text.strip())
+    return decoded or ""
 
 
 def _find_local(parent: ET.Element, names: tuple[str, ...]) -> ET.Element | None:
@@ -89,7 +110,7 @@ def _extract_link(item: ET.Element) -> str:
     # Atom: <link href="..."/>
     href = link_el.get("href")
     if href:
-        return href.strip()
+        return _decode_html_entities(href.strip()) or ""
     # RSS: <link>https://...</link>
     return _text_of(link_el)
 
