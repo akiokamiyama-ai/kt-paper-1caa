@@ -45,8 +45,14 @@ from .render import replace_page_one
 from .selector.stage1 import run_stage1
 from .selector.stage2 import run_stage2
 from .selector.stage3 import integrate_scores
+from .selector.dedup_filter import (
+    filter_recently_displayed,
+    load_recently_displayed_urls,
+    write_displayed_urls_log,
+)
 from .selector.page2 import (
     COMPANY_KEYS as PAGE2_COMPANY_ORDER,
+    SHORT_TO_CATEGORY as PAGE2_SHORT_TO_CATEGORY,
     default_fetcher as page2_default_fetcher,
     run_page2_pipeline,
 )
@@ -82,6 +88,16 @@ JAPANESE_SOURCE_PATTERNS: tuple[str, ...] = (
 # scripts/selector/page2.py の DEFAULT_THRESHOLD = 40.0 を caller 側で
 # override する形（page2.py のモジュール定数は不変）。
 PAGE2_THRESHOLD = 35.0
+
+# Sprint 2 Step D: 重複排除レイヤー。displayed_urls_*.json を遡及参照して
+# 過去 N 日に「実際に紙面で表示した」記事を翌朝以降の選定から除外する。
+PAGE1_DEDUP_DAYS = 7
+PAGE2_DEDUP_DAYS = 3
+
+# 逆引き：companies.md の Source.category → page2 短縮キー
+PAGE2_CATEGORY_TO_KEY: dict[str, str] = {
+    cat: key for key, cat in PAGE2_SHORT_TO_CATEGORY.items()
+}
 
 # 第2面の3社表示メタデータ：display_name + 業種ラベル。
 # archive/2026-04-25.html Page II の <div class="company"> 構造を踏襲。
@@ -696,31 +712,142 @@ def _print_dry_run_report(result: PipelineResult, fetched_by_source: dict[str, i
         print(f"  [{role}] {score:6.2f}  ({src[:20]})  {title}")
 
 
+def _make_dedup_aware_page2_fetcher(target: date, days_back: int = PAGE2_DEDUP_DAYS):
+    """Wrap ``page2_default_fetcher`` so each ``companies:*`` fetch removes
+    articles whose URL was displayed on Page II of that company in the
+    past ``days_back`` days.
+
+    Two category forms are handled:
+
+    * Specific (``"companies:Cocolomi"`` etc.) — dedup against that single
+      company's displayed_urls. Used by Page II's per-company fallback
+      fetches (Medium / Reference) inside ``page2.run_page2_pipeline``.
+    * Broad (``"companies:"``) — articles span all 3 companies. Each
+      article is attributed via its ``category`` field and deduped against
+      that specific company's displayed_urls. Used by the **initial**
+      High-pool fetch in ``_run_page2_selection``.
+
+    Cross-industry fetches (``category="business"`` / ``"geopolitics"``)
+    are **not** deduplicated — they intentionally cast a wide net and the
+    same article may serve as fallback for multiple companies.
+    """
+    # Pre-compute the displayed URL set per company once per fetcher
+    # instance — these are immutable for the duration of the run.
+    displayed_per_company: dict[str, set[str]] = {
+        ck: load_recently_displayed_urls(
+            days_back=days_back, page="page2", company_key=ck, until_date=target,
+        )
+        for ck in PAGE2_CATEGORY_TO_KEY.values()
+    }
+
+    def wrapped(*, name_substring=None, category=None, priority=None, limit=8, **kw):
+        articles = page2_default_fetcher(
+            name_substring=name_substring,
+            category=category,
+            priority=priority,
+            limit=limit,
+            **kw,
+        )
+        if not (category and category.startswith("companies:")):
+            return articles  # cross-industry: no dedup
+
+        # Specific category: single-company dedup.
+        if category in PAGE2_CATEGORY_TO_KEY:
+            company_key = PAGE2_CATEGORY_TO_KEY[category]
+            displayed = displayed_per_company.get(company_key, set())
+            if displayed:
+                before = len(articles)
+                articles = filter_recently_displayed(articles, displayed)
+                removed = before - len(articles)
+                if removed:
+                    print(
+                        f"  [dedup] {category} priority={priority}: "
+                        f"removed {removed}/{before} recently-displayed",
+                        file=sys.stderr,
+                    )
+            return articles
+
+        # Broad "companies:" — attribute each article to its specific
+        # company via Source.category, then dedup against THAT company's
+        # window. Articles whose category cannot be resolved are kept
+        # (defensive: we don't drop articles we can't identify).
+        filtered: list[dict] = []
+        per_company_removed: dict[str, int] = {}
+        for art in articles:
+            art_cat = art.get("category")
+            ck = PAGE2_CATEGORY_TO_KEY.get(art_cat) if art_cat else None
+            if not ck:
+                filtered.append(art)
+                continue
+            displayed = displayed_per_company.get(ck, set())
+            if art.get("url") in displayed:
+                per_company_removed[ck] = per_company_removed.get(ck, 0) + 1
+                continue
+            filtered.append(art)
+        for ck, n in per_company_removed.items():
+            print(
+                f"  [dedup] {category} (broad) priority={priority}: "
+                f"removed {n} for company={ck}",
+                file=sys.stderr,
+            )
+        return filtered
+
+    return wrapped
+
+
 def _run_page2_selection(target: date, *, write_log: bool, threshold: float):
     """Fetch companies:* High → run page2 pipeline → return Page2Result.
 
     Separated from main() for clarity; called whether dry-run or production
     so dry-run output can show the Page II selections too.
+
+    Sprint 2 Step D: dedup-aware fetcher を使用し、initial High pool +
+    Medium/Reference fallback すべてに 3-day 社別 dedup を適用する。
+    cross-industry stage は意図的に dedup なし。
     """
     print(
-        "Fetching companies.md High Priority for Page II selection…",
+        "Fetching companies.md High Priority for Page II selection (with 3-day dedup)…",
         file=sys.stderr,
     )
-    companies_scored = page2_default_fetcher(
+    dedup_fetcher = _make_dedup_aware_page2_fetcher(target)
+    # Initial High pool — dedup applied via the wrapped fetcher.
+    companies_scored = dedup_fetcher(
         category="companies:", priority="high", limit=8, no_dedupe=True,
     )
     print(
-        f"  got {len(companies_scored)} scored articles for Page II",
+        f"  got {len(companies_scored)} scored articles for Page II "
+        "(post-dedup)",
         file=sys.stderr,
     )
-    print("Running Page II pipeline (Step 1 + selection + Step 2)…", file=sys.stderr)
+
+    # Per-company exhaustion check on initial pool.
+    page2_exhaustion: dict[str, int] = {}
+    for art in companies_scored:
+        cat = art.get("category")
+        ck = PAGE2_CATEGORY_TO_KEY.get(cat) if cat else None
+        if ck:
+            page2_exhaustion[ck] = page2_exhaustion.get(ck, 0) + 1
+    for ck in PAGE2_COMPANY_ORDER:
+        if page2_exhaustion.get(ck, 0) == 0:
+            display = COMPANY_DISPLAY_META[ck][0]
+            print(
+                f"  WARNING: {display} 候補枯渇 (initial High pool が"
+                f"dedup 後に 0 件、fallback stage に依存)",
+                file=sys.stderr,
+            )
+
+    print(
+        "Running Page II pipeline (Step 1 + selection + Step 2)…",
+        file=sys.stderr,
+    )
     page2_result = run_page2_pipeline(
         companies_scored,
-        fetcher_fn=page2_default_fetcher,
+        fetcher_fn=dedup_fetcher,  # ← wrapped fetcher applies dedup to fallbacks too
         write_log=write_log,
         today=target,
         threshold=threshold,
     )
+    page2_result._exhaustion_initial = page2_exhaustion  # type: ignore[attr-defined]
     return page2_result
 
 
@@ -807,14 +934,35 @@ def main(argv: list[str] | None = None) -> int:
     result = run_pipeline(articles)
     result.fetched_by_source = per_source
 
-    if len(result.selected) < N_TOP + N_SECONDARIES:
+    # 2b) Sprint 2 Step D: Page I dedup against past 7 days' displayed URLs.
+    page1_displayed = load_recently_displayed_urls(
+        days_back=PAGE1_DEDUP_DAYS, page="page1", until_date=target,
+    )
+    if page1_displayed:
+        before = len(result.candidates_scored)
+        deduped_candidates = filter_recently_displayed(
+            result.candidates_scored, page1_displayed,
+        )
+        removed = before - len(deduped_candidates)
         print(
-            f"ERROR: Page I pipeline returned {len(result.selected)} candidates, "
-            f"need {N_TOP + N_SECONDARIES}. Aborting.",
+            f"[dedup] Page I: removed {removed}/{before} candidates "
+            f"already shown in past {PAGE1_DEDUP_DAYS} days "
+            f"({len(deduped_candidates)} remain)",
             file=sys.stderr,
         )
-        _print_dry_run_report(result, per_source)
-        return 1
+        result.candidates_scored = deduped_candidates
+        result.selected = deduped_candidates[: N_TOP + N_SECONDARIES]
+
+    if len(result.selected) < N_TOP + N_SECONDARIES:
+        print(
+            f"WARNING: Page I 候補枯渇 ({len(result.selected)}/{N_TOP + N_SECONDARIES} 本)",
+            file=sys.stderr,
+        )
+        # If we have ≥1 article we still try to render. If 0, abort.
+        if len(result.selected) == 0:
+            print("ERROR: 0 candidates after dedup. Aborting.", file=sys.stderr)
+            _print_dry_run_report(result, per_source)
+            return 1
 
     # 3) Page II pipeline (independent fetch from companies.md High)
     page2_result = None
@@ -862,6 +1010,21 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Overwriting existing {out_path}", file=sys.stderr)
     out_path.write_text(final_html, encoding="utf-8")
     print(f"Wrote {out_path}", file=sys.stderr)
+
+    # 7) Sprint 2 Step D: record displayed URLs for tomorrow's dedup.
+    page1_urls_displayed = [a.get("url", "") for a in result.selected if a.get("url")]
+    page2_urls_displayed: dict[str, str | None] = {k: None for k in PAGE2_COMPANY_ORDER}
+    if page2_result is not None:
+        for company_key in PAGE2_COMPANY_ORDER:
+            sel = page2_result.selections.get(company_key)
+            if sel is not None and sel.article is not None:
+                page2_urls_displayed[company_key] = sel.article.get("url")
+    log_path = write_displayed_urls_log(
+        target,
+        page1_urls=page1_urls_displayed,
+        page2_urls_by_company=page2_urls_displayed,
+    )
+    print(f"Wrote {log_path}", file=sys.stderr)
 
     # 6) Optional index update
     if args.update_index:
