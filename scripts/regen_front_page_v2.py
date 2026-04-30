@@ -35,7 +35,7 @@ import sys
 import time
 from collections import Counter
 from dataclasses import dataclass
-from datetime import date, datetime
+from datetime import date, datetime, timezone, timedelta
 from pathlib import Path
 from typing import Iterable
 
@@ -209,6 +209,42 @@ def _kicker_for(source_name: str | None, *, is_top: bool) -> str:
         if prefix in source_name:
             return f"{kicker}・トップ" if is_top else kicker
     return DEFAULT_KICKER
+
+
+# Sprint 2 Step E: 記事の発行日表示。byline に「· 2026年4月28日」を追記する。
+# pub_date は ISO 8601 文字列（Stage 1 / page2 が Article.pub_date.isoformat()
+# として article dict に乗せる）。タイムゾーンは JST 換算してから日付部分を
+# 取り出す（UTC で 22:00 の記事は JST で翌日 7:00 になり、表示日付が翌日に
+# シフトする）。
+_JST = timezone(timedelta(hours=9))
+
+
+def _format_publish_date_ja(iso_date_str: str | None) -> str:
+    """Convert ISO 8601 date string to "YYYY年M月D日" (JST-converted).
+
+    Returns an empty string when input is None, malformed, or unparseable —
+    so callers can ``f"{byline_base}{maybe_date}"`` without conditional logic.
+    Accepts both full datetimes (``"2026-04-28T10:30:00+00:00"``) and date-
+    only strings (``"2026-04-28"``).
+    """
+    if not iso_date_str:
+        return ""
+    try:
+        # datetime.fromisoformat (Python 3.11+) accepts "Z" suffix and most
+        # standard ISO 8601 forms.
+        dt = datetime.fromisoformat(iso_date_str)
+    except (TypeError, ValueError):
+        # Try date-only "YYYY-MM-DD".
+        try:
+            dt = datetime.fromisoformat(f"{iso_date_str}T00:00:00")
+        except (TypeError, ValueError):
+            return ""
+    # Naive datetimes: assume UTC (RSS feeds typically publish in UTC or
+    # encode timezone explicitly; truly naive timestamps are ambiguous).
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    dt_jst = dt.astimezone(_JST)
+    return f"{dt_jst.year}年{dt_jst.month}月{dt_jst.day}日"
 
 
 def _byline_for(source_name: str | None) -> str:
@@ -433,6 +469,9 @@ def build_page_one_v2(articles: list[dict]) -> str:
     for s in secs:
         kicker = _kicker_for(s.get("source_name"), is_top=False)
         byline = _byline_for(s.get("source_name"))
+        date_label = _format_publish_date_ja(s.get("pub_date"))
+        if date_label:
+            byline = f"{byline} · {date_label}"
         secondaries_html.append(
             f"""
       <div class="col" lang="ja">
@@ -445,6 +484,9 @@ def build_page_one_v2(articles: list[dict]) -> str:
 
     top_kicker = _kicker_for(top.get("source_name"), is_top=True)
     top_byline = _byline_for(top.get("source_name"))
+    top_date_label = _format_publish_date_ja(top.get("pub_date"))
+    if top_date_label:
+        top_byline = f"{top_byline} · {top_date_label}"
 
     page = f"""<section class="page page-one">
     <div class="page-banner"><span class="pg-num">— Page I —</span> The Front Page · World &amp; Business</div>
@@ -525,6 +567,9 @@ def _render_briefing_row(company_key: str, sel) -> str:
     url = article.get("url", "")
     kicker = _kicker_for_page2(source_name)
     byline = _byline_for_page2(source_name)
+    date_label = _format_publish_date_ja(article.get("pub_date"))
+    if date_label:
+        byline = f"{byline} · {date_label}"
     question = sel.morning_question
 
     return f"""
