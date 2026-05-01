@@ -1,0 +1,672 @@
+# Kamiyama Tribune - Concept Library v1
+# 第4面「今週の概念」コラム用シード概念リスト
+#
+# 52 concepts across:
+#   現象学 / 認識論 / 認知科学 / 認知言語学 /
+#   行動経済学 / 質的研究 / 仏教哲学 / 日本思想 /
+#   現代思想 / 自然科学
+#
+# Schema:
+#   id          - unique snake_case identifier (used in history log)
+#   name_ja     - 日本語表記
+#   name_en     - English / 学術原語
+#   domain      - 主要分野
+#   thinkers    - 代表的な思想家
+#   seed        - 概念の核となる定義（LLMの解説生成シード）
+#   related     - 関連する他の概念のID
+#   difficulty  - 1 (accessible) / 2 (intermediate) / 3 (specialized)
+
+# ============================================================
+# 現象学 (Phenomenology)
+# ============================================================
+
+- id: phenomenology
+  name_ja: 現象学
+  name_en: Phenomenology
+  domain: 現象学
+  thinkers: [フッサール, ハイデガー, メルロ＝ポンティ]
+  seed: |
+    意識に現れるもの（現象）を、先入観を括弧に入れて
+    そのあるがままに記述しようとする哲学的方法。
+    20世紀大陸哲学の出発点。
+  related: [intentionality, lifeworld, embodiment]
+  difficulty: 2
+
+- id: intentionality
+  name_ja: 志向性
+  name_en: Intentionality
+  domain: 現象学
+  thinkers: [ブレンターノ, フッサール]
+  seed: |
+    意識は常に「何かについての」意識であるという
+    現象学の根本原理。心的状態が必ず対象を持つ性質。
+  related: [phenomenology, yogachara]
+  difficulty: 2
+
+- id: lifeworld
+  name_ja: 生活世界
+  name_en: Lebenswelt / Lifeworld
+  domain: 現象学
+  thinkers: [フッサール]
+  seed: |
+    科学的抽象化以前の、日常的な経験の地平。
+    すべての理論的営みが立脚する前理論的な世界。
+    フッサール後期の中心概念。
+  related: [phenomenology, intersubjectivity]
+  difficulty: 2
+
+- id: intersubjectivity
+  name_ja: 間主観性
+  name_en: Intersubjectivity
+  domain: 現象学
+  thinkers: [フッサール, シュッツ]
+  seed: |
+    個々の主観の閉じた世界ではなく、複数の主観の
+    あいだで共有される意味の世界。
+    社会的現実の現象学的基盤。
+  related: [lifeworld, theory_of_mind]
+  difficulty: 2
+
+- id: embodiment
+  name_ja: 身体性
+  name_en: Embodiment / Leib
+  domain: 現象学
+  thinkers: [メルロ＝ポンティ]
+  seed: |
+    認識や意味が、抽象的な精神ではなく身体を通じて
+    成立しているという観点。「世界の身体的把握」が
+    認知の根源にある。
+  related: [embodied_cognition, being_in_the_world]
+  difficulty: 2
+
+- id: being_in_the_world
+  name_ja: 世界内存在
+  name_en: Being-in-the-world / In-der-Welt-Sein
+  domain: 実存哲学
+  thinkers: [ハイデガー]
+  seed: |
+    人間（現存在）は世界から切り離された主観ではなく、
+    すでに世界に投げ込まれ、関わりつつ存在している。
+    主観／客観の二分法を解体する概念。
+  related: [phenomenology, embodiment]
+  difficulty: 3
+
+# ============================================================
+# 認識論・科学哲学 (Epistemology / Philosophy of Science)
+# ============================================================
+
+- id: tacit_knowledge
+  name_ja: 暗黙知
+  name_en: Tacit Knowledge
+  domain: 認識論・経営学
+  thinkers: [マイケル・ポランニー, 野中郁次郎]
+  seed: |
+    言語化できないが確実に持っている知識。
+    「我々は語れる以上のことを知っている」。
+    SECIモデルの起点となる概念。
+  related: [seci_model, embodied_cognition, habitus]
+  difficulty: 1
+
+- id: seci_model
+  name_ja: SECIモデル
+  name_en: SECI Model
+  domain: 経営学・知識経営
+  thinkers: [野中郁次郎, 竹内弘高]
+  seed: |
+    暗黙知と形式知が組織内で循環するプロセスを
+    Socialization, Externalization, Combination,
+    Internalization の4段階で表したモデル。
+  related: [tacit_knowledge]
+  difficulty: 1
+
+- id: abduction
+  name_ja: アブダクション
+  name_en: Abduction
+  domain: 科学哲学・論理学
+  thinkers: [パース]
+  seed: |
+    観察された事実から、それを最もよく説明する仮説を
+    導く推論。演繹・帰納と並ぶ第三の推論形式。
+    科学的発見の論理。
+  related: [falsifiability]
+  difficulty: 2
+
+- id: falsifiability
+  name_ja: 反証可能性
+  name_en: Falsifiability
+  domain: 科学哲学
+  thinkers: [カール・ポパー]
+  seed: |
+    科学的命題は「反証されうる」形式でなければならない。
+    検証ではなく反証可能性が科学と非科学の境界を画す。
+  related: [paradigm_shift, abduction]
+  difficulty: 2
+
+- id: paradigm_shift
+  name_ja: パラダイムシフト
+  name_en: Paradigm Shift
+  domain: 科学哲学・科学史
+  thinkers: [トマス・クーン]
+  seed: |
+    科学の発展は累積的ではなく、共有される世界観
+    （パラダイム）が断絶的に変わる「革命」を経て進む。
+  related: [falsifiability]
+  difficulty: 1
+
+# ============================================================
+# 認知科学 (Cognitive Science)
+# ============================================================
+
+- id: metacognition
+  name_ja: メタ認知
+  name_en: Metacognition
+  domain: 認知科学・教育学
+  thinkers: [フラベル]
+  seed: |
+    自分の認知プロセスを認知する能力。
+    「考えていることを考える」自己モニタリング機能。
+    学習と意思決定の質を左右する。
+  related: [theory_of_mind, dual_process_theory]
+  difficulty: 1
+
+- id: umwelt
+  name_ja: 環世界
+  name_en: Umwelt
+  domain: 生物学・現象学
+  thinkers: [ユクスキュル]
+  seed: |
+    生物がそれぞれ独自の知覚と意味のなかで生きる世界。
+    ダニにはダニの、人間には人間の環世界がある。
+    客観的世界とは異なる「主体ごとの世界」。
+  related: [affordance, embodied_cognition]
+  difficulty: 2
+
+- id: affordance
+  name_ja: アフォーダンス
+  name_en: Affordance
+  domain: 認知科学・生態心理学
+  thinkers: [ジェームズ・ギブソン, ドナルド・ノーマン]
+  seed: |
+    環境が動物に提供する行為の可能性。
+    椅子は「座れること」をアフォードする。
+    認知は頭の中ではなく環境との関係に宿る。
+  related: [umwelt, embodied_cognition]
+  difficulty: 1
+
+- id: embodied_cognition
+  name_ja: 身体化された認知
+  name_en: Embodied Cognition
+  domain: 認知科学
+  thinkers: [ヴァレラ, ロッシュ, レイコフ]
+  seed: |
+    認知は脳内の抽象的計算ではなく、身体と環境の
+    相互作用に根差している。
+    「体で考える」を認知科学的に基礎づける立場。
+  related: [embodiment, extended_mind, conceptual_metaphor]
+  difficulty: 2
+
+- id: extended_mind
+  name_ja: 拡張された心
+  name_en: Extended Mind
+  domain: 心の哲学
+  thinkers: [アンディ・クラーク, デイヴィッド・チャーマーズ]
+  seed: |
+    心は頭蓋骨の内側に閉じていない。
+    ノート、スマホ、外的道具も認知プロセスの一部を担う。
+    心の境界を再定義する思考実験。
+  related: [embodied_cognition, actor_network_theory]
+  difficulty: 2
+
+- id: predictive_processing
+  name_ja: プレディクティブ・プロセッシング
+  name_en: Predictive Processing
+  domain: 認知神経科学
+  thinkers: [カール・フリストン, アンディ・クラーク]
+  seed: |
+    脳は外界を受動的に処理するのではなく、
+    つねに予測を生成し、誤差を最小化する装置である。
+    自由エネルギー原理として理論化。
+  related: [embodied_cognition]
+  difficulty: 3
+
+- id: qualia
+  name_ja: クオリア
+  name_en: Qualia
+  domain: 心の哲学
+  thinkers: [デイヴィッド・チャーマーズ, トマス・ネーゲル]
+  seed: |
+    「赤い色を見ている、その感じ」のような主観的な質感。
+    物理的説明では捉えきれない、
+    意識のハードプロブレムの中心。
+  related: [theory_of_mind]
+  difficulty: 3
+
+- id: theory_of_mind
+  name_ja: 心の理論
+  name_en: Theory of Mind
+  domain: 発達心理学・認知科学
+  thinkers: [プレマック, ウッドラフ]
+  seed: |
+    他者にも自分とは異なる心的状態（信念・意図）が
+    あると理解する能力。4歳前後で発達するとされる。
+    社会的認知の基盤。
+  related: [metacognition, intersubjectivity]
+  difficulty: 1
+
+# ============================================================
+# 認知言語学・言語哲学 (Cognitive Linguistics)
+# ============================================================
+
+- id: cognitive_linguistics
+  name_ja: 認知言語学
+  name_en: Cognitive Linguistics
+  domain: 言語学
+  thinkers: [ジョージ・レイコフ, ロナルド・ラネカー]
+  seed: |
+    言語を独立した記号システムではなく、人間の認知の
+    一部とみなす言語学。意味は身体経験に根差す。
+  related: [conceptual_metaphor, prototype_theory]
+  difficulty: 1
+
+- id: conceptual_metaphor
+  name_ja: 概念メタファー
+  name_en: Conceptual Metaphor
+  domain: 認知言語学
+  thinkers: [ジョージ・レイコフ, マーク・ジョンソン]
+  seed: |
+    メタファーは言葉の飾りではなく、思考そのものの構造。
+    「議論は戦争」「時間は金」など、抽象概念を身体経験に
+    マッピングして理解している。
+  related: [cognitive_linguistics, embodied_cognition]
+  difficulty: 1
+
+- id: prototype_theory
+  name_ja: プロトタイプ理論
+  name_en: Prototype Theory
+  domain: 認知言語学・カテゴリー論
+  thinkers: [エレノア・ロッシュ]
+  seed: |
+    カテゴリーには明確な定義ではなく、典型例（プロトタイプ）
+    があり、メンバーシップは段階的。
+    「鳥といえばスズメ、ペンギンは周辺的」。
+  related: [cognitive_linguistics]
+  difficulty: 1
+
+- id: language_game
+  name_ja: 言語ゲーム
+  name_en: Language Game
+  domain: 言語哲学
+  thinkers: [ヴィトゲンシュタイン]
+  seed: |
+    言葉の意味は辞書的定義にではなく、特定の生活様式の
+    なかでの「使用」にある。語の意味はゲームのルールに似る。
+  related: [linguistic_relativity, middle_voice]
+  difficulty: 2
+
+- id: linguistic_relativity
+  name_ja: 言語相対論
+  name_en: Linguistic Relativity / Sapir-Whorf
+  domain: 言語人類学
+  thinkers: [サピア, ウォーフ]
+  seed: |
+    話す言語が話者の世界の見方を規定するという仮説。
+    現代では弱い形での影響が実証的に支持されている。
+  related: [cognitive_linguistics, language_game]
+  difficulty: 2
+
+# ============================================================
+# 行動経済学・意思決定論 (Behavioral Economics)
+# ============================================================
+
+- id: behavioral_economics
+  name_ja: 行動経済学
+  name_en: Behavioral Economics
+  domain: 経済学・心理学
+  thinkers: [カーネマン, トヴェルスキー, セイラー]
+  seed: |
+    人間は完全に合理的ではなく、認知バイアスや
+    ヒューリスティックに従うという前提で
+    経済行動を分析する分野。
+  related: [nudge, prospect_theory, heuristics]
+  difficulty: 1
+
+- id: nudge
+  name_ja: ナッジ
+  name_en: Nudge
+  domain: 行動経済学・公共政策
+  thinkers: [リチャード・セイラー, キャス・サンスティーン]
+  seed: |
+    選択肢を奪わずに、人々がよりよい選択をするよう
+    そっと後押しする設計。
+    デフォルト設定の変更などが代表例。
+  related: [behavioral_economics, dual_process_theory]
+  difficulty: 1
+
+- id: prospect_theory
+  name_ja: プロスペクト理論
+  name_en: Prospect Theory
+  domain: 行動経済学
+  thinkers: [カーネマン, トヴェルスキー]
+  seed: |
+    人は利得より損失に敏感で、参照点からの変化で
+    効用を評価する。期待効用理論への根本的批判。
+  related: [behavioral_economics, heuristics]
+  difficulty: 2
+
+- id: heuristics
+  name_ja: ヒューリスティック
+  name_en: Heuristics
+  domain: 認知心理学
+  thinkers: [カーネマン, トヴェルスキー, ギーゲレンツァー]
+  seed: |
+    完全な合理性ではなく経験則で素早く判断する戦略。
+    多くの場面で有効だが、系統的なバイアスも生む。
+  related: [dual_process_theory, behavioral_economics]
+  difficulty: 1
+
+- id: dual_process_theory
+  name_ja: デュアルプロセス理論
+  name_en: Dual Process Theory / System 1 & 2
+  domain: 認知心理学
+  thinkers: [ダニエル・カーネマン, キース・スタノヴィッチ]
+  seed: |
+    思考には速くて自動的なシステム1と、
+    遅くて熟考的なシステム2の2系統がある。
+    日常の判断の多くはシステム1が担う。
+  related: [heuristics, metacognition]
+  difficulty: 1
+
+# ============================================================
+# 質的研究・社会科学方法論 (Qualitative Research)
+# ============================================================
+
+- id: qualitative_research
+  name_ja: 質的研究
+  name_en: Qualitative Research
+  domain: 社会科学方法論
+  thinkers: [デンジン, リンカン]
+  seed: |
+    数量化を主目的とせず、意味・経験・文脈の理解を
+    重視する研究アプローチ。インタビュー、参与観察、
+    エスノグラフィーなどの手法群。
+  related: [grounded_theory, ethnography]
+  difficulty: 1
+
+- id: grounded_theory
+  name_ja: グラウンデッド・セオリー
+  name_en: Grounded Theory
+  domain: 社会科学方法論
+  thinkers: [グレイザー, ストラウス]
+  seed: |
+    既存の理論から仮説を演繹するのではなく、データに
+    密着しながら理論を生成する質的研究の方法論。
+  related: [qualitative_research, ethnography]
+  difficulty: 2
+
+- id: ethnography
+  name_ja: エスノグラフィー
+  name_en: Ethnography
+  domain: 文化人類学・社会学
+  thinkers: [マリノフスキー, ギアーツ]
+  seed: |
+    参与観察を通じて、ある集団の文化や生活様式を
+    内側から記述する手法。「厚い記述」が鍵。
+  related: [qualitative_research]
+  difficulty: 1
+
+- id: habitus
+  name_ja: ハビトゥス
+  name_en: Habitus
+  domain: 社会学
+  thinkers: [ピエール・ブルデュー]
+  seed: |
+    社会的環境を通じて身体に刻まれた性向の体系。
+    意識せずに行動を方向づける、構造と主体を媒介する概念。
+  related: [embodiment, tacit_knowledge]
+  difficulty: 2
+
+- id: actor_network_theory
+  name_ja: アクターネットワーク理論
+  name_en: Actor-Network Theory
+  domain: 科学技術社会論
+  thinkers: [ブルーノ・ラトゥール, ジョン・ロー]
+  seed: |
+    人間だけでなくモノや技術も「アクター」として
+    社会を構成すると見る理論。
+    主体／客体、社会／自然の二分法を解体。
+  related: [extended_mind, rhizome]
+  difficulty: 3
+
+# ============================================================
+# 仏教哲学・東洋思想 (Buddhist & Eastern Philosophy)
+# ============================================================
+
+- id: sunyata
+  name_ja: 空（くう）
+  name_en: Śūnyatā / Emptiness
+  domain: 仏教哲学
+  thinkers: [ナーガールジュナ（龍樹）]
+  seed: |
+    あらゆる存在は固定した実体を持たず、関係のなかで
+    成り立つ。「無」ではなく「実体性の欠如」。
+    中観派の中心思想。
+  related: [dependent_origination, middle_way, anatman]
+  difficulty: 3
+
+- id: yogachara
+  name_ja: 唯識
+  name_en: Yogācāra / Vijñapti-mātra
+  domain: 仏教哲学
+  thinkers: [無著, 世親, 玄奘]
+  seed: |
+    一切は識（意識）の現れであるとする大乗仏教の学派。
+    阿頼耶識を含む八識の構造で心のはたらきを分析する。
+  related: [sunyata, intentionality, qualia]
+  difficulty: 3
+
+- id: dependent_origination
+  name_ja: 縁起
+  name_en: Pratītyasamutpāda / Dependent Origination
+  domain: 仏教哲学
+  thinkers: [釈迦, ナーガールジュナ]
+  seed: |
+    すべての現象は他の条件に依存して生じる。
+    独立した実体は存在しない。
+    仏教の核心的存在論。
+  related: [sunyata, anatman]
+  difficulty: 2
+
+- id: anatman
+  name_ja: 無我
+  name_en: Anātman / Non-Self
+  domain: 仏教哲学
+  thinkers: [釈迦]
+  seed: |
+    永続的・実体的な「自我」は存在しないという教説。
+    自己とは諸要素の流動的集合体。
+    西洋の主体哲学への根本的挑戦。
+  related: [dependent_origination, sunyata]
+  difficulty: 2
+
+- id: middle_way
+  name_ja: 中道
+  name_en: Madhyamā Pratipad / Middle Way
+  domain: 仏教哲学
+  thinkers: [釈迦, ナーガールジュナ]
+  seed: |
+    「有」と「無」、「常住」と「断滅」のような両極端を
+    退ける思考の道。
+    ナーガールジュナの中観派の名の由来。
+  related: [sunyata, dependent_origination]
+  difficulty: 2
+
+- id: dao
+  name_ja: 道（タオ）
+  name_en: Dao / Tao
+  domain: 道家思想
+  thinkers: [老子, 荘子]
+  seed: |
+    名づけ得ぬ究極の原理であり、万物を生成する根源。
+    人為（作為）に対する無為自然を尊ぶ思想の中心概念。
+  related: [middle_way]
+  difficulty: 2
+
+# ============================================================
+# 西洋哲学・神学的伝統 (Western Philosophy & Theological Traditions)
+# ============================================================
+
+- id: conatus
+  name_ja: コナトゥス
+  name_en: Conatus
+  domain: 形而上学・スピノザ哲学
+  thinkers: [スピノザ]
+  seed: |
+    各々の物が自らの存在を維持し続けようとする力。
+    生命も人間の感情も、すべてこの存在欲動の現れ
+    として一元的に説明される。
+  related: [predictive_processing, dissipative_structure, anatman]
+  difficulty: 2
+
+- id: i_thou
+  name_ja: 我と汝
+  name_en: Ich und Du / I-Thou
+  domain: 対話の哲学・ユダヤ思想
+  thinkers: [マルティン・ブーバー]
+  seed: |
+    世界への関わり方には「我―それ」（対象として扱う）と
+    「我―汝」（人格として出会う）の二つがある。
+    真の対話は後者においてのみ成立する。
+  related: [intersubjectivity, theory_of_mind]
+  difficulty: 2
+
+- id: apophatic_theology
+  name_ja: 否定神学
+  name_en: Apophatic Theology / Via Negativa
+  domain: キリスト教神秘主義・哲学的神学
+  thinkers: [偽ディオニシオス, マイスター・エックハルト, トマス・アクィナス]
+  seed: |
+    神は「〜ではない」という否定の積み重ねによってのみ
+    語られうる、とする神学的方法。
+    積極的規定を超えた究極者への接近法。
+  related: [sunyata, dao, middle_way]
+  difficulty: 3
+
+# ============================================================
+# 日本思想 (Japanese Thought)
+# ============================================================
+
+- id: middle_voice
+  name_ja: 中動態
+  name_en: Middle Voice
+  domain: 言語哲学・現代日本哲学
+  thinkers: [國分功一郎, バンヴェニスト]
+  seed: |
+    能動／受動の二項では捉えきれない、行為が主体の内側で
+    起こる古代ギリシア語の文法カテゴリー。
+    意志と責任の哲学を再考する手がかり。
+  related: [language_game, conatus, being_in_the_world]
+  difficulty: 3
+
+- id: ma
+  name_ja: 間（ま）
+  name_en: Ma / Negative Space
+  domain: 日本美学
+  thinkers: [磯崎新, 武満徹]
+  seed: |
+    時間や空間における「あいだ」「余白」を積極的に
+    意味あるものとして捉える日本的感性。
+    沈黙、間合い、余白の美学。
+  related: [mono_no_aware]
+  difficulty: 2
+
+- id: mono_no_aware
+  name_ja: もののあはれ
+  name_en: Mono no Aware
+  domain: 日本美学・国学
+  thinkers: [本居宣長]
+  seed: |
+    事物に触れて生じる、しみじみとした情趣。
+    儚さや無常への共感的な情感。
+    日本古典文学の美的中核。
+  related: [ma]
+  difficulty: 2
+
+# ============================================================
+# 現代思想 (Contemporary Thought)
+# ============================================================
+
+- id: rhizome
+  name_ja: リゾーム
+  name_en: Rhizome
+  domain: ポスト構造主義
+  thinkers: [ジル・ドゥルーズ, フェリックス・ガタリ]
+  seed: |
+    中心や階層を持たず、どこからでも接続・切断可能な
+    地下茎のような構造。
+    ツリー構造（樹木）と対立する思考のモデル。
+  related: [actor_network_theory]
+  difficulty: 3
+
+- id: panopticon
+  name_ja: パノプティコン
+  name_en: Panopticon
+  domain: 社会思想
+  thinkers: [ベンサム, ミシェル・フーコー]
+  seed: |
+    中央から全体を一望監視できる施設構造。
+    フーコーが近代の規律権力の象徴として再解釈し、
+    「見られることで自己規律する」主体を分析。
+  related: [habitus]
+  difficulty: 2
+
+# ============================================================
+# 自然科学・複雑系 (Natural Science / Complexity)
+# ============================================================
+
+- id: loop_quantum_gravity
+  name_ja: ループ量子重力
+  name_en: Loop Quantum Gravity
+  domain: 理論物理学
+  thinkers: [カルロ・ロヴェッリ, アシュテカール]
+  seed: |
+    時空そのものが連続体ではなく、離散的な量子で
+    織りなされているとする量子重力理論。
+    「時間は実在しない」という哲学的帰結も。
+  related: [emergence, entropy]
+  difficulty: 3
+
+- id: entropy
+  name_ja: エントロピー
+  name_en: Entropy
+  domain: 物理学・情報理論
+  thinkers: [ボルツマン, シャノン, プリゴジン]
+  seed: |
+    無秩序の度合いを表す量。熱力学第二法則は宇宙全体の
+    エントロピーが増大することを述べる。
+    時間の矢の根拠。
+  related: [emergence, dissipative_structure]
+  difficulty: 2
+
+- id: emergence
+  name_ja: 創発
+  name_en: Emergence
+  domain: 複雑系科学
+  thinkers: [プリゴジン, ホランド]
+  seed: |
+    要素の総和を超えた性質が、全体のレベルで
+    立ち現れる現象。意識、生命、社会など
+    多層的な現実を理解する鍵。
+  related: [dissipative_structure, extended_mind]
+  difficulty: 2
+
+- id: dissipative_structure
+  name_ja: 散逸構造
+  name_en: Dissipative Structure
+  domain: 複雑系科学・熱力学
+  thinkers: [イリヤ・プリゴジン]
+  seed: |
+    エネルギーや物質を散逸させながら、平衡から離れた
+    状態で秩序を維持する構造。
+    生命や対流もこれに含まれる。
+  related: [entropy, emergence]
+  difficulty: 3
