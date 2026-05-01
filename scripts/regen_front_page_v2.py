@@ -56,6 +56,13 @@ from .selector.page2 import (
     default_fetcher as page2_default_fetcher,
     run_page2_pipeline,
 )
+from .selector.page3 import (
+    REGIONS as PAGE3_REGIONS,
+    REGION_DISPLAY_NAMES as PAGE3_REGION_DISPLAY_NAMES,
+    _generate_kicker as _page3_generate_kicker,
+    _is_japanese_source as _page3_is_japanese_source,
+    run_page3_pipeline,
+)
 from .selector.why_important import (
     LLMError as WhyImportantLLMError,
     ValidationError as WhyImportantValidationError,
@@ -678,6 +685,97 @@ def replace_page_two(html_text: str, new_page_html: str) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Rendering — Page III ("General News")
+# ---------------------------------------------------------------------------
+
+def _render_page3_item(article: dict, region: str) -> str:
+    """Render one <div class="item"> for Page III.
+
+    Uses the article's element language for the ``lang`` attribute. Source
+    text is kept as-is — no translation runs on Page III articles per
+    page3_design_v1.md §13 Q5.
+
+    Sprint 3 Step A 改善（2026-05-01）：本文の直後に「出典：source · 日付」
+    の byline を追加。pub_date が無いソースは日付省略。why_important.py
+    と同じ ``_format_publish_date_ja()`` を再利用。
+    """
+    is_ja = _page3_is_japanese_source(article.get("source_name"))
+    lang_attr = ' lang="ja"' if is_ja else ''
+    kicker = _page3_generate_kicker(article, region)
+    title = article.get("title") or ""
+    description = article.get("description") or ""
+    source_name = article.get("source_name") or ""
+    date_label = _format_publish_date_ja(article.get("pub_date"))
+    if date_label:
+        byline_text = f"出典：{source_name} · {date_label}"
+    else:
+        byline_text = f"出典：{source_name}"
+    return f"""
+      <div class="item"{lang_attr}>
+        <div class="kicker">{_esc(kicker)}</div>
+        <h5 class="headline-s">{_esc(title)}</h5>
+        <p>{_esc(description)}</p>
+        <p class="byline" style="font-size: 11px; color: #666; margin-top: 4px;">{_esc(byline_text)}</p>
+      </div>""".rstrip()
+
+
+def _render_page3_placeholder(region: str) -> str:
+    """Render a 「本日該当なし」 placeholder item for an unfilled region.
+
+    Per page3_design_v1.md §7.2、最小限の表示（kicker + headline のみ、
+    説明文・byline・本文なし）。CSS Grid 罫線ロジックは内容ではなく item の
+    インデックス位置で適用されるので、placeholder でも正常配置される。
+    """
+    display_name = PAGE3_REGION_DISPLAY_NAMES.get(region, region)
+    return f"""
+      <div class="item" lang="ja">
+        <div class="kicker">{_esc(display_name)}</div>
+        <h5 class="headline-s" style="font-style: italic; color: #666;">本日該当なし</h5>
+      </div>""".rstrip()
+
+
+def build_page_three_v2(selections: dict) -> str:
+    """Assemble the full Page III <section> block.
+
+    ``selections`` is the ``Page3Result.selections`` dict mapping region
+    keys (R1〜R6) to RegionSelection objects. Order is fixed per
+    PAGE3_REGIONS (R1→R6, 1行目左→2行目右).
+    """
+    items_html: list[str] = []
+    for region in PAGE3_REGIONS:
+        sel = selections.get(region)
+        if sel is None or sel.article is None:
+            items_html.append(_render_page3_placeholder(region))
+        else:
+            items_html.append(_render_page3_item(sel.article, region))
+
+    items_concat = "\n".join(items_html)
+    return f"""<section class="page page-three">
+    <div class="page-banner"><span class="pg-num">— Page III —</span> General News · The Wider World, in Brief</div>
+
+    <div class="general-grid">
+{items_concat}
+
+    </div>
+  </section>"""
+
+
+def replace_page_three(html_text: str, new_page_html: str) -> str:
+    """Surgical replace for Page III, parallel to ``replace_page_two``."""
+    start_marker = '<section class="page page-three">'
+    if html_text.count(start_marker) != 1:
+        raise RuntimeError(
+            f"Expected 1 page-three section, found {html_text.count(start_marker)}"
+        )
+    start = html_text.find(start_marker)
+    end = html_text.find("</section>", start)
+    if end == -1:
+        raise RuntimeError("Page Three section end not found")
+    end += len("</section>")
+    return html_text[:start] + new_page_html + html_text[end:]
+
+
+# ---------------------------------------------------------------------------
 # Template date manipulation
 # ---------------------------------------------------------------------------
 
@@ -981,6 +1079,95 @@ def _run_page2_selection(target: date, *, write_log: bool, threshold: float):
     return page2_result
 
 
+def _run_page3_selection(
+    target: date,
+    *,
+    page1_result,
+    page2_result,
+    write_log: bool,
+):
+    """Page III pipeline: 6領域 × 各1本.
+
+    Stage 2 結果は page1 と共有（page1 で評価済の Foresight / Economist 等
+    の URL は再評価しない、page3_design_v1.md §10.4）。
+    """
+    print(
+        "Fetching business + geopolitics + academic + books for Page III...",
+        file=sys.stderr,
+    )
+
+    # Stage 2 結果共有：page1 で評価済の article dict をキャッシュ。
+    pre_evaluated: dict[str, dict] = {}
+    for art in page1_result.candidates_scored:
+        url = art.get("url")
+        if url:
+            pre_evaluated[url] = art
+
+    # 当日 page1 + page2 で選定された URL を当日他面 dedup として渡す。
+    today_urls: set[str] = set()
+    for art in page1_result.selected:
+        url = art.get("url")
+        if url:
+            today_urls.add(url)
+    if page2_result is not None:
+        for sel in page2_result.selections.values():
+            if sel.article is not None:
+                url = sel.article.get("url")
+                if url:
+                    today_urls.add(url)
+
+    # 過去 N=7 日の page3 dedup。
+    past_urls = load_recently_displayed_urls(
+        days_back=7, page="page3", until_date=target,
+    )
+    if past_urls:
+        print(
+            f"  [dedup] Page III: past 7 days has {len(past_urls)} URLs to exclude",
+            file=sys.stderr,
+        )
+
+    print(
+        "Running Page III pipeline (Stage 1 → 2 → 3 + 領域振分け)...",
+        file=sys.stderr,
+    )
+    page3_result = run_page3_pipeline(
+        target_date=target,
+        pre_evaluated=pre_evaluated,
+        displayed_urls_today=today_urls,
+        displayed_urls_past_n=past_urls,
+        write_log=write_log,
+    )
+    print(
+        f"  Page III: {6 - page3_result.placeholder_count}/6 regions filled, "
+        f"cost=${page3_result.cost_usd:.4f}",
+        file=sys.stderr,
+    )
+    return page3_result
+
+
+def _print_page3_report(page3_result) -> None:
+    print()
+    print("=== Page III selections ===")
+    print(f"  candidates: {page3_result.candidates_total} total → "
+          f"{page3_result.candidates_after_dedup} after dedup")
+    print(f"  cost (Stage 2 LLM): ${page3_result.cost_usd:.4f}")
+    print(f"  placeholders: {page3_result.placeholder_count}/6")
+    print()
+    for region in PAGE3_REGIONS:
+        sel = page3_result.selections.get(region)
+        display = PAGE3_REGION_DISPLAY_NAMES[region]
+        if sel is None or sel.article is None:
+            print(f"  [{region} {display:<18}] 本日該当なし  ({sel.fallback_reason if sel else 'no entry'})")
+            continue
+        art = sel.article
+        kicker = _page3_generate_kicker(art, region)
+        print(
+            f"  [{region} {display:<18}] score={sel.final_score:6.2f}  "
+            f"kicker={kicker:<14}  ({art.get('source_name', '')[:25]})"
+        )
+        print(f"      title: {art.get('title', '')[:70]}")
+
+
 def _print_page2_report(page2_result) -> None:
     print()
     print("=== Page II selections ===")
@@ -1037,6 +1224,10 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument(
         "--skip-page2", action="store_true",
         help="skip Page II generation entirely (Page I only, debug aid)",
+    )
+    p.add_argument(
+        "--skip-page3", action="store_true",
+        help="skip Page III generation (Page I + II only, debug aid)",
     )
     args = p.parse_args(argv)
 
@@ -1101,10 +1292,23 @@ def main(argv: list[str] | None = None) -> int:
             target, write_log=not args.dry_run, threshold=args.page2_threshold,
         )
 
+    # 3b) Page III pipeline (Sprint 3 Step A): 6領域 × 各1本.
+    # Stage 2 結果は page1 と共有（page3_design_v1.md §13 Q6）。
+    page3_result = None
+    if not args.skip_page3:
+        page3_result = _run_page3_selection(
+            target,
+            page1_result=result,
+            page2_result=page2_result,
+            write_log=not args.dry_run,
+        )
+
     if args.dry_run:
         _print_dry_run_report(result, per_source)
         if page2_result is not None:
             _print_page2_report(page2_result)
+        if page3_result is not None:
+            _print_page3_report(page3_result)
         if result.selected:
             _dry_run_sidebar_preview(result.selected[0])
         return 0
@@ -1121,21 +1325,27 @@ def main(argv: list[str] | None = None) -> int:
             print("Translating Page II articles...", file=sys.stderr)
             translate_for_render(page2_articles)
 
-    # 5) Render Page I + Page II
+    # 5) Render Page I + Page II + Page III
     print("Building Page I HTML...", file=sys.stderr)
     page_one_html = build_page_one_v2(result.selected)
     page_two_html: str | None = None
     if page2_result is not None:
         print("Building Page II HTML...", file=sys.stderr)
         page_two_html = build_page_two_v2(page2_result.selections)
+    page_three_html: str | None = None
+    if page3_result is not None:
+        print("Building Page III HTML...", file=sys.stderr)
+        page_three_html = build_page_three_v2(page3_result.selections)
 
-    # 6) Load template, update dates, swap Page I (and II), write
+    # 6) Load template, update dates, swap Page I (and II + III), write
     print(f"Loading template: {TEMPLATE_PATH}", file=sys.stderr)
     template = TEMPLATE_PATH.read_text(encoding="utf-8")
     dated = update_template_date_strings(template, target)
     final_html = replace_page_one(dated, page_one_html)
     if page_two_html is not None:
         final_html = replace_page_two(final_html, page_two_html)
+    if page_three_html is not None:
+        final_html = replace_page_three(final_html, page_three_html)
 
     out_path = _archive_path(target)
     if out_path.exists():
@@ -1143,7 +1353,7 @@ def main(argv: list[str] | None = None) -> int:
     out_path.write_text(final_html, encoding="utf-8")
     print(f"Wrote {out_path}", file=sys.stderr)
 
-    # 7) Sprint 2 Step D: record displayed URLs for tomorrow's dedup.
+    # 7) Sprint 2/3: record displayed URLs for tomorrow's dedup.
     page1_urls_displayed = [a.get("url", "") for a in result.selected if a.get("url")]
     page2_urls_displayed: dict[str, str | None] = {k: None for k in PAGE2_COMPANY_ORDER}
     if page2_result is not None:
@@ -1151,10 +1361,19 @@ def main(argv: list[str] | None = None) -> int:
             sel = page2_result.selections.get(company_key)
             if sel is not None and sel.article is not None:
                 page2_urls_displayed[company_key] = sel.article.get("url")
+    page3_urls_displayed: list[str | None] = []
+    if page3_result is not None:
+        for region in PAGE3_REGIONS:
+            sel = page3_result.selections.get(region)
+            if sel is not None and sel.article is not None:
+                page3_urls_displayed.append(sel.article.get("url"))
+            else:
+                page3_urls_displayed.append(None)
     log_path = write_displayed_urls_log(
         target,
         page1_urls=page1_urls_displayed,
         page2_urls_by_company=page2_urls_displayed,
+        page3_urls=page3_urls_displayed if page3_result is not None else None,
     )
     print(f"Wrote {log_path}", file=sys.stderr)
 
@@ -1190,6 +1409,29 @@ def main(argv: list[str] | None = None) -> int:
             print(f"      title: {sel.article.get('title_ja', '')[:60]}")
             print(f"      問い:  {sel.morning_question}")
         print(f"  cost (Page II Step 1+2 LLM): ${page2_result.cost_usd:.4f}")
+
+    if page3_result is not None:
+        print()
+        print("=== Page III summary ===")
+        for region in PAGE3_REGIONS:
+            sel = page3_result.selections.get(region)
+            display = PAGE3_REGION_DISPLAY_NAMES[region]
+            if sel is None or sel.article is None:
+                print(f"  [{region} {display:<18}] 本日該当なし")
+                continue
+            art = sel.article
+            kicker = _page3_generate_kicker(art, region)
+            print(
+                f"  [{region} {display:<18}] score={sel.final_score:6.2f}  "
+                f"kicker={kicker:<14}  ({art.get('source_name', '')[:25]})"
+            )
+            print(f"      title: {art.get('title', '')[:70]}")
+        print(f"  cost (Page III Stage 2 LLM): ${page3_result.cost_usd:.4f}")
+        if page3_result.placeholder_count >= 2:
+            print(
+                f"  ⚠ {page3_result.placeholder_count} 領域 placeholder "
+                "（2 領域以上）— logs/page3_selection_*.json で確認推奨"
+            )
 
     print(f"  output: {out_path}")
     return 0
