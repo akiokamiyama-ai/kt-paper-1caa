@@ -111,13 +111,21 @@ def run_stage1(
                 excluded = True
                 reason = pod_reason
             else:
-                region = src.category if src else None
-                hf_excluded, hf_reason = hard_filter.evaluate(
-                    title, body or desc, region
-                )
-                if hf_excluded:
+                # Universal description-length filter. Sprint 3 Step A
+                # (2026-05-01): 日経のように description 空の RSS は紙面に
+                # 「未完成の記事」を出してしまうため、< 30 字は弾く。
+                desc_excluded, desc_reason = hard_filter.evaluate_description_length(d)
+                if desc_excluded:
                     excluded = True
-                    reason = hf_reason
+                    reason = desc_reason
+                else:
+                    region = src.category if src else None
+                    hf_excluded, hf_reason = hard_filter.evaluate(
+                        title, body or desc, region
+                    )
+                    if hf_excluded:
+                        excluded = True
+                        reason = hf_reason
 
         d["is_excluded"] = excluded
         d["exclusion_reason"] = reason

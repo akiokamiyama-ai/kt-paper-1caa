@@ -140,11 +140,92 @@ def test_stage1_excludes_podcast():
 
 
 # ---------------------------------------------------------------------------
+# Direct evaluate_description_length() tests (Sprint 3 Step A)
+# ---------------------------------------------------------------------------
+
+def test_desclen_none():
+    excluded, reason = hard_filter.evaluate_description_length({"description": None})
+    ok = excluded is True and reason == "description_too_short"
+    _check("d1 None description → excluded", ok,
+           f"excluded={excluded}, reason={reason!r}")
+
+
+def test_desclen_empty():
+    excluded, reason = hard_filter.evaluate_description_length({"description": ""})
+    ok = excluded is True and reason == "description_too_short"
+    _check("d2 empty description → excluded", ok,
+           f"excluded={excluded}, reason={reason!r}")
+
+
+def test_desclen_29_chars():
+    excluded, reason = hard_filter.evaluate_description_length({"description": "a" * 29})
+    ok = excluded is True and reason == "description_too_short"
+    _check("d3 29-char description → excluded", ok,
+           f"excluded={excluded}, reason={reason!r}")
+
+
+def test_desclen_30_chars():
+    """境界値：30 文字ちょうど → NOT excluded."""
+    excluded, reason = hard_filter.evaluate_description_length({"description": "a" * 30})
+    ok = excluded is False and reason is None
+    _check("d4 30-char description → NOT excluded (boundary)", ok,
+           f"excluded={excluded}, reason={reason!r}")
+
+
+def test_desclen_100_chars():
+    excluded, reason = hard_filter.evaluate_description_length({"description": "a" * 100})
+    ok = excluded is False and reason is None
+    _check("d5 100-char description → NOT excluded", ok)
+
+
+def test_desclen_whitespace_only():
+    """全部 whitespace → strip 後 0 文字 → excluded."""
+    excluded, reason = hard_filter.evaluate_description_length({"description": "   \n\t  "})
+    ok = excluded is True and reason == "description_too_short"
+    _check("d6 whitespace-only description → excluded", ok,
+           f"excluded={excluded}, reason={reason!r}")
+
+
+def test_stage1_excludes_short_description():
+    """run_stage1 integration: 日経風の短い description は除外される."""
+    arts = [
+        {
+            "url": "https://www.nikkei.com/article/short-desc",
+            "title": "Apple、1~3月純利益19%増　際限なき「AI軍拡競争」とは一線",
+            "description": "",  # 日経 RSS の典型例
+            "body": "",
+            "source_name": "日本経済新聞",
+        },
+        {
+            "url": "https://www.economist.com/full-desc",
+            "title": "Banking rules tightened across G7",
+            "description": "G7 finance ministers agreed yesterday to tighten capital requirements for systemically important banks following the latest Basel review.",
+            "body": "",
+            "source_name": "The Economist",
+        },
+    ]
+    out = run_stage1(arts)
+    short = next(a for a in out if "short-desc" in a["url"])
+    full = next(a for a in out if "full-desc" in a["url"])
+    ok = (
+        short.get("is_excluded") is True
+        and short.get("exclusion_reason") == "description_too_short"
+        and full.get("is_excluded") is False
+    )
+    _check(
+        "d7 stage1: empty description → excluded, full description → NOT excluded",
+        ok,
+        f"short={short.get('is_excluded')}/{short.get('exclusion_reason')!r}, "
+        f"full={full.get('is_excluded')}",
+    )
+
+
+# ---------------------------------------------------------------------------
 # Test runner
 # ---------------------------------------------------------------------------
 
 def main() -> int:
-    print("Hard filter — Podcast / audio-content tests")
+    print("Hard filter — Podcast / audio-content tests + description length")
     print()
     print("(p) evaluate_podcast() direct:")
     test_podcast_url_hbr()
@@ -155,6 +236,15 @@ def main() -> int:
     print()
     print("(p) run_stage1 integration:")
     test_stage1_excludes_podcast()
+    print()
+    print("(d) evaluate_description_length() direct + stage1:")
+    test_desclen_none()
+    test_desclen_empty()
+    test_desclen_29_chars()
+    test_desclen_30_chars()
+    test_desclen_100_chars()
+    test_desclen_whitespace_only()
+    test_stage1_excludes_short_description()
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")
     return 0 if FAIL == 0 else 1

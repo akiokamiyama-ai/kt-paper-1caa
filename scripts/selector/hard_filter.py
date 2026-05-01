@@ -105,6 +105,36 @@ _PODCAST_TEXT_MARKERS: tuple[str, ...] = (
 )
 
 
+# ---------------------------------------------------------------------------
+# Description length (universal hard filter, applies regardless of region)
+#
+# 動機：日経のように RSS feed が description を提供しない（または極端に
+# 短い）ソースの記事は、紙面に並べたときに本文が空 / 半端で「未完成の
+# 記事」が紙面に乗ってしまう。第3面で日経 Apple 記事の <p></p> 空 byline
+# が表面化したため、Sprint 3 Step A の改善として universal フィルタを
+# 追加（2026-05-01）。
+# ---------------------------------------------------------------------------
+
+DESCRIPTION_MIN_CHARS: int = 30
+
+
+def evaluate_description_length(article: dict) -> tuple[bool, str | None]:
+    """Universal hard filter: exclude articles with description < 30 chars.
+
+    Returns ``(excluded, reason)``. Reason is the constant
+    ``"description_too_short"`` for downstream log auditing.
+
+    Threshold rationale: 30 文字は「ニュース1文」の最小単位。これより短い
+    descripton は事実上の「タイトルの繰り返し」「未完成の RSS 抜粋」で、
+    紙面の本文として機能しない。30 字以上あれば最低限の論点提示が可能と
+    判断（運用 1〜2 週間で頻度を見て v1.1 で調整）。
+    """
+    desc = article.get("description") or ""
+    if len(desc.strip()) < DESCRIPTION_MIN_CHARS:
+        return True, "description_too_short"
+    return False, None
+
+
 def evaluate_podcast(
     *,
     url: str | None,
