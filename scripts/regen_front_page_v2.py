@@ -56,6 +56,13 @@ from .selector.page2 import (
     default_fetcher as page2_default_fetcher,
     run_page2_pipeline,
 )
+from .selector.why_important import (
+    LLMError as WhyImportantLLMError,
+    ValidationError as WhyImportantValidationError,
+    generate_why_important,
+    static_why_important,
+)
+from .lib.llm import CapExceededError
 from .translate import translate
 
 # ---------------------------------------------------------------------------
@@ -440,17 +447,47 @@ def _render_secondary_body(sec: dict) -> str:
 
 
 def _build_sidebar(top: dict) -> str:
-    """The 'なぜ重要か' sidebar — generalized to be source-agnostic."""
-    title_ja = _esc(top.get("title_ja", ""))
+    """The 'なぜ重要か' sidebar — LLM-generated 3 points with static fallback.
+
+    Sprint 2 後半 / Sprint 3: docs/why_important_v1.md §6.3 の設計に従い、
+    トップ記事の主題・重要論点・経営者視点 3点を Sonnet 4.6 で動的生成。
+    LLM 障害・validation 失敗・cap 抵触時は static_why_important() の
+    定型文にフォールバック（神山さんの第1面読書体験は最低限保証）。
+    """
+    try:
+        points = generate_why_important(top)
+    except (
+        WhyImportantLLMError,
+        WhyImportantValidationError,
+        CapExceededError,
+    ) as e:
+        print(
+            f"[sidebar] LLM failed, using static fallback: {e}",
+            file=sys.stderr,
+        )
+        points = static_why_important(top)
+    return _render_sidebar_html(top, points)
+
+
+def _render_sidebar_html(top: dict, points: dict) -> str:
+    """Render the lead-sidebar HTML from a 3-point dict.
+
+    Layout follows archive/2026-04-25.html's <aside class="lead-sidebar">.
+    Points dict keys: point_1_subject / point_2_significance /
+    point_3_executive_perspective.
+    """
+    p1 = _esc(points.get("point_1_subject", ""))
+    p2 = _esc(points.get("point_2_significance", ""))
+    p3 = _esc(points.get("point_3_executive_perspective", ""))
     return f"""
       <aside class="lead-sidebar" lang="ja">
         <div class="kicker">なぜ重要か</div>
         <h4 class="headline-m">本日のトップから読み取るべきこと</h4>
-        <p>本紙が今朝、神山さんの美意識基準に従って3ソース（BBC ビジネス、The Economist、Foresight）から選定したトップ記事を、本日の最初に頭に置くべき話題として第1面に据えた。読み解きのための3点：</p>
+        <p>読み解きのための3点：</p>
         <hr class="dotted" />
-        <p><strong>1・</strong>記事の主題（『{title_ja}』）が、グローバルな政治・経済の地形にどんな波紋を投げているかを把握する。</p>
-        <p><strong>2・</strong>同じ事象を別の視点で扱う他ソース（FT・日経・Bloomberg 等）と読み比べ、フレーミングの違いを観察する。</p>
-        <p><strong>3・</strong>このニュースが、今後1週間の意思決定タイムラインに何を加えるかを問う——それが本紙が翌朝以降に追跡すべき焦点となる。</p>
+        <p><strong>1・</strong>{p1}</p>
+        <p><strong>2・</strong>{p2}</p>
+        <p><strong>3・</strong>{p3}</p>
         <hr class="dotted" />
         <p class="byline" style="margin-top:8px;">出典：3ソース合議 · 翻訳：Google／MyMemory（日本語ソースは原文）</p>
       </aside>""".rstrip()
@@ -757,6 +794,54 @@ def _print_dry_run_report(result: PipelineResult, fetched_by_source: dict[str, i
         print(f"  [{role}] {score:6.2f}  ({src[:20]})  {title}")
 
 
+def _dry_run_sidebar_preview(top: dict) -> None:
+    """Translate top + call generate_why_important + print 3-point preview.
+
+    Exists only for ``--dry-run`` so the operator can sanity-check sidebar
+    output without writing HTML. Production rendering goes through
+    ``_build_sidebar(top)`` inside ``build_page_one_v2``.
+    """
+    print()
+    print("=== Sidebar preview (Page I top) ===")
+    if _is_japanese_source(top.get("source_name", "")):
+        top["title_ja"] = top.get("title", "")
+        top["desc_ja"] = top.get("description", "")
+    else:
+        try:
+            _translate_article(top)
+        except Exception as e:
+            print(f"  translation failed: {e}")
+            top["title_ja"] = top.get("title", "")
+            top["desc_ja"] = top.get("description", "")
+    print(f"  top.title_ja: {top.get('title_ja','')[:80]}")
+    try:
+        points = generate_why_important(top)
+        used_fallback = False
+    except (
+        WhyImportantLLMError,
+        WhyImportantValidationError,
+        CapExceededError,
+    ) as e:
+        print(f"  LLM failed → static fallback ({e})")
+        points = static_why_important(top)
+        used_fallback = True
+    print(f"  fallback used: {used_fallback}")
+    for k in (
+        "point_1_subject",
+        "point_2_significance",
+        "point_3_executive_perspective",
+    ):
+        v = points.get(k, "")
+        n = len(v)
+        in_band = (
+            "OK" if 60 <= n <= 100
+            else "soft-out" if 50 <= n <= 120
+            else "hard-out"
+        )
+        print(f"  [{k}] {n}字 ({in_band})")
+        print(f"    {v}")
+
+
 def _make_dedup_aware_page2_fetcher(target: date, days_back: int = PAGE2_DEDUP_DAYS):
     """Wrap ``page2_default_fetcher`` so each ``companies:*`` fetch removes
     articles whose URL was displayed on Page II of that company in the
@@ -1020,6 +1105,8 @@ def main(argv: list[str] | None = None) -> int:
         _print_dry_run_report(result, per_source)
         if page2_result is not None:
             _print_page2_report(page2_result)
+        if result.selected:
+            _dry_run_sidebar_preview(result.selected[0])
         return 0
 
     # 4) Translate selected (Page I + Page II articles).
