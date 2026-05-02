@@ -62,7 +62,7 @@
 
 ---
 
-## 海外UL系（Reference〜Medium）
+## 海外UL系・論考（Reference）
 
 ### 6. Backpacking Light ✅
 - **URL**: https://backpackinglight.com/
@@ -70,31 +70,38 @@
 - **形式**: RSS 2.0
 - **mainstream**: true
 - **対象**: **米UL業界の総本山**。ギアレビュー、ロングトレイル記、UL哲学の論考、有料フォーラム
-- **位置付け**: news_profile.md §4.7 嗜好の本質「**UL思想**」「**とがった本質的なプロダクト**」の英語圏での最重要ソース。Hyperlite/Zpacks/Pa'lante 等の **メーカー直接取材記事** が定期的に出る。**英語原文のまま採用**（§5 編集ポリシー）
+- **位置付け**: news_profile.md §4.7 嗜好の本質「**UL思想**」「**とがった本質的なプロダクト**」の英語圏での最重要ソース。Hyperlite/Zpacks/Pa'lante 等の **メーカー直接取材記事** が定期的に出る。**英語原文のまま採用**（§5 編集ポリシー）。**更新頻度は月1〜2本（2026-05-02 計測：直近5本の平均間隔 18 日）** のため Reference 据え置き、入った日は質が高いという扱い
+
+---
+
+## 海外UL系（Medium）
+
+2026-05-02 検証で判明：このセクションの 3 ソースは RSS feed が **default UA で HTTP 200** を返し（403 だったのは HTML top page のみ）、かつ更新頻度が日次レベルのため、第5面 Leisure アウトドアカラムの実供給源として Medium 昇格。
 
 ### 7. The Trek ✅
 - **URL**: https://thetrek.co/
-- **RSS**: https://thetrek.co/feed/（Cloudflare 配信）
+- **RSS**: https://thetrek.co/feed/（Cloudflare 配信、default UA OK）
 - **形式**: RSS 2.0
 - **mainstream**: false
 - **対象**: 米長距離縦走（Appalachian Trail / Pacific Crest Trail / Continental Divide Trail）の専門メディア。**ハイカー本人による日記形式の記事** が中心
-- **位置付け**: news_profile.md §4.7 「**未踏で興味のある領域：縦走**」への **入り口の入り口**。「最初の縦走をどう準備するか」「装備リスト」「水場情報」等の **入門記事も豊富**。専門用語は多いがハードコア技術論ではなく、**個人の物語として読める** 点が神山さんの嗜好に合う
+- **位置付け**: news_profile.md §4.7 「**未踏で興味のある領域：縦走**」への **入り口の入り口**。「最初の縦走をどう準備するか」「装備リスト」「水場情報」等の **入門記事も豊富**。専門用語は多いがハードコア技術論ではなく、**個人の物語として読める** 点が神山さんの嗜好に合う。**更新頻度突出（2026-05-02 計測：直近5本が同日内、平均間隔 ≈ 2 時間。スルーハイクシーズンに複数ハイカーが並走更新）**
 
 ### 8. Section Hiker ✅
 - **URL**: https://sectionhiker.com/
-- **RSS**: https://sectionhiker.com/feed/（Cloudflare 配信）
+- **RSS**: https://sectionhiker.com/feed/（Cloudflare 配信、default UA OK）
 - **形式**: RSS 2.0
 - **mainstream**: false
 - **対象**: 米個人ハイカー Philip Werner 運営のブログ。**ガレージブランド製品の徹底レビュー**、ロングトレイル記、UL ノウハウ
-- **位置付け**: news_profile.md §4.7 嗜好の本質「**個人がやっているような小さなブランド**」への **個人ブログ視点でのアクセス**。Backpacking Light が「業界誌」、Section Hiker が「**個人の目利き**」。長年の運営で記事数が膨大、**美意識2（目利き感覚で主流外の本質）** との親和性が極めて高い
+- **位置付け**: news_profile.md §4.7 嗜好の本質「**個人がやっているような小さなブランド**」への **個人ブログ視点でのアクセス**。Backpacking Light が「業界誌」、Section Hiker が「**個人の目利き**」。長年の運営で記事数が膨大、**美意識2（目利き感覚で主流外の本質）** との親和性が極めて高い。**安定したデイリー更新（2026-05-02 計測：1日1本ペース）**
 
 ### 9. CleverHiker ✅
 - **URL**: https://www.cleverhiker.com/
-- **RSS**: https://www.cleverhiker.com/feed/（**ブラウザUA必須**、デフォルトUAでは 403。books.md Reactor、music.md なし、と並ぶ「サイト別フェッチ調整」事例）
+- **RSS**: https://www.cleverhiker.com/feed/
 - **形式**: RSS 2.0
 - **mainstream**: false
 - **対象**: 米ギアレビューサイト。テント・バックパック・スリーピング系の比較レビュー、UL寄り
-- **位置付け**: Backpacking Light が「**論考・哲学**」、Section Hiker が「**個人視点のレビュー**」、CleverHiker は「**比較レビューに特化**」した三本柱の最後の1つ。神山さんが新しいギアを検討する際の参考情報として。フェッチ層には **User-Agent 設定の永続化が必須**
+- **位置付け**: Backpacking Light が「**論考・哲学**」、Section Hiker が「**個人視点のレビュー**」、CleverHiker は「**比較レビューに特化**」した三本柱の最後の1つ。神山さんが新しいギアを検討する際の参考情報として。**更新頻度は日次2本ペース（2026-05-02 計測：平均間隔 0.5 日）**
+- **フェッチメモ**：`config/site_overrides.toml` に Chrome UA override が登録されているが、**2026-05-02 検証時点では `/feed/` は default UA でも HTTP 200**。HTML scraping 経路（top page）が将来 403 化する保険として override は残置
 
 ---
 
