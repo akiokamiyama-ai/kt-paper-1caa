@@ -72,6 +72,8 @@ from .selector.why_important import (
 from .page4 import article_rotator as page4_rotator
 from .page4 import concept_selector as page4_concept_selector
 from .page4 import concept_writer as page4_concept_writer
+from .page5 import cooking_generator as page5_cooking
+from .page5 import leisure_recommender as page5_leisure
 from .lib.llm import CapExceededError
 from .translate import translate
 
@@ -973,6 +975,207 @@ def replace_page_four(html_text: str, new_page_html: str) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Rendering — Page V ("Leisure")
+# ---------------------------------------------------------------------------
+
+PAGE_FIVE_CSS_MARKER = "/* === Page V (Sprint 3 Step C) === */"
+
+PAGE_FIVE_CSS = f"""
+{PAGE_FIVE_CSS_MARKER}
+.page-five-grid-v2 {{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  padding: 16px 24px;
+}}
+.leisure-column-v2 {{
+  padding: 0 16px;
+  border-right: 1px solid #ccc;
+}}
+.leisure-column-v2:last-child {{ border-right: none; }}
+.leisure-column-v2:first-child {{ padding-left: 0; }}
+.leisure-column-v2 .kicker {{
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #666;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}}
+.leisure-column-v2 .column-title {{
+  font-family: 'Noto Serif JP', 'Old Standard TT', serif;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0 0 12px;
+}}
+.leisure-column-v2 .column-body p {{
+  font-family: 'Noto Serif JP', 'Old Standard TT', serif;
+  font-size: 13px;
+  line-height: 1.8;
+  text-align: justify;
+  margin-bottom: 8px;
+}}
+.leisure-column-v2 .byline-v2 {{
+  font-size: 10px;
+  color: #888;
+  margin-top: 8px;
+  border-top: 1px dotted #ccc;
+  padding-top: 6px;
+}}
+.cooking-column-v2 .dish-name {{
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 4px;
+}}
+.cooking-column-v2 .ingredients {{
+  font-size: 12px;
+  color: #555;
+  font-style: italic;
+  margin-bottom: 10px;
+  padding: 6px 8px;
+  background: #f8f5f0;
+  border-left: 2px solid #c0a060;
+}}
+"""
+
+
+def inject_page_five_css(html_text: str) -> str:
+    """Idempotently inject Page V CSS just before </style>."""
+    if PAGE_FIVE_CSS_MARKER in html_text:
+        return html_text
+    end_style_idx = html_text.rfind("</style>")
+    if end_style_idx < 0:
+        head_close = html_text.find("</head>")
+        if head_close < 0:
+            return html_text
+        injected = f"<style>\n{PAGE_FIVE_CSS}\n</style>\n"
+        return html_text[:head_close] + injected + html_text[head_close:]
+    return html_text[:end_style_idx] + PAGE_FIVE_CSS + html_text[end_style_idx:]
+
+
+def _render_leisure_column(
+    *,
+    area_label: str,
+    column_class: str,
+    result: dict,
+) -> str:
+    """One column for books / music / outdoor.
+
+    ``result`` is the dict returned by ``leisure_recommender.recommend_for_area``.
+    """
+    column_title = result.get("column_title", "")
+    column_body = result.get("column_body", "")
+    article = result.get("article")
+
+    if article is not None:
+        source_name = article.get("source_name", "")
+        date_label = _format_publish_date_ja(article.get("pub_date"))
+        if date_label:
+            byline_text = f"出典：{source_name} · {date_label}"
+        else:
+            byline_text = f"出典：{source_name}"
+    else:
+        byline_text = "本紙編集部"
+
+    return f"""
+    <article class="leisure-column-v2 {column_class}" lang="ja">
+      <div class="kicker">{_esc(area_label)}</div>
+      <h3 class="column-title">{_esc(column_title)}</h3>
+      <div class="column-body">
+        <p>{_esc(column_body)}</p>
+      </div>
+      <p class="byline-v2">{_esc(byline_text)}</p>
+    </article>""".rstrip()
+
+
+def _render_cooking_column(result: dict) -> str:
+    """The 4th column — cooking is structurally different (dish_name + ingredients)."""
+    return f"""
+    <article class="leisure-column-v2 cooking-column-v2" lang="ja">
+      <div class="kicker">料理</div>
+      <h3 class="column-title">{_esc(result.get("column_title", ""))}</h3>
+      <p class="dish-name">{_esc(result.get("dish_name", ""))}</p>
+      <p class="ingredients">{_esc(result.get("ingredients_summary", ""))}</p>
+      <div class="column-body">
+        <p>{_esc(result.get("column_body", ""))}</p>
+      </div>
+      <p class="byline-v2">Tribune厨房</p>
+    </article>""".rstrip()
+
+
+def build_page_five_v2(
+    target_date: date,
+    *,
+    pre_evaluated: dict[str, dict] | None = None,
+) -> tuple[str, dict]:
+    """Build the full <section class="page page-five"> block.
+
+    Returns (html, telemetry).
+    """
+    # 1) Books / Music / Outdoor — recommend + LLM column
+    books = page5_leisure.recommend_for_area(
+        "books", target_date=target_date, pre_evaluated=pre_evaluated,
+    )
+    music = page5_leisure.recommend_for_area(
+        "music", target_date=target_date, pre_evaluated=pre_evaluated,
+    )
+    outdoor = page5_leisure.recommend_for_area(
+        "outdoor", target_date=target_date, pre_evaluated=pre_evaluated,
+    )
+
+    # 2) Cooking — LLM autonomous
+    cooking = page5_cooking.generate_cooking_column(target_date=target_date)
+
+    # 3) Render
+    books_html = _render_leisure_column(
+        area_label="読書", column_class="books-column-v2", result=books,
+    )
+    music_html = _render_leisure_column(
+        area_label="音楽", column_class="music-column-v2", result=music,
+    )
+    outdoor_html = _render_leisure_column(
+        area_label="アウトドア", column_class="outdoor-column-v2", result=outdoor,
+    )
+    cooking_html = _render_cooking_column(cooking)
+
+    page = f"""<section class="page page-five">
+    <div class="page-banner"><span class="pg-num">— Page V —</span> Leisure · Reading, Music, Trail &amp; Table</div>
+
+    <div class="page-five-grid-v2">
+{books_html}
+{music_html}
+{outdoor_html}
+{cooking_html}
+    </div>
+  </section>"""
+
+    telemetry = {
+        "books": books,
+        "music": music,
+        "outdoor": outdoor,
+        "cooking": cooking,
+    }
+    return page, telemetry
+
+
+def replace_page_five(html_text: str, new_page_html: str) -> str:
+    """Surgical replace for Page V."""
+    start_marker = '<section class="page page-five">'
+    if html_text.count(start_marker) != 1:
+        raise RuntimeError(
+            f"Expected 1 page-five section, found {html_text.count(start_marker)}"
+        )
+    start = html_text.find(start_marker)
+    end = html_text.find("</section>", start)
+    if end == -1:
+        raise RuntimeError("Page Five section end not found")
+    end += len("</section>")
+    return html_text[:start] + new_page_html + html_text[end:]
+
+
+# ---------------------------------------------------------------------------
 # Template date manipulation
 # ---------------------------------------------------------------------------
 
@@ -1430,6 +1633,10 @@ def main(argv: list[str] | None = None) -> int:
         "--skip-page4", action="store_true",
         help="skip Page IV generation (Page I + II + III only, debug aid)",
     )
+    p.add_argument(
+        "--skip-page5", action="store_true",
+        help="skip Page V generation (Page I+II+III+IV only, debug aid)",
+    )
     args = p.parse_args(argv)
 
     if args.date:
@@ -1529,6 +1736,8 @@ def main(argv: list[str] | None = None) -> int:
     # 4b) Page IV pipeline (Sprint 3 Step B): concept + 3 academic articles.
     page_four_html: str | None = None
     page_four_telemetry: dict | None = None
+    page_five_html: str | None = None
+    page_five_telemetry: dict | None = None
     if not args.skip_page4:
         print("Building Page IV (concept + 3 academic articles)...", file=sys.stderr)
         # Reuse Stage 2 cache for academic + books overlap (small but consistent).
@@ -1556,6 +1765,39 @@ def main(argv: list[str] | None = None) -> int:
             )
             page_four_html = None
 
+    # 4c) Page V pipeline (Sprint 3 Step C): books / music / outdoor + cooking.
+    if not args.skip_page5:
+        print("Building Page V (books + music + outdoor + cooking)...", file=sys.stderr)
+        pre_evaluated_for_page5: dict[str, dict] = {
+            a["url"]: a for a in result.candidates_scored if a.get("url")
+        }
+        try:
+            page_five_html, page_five_telemetry = build_page_five_v2(
+                target, pre_evaluated=pre_evaluated_for_page5,
+            )
+            books_t = page_five_telemetry["books"]
+            music_t = page_five_telemetry["music"]
+            outdoor_t = page_five_telemetry["outdoor"]
+            cooking_t = page_five_telemetry["cooking"]
+            total_p5 = (
+                books_t["cost_usd"] + music_t["cost_usd"]
+                + outdoor_t["cost_usd"] + cooking_t["cost_usd"]
+            )
+            print(
+                f"  Page V: books={'✓' if not books_t['is_fallback'] else 'fallback'}, "
+                f"music={'✓' if not music_t['is_fallback'] else 'fallback'}, "
+                f"outdoor={'✓' if not outdoor_t['is_fallback'] else 'fallback'}, "
+                f"cooking={'✓' if not cooking_t['is_fallback'] else 'fallback'}, "
+                f"cost=${total_p5:.4f}",
+                file=sys.stderr,
+            )
+        except Exception as e:
+            print(
+                f"[page5] FAILED: {type(e).__name__}: {e} — skipping Page V regen",
+                file=sys.stderr,
+            )
+            page_five_html = None
+
     # 5) Render Page I + Page II + Page III
     print("Building Page I HTML...", file=sys.stderr)
     page_one_html = build_page_one_v2(result.selected)
@@ -1568,12 +1810,14 @@ def main(argv: list[str] | None = None) -> int:
         print("Building Page III HTML...", file=sys.stderr)
         page_three_html = build_page_three_v2(page3_result.selections)
 
-    # 6) Load template, update dates, swap Page I (and II + III + IV), write
+    # 6) Load template, update dates, swap Page I (and II + III + IV + V), write
     print(f"Loading template: {TEMPLATE_PATH}", file=sys.stderr)
     template = TEMPLATE_PATH.read_text(encoding="utf-8")
     dated = update_template_date_strings(template, target)
     if page_four_html is not None:
         dated = inject_page_four_css(dated)
+    if page_five_html is not None:
+        dated = inject_page_five_css(dated)
     final_html = replace_page_one(dated, page_one_html)
     if page_two_html is not None:
         final_html = replace_page_two(final_html, page_two_html)
@@ -1581,6 +1825,8 @@ def main(argv: list[str] | None = None) -> int:
         final_html = replace_page_three(final_html, page_three_html)
     if page_four_html is not None:
         final_html = replace_page_four(final_html, page_four_html)
+    if page_five_html is not None:
+        final_html = replace_page_five(final_html, page_five_html)
 
     out_path = _archive_path(target)
     if out_path.exists():
@@ -1610,12 +1856,19 @@ def main(argv: list[str] | None = None) -> int:
             url = art.get("url")
             if url:
                 page4_urls_displayed.append(url)
+    page5_urls_displayed: dict[str, str | None] = {}
+    if page_five_telemetry is not None:
+        for area in ("books", "music", "outdoor"):
+            r = page_five_telemetry.get(area, {})
+            art = r.get("article")
+            page5_urls_displayed[area] = art.get("url") if art else None
     log_path = write_displayed_urls_log(
         target,
         page1_urls=page1_urls_displayed,
         page2_urls_by_company=page2_urls_displayed,
         page3_urls=page3_urls_displayed if page3_result is not None else None,
         page4_urls=page4_urls_displayed if page_four_telemetry is not None else None,
+        page5_urls=page5_urls_displayed if page_five_telemetry is not None else None,
     )
     print(f"Wrote {log_path}", file=sys.stderr)
 
@@ -1692,6 +1945,37 @@ def main(argv: list[str] | None = None) -> int:
             print(f"        title: {a.get('title', '')[:70]}")
         print(f"  cost (Page IV Stage 2 + concept LLM): "
               f"${e['cost_usd'] + ar['cost_usd']:.4f}")
+
+    if page_five_telemetry is not None:
+        print()
+        print("=== Page V summary ===")
+        total_p5 = 0.0
+        for area_key, area_label in (
+            ("books", "読書"), ("music", "音楽"), ("outdoor", "アウトドア"),
+        ):
+            r = page_five_telemetry[area_key]
+            total_p5 += r["cost_usd"]
+            if r["article"] is None:
+                print(f"  [{area_label:<8}] 本日該当なし  ({r.get('fallback_reason', '')})")
+                continue
+            art = r["article"]
+            score = art.get("final_score", 0.0)
+            fallback_tag = " (fallback)" if r["is_fallback"] else ""
+            print(
+                f"  [{area_label:<8}] score={score:6.2f}  "
+                f"({art.get('source_name', '')[:25]}){fallback_tag}"
+            )
+            print(f"      title  : {art.get('title', '')[:70]}")
+            print(f"      column : {r['column_title'][:30]}")
+            print(f"      body   : {r['column_body'][:50]}...")
+        c = page_five_telemetry["cooking"]
+        total_p5 += c["cost_usd"]
+        cook_tag = " (fallback)" if c["is_fallback"] else ""
+        print(f"  [{'料理':<8}] {c['dish_name']} ({c['genre']}){cook_tag}")
+        print(f"      ingredients: {c['ingredients_summary']}")
+        print(f"      column : {c['column_title']}")
+        print(f"      body   : {c['column_body'][:50]}...")
+        print(f"  cost (Page V LLM 4 calls): ${total_p5:.4f}")
 
     print(f"  output: {out_path}")
     return 0
