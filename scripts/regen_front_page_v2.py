@@ -74,6 +74,8 @@ from .page4 import concept_selector as page4_concept_selector
 from .page4 import concept_writer as page4_concept_writer
 from .page5 import cooking_generator as page5_cooking
 from .page5 import leisure_recommender as page5_leisure
+from .page6 import ai_kamiyama_writer as page6_ai_kamiyama
+from .page6 import serendipity_selector as page6_serendipity
 from .lib.llm import CapExceededError
 from .translate import translate
 
@@ -1176,6 +1178,213 @@ def replace_page_five(html_text: str, new_page_html: str) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Rendering — Page VI ("Columns & Serendipity")
+# ---------------------------------------------------------------------------
+
+PAGE_SIX_CSS_MARKER = "/* === Page VI (Sprint 3 Step D) === */"
+
+PAGE_SIX_CSS = f"""
+{PAGE_SIX_CSS_MARKER}
+.page-six-content {{
+  padding: 16px 24px;
+}}
+.ai-kamiyama-column {{
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #ccc;
+}}
+.ai-kamiyama-column .kicker {{
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #666;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}}
+.ai-kamiyama-column .column-title {{
+  font-family: 'Noto Serif JP', 'Old Standard TT', serif;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0 0 16px;
+}}
+.ai-kamiyama-column .column-body p {{
+  font-family: 'Noto Serif JP', 'Old Standard TT', serif;
+  font-size: 15px;
+  line-height: 1.9;
+  text-align: justify;
+  text-indent: 1em;
+  margin-bottom: 12px;
+}}
+.ai-kamiyama-column .ai-byline {{
+  font-size: 11px;
+  color: #888;
+  text-align: right;
+  font-style: italic;
+  margin-top: 12px;
+}}
+.serendipity-article .kicker {{
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #666;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}}
+.serendipity-article .article-title {{
+  font-family: 'Noto Serif JP', 'Old Standard TT', serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.5;
+  margin: 0 0 10px;
+}}
+.serendipity-article .description {{
+  font-family: 'Noto Serif JP', 'Old Standard TT', serif;
+  font-size: 14px;
+  line-height: 1.8;
+  color: #333;
+  margin-bottom: 8px;
+}}
+.serendipity-article .serendipity-byline {{
+  font-size: 11px;
+  color: #888;
+  border-top: 1px dotted #ccc;
+  padding-top: 6px;
+}}
+.page-six-placeholder {{
+  text-align: center;
+  padding: 60px 24px;
+  color: #888;
+  font-style: italic;
+}}
+"""
+
+
+def inject_page_six_css(html_text: str) -> str:
+    """Idempotently inject Page VI CSS just before </style>."""
+    if PAGE_SIX_CSS_MARKER in html_text:
+        return html_text
+    end_style_idx = html_text.rfind("</style>")
+    if end_style_idx < 0:
+        head_close = html_text.find("</head>")
+        if head_close < 0:
+            return html_text
+        injected = f"<style>\n{PAGE_SIX_CSS}\n</style>\n"
+        return html_text[:head_close] + injected + html_text[head_close:]
+    return html_text[:end_style_idx] + PAGE_SIX_CSS + html_text[end_style_idx:]
+
+
+def _truncate_to_chars(text: str, n: int = 120) -> str:
+    if not text:
+        return ""
+    s = text.strip()
+    if len(s) <= n:
+        return s
+    # Try to break at a sentence boundary
+    cut = s[:n]
+    for sep in ("。", "．", ".", "\n"):
+        idx = cut.rfind(sep)
+        if idx >= n // 2:
+            return cut[: idx + 1]
+    return cut + "…"
+
+
+def build_page_six_v2(
+    target_date: date,
+    *,
+    pre_evaluated: dict[str, dict] | None = None,
+) -> tuple[str, dict]:
+    """Build the full <section class="page page-six"> block.
+
+    Returns (html, telemetry) — telemetry contains:
+      - serendipity_result (article + category + tie_candidates + cost_usd)
+      - column_result (column_title + column_body + is_fallback + elapsed_ms)
+    """
+    # 1) Select the serendipity article
+    serendipity = page6_serendipity.select_for_today(
+        target_date=target_date, pre_evaluated=pre_evaluated,
+    )
+
+    # 2) Render placeholder if no candidates
+    if serendipity["is_placeholder"]:
+        html = _render_page_six_placeholder()
+        return html, {"serendipity": serendipity, "column": None}
+
+    # 3) AI 神山 column generation via miibo
+    article = serendipity["article"]
+    column = page6_ai_kamiyama.write_column(article)
+
+    # 4) Render full structure
+    html = _render_page_six(serendipity, column)
+    return html, {"serendipity": serendipity, "column": column}
+
+
+def _render_page_six(serendipity: dict, column: dict) -> str:
+    """Render the standard Page VI: AI神山 column (top 60%) + serendipity (40%)."""
+    article = serendipity["article"]
+    title = (article.get("title") or "").strip()
+    source_name = (article.get("source_name") or "").strip()
+    description = _truncate_to_chars(article.get("description") or "", 120)
+    date_label = _format_publish_date_ja(article.get("pub_date"))
+    if date_label:
+        article_byline = f"出典：{source_name} · {date_label}"
+    else:
+        article_byline = f"出典：{source_name}"
+
+    column_title = column.get("column_title", "")
+    column_body = column.get("column_body", "")
+
+    return f"""<section class="page page-six">
+    <div class="page-banner"><span class="pg-num">— Page VI —</span> Columns &amp; Serendipity · A Room with a Different Window</div>
+
+    <div class="page-six-content" lang="ja">
+      <article class="ai-kamiyama-column">
+        <div class="kicker">AIかみやまの一筆</div>
+        <h3 class="column-title">{_esc(column_title)}</h3>
+        <div class="column-body">
+          <p>{_esc(column_body)}</p>
+        </div>
+        <p class="ai-byline">— AIかみやま</p>
+      </article>
+
+      <aside class="serendipity-article">
+        <div class="kicker">今朝出会った1本</div>
+        <h3 class="article-title">{_esc(title)}</h3>
+        <p class="description">{_esc(description)}</p>
+        <p class="serendipity-byline">{_esc(article_byline)}</p>
+      </aside>
+    </div>
+  </section>"""
+
+
+def _render_page_six_placeholder() -> str:
+    """Render the both-sides-empty placeholder (no serendipity candidate)."""
+    return """<section class="page page-six">
+    <div class="page-banner"><span class="pg-num">— Page VI —</span> Columns &amp; Serendipity · A Room with a Different Window</div>
+
+    <div class="page-six-placeholder" lang="ja">
+      <p>本日は出会いがありませんでした。</p>
+      <p>明日の更新をお待ちください。</p>
+    </div>
+  </section>"""
+
+
+def replace_page_six(html_text: str, new_page_html: str) -> str:
+    """Surgical replace for Page VI."""
+    start_marker = '<section class="page page-six">'
+    if html_text.count(start_marker) != 1:
+        raise RuntimeError(
+            f"Expected 1 page-six section, found {html_text.count(start_marker)}"
+        )
+    start = html_text.find(start_marker)
+    end = html_text.find("</section>", start)
+    if end == -1:
+        raise RuntimeError("Page Six section end not found")
+    end += len("</section>")
+    return html_text[:start] + new_page_html + html_text[end:]
+
+
+# ---------------------------------------------------------------------------
 # Template date manipulation
 # ---------------------------------------------------------------------------
 
@@ -1637,6 +1846,10 @@ def main(argv: list[str] | None = None) -> int:
         "--skip-page5", action="store_true",
         help="skip Page V generation (Page I+II+III+IV only, debug aid)",
     )
+    p.add_argument(
+        "--skip-page6", action="store_true",
+        help="skip Page VI generation (Page I+II+III+IV+V only, debug aid)",
+    )
     args = p.parse_args(argv)
 
     if args.date:
@@ -1738,6 +1951,8 @@ def main(argv: list[str] | None = None) -> int:
     page_four_telemetry: dict | None = None
     page_five_html: str | None = None
     page_five_telemetry: dict | None = None
+    page_six_html: str | None = None
+    page_six_telemetry: dict | None = None
     if not args.skip_page4:
         print("Building Page IV (concept + 3 academic articles)...", file=sys.stderr)
         # Reuse Stage 2 cache for academic + books overlap (small but consistent).
@@ -1798,6 +2013,47 @@ def main(argv: list[str] | None = None) -> int:
             )
             page_five_html = None
 
+    # 4d) Page VI pipeline (Sprint 3 Step D): serendipity + AI神山 column
+    if not args.skip_page6:
+        print(
+            "Building Page VI (serendipity + AI神山 column via miibo)...",
+            file=sys.stderr,
+        )
+        pre_evaluated_for_page6: dict[str, dict] = {
+            a["url"]: a for a in result.candidates_scored if a.get("url")
+        }
+        try:
+            page_six_html, page_six_telemetry = build_page_six_v2(
+                target, pre_evaluated=pre_evaluated_for_page6,
+            )
+            sty = page_six_telemetry["serendipity"]
+            col = page_six_telemetry.get("column")
+            if sty["is_placeholder"]:
+                print(
+                    f"  Page VI: PLACEHOLDER ({sty['category']}, "
+                    f"tied={sty['tie_candidates']}, no candidates)",
+                    file=sys.stderr,
+                )
+            else:
+                article = sty["article"]
+                col_status = (
+                    "fallback" if col["is_fallback"]
+                    else f"AI神山 OK ({col['elapsed_ms']}ms)"
+                )
+                print(
+                    f"  Page VI: category={sty['category']} (tied: "
+                    f"{sty['tie_candidates']}), pool={sty['selected_from_pool_size']}, "
+                    f"article={article.get('source_name', '')[:25]}, "
+                    f"column={col_status}",
+                    file=sys.stderr,
+                )
+        except Exception as e:
+            print(
+                f"[page6] FAILED: {type(e).__name__}: {e} — skipping Page VI regen",
+                file=sys.stderr,
+            )
+            page_six_html = None
+
     # 5) Render Page I + Page II + Page III
     print("Building Page I HTML...", file=sys.stderr)
     page_one_html = build_page_one_v2(result.selected)
@@ -1810,7 +2066,7 @@ def main(argv: list[str] | None = None) -> int:
         print("Building Page III HTML...", file=sys.stderr)
         page_three_html = build_page_three_v2(page3_result.selections)
 
-    # 6) Load template, update dates, swap Page I (and II + III + IV + V), write
+    # 6) Load template, update dates, swap Page I (and II + III + IV + V + VI), write
     print(f"Loading template: {TEMPLATE_PATH}", file=sys.stderr)
     template = TEMPLATE_PATH.read_text(encoding="utf-8")
     dated = update_template_date_strings(template, target)
@@ -1818,6 +2074,8 @@ def main(argv: list[str] | None = None) -> int:
         dated = inject_page_four_css(dated)
     if page_five_html is not None:
         dated = inject_page_five_css(dated)
+    if page_six_html is not None:
+        dated = inject_page_six_css(dated)
     final_html = replace_page_one(dated, page_one_html)
     if page_two_html is not None:
         final_html = replace_page_two(final_html, page_two_html)
@@ -1827,6 +2085,8 @@ def main(argv: list[str] | None = None) -> int:
         final_html = replace_page_four(final_html, page_four_html)
     if page_five_html is not None:
         final_html = replace_page_five(final_html, page_five_html)
+    if page_six_html is not None:
+        final_html = replace_page_six(final_html, page_six_html)
 
     out_path = _archive_path(target)
     if out_path.exists():
@@ -1862,6 +2122,12 @@ def main(argv: list[str] | None = None) -> int:
             r = page_five_telemetry.get(area, {})
             art = r.get("article")
             page5_urls_displayed[area] = art.get("url") if art else None
+    page6_url_displayed: str | None = None
+    if page_six_telemetry is not None:
+        sty6 = page_six_telemetry.get("serendipity") or {}
+        art6 = sty6.get("article")
+        if art6:
+            page6_url_displayed = art6.get("url")
     log_path = write_displayed_urls_log(
         target,
         page1_urls=page1_urls_displayed,
@@ -1869,6 +2135,7 @@ def main(argv: list[str] | None = None) -> int:
         page3_urls=page3_urls_displayed if page3_result is not None else None,
         page4_urls=page4_urls_displayed if page_four_telemetry is not None else None,
         page5_urls=page5_urls_displayed if page_five_telemetry is not None else None,
+        page6_url=page6_url_displayed,
     )
     print(f"Wrote {log_path}", file=sys.stderr)
 
@@ -1945,6 +2212,27 @@ def main(argv: list[str] | None = None) -> int:
             print(f"        title: {a.get('title', '')[:70]}")
         print(f"  cost (Page IV Stage 2 + concept LLM): "
               f"${e['cost_usd'] + ar['cost_usd']:.4f}")
+
+    if page_six_telemetry is not None:
+        print()
+        print("=== Page VI summary ===")
+        sty6 = page_six_telemetry["serendipity"]
+        col6 = page_six_telemetry.get("column")
+        print(f"  category   : {sty6['category']}  "
+              f"(tied: {sty6['tie_candidates']})")
+        if sty6["is_placeholder"]:
+            print("  PLACEHOLDER (no candidates)")
+        else:
+            art = sty6["article"]
+            print(f"  article    : {art.get('source_name', '')[:30]}")
+            print(f"  title      : {art.get('title', '')[:70]}")
+            print(f"  pool size  : {sty6['selected_from_pool_size']}")
+            if col6 is not None:
+                tag = "(fallback)" if col6["is_fallback"] else f"({col6['elapsed_ms']}ms)"
+                print(f"  column     : {col6['column_title']} {tag}")
+                print(f"  body[:60]  : {col6['column_body'][:60]}")
+        print(f"  cost (page6 stage2 LLM): ${sty6.get('cost_usd', 0.0):.4f}")
+        print("  miibo API cost: 別系統（神山さんの会社契約定額枠内）")
 
     if page_five_telemetry is not None:
         print()
