@@ -351,6 +351,91 @@
     [lang="ja"] h2.headline-xl { font-size: 26px; }
   }
 
+/* === Page I title formatting (Sprint 5, 2026-05-03) === */
+.article-title-original {
+  font-family: 'Noto Serif JP', 'Times New Roman', serif;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0 0 6px;
+}
+.article-title-japanese {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: #666;
+  line-height: 1.5;
+  margin: 0 0 12px;
+  padding-left: 2px;
+}
+/* Top の lead-story では h2.headline-xl をそのまま original 用に流用、サイズだけ拡張 */
+.lead-story h2.article-title-original {
+  font-size: 36px;
+  line-height: 1.2;
+}
+.secondaries .col h3.article-title-original {
+  font-size: 20px;
+}
+
+/* === Page II logos (2026-05-03) === */
+.briefing-row .company .company-logo {
+  height: 22px;
+  width: auto;
+  vertical-align: middle;
+  margin-right: 10px;
+  margin-bottom: 4px;
+  filter: grayscale(100%) contrast(1.3);  /* pattern-3 採用 (2026-05-03) */
+}
+
+/* === Page IV (Sprint 3 Step B) === */
+.page-four-grid {
+  display: grid;
+  grid-template-columns: 55% 45%;
+  gap: 24px;
+  padding: 16px 24px;
+}
+.concept-column {
+  border-right: 1px solid #ddd;
+  padding-right: 24px;
+}
+.concept-title {
+  font-family: 'Noto Serif JP', 'Old Standard TT', serif;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 8px 0 4px;
+  line-height: 1.3;
+}
+.concept-en {
+  display: block;
+  font-size: 14px;
+  font-weight: 400;
+  color: #666;
+  font-style: italic;
+  margin-top: 2px;
+}
+.concept-meta {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px dotted #ccc;
+}
+.concept-meta .domain { margin-right: 12px; font-weight: 600; }
+.concept-meta .thinkers { font-style: italic; }
+.concept-essay p {
+  font-family: 'Noto Serif JP', 'Old Standard TT', serif;
+  font-size: 15px;
+  line-height: 1.9;
+  text-align: justify;
+  text-indent: 1em;
+}
+.academic-column .item {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px dotted #ccc;
+}
+.academic-column .item:last-child { border-bottom: none; }
+
 /* === Page V (Sprint 4 layout swap, was Sprint 3 Step D) === */
 .page-five-content {
   display: grid;
@@ -426,6 +511,64 @@
   color: #888;
   font-style: italic;
 }
+
+/* === Page VI (Sprint 4 layout swap, was Sprint 3 Step C) === */
+.page-six-grid-v2 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  padding: 16px 24px;
+}
+.leisure-column-v2 {
+  padding: 0 16px;
+  border-right: 1px solid #ccc;
+}
+.leisure-column-v2:last-child { border-right: none; }
+.leisure-column-v2:first-child { padding-left: 0; }
+.leisure-column-v2 .kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #666;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.leisure-column-v2 .column-title {
+  font-family: 'Noto Serif JP', 'Old Standard TT', serif;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0 0 12px;
+}
+.leisure-column-v2 .column-body p {
+  font-family: 'Noto Serif JP', 'Old Standard TT', serif;
+  font-size: 13px;
+  line-height: 1.8;
+  text-align: justify;
+  margin-bottom: 8px;
+}
+.leisure-column-v2 .byline-v2 {
+  font-size: 10px;
+  color: #888;
+  margin-top: 8px;
+  border-top: 1px dotted #ccc;
+  padding-top: 6px;
+}
+.cooking-column-v2 .dish-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 4px;
+}
+.cooking-column-v2 .ingredients {
+  font-size: 12px;
+  color: #555;
+  font-style: italic;
+  margin-bottom: 10px;
+  padding: 6px 8px;
+  background: #f8f5f0;
+  border-left: 2px solid #c0a060;
+}
 </style>
 </head>
 <body>
@@ -466,12 +609,13 @@
     <article class="front-top">
       <div class="lead-story" lang="ja">
         <div class="kicker">The Economist・トップ</div>
-        <h2 class="headline-xl">世界銀行は産業政策に関してUターンを行ったのでしょうか?</h2>
-        <p class="deck">そう考える介入主義者は、その新しい報告書をもっと詳しく読むべきだ</p>
+        <h2 class="headline-xl article-title-original">Has the World Bank performed a U-turn on industrial policy?</h2>
+        <p class="article-title-japanese">世界銀行は産業政策に関してUターンを行ったのでしょうか?</p>
+        <p class="deck">Interventionists who think so should read its new report more closely</p>
         <p class="byline">本紙編集部　The Economistより構成 · 2026年4月23日</p>
         <div class="body-3col">
-          <p class="dropcap">そう考える介入主義者は、その新しい報告書をもっと詳しく読むべきだ</p>
-          <p class="byline" style="margin-top:8px;">原題：<em>Has the World Bank performed a U-turn on industrial policy?</em>　全文：<a href="https://www.economist.com/finance-and-economics/2026/04/23/has-the-world-bank-performed-a-u-turn-on-industrial-policy" target="_blank" rel="noopener noreferrer">The Economist</a></p>
+          <p class="dropcap">Interventionists who think so should read its new report more closely</p>
+          <p class="byline" style="margin-top:8px;">全文：<a href="https://www.economist.com/finance-and-economics/2026/04/23/has-the-world-bank-performed-a-u-turn-on-industrial-policy" target="_blank" rel="noopener noreferrer">The Economist</a></p>
         </div>
       </div>
 
@@ -480,9 +624,9 @@
         <h4 class="headline-m">本日のトップから読み取るべきこと</h4>
         <p>読み解きのための3点：</p>
         <hr class="dotted" />
-        <p><strong>1・</strong>世界銀行の新報告書を巡り、産業政策支持派が「方針転換」と読み解いているが、The Economist はその解釈に疑義を呈する。報告書の実際の立場は介入主義者の期待より慎重であると論じる。</p>
-        <p><strong>2・</strong>産業政策の是非は開発途上国から先進国まで政策立案の最前線にある。世界銀行という権威的機関の立場の読み方次第で、各国の政策設計や国際融資の文脈が動く可能性をはらむ。</p>
-        <p><strong>3・</strong>権威ある報告書を「読みたいように読む」解釈バイアスは政策議論に頻出する。開発経済学と産業政策論を架橋しながら原典テキストへ立ち戻る精読の姿勢が、構造理解の精度を分ける局面。</p>
+        <p><strong>1・</strong>世界銀行の新報告書が産業政策への支持転換と読まれているが、The Economist はその解釈を「精読不足」と指摘する。介入主義派の希望的読解と報告書の実際の主張の乖離を論じる。</p>
+        <p><strong>2・</strong>産業政策が国際機関のお墨付きを得たという言説が拡散すれば、各国政府の補助金・規制設計に正当性が与えられ、貿易摩擦や産業保護の地形変動を加速させる可能性がある。</p>
+        <p><strong>3・</strong>報告書そのものと「報告書が支持した」という解釈の間のズレを読み解く目利きが要る。開発経済学と政治経済学の境界で何が論点化されているかを構造と細部の往復で押さえたい局面。</p>
         <hr class="dotted" />
         <p class="byline" style="margin-top:8px;">出典：3ソース合議 · 翻訳：Google／MyMemory（日本語ソースは原文）</p>
       </aside>
@@ -491,24 +635,25 @@
     <div class="secondaries">
       <div class="col" lang="ja">
         <div class="kicker">Foresight・国際情勢</div>
-        <h3 class="headline-l">ハンガリー「マジャル新政権」は親EU・親ウクライナへ傾くのか？（下）</h3>
+        <h3 class="headline-l article-title-original">ハンガリー「マジャル新政権」は親EU・親ウクライナへ傾くのか？（下）</h3>
         <p class="byline">本紙編集部　Foresightより構成 · 2026年5月1日</p>
         <p>オルバーン政権とその与党フィデスはウクライナを事実上の「敵対国家」と位置づけてきた［総選挙前日、ウクライナのゼレンスキー大統領とマジャル氏を非難するプラカードを掲げたフィデス支持者＝2026年4月11日、ハンガリー・ブダペスト］（C）Krisztian Elek / SOPA Images via Reuters Connect ハンガリー「マジャル新政権」は親EU・親ウクライナへ傾くのか？（上） 対ウクライナ関係：「…</p>
-        <p class="byline" style="margin-top:6px;">原題：<em>ハンガリー「マジャル新政権」は親EU・親ウクライナへ傾くのか？（下）</em>　全文：<a href="https://www.fsight.jp/articles/-/52061" target="_blank" rel="noopener noreferrer">Foresight</a></p>
+        <p class="byline" style="margin-top:6px;">全文：<a href="https://www.fsight.jp/articles/-/52061" target="_blank" rel="noopener noreferrer">Foresight</a></p>
       </div>
       <div class="col" lang="ja">
         <div class="kicker">Foresight・国際情勢</div>
-        <h3 class="headline-l">【Analysis】UAE離脱でOPECプラスの市場支配力低下へ　ただし枠組み維持の公算＝関係者</h3>
-        <p class="byline">本紙編集部　Foresightより構成 · 2026年4月29日</p>
-        <p>ホルムズ海峡の海運が事実上停止している現状、生産や輸出を増やす余地は限られる［UAEのスハイル・ムハンマド・アルマズルーイ・エネルギー相＝2019年12月6日］（C）REUTERS/Leonhard Foeger ［ロンドン発／ロイター］UAE（アラブ首長国連邦）はOPEC（石油輸出国機構）第4位の産油国であり、加盟から約60年を経て、４月28日に脱退を表明した。脱退は５月１日付となる。これによりアブダビは、需給調整のためOPEC加盟国とその協調産油国に課される…</p>
-        <p class="byline" style="margin-top:6px;">原題：<em>【Analysis】UAE離脱でOPECプラスの市場支配力低下へ　ただし枠組み維持の公算＝関係者</em>　全文：<a href="https://www.fsight.jp/articles/-/52051" target="_blank" rel="noopener noreferrer">Foresight</a></p>
-      </div>
-      <div class="col" lang="ja">
-        <div class="kicker">Foresight・国際情勢</div>
-        <h3 class="headline-l">胎動するゲームチェンジャー「南鳥島レアアース泥」――日本が手に入れる「世界第3位」の埋蔵量｜中村謙太郎・東京大学エネルギー・資源フロンティアセンター長（1）</h3>
+        <h3 class="headline-l article-title-original">胎動するゲームチェンジャー「南鳥島レアアース泥」――日本が手に入れる「世界第3位」の埋蔵量｜中村謙太郎・東京大学エネルギー・資源フロンティアセンター長（1）</h3>
         <p class="byline">本紙編集部　Foresightより構成 · 2026年4月30日</p>
         <p>長野光と関瑶子のビデオクリエイター・ユニットが、現代のキーワードを掘り下げるYouTubeチャンネル「Point Alpha」。今回は、日本のレアアース輸入の現状と南鳥島周辺の日本の排他的経済水域（EEZ）内で発見されたレアアース泥の特徴について、東京大学大学院工学系研究科附属エネルギー・資源フロンティアセンター長の中村謙太郎氏に話を聞いた。 ※主な発言を抜粋・編集してあります。 「重希土類」は100％近くが中国依存 ——日本のレ…</p>
-        <p class="byline" style="margin-top:6px;">原題：<em>胎動するゲームチェンジャー「南鳥島レアアース泥」――日本が手に入れる「世界第3位」の埋蔵量｜中村謙太郎・東京大学エネルギー・資源フロンティアセンター長（1）</em>　全文：<a href="https://www.fsight.jp/articles/-/52054" target="_blank" rel="noopener noreferrer">Foresight</a></p>
+        <p class="byline" style="margin-top:6px;">全文：<a href="https://www.fsight.jp/articles/-/52054" target="_blank" rel="noopener noreferrer">Foresight</a></p>
+      </div>
+      <div class="col" lang="ja">
+        <div class="kicker">The Economist</div>
+        <h3 class="headline-l article-title-original">Will Kevin Warsh Trumpify the Federal Reserve?</h3>
+        <p class="article-title-japanese">ケビン・ウォーシュはFRBをトランプ大統領にするか?</p>
+        <p class="byline">本紙編集部　The Economistより構成 · 2026年4月26日</p>
+        <p>The incoming Fed chair says he wants regime change. But a revolution is unlikely</p>
+        <p class="byline" style="margin-top:6px;">全文：<a href="https://www.economist.com/finance-and-economics/2026/04/26/will-kevin-warsh-trumpify-the-federal-reserve" target="_blank" rel="noopener noreferrer">The Economist</a></p>
       </div>
     </div>
   </section>
@@ -524,57 +669,47 @@
       Cocolomi・Human Energy・Web-Repo3社の事業文脈に関わる今朝の話題を、各社につき1本——朝の経営判断のための短い問いを添えて。
     </p>
 
-    <!-- KOKOROMI -->
     <div class="briefing-row" lang="ja">
       <div class="company">
-        Cocolomi
+        <img class="company-logo" src="../assets/logos/cocolomi.svg" alt="Cocolomi logo" />Cocolomi
         <span class="jp">生成AI導入支援</span>
       </div>
       <div class="story">
-        <div class="kicker">経産省・導入ガイドライン</div>
-        <h4 class="headline-m">経産省、中堅製造業向け「生成AI導入参照アーキテクチャ」を公表</h4>
-        <p class="byline">産業部</p>
-        <p>経済産業省は24日、待たれていた『中堅製造業における生成AI導入参照アーキテクチャ』全92ページを公表した。題名の堅さに反し、本文書は今後2年間の購買が日本のどこで起きるかを示す、現時点でもっとも明瞭な政策的シグナルである。参照アーキテクチャは検索拡張パターンに大きく寄りかかり、調達手続きについて異例に詳細な手引きを示す。そして経産省の最近の文書としては初めて、「実装パートナーの実装能力」を補助金支給要件として明記した。</p>
+        <div class="kicker">ZDNet Japan</div>
+        <h4 class="headline-m"><a href="https://japan.zdnet.com/article/35247102/" target="_blank" rel="noopener noreferrer">機会損失8億円をAIエージェントで解消した、ある中小企業の転禍為福</a></h4>
+        <p class="byline">本紙編集部　ZDNet Japanより構成 · 2026年5月3日</p>
+        <p>顧客からの問い合わせが増えているが、対応できるマンパワーが限られている。年間8.1億円の機会損失を抱えており、このままでは2030年時点の累計機会損失は30億円に――。ある中小企業はAIエージェントの活用で、このリスクを乗り越えている。</p>
       </div>
       <div class="insight">
         <span class="label">Editor's Note · 社長への朝の覚え書き</span>
-        <p>注目すべき構造変化は文書そのものではなく要件条項にある——補助金は「実績のあるパートナー」を辿るのであって、「技術を持つベンダー」を辿るのではない。これによりインテグレーション市場は、断片的なサービス事業から「参照可能なサプライヤー登録簿」に近い形へと位置づけが変わる。<br/><br/><strong>今朝の問い：</strong>7月までに執筆・公開できれば、競合がリストの存在に気付く前にCocolomiを参照リストの中に置けるであろう、製造業の事例研究2本はどれか？</p>
+        <p><strong>今朝の問い：</strong>「年間8.1億円の機会損失→AIエージェントで解消」という構造を、自社顧客の業種・規模別に当てはめた場合、最も再現性が高いと見込める業種と損失試算の組み合わせはどれか？</p>
       </div>
     </div>
 
-    <!-- HUMAN ENERGY -->
     <div class="briefing-row" lang="ja">
       <div class="company">
-        Human Energy
+        <img class="company-logo" src="../assets/logos/HE.png" alt="Human Energy logo" />Human Energy
         <span class="jp">企業向け研修</span>
       </div>
       <div class="story">
-        <div class="kicker">愛知・現場研究</div>
-        <h4 class="headline-m">シャイン後継ラボのフィールドスタディ、愛知3社で「謙虚な問いかけ」を追跡</h4>
-        <p class="byline">組織開発部</p>
-        <p>故エドガー・シャインの最終ゼミ生らが設立したボストン拠点のラボの研究者が、愛知の工場現場で14ヶ月間、監督職を追跡した異例に粒度の細かいフィールドスタディを公表した。見出しの結論——KPI構造を変えずに「謙虚な問いかけ」を持続的に実践したことで、現場の問題提起率が38%上昇——よりも興味深いのは方法論的注記である。チームはアンケートではなく、参加者ジャーナルと四半期ごとの対話的インタビューを用いた。換言すれば、結論を可視化したのは<em>計測の道具立てそのもの</em>だった。</p>
+        <div class="kicker">MIT Sloan Management Review</div>
+        <h4 class="headline-m"><a href="https://sloanreview.mit.edu/video/leaders-at-all-levels-how-argenx-scaled-to-4-billion-without-bureaucracy/" target="_blank" rel="noopener noreferrer">Leaders at All Levels: How Argenx Scaled to $4 Billion Without Bureaucracy</a></h4>
+        <p class="byline">本紙編集部　MIT Sloan Management Reviewより構成 · 2026年4月29日</p>
+        <p>Biotech companies face the same dilemma as businesses in other industries: Innovation drops off dramatically with scale. European biotech Argenx has reached a market value of more than $40 billion, having so far escaped that innovation trap. How has it done this? The company shuns hierarchy and instead organizes into small teams, each dedicated to […]</p>
       </div>
       <div class="insight">
         <span class="label">Editor's Note · 社長への朝の覚え書き</span>
-        <p>方法論として、本研究はHuman Energyが研修の場で既に行っていることに非常に近い——計測ではなく構造化された対話を通して、暗黙のものを明示化する。機会はシャインのラボを模倣することではなく、貴社のトレーナーが彼らの計測道具に「似たことをしている」という事実を、クライアントが買える言葉で言語化することにある。<br/><br/><strong>今朝の問い：</strong>Human Energy版「フィールドスタディ」のパンフレット——3ページ、1クライアント、観察記録（証言ではなく）——は、次回の営業レビューまでに草稿化できるか？</p>
+        <p><strong>今朝の問い：</strong>Argenxの「小チーム×脱階層」モデルは、Human Energyの顧客企業が抱えるスケール後のイノベーション停滞に対し、次回のカルチャー変革研修で新たな診断問いとして使えるか？</p>
       </div>
     </div>
 
-    <!-- WEB-LIPO -->
     <div class="briefing-row" lang="ja">
       <div class="company">
-        Web-Repo
+        <img class="company-logo" src="../assets/logos/web-repo.png" alt="Web-Repo logo" />Web-Repo
         <span class="jp">フランチャイズ業界</span>
       </div>
       <div class="story">
-        <div class="kicker">東京地裁・開示</div>
-        <h4 class="headline-m">東京地裁、フランチャイザーの収益見込み開示基準を厳格化</h4>
-        <p class="byline">法務部</p>
-        <p>23日に公表された東京地裁判決は、フランチャイザーが加盟希望者に提示する想定営業利益の表現に許される裁量を実質的に狭めた。中堅外食チェーンを巡る長期係争での同判決は、「地域平均」値を提示する場合、その背後の分布と募集期間中の母集団比率を併せて示すべきだとした。業界顧問団は6週間以内に日本フランチャイズチェーン協会から開示モデル雛形の改訂が出ると見ており、自主的なテンプレ改訂の波が続くと予想している。</p>
-      </div>
-      <div class="insight">
-        <span class="label">Editor's Note · 社長への朝の覚え書き</span>
-        <p>これはWeb-Repoのディレクトリ事業にとって構造的な瞬間である——開示基準が厳格化されると、平易に提示され、出典の確かなFC案件情報の<em>編集的プレミアム</em>が急上昇する。加盟希望者からの引き合いは1四半期以内に、案件の「目立ち具合」よりも「透明性」を重視するようになる。<br/><br/><strong>今朝の問い：</strong>「この見込み数字が何を意味するか」を平易に解説するサイドバーを付加した場合、最も恩恵が大きいのはWeb-Repo上のどの上位50案件か？ そしてそのコストは？</p>
+        <h4 class="headline-m" style="font-style: italic; color: #666;">本日休載</h4>
       </div>
     </div>
   </section>
@@ -589,33 +724,41 @@
     <div class="general-grid">
 
       <div class="item">
-        <div class="kicker">Singapore</div>
-        <h5 class="headline-s">GIC Trims US Tech, Adds Japanese Industrials</h5>
-        <p>Singapore's sovereign fund quietly rotated about 2.4 per cent of its US-equity book into Japanese mid-cap industrials over the first quarter, according to a partner-presentation deck circulating in Singapore. The reweighting is small but unusually directional — a vote, in capital terms, on Japan's industrial-policy moment rather than its index.</p>
+        <div class="kicker">Washington・安全保障</div>
+        <h5 class="headline-s">Human Geography: The Strategic Edge in a Complex World</h5>
+        <p>In 2024, Judd Devermont wrote, “Human Geography Is Mission-Critical,” where he argued that the United States should focus on behaviors and attitudes informed by human geography to craft better strategy. Two years later, we asked Judd to revisit his arguments. Image: Samuel Lamptey via Wikimedia CommonsIn your 2024 article, you argued that the United States needed to focus its attention on behaviors and attitudes informed by human geography to craft strategy that adequately navigates a more complex world and threat environment. Two years later, has the United States utilized human geography more as an indicator for foreign policy decisions? Can you give some examples The post Human Geography: The Strategic Edge in a Complex World appeared first on War on the Rocks .</p>
+        <p class="byline" style="font-size: 11px; color: #666; margin-top: 4px;">出典：War on the Rocks · 2026年4月30日</p>
       </div>
 
       <div class="item" lang="ja">
-        <div class="kicker">東京・人口</div>
-        <h5 class="headline-s">2026年の人口断崖：生産年齢人口、初めて60%割れ</h5>
-        <p>今週確定した2025年国勢調査により、長く予期されてきた閾値が確認された——日本の生産年齢人口は総人口の59.3%まで低下した。数字自体は誰も驚かせない。注目は2020年比の低下速度がプロジェクションよりやや速い点にある。秋以前の補正予算論議よりも、今回はさらに労働力不足対策に重心が傾く見通しだ。</p>
+        <div class="kicker">国内マクロ・産業</div>
+        <h5 class="headline-s" style="font-style: italic; color: #666;">本日該当なし</h5>
+      </div>
+
+      <div class="item" lang="ja">
+        <div class="kicker">国際規制・テクノ覇権</div>
+        <h5 class="headline-s" style="font-style: italic; color: #666;">本日該当なし</h5>
       </div>
 
       <div class="item">
-        <div class="kicker">Brussels</div>
-        <h5 class="headline-s">EU AI Act: First Enforcement Cases Target Hiring Tools</h5>
-        <p>The Commission opened the first three formal enforcement actions under the AI Act this week, all of them against vendors of recruitment-screening tools rather than against the more politically conspicuous foundation-model providers. The signal is methodological: the Commission is starting where the harms are most legally legible, not where the headlines are loudest.</p>
+        <div class="kicker">New York・経営</div>
+        <h5 class="headline-s">The case for optimism in uncertain times</h5>
+        <p>When the world feels this uncertain, optimism can look like denial. But that depends on how broadly you frame the past and future.</p>
+        <p class="byline" style="font-size: 11px; color: #666; margin-top: 4px;">出典：McKinsey Insights</p>
       </div>
 
       <div class="item" lang="ja">
-        <div class="kicker">豊田市・産業</div>
-        <h5 class="headline-s">トヨタの水素戦略、EVの波を生き延びる——なぜか</h5>
-        <p>動力源論争を決着させるはずだった世界的なEVリセットから3年——トヨタの第4四半期水素関連開示は、商用車・定置型燃料プログラムの加速を示している。社内の見立て：水素は元々「乗用車」の話ではなかった。EV論が応えられない<em>産業需要市場</em>の話であり続けてきた。三品和広のプラットフォーム戦略における忍耐論を再読する価値がある。</p>
+        <div class="kicker">文化・社会</div>
+        <h5 class="headline-s">５月２日　空き家と移住 - 高坂浩一の新刊番台（岩風呂）</h5>
+        <p>今日はりぼん、なかよし、ちゃおなどの雑誌も発売になっています。...</p>
+        <p class="byline" style="font-size: 11px; color: #666; margin-top: 4px;">出典：本の雑誌オンライン · 2026年5月2日</p>
       </div>
 
-      <div class="item" lang="ja">
-        <div class="kicker">ヴェローナ・新刊</div>
-        <h5 class="headline-s">ロヴェッリの新エッセイ集、来週日本の書店に</h5>
-        <p>河出書房新社による『L'ordine del tempo, ancora』——アナクシマンドロスを伴って「時間と熱力学」のテーマに再交渉する——の翻訳が、5月1日に書店に並ぶ。ロヴェッリ愛読者には馴染みの動き：物理学を前ソクラテスの哲学者と共に語り、マッハとフッサールが静かに同席する。物理学を「人文学的な縫い目」が見える形で読みたい読者にとって、自然な架橋の1冊。</p>
+      <div class="item">
+        <div class="kicker">New York・科学</div>
+        <h5 class="headline-s">Farewell to a Giant of Botany</h5>
+        <p>Peter Raven, the transformative conservationist and father of “coevolution,” passed away this week The post Farewell to a Giant of Botany appeared first on Nautilus .</p>
+        <p class="byline" style="font-size: 11px; color: #666; margin-top: 4px;">出典：Nautilus · 2026年5月2日</p>
       </div>
 
     </div>
@@ -628,54 +771,44 @@
   <section class="page page-four">
     <div class="page-banner"><span class="pg-num">— Page IV —</span> Arts &amp; Letters · A Page for Slow Reading</div>
 
-    <div class="arts-grid">
+    <div class="page-four-grid">
 
-      <article class="concept-of-week" lang="ja">
-        <span class="label">— Concept of the Week ／ 今週の概念 —</span>
-        <h3>暗黙知とSECIスパイラル、再訪</h3>
-        <p class="byline">本紙編集部　2026年4月20日—26日号</p>
-        <div class="body">
-          <p class="dropcap">ポラニーの有名すぎるあの1句——「我々は語りうる以上のことを知っている」——は、引用が反復されるうちに、その奇妙さが摩耗してしまった。むしろ、その逆命題から始めたい。野中郁次郎が1つのキャリアをかけて打ち立てた命題：「組織はそのいずれの構成員が語りうる以上のことを知っており、その知は構成員と構成員の隙間に保持されている」。隙間は暗黙である。経営の仕事は、その隙間を凍結させずに可読化することにある。</p>
-          <p>SECIモデル——共同化・表出化・連結化・内面化——は通常、「暗黙／明示」と「個人／集団」を交差させた平らな2×2として描かれる。野中本人は、紺野登・遠山亮子との後年の論考で、この平面的な読み方を放棄し、螺旋へと差し替えている。4つのモードを1巡するごとに抽象度は1段上がる。そして螺旋は安定した均衡点を持たない。あるのは「次の1巡」だけである。</p>
-          <p>経営文献ではあまり語られないが、この描像は、約1世紀前にフッサールが展開していた現象学に驚くほど近い——その現象学を、日本語で根気よく可読化してきたのが竹田青嗣である。フッサールの本質直観（Wesenschau）は実務的な言葉に置き換えれば、現象に対する反省以前の把握（暗黙）から、別の意識による検証に耐える記述（明示）へと、構造化された手順で移行する技法である。現象学者の「エポケー」——自然的態度の慎重な括弧入れ——は、熟練のファシリテーターがワークショップに課す対話的規律と本質的に異なるものではない。</p>
-          <p>この架橋は、修辞以上の含意を持つ。<em>ディープリスニング</em>を名乗るあらゆる実践にとって、実務的な含意がある。深く聞くとは、引き出すことではない。話し手がまだ言葉にできていない暗黙の輪郭が、共有された焦点に立ち上がってくるまで、場に留まり続けることである。SECIの螺旋をフッサールから読み返したとき、「留まる」ことの工学が見えてくる。</p>
-          <p>実務に持ち帰るべき注意点が2つある。第1に、<em>表出化</em>の段階こそ多くの組織がもっとも誤る場面である——「文字に起こす」ことを「共有する」ことと取り違えるからである。第2に、螺旋はどのモードからでも入れるわけではない。実践上はほぼ常に、記憶に残るほど密度の高い「共同化のエピソード」から始まる。設計されたワークショップへの含意は鋭い：何も「成果」が産み出されていないように見える初期の時間を、惜しまずに予算化すべきである。</p>
-        </div>
-        <div class="further">
-          <strong>For Further Reading ／ 関連書誌</strong>
-          野中郁次郎・紺野登「『場』の概念」（1998）——引用されないが本質的な論文。竹田青嗣『現代思想の冒険』『フッサール「現象学の理念」入門』——日本語の入口。ポラニー『暗黙知の次元』第1章——短く、再読の価値。野矢茂樹の最新論考『記述とその限界』——本面の関連短信を参照。
-          <br/><br/>
-          <strong>Application Note · ディープリスニング実務への含意</strong>
-          Human Energyのファシリテーターが、参加者の「うまく言葉にできないのですが…」という瞬間に気付いたとき、取るべき動きは要約ではなく、こう問うことである——「もし答えに出会ったら、どんな状況でそれが『答えだ』と分かりますか」。この動きは構造的に、SECI螺旋における<em>表出化</em>のステップそのものである。
-        </div>
-      </article>
-
-      <aside class="academic-news" lang="ja">
-        <div class="kicker">岩波書店・春の新刊</div>
-        <h4 class="headline-m">野矢茂樹『記述とその限界』、岩波春の目玉</h4>
-        <p class="byline">書評部</p>
-        <p>野矢茂樹の近刊——仮題『記述とその限界』——が、岩波書店春のカタログの中心に据えられた。本書は、ウィトゲンシュタイン後期は「何が、誰によって、どんな共有された背景を伴って語りうるか」の探究として読むのが最も生産的だ、という野矢の長年の議論を1段押し進める。現象学に注意深い読者にとって特に興味深いのは、野矢がこれまでより直接的に<em>間主観性</em>の問題に踏み込む1章である。</p>
-        <hr class="dotted" />
-        <p>予約は丸の内丸善でも金曜朝から受付開始。初版部数は野矢の通例より大きいと伝えられる——アカデミー外への到達への、版元の賭けである。</p>
-        <hr class="thin" />
-        <div class="kicker">Also Worth Noting</div>
-        <h5 class="headline-s" style="margin-top:6px;">Aeon's Long Essay on the Yorùbá Storyteller</h5>
-        <p style="font-family:'Merriweather',serif; line-height:1.55;">An Aeon essay published this week makes a careful case for treating the West-African oral tradition as a living theory of mind, not a corpus of folktales. Useful pairing for readers of Tutuola.</p>
-      </aside>
-
-    </div>
-
-    <!-- THINK LOG STUB -->
-    <hr class="thick" />
-    <div lang="ja" style="display:grid; grid-template-columns: 1fr 2fr; gap:24px; align-items:start;">
-      <div>
-        <div class="kicker">— 思索ログ —</div>
-        <h4 class="headline-m">先週のメモが今週の読みに出会う場所</h4>
-        <p class="byline">本面常設欄・読者の余白用</p>
+    <article class="concept-column" lang="ja">
+      <div class="kicker">今週の概念</div>
+      <h3 class="concept-title">
+        概念メタファー
+        <span class="concept-en">Conceptual Metaphor</span>
+      </h3>
+      <div class="concept-meta">
+        <span class="domain">認知言語学</span>
+        <span class="thinkers">代表：ジョージ・レイコフ, マーク・ジョンソン</span>
       </div>
-      <div>
-        <p style="color: var(--ink-soft);">この欄は、読者自身の手帳と本紙が選んだ記事との対話に充てられる。仕組み——直近のメモの核片を、関連する記事と編集部が出会わせる——は、合宿後の組み立てに向けて準備中である。本格運用までの間、この欄は、いずれ本紙のもっとも個性的な企画になるはずの仕組みのプレースホルダーとして立つ。</p>
+      <div class="concept-essay">
+        <p>私たちが「議論に勝つ」「時間を無駄にする」と口にするとき、それは単なる比喩表現ではなく、思考そのものの設計図が露出している瞬間だ。ジョージ・レイコフとマーク・ジョンソンが1980年の『Metaphors We Live By』で提唱した概念メタファー理論は、「議論は戦争である」「時間は金である」といった抽象構造が、攻撃・防御・損得という身体的・物理的経験のスキーマ（認知の鋳型）に乗って初めて理解可能になることを示した。メタファーは文学的装飾ではなく、人間の認知がいかに身体に根ざしているかを暴く構造的事実なのである。アリストテレス以来、比喩は修辞学の問題として扱われてきたが、彼らはそれを認知科学と言語学の交叉点に引き戻し、「体験に基づく哲学（experiential philosophy）」の礎石に置いた。経営の文脈でこれを考えると、示唆は鋭い。「組織は機械である」と語る経営者は修理や効率を追い、「組織は生態系である」と語る経営者は多様性と共進化を見る——同じ現実を、異なるメタファーで切り取ることで、行動の選択肢そのものが変わってしまう。私たちが使うメタファーは世界観の症状であると同時に、世界を形成する力でもある。だとすれば、思考の刷新とはしばしば、言葉の刷新ではなく、根底にある概念メタファーを自覚し、更新することに他ならない。</p>
       </div>
+    </article>
+
+    <aside class="academic-column" lang="ja">
+      <div class="kicker">学術ニュース</div>
+
+      <div class="item" lang="ja">
+        <h5 class="headline-s"><a href="https://www.shunjusha.co.jp/news/n126097.html" target="_blank" rel="noopener noreferrer">サティ生誕160年記念 青柳いづみこ×高橋悠治 ダンスと画像とピアノ</a></h5>
+        <p>サティ生誕160年記念 青柳いづみこ×高橋悠治 ダンスと画像とピアノについて</p>
+        <p class="byline" style="font-size: 11px; color: #666; margin-top: 4px;">出典：春秋社 · 2026年4月28日</p>
+      </div>
+
+      <div class="item" lang="ja">
+        <h5 class="headline-s"><a href="https://shinsho-plus.shueisha.co.jp/column/gendai_majyo/34527" target="_blank" rel="noopener noreferrer">今日のウイッチクラフト</a></h5>
+        <p>2024年、私はミーアンジンに降り立った。 現在ではブリスベンという名で知られるこの土地は、はるか以前からトゥルバル族やユガラ族が暮らしてきた場所であり、彼らはここをミーアンジンと呼んできた。ヤガラ語を話す先住民たちが、 […]</p>
+        <p class="byline" style="font-size: 11px; color: #666; margin-top: 4px;">出典：集英社新書プラス · 2026年4月24日</p>
+      </div>
+
+      <div class="item" lang="ja">
+        <h5 class="headline-s"><a href="https://www.shunjusha.co.jp/news/n126016.html" target="_blank" rel="noopener noreferrer">アジア文芸ライブラリー『シュグデン』訳者 阿比留美帆氏×作家 万城目学氏 トークイベント開催</a></h5>
+        <p>アジア文芸ライブラリー『シュグデン』訳者 阿比留美帆氏×作家 万城目学氏 トークイベント開催について</p>
+        <p class="byline" style="font-size: 11px; color: #666; margin-top: 4px;">出典：春秋社 · 2026年4月23日</p>
+      </div>
+    </aside>
     </div>
   </section>
 
@@ -689,22 +822,16 @@
     <div class="page-five-content" lang="ja">
       <aside class="serendipity-article">
         <div class="kicker">今朝出会った1本</div>
-        <h3 class="article-title">建築を「見る」ためのもう一つの形式。瀧本幹也、国立西洋美術館の写真集を刊行</h3>
-        <p class="description">写真家・瀧本幹也による写真集「LE CORBUSIER THE NATIONAL MUSEUM OF WESTERN ART ル・コルビュジエ 国立西洋美術館 写真 / 瀧本幹也」が刊行される。国立西洋美術館の世界遺産登 […]</p>
+        <h3 class="article-title">世界的サウナブームの火付け役で「ロウリュ」の立役者、ヤスペル・ペーコネンに聞く</h3>
+        <p class="description">世界的なサウナブームの震源地となったLoÿly（ロウリュ）。Photo by kuvio.com 今から10年前の2016年、フィンランドの首都ヘルシンキの中心部、バルト海沿いに「Loÿly（ロウリュ）」という名のサウナ […]</p>
         <p class="serendipity-byline">出典：AXIS · 2026年5月1日</p>
       </aside>
 
       <article class="ai-kamiyama-column">
         <div class="kicker">AIかみやまの一筆</div>
-        <h3 class="column-title">建築が語り出す写真集</h3>
+        <h3 class="column-title">ロウリュは沈黙の傘装置</h3>
         <div class="column-body">
-          <p>なるほど、普段の自分の環世界からちょっと外れたところで、こういう記事に出会う感じ、いいですね。
-
-建築は本来、使われて初めて立ち上がるものだけど、写真は「使われる前の沈黙」を切り取れる。瀧本幹也さんの写真集は、西洋美術館を“見る”だけでなく、建物の呼吸を“聞く”形式なのかもしれない。
-
-聞き上手の黒子の美学に近い。主役は建物で、撮る人は前に出ない。でも、光・影・距離の選び方で、建物の暗黙知が形式知になる。
-
-コルビュジエの声を、スナックのカラオケみたいに勝手に盛らずに、原曲キーで届ける。そんな誠実さを想像しました。</p>
+          <p>普段読まない領域の記事に出会うと、自分の環世界が少し広がる感じがありますね。Loÿlyのロウリュは、単なる熱の演出以上に、言葉を減らし呼吸と間を増やす「聞き合いの儀式」という見方もできる気がします。蒸気の中では助言が溶けて、聞き手は黒子のようにただ在ることが許される。空雨傘で言えば、空は回復、雨は孤独や緊張、傘が共同のロウリュ。場が人を整えるのではなく、人が場に整えられる、そんな逆転を感じました。</p>
         </div>
         <p class="ai-byline">— AIかみやま</p>
       </article>
@@ -716,30 +843,47 @@
   <!--                  PAGE SIX — COLUMNS & SERENDIPITY               -->
   <!-- ═══════════════════════════════════════════════════════════════ -->
   <section class="page page-six">
-    <div class="page-banner"><span class="pg-num">— Page VI —</span> Columns &amp; Serendipity · A Room with a Different Window</div>
+    <div class="page-banner"><span class="pg-num">— Page VI —</span> Leisure · Reading, Music, Trail &amp; Table</div>
 
-    <div class="columns-grid">
+    <div class="page-six-grid-v2">
 
-      <article class="col">
-        <span class="corner">— Serendipity —</span>
-        <div class="kicker">From the Linguistics Desk</div>
-        <h3 class="headline-l">The Storytellers of Yorùbáland — A Linguistic Survey of a Living Oral Tradition</h3>
-        <p class="byline">By <span class="author">A Visiting Correspondent</span> · Ile-Ife, Nigeria</p>
-        <p>For three months a small team from a Lagos university has been recording the storytellers of three southwestern Yorùbá towns, with a question that any phenomenologist would recognise: <em>what is being preserved, exactly, when an oral tradition is preserved?</em> Not the words — those vary night to night. Not the plot — most listeners can predict it. What is preserved is the <em>shape of the attention</em> the storyteller invites the audience to hold, and the way that shape is broken and re-made over the arc of the night.</p>
-        <p>The team's methodological move is unusual: they treat each performance as a piece of cognitive infrastructure, not a piece of literature. The closest Western analogues are not folklorists but the conversational analysts in the Goffman line. The interim findings — quietly extraordinary — suggest that several of the older performers have, in their bodies, a working theory of <em>shared attention</em> more articulate than most of what is published in cognitive science journals.</p>
-        <p>The Tribune notes this story today not because it is timely but because it sits on the seam between three things this paper cares about — a phenomenological question, a marginal tradition, and an oral practice that is, in the most literal sense, a living theory of mind. Tutuola admirers will recognise the soil.</p>
-      </article>
+    <article class="leisure-column-v2 books-column-v2" lang="ja">
+      <div class="kicker">読書</div>
+      <h3 class="column-title">消えない傷跡、亡霊の街角</h3>
+      <div class="column-body">
+        <p>南北戦争から160年が過ぎても、アメリカの街には南部連合の記念碑や命名された通りがゾンビのように生き残っている。The Paris Reviewに掲載されたこのエッセイが放つ言葉が刺さった。「nation is splattered with these zombie structures, or sutures」――縫合痕、という訳語が頭から離れない。取り除くことも、完全に忘れることもできない傷跡が都市の皮膚に刻まれている。平野啓一郎が「分人」で問うた〈誰と向き合うかで人は変わる〉という問いを、街そのものに当てはめたくなる。あるいは澤村伊智のJホラーが描く「そこにあり続けるもの」の恐怖と、どこか通底しないだろうか。歴史は幽霊になって建築に宿る。LAを歩いたことのある方なら、あの乾いた光の下に何が縫い込まれているか、少し違って見えてくるかもしれない。</p>
+      </div>
+      <p class="byline-v2">出典：The Paris Review · 2026年5月1日</p>
+    </article>
 
-      <article class="col" lang="ja">
-        <span class="corner">— Column —</span>
-        <div class="kicker">手帖から</div>
-        <h3 class="headline-l">「聞かれる」ことについて——現象学者の手帖から</h3>
-        <p class="byline">本紙寄稿者</p>
-        <p>現象学の文献にはよく書かれているが、その外ではめったに語られない、奇妙な経験がある——<em>ひどく良く聞かれていると、自分でもまだ言葉にできていなかったことを、知り始める</em>、という経験である。フッサールは『デカルト的省察』の第二省察で、これに近い事態を他者意識の「付帯現前化（appresentation）」と呼んだ。メルロ＝ポンティはより身体的に、「間身体性」の織物について語った。日常の日本語では「聞く」という動詞が、聴くと訊くの間で揺れる有用な曖昧さを担っている——その揺れを職業的に使う人の手にあれば、それ自体が小さな現象学的技術である。</p>
-        <p>文献があまり率直に書かないのは、この経験が職業生活の中ではどれほど稀か、そしてそれを引き出す小さな実践群がどれほど特定可能か、という2点である。挙げれば次のようなものになる：問いを未完のまま手放す覚悟、要約に急がない規律、そして——もっとも教えにくい——話し手が「自分が言いたかったことに気付く直前」の小さな沈黙への耐性。神秘的なものは何もない。記述するのは易く、為すのは難い。</p>
-        <p>もしこの欄に主張があるとすれば、こうである——「聞いてもらえた」というあの軽い口語は、その軽さが示唆する以上の哲学的な仕事をしている。真剣に取れば、それは「精神はいかにして互いに接近可能になるか」という理論への入口を指す。それは結局のところ、<em>ディープリスニング</em>を名乗るあらゆる実践がその上に立っている問いそのものである。</p>
-      </article>
+    <article class="leisure-column-v2 music-column-v2" lang="ja">
+      <div class="kicker">音楽</div>
+      <h3 class="column-title">ボカロが大西洋を渡る日</h3>
+      <div class="column-body">
+        <p>Yeの長女ノース・ウェストが1st EPに収録した楽曲が、ボカロP・きくおの「愛して愛して愛して」をサンプリングしているという。しかも公認で。きくおはニコニコ動画発のアーティストだが、その楽曲が持つ反復と過剰の美学——あれはRadioheadの「Fitter Happier」が抱えていた焦燥と、どこか同じ温度を持っていると思っていた。言語の壁をひとつのサンプルが軽々と飛び越えてしまう光景は、90年代にUKとUSのロックが互いを発見していったあの感覚に少し似ている。ボカロという文脈を知らなくても、あの反復するメロディは確かに誰かの耳に刺さる。EPをまだ聴いていないなら、元ネタ「愛して愛して愛して」からたどってみるのも一興だ。</p>
+      </div>
+      <p class="byline-v2">出典：ナタリー音楽 · 2026年5月3日</p>
+    </article>
 
+    <article class="leisure-column-v2 outdoor-column-v2" lang="ja">
+      <div class="kicker">アウトドア</div>
+      <h3 class="column-title">城門を出発点にする歩き</h3>
+      <div class="column-body">
+        <p>800年前の城門をくぐってトレイルが始まる、という出だしをどう受け取るだろうか。ウェールズ北西部カーナーヴォンを発つロングウォーカーの記録は、出発地点そのものが既に「非日常」だと気づかせてくれる。翻って考えると、奥多摩や丹沢に向かうとき、私たちも似たような閾をまたいでいる。改札口、登山口の標識、あるいは最初の石段——そこには、日常と別世界を隔てる見えない門がある。ULの思想が「余分を削ること」を説くように、出発地点を意識することは旅の解像度を上げる。カーディフでも奥武蔵でも、どこから歩き始めるかがすでに物語の第一文だ、とこの記事は静かに示している。</p>
+      </div>
+      <p class="byline-v2">出典：The Trek · 2026年5月3日</p>
+    </article>
+
+    <article class="leisure-column-v2 cooking-column-v2" lang="ja">
+      <div class="kicker">料理</div>
+      <h3 class="column-title">5月の朝に、河風のような一杯を</h3>
+      <p class="dish-name">春キャベツとえびのフォー風スープ麺</p>
+      <p class="ingredients">春キャベツ、むきえび、フォー（ライスヌードル）、ナンプラー</p>
+      <div class="column-body">
+        <p>ベトナムのフォーといえば長時間煮込んだ骨スープ、というイメージがあるが、家庭では昆布と鶏がらスープの素で十分に「らしさ」が出る。今日のポイントは春キャベツをざっくり手でちぎって最後に加えること。火を通しすぎず、芯の甘みと葉の柔らかさを両立させたい。ナンプラーは小さじ1から始め、塩気より「香り」として捉えると薄味派にも馴染みやすい。えびは冷凍むき身で十分で、沸騰した湯に入れて30秒、色が変わったら引き上げる。麺を器に盛り、スープを注ぎ、えびと春キャベツをふんわりのせてライムを一絞り。柑橘が5月の空気に似た爽やかな酸味を加えてくれる。トータル20分。出勤前の厨房で、少しだけホーチミンの路地を想像してみるのも悪くない。</p>
+      </div>
+      <p class="byline-v2">Tribune厨房</p>
+    </article>
     </div>
   </section>
 
