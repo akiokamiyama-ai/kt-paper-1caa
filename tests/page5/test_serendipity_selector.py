@@ -304,6 +304,101 @@ def test_culture_participates_in_tie_random():
 
 
 # ---------------------------------------------------------------------------
+# (g) B1 改修：Reference priority も fetch 対象に含む（2026-05-03）
+# ---------------------------------------------------------------------------
+
+def test_fetch_calls_include_reference_priority():
+    """_fetch_and_score_category は high/medium/reference の3優先度で fetch_run を呼ぶ。"""
+    calls: list[dict] = []
+
+    def fake_fetch_run(*, category, priority, **kw):
+        calls.append({"category": category, "priority": priority})
+        return {"articles": []}  # 空で OK、本テストは call 引数の検証のみ
+
+    original_fetch = serendipity_selector.fetch_run
+    serendipity_selector.fetch_run = fake_fetch_run
+    try:
+        scored, cost = serendipity_selector._fetch_and_score_category("culture")
+    finally:
+        serendipity_selector.fetch_run = original_fetch
+
+    priorities = [c["priority"] for c in calls if c["category"] == "culture"]
+    ok = (
+        set(priorities) == {"high", "medium", "reference"}
+        and len(priorities) == 3
+        and scored == []
+        and cost == 0.0
+    )
+    _check("g1 fetch_run is called for high+medium+reference (3 calls)", ok,
+           f"priorities={priorities}, scored_len={len(scored)}")
+
+
+def test_reference_articles_reach_pipeline_input():
+    """Reference 由来の Article が dedup/pipeline 入力に到達する。
+
+    fetch_run mock で priority="reference" のときだけ Article を返し、その URL が
+    Stage 1 の入力（pipeline_dicts）に含まれることを Stage 1 mock で検証する。
+    """
+    from datetime import datetime
+    from scripts.lib.source import Article
+
+    ref_article = Article(
+        source_name="Pitchfork",
+        title="Reference-only article",
+        link="https://pitchfork.test/ref-only-1",
+        description="dummy",
+        pub_date=datetime(2026, 5, 3, 9, 0, 0),
+        body_paragraphs=["dummy body"],
+    )
+
+    def fake_fetch_run(*, category, priority, **kw):
+        # high/medium は空、reference のときだけ 1 件返す
+        if priority == "reference":
+            return {"articles": [ref_article]}
+        return {"articles": []}
+
+    captured_pipeline_input: list[list[dict]] = []
+
+    def fake_run_stage1(pipeline_dicts):
+        captured_pipeline_input.append(list(pipeline_dicts))
+        # 全件 surviving 扱い
+        return [{**d, "is_excluded": False} for d in pipeline_dicts]
+
+    # Stage 2 が呼ばれないように、stage1 の結果を空にせず、stage2 mock も入れる
+    def fake_run_stage2(arts):
+        class FakeS2:
+            evaluations_by_url = {a["url"]: {"final_score": 50.0} for a in arts}
+            cost_usd = 0.0
+            errors = []
+        return FakeS2()
+
+    original_fetch = serendipity_selector.fetch_run
+    original_s1 = serendipity_selector.run_stage1
+    original_s2 = serendipity_selector.run_stage2
+    serendipity_selector.fetch_run = fake_fetch_run
+    serendipity_selector.run_stage1 = fake_run_stage1
+    serendipity_selector.run_stage2 = fake_run_stage2
+    try:
+        scored, _cost = serendipity_selector._fetch_and_score_category("music")
+    finally:
+        serendipity_selector.fetch_run = original_fetch
+        serendipity_selector.run_stage1 = original_s1
+        serendipity_selector.run_stage2 = original_s2
+
+    # Stage 1 入力に reference 由来の URL が含まれている
+    urls_in_pipeline = {
+        d["url"] for batch in captured_pipeline_input for d in batch
+    }
+    scored_urls = {a.get("url") for a in scored}
+    ok = (
+        "https://pitchfork.test/ref-only-1" in urls_in_pipeline
+        and "https://pitchfork.test/ref-only-1" in scored_urls
+    )
+    _check("g2 Reference 由来の記事が Stage 1 入力 + 最終 scored に到達する", ok,
+           f"pipeline_urls={urls_in_pipeline}, scored_urls={scored_urls}")
+
+
+# ---------------------------------------------------------------------------
 # Test runner
 # ---------------------------------------------------------------------------
 
@@ -338,6 +433,10 @@ def main() -> int:
     test_culture_in_eligible_categories()
     test_culture_pickable_when_least_shown()
     test_culture_participates_in_tie_random()
+    print()
+    print("(g) B1 改修：Reference priority も fetch:")
+    test_fetch_calls_include_reference_priority()
+    test_reference_articles_reach_pipeline_input()
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")
     return 0 if FAIL == 0 else 1

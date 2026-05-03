@@ -58,6 +58,7 @@
 
 優先度順：
 
+0. **Page IV (article_rotator.py) の Reference 取り込み backlog** — 2026-05-03 の B1 改修で Page V serendipity は high+medium+reference の3優先度を fetch するように改修したが、Page IV (`scripts/page4/article_rotator.py:168`) は同じ "high+medium のみ" パターンが残っている。今 sprint では非対称のまま運用し、Page V の運用観察結果（30日後）と合わせて Page IV にも B1 同等改修を入れるか判断する
 1. **Stage 2 プロンプトでの「カルチャー領域評価軸」の調整** — 既存のプロンプトはビジネス・地政・学術文脈を主に想定しているため、houyhnhnm / cinra.net の単純告知記事（新作・キャスト発表）が「読者の知的探究に資するか」で確実に低スコアになるか要確認。低スコア化が弱ければ否定キーワード辞書（「リリース」「キャスト発表」「グッズ販売」等）の追加を検討
 2. **TABI LABO の Z世代観察記事と一般ライフハック記事の弁別** — 同サイト内で「TikTok トレンド分析」のような社会観察と「掃除のコツ」のような汎用ライフハック記事が混在。前者を高評価する選定ロジックを Stage 2 プロンプトで明示
 3. **ナタリーの再検討（フェーズ2）** — RSS 不在のため今回は除外したが、ポップカルチャー領域の主力なので、Google News RSS proxy 経由ではない代替経路（HTML スクレイピング、JSON API 等）の調査を将来検討

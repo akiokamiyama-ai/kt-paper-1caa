@@ -12,6 +12,24 @@ Strategy:
 Why "上位 N からランダム抽選"：score 1位固定だと毎日同じ記事になる懸念。
 未読領域に出会う「セレンディピティ」を最大化するため、品質の足切りはしつつ
 最終選定は乱数で混ぜる。
+
+運用観察 TODO（2026-05-03 culture 導入時の B1 改修に伴う）:
+    Sprint 4 で priority="reference" を fetch 対象に追加した（B1 改修）。
+    これにより以下の挙動を 30 日運用後に観察し、必要なら B3 昇格を検討する。
+
+    観察ポイント:
+    - logs/page5_history.json の category 別表示頻度
+    - academic の場合：article_url 集計で SEP/PhilPapers の偏り確認
+    - music の場合：Pitchfork/NME の日常化有無
+    - 全カテゴリ：Reference ソースが Medium ソースを圧迫していないか
+
+    B3 昇格判断基準:
+    - 同じ Reference ソースが 7 日以内に 3 回以上選定された場合、B3 検討
+    - カテゴリ内で Reference ソースが Medium を 50% 以上占めるように
+      なった場合、Stage 2 評価の priority 重み付け追加を検討
+
+    関連 backlog: Page IV (article_rotator.py) も同じ "high+medium のみ"
+    パターン。今 sprint では Page V のみ B1 改修、Page IV は別タスク。
 """
 
 from __future__ import annotations
@@ -253,12 +271,17 @@ def _fetch_and_score_category(
     pre_evaluated: dict[str, dict] | None = None,
     registry: SourceRegistry | None = None,
 ) -> tuple[list[dict], float]:
-    """Fetch ``{category}.md`` High+Medium, run Stage 1+2+3."""
+    """Fetch ``{category}.md`` High+Medium+Reference, run Stage 1+2+3.
+
+    Reference 配置のソースもセレンディピティ候補として fetch する（B1 改修、
+    2026-05-03）。priority による重み付けは行わず、Stage 2 LLM 評価による
+    品質フィルタに委譲する。観察 TODO はモジュール docstring 参照。
+    """
     if registry is None:
         registry = build_registry(SOURCES_DIR)
 
     raw = []
-    for pri in ("high", "medium"):
+    for pri in ("high", "medium", "reference"):
         try:
             summary = fetch_run(
                 category=category, priority=pri, limit=PER_FETCH_LIMIT,
