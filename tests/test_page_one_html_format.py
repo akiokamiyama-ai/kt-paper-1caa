@@ -40,7 +40,8 @@ def _check(label: str, condition: bool, detail: str = "") -> bool:
 # (a) byline strips "原題：<em>...</em>"
 # ---------------------------------------------------------------------------
 
-def test_top_body_no_genrei_tag():
+def test_top_body_byline_format():
+    """Sprint 6: byline は「出典：{label}」(plain text)、'原題：'/'全文：' はなし。"""
     article = {
         "title": "OpenAI Launches GPT-X",
         "description": "...",
@@ -50,13 +51,18 @@ def test_top_body_no_genrei_tag():
     }
     html = regen._render_top_body(article)
     no_genrei = "原題：" not in html and "<em>" not in html
-    has_zenbun = "全文：" in html and 'href="https://test.test/article"' in html
+    no_zenbun = "全文：" not in html
+    has_shutten = "出典：" in html
+    no_a_in_byline = '<a href="https://test.test/article"' not in html
     _check("a1 _render_top_body has no '原題：<em>' label", no_genrei,
            "byline must drop 原題 since h2 carries it now")
-    _check("a2 _render_top_body still has '全文：<a>' link", has_zenbun)
+    _check("a2 _render_top_body has no '全文：<a>' link (Sprint 6)",
+           no_zenbun and no_a_in_byline,
+           "byline must drop 全文 link; URL link is on h2 now")
+    _check("a3 _render_top_body has '出典：' label", has_shutten)
 
 
-def test_secondary_body_no_genrei_tag():
+def test_secondary_body_byline_format():
     article = {
         "title": "Some Story",
         "description": "...",
@@ -66,7 +72,13 @@ def test_secondary_body_no_genrei_tag():
     }
     html = regen._render_secondary_body(article)
     no_genrei = "原題：" not in html and "<em>" not in html
-    _check("a3 _render_secondary_body has no '原題：<em>' label", no_genrei)
+    no_zenbun = "全文：" not in html
+    has_shutten = "出典：" in html
+    no_a_in_byline = '<a href="https://test.test/sec"' not in html
+    _check("a4 _render_secondary_body has no '原題：<em>' label", no_genrei)
+    _check("a5 _render_secondary_body has no '全文：<a>' link (Sprint 6)",
+           no_zenbun and no_a_in_byline)
+    _check("a6 _render_secondary_body has '出典：' label", has_shutten)
 
 
 # ---------------------------------------------------------------------------
@@ -130,19 +142,22 @@ def test_build_page_one_emits_new_format():
     finally:
         regen._build_sidebar = original_sidebar
 
-    # Top is EN → h2 has original, p.article-title-japanese has 世銀がピボット
+    # Sprint 6: タイトルは <h2><a href>...</a></h2> 形式に変更
+    # Top is EN → h2 has original wrapped in <a>, p.article-title-japanese has 世銀がピボット
     top_h2_orig = (
-        '<h2 class="headline-xl article-title-original">World Bank Pivots</h2>' in html
+        '<h2 class="headline-xl article-title-original"><a href="https://e/1"' in html
+        and '>World Bank Pivots</a></h2>' in html
     )
     top_jp = (
         '<p class="article-title-japanese">世銀がピボット</p>' in html
     )
-    _check("c1 top EN article: h2 = original, jp line present", top_h2_orig and top_jp,
+    _check("c1 top EN article: h2><a> = original, jp line present", top_h2_orig and top_jp,
            f"h2_orig={top_h2_orig}, jp={top_jp}")
 
-    # Secondary 1 is JA (Foresight) → no jp line, h3 = ハンガリーの動向 (which is also title)
+    # Secondary 1 is JA (Foresight) → no jp line, h3><a>title</a></h3>
     sec_ja_h3 = (
-        '<h3 class="headline-l article-title-original">ハンガリーの動向</h3>' in html
+        '<h3 class="headline-l article-title-original"><a href="https://f/1"' in html
+        and '>ハンガリーの動向</a></h3>' in html
     )
     # The JA article's title_ja line must NOT appear (would be duplicate)
     no_dup_ja = html.count("ハンガリーの動向") == 1
@@ -150,12 +165,13 @@ def test_build_page_one_emits_new_format():
            sec_ja_h3 and no_dup_ja,
            f"h3_present={sec_ja_h3}, occurrences={html.count('ハンガリーの動向')}")
 
-    # Secondary 2 (Reuters EN) → h3 has original + jp line
+    # Secondary 2 (Reuters EN) → h3><a>title</a></h3> + jp line
     sec_en_h3 = (
-        '<h3 class="headline-l article-title-original">Reuters Story</h3>' in html
+        '<h3 class="headline-l article-title-original"><a href="https://r/1"' in html
+        and '>Reuters Story</a></h3>' in html
     )
     sec_en_jp = '<p class="article-title-japanese">ロイターの記事</p>' in html
-    _check("c3 EN secondary: h3 = original, jp line present",
+    _check("c3 EN secondary: h3><a> = original, jp line present",
            sec_en_h3 and sec_en_jp,
            f"h3={sec_en_h3}, jp={sec_en_jp}")
 
@@ -166,9 +182,9 @@ def test_build_page_one_emits_new_format():
 def main() -> int:
     print("Page I HTML format tests (Sprint 5, 2026-05-03)")
     print()
-    print("(a) byline drops 原題 label:")
-    test_top_body_no_genrei_tag()
-    test_secondary_body_no_genrei_tag()
+    print("(a) byline becomes plain '出典：' (Sprint 6):")
+    test_top_body_byline_format()
+    test_secondary_body_byline_format()
     print()
     print("(b) inject_page_one_css contents + idempotency:")
     test_inject_page_one_css_contains_selectors()

@@ -457,6 +457,41 @@ def translate_for_render(articles: list[dict]) -> None:
 # Rendering — source-aware Page I builder
 # ---------------------------------------------------------------------------
 
+# Sprint 6 (2026-05-03): 全面共通のリンクスタイル統一。color: inherit + dotted
+# underline + hover で solid。新聞らしい硬質な見た目を保つ。
+LINK_STYLE_CSS_MARKER = "/* === Sprint 6 unified link style === */"
+
+LINK_STYLE_CSS = f"""
+{LINK_STYLE_CSS_MARKER}
+a {{
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px dotted #888;
+  padding-bottom: 1px;
+}}
+a:hover {{
+  border-bottom-style: solid;
+}}
+a:visited {{
+  color: inherit;
+}}
+"""
+
+
+def inject_link_style_css(html_text: str) -> str:
+    """Idempotently inject the unified link style CSS just before </style>."""
+    if LINK_STYLE_CSS_MARKER in html_text:
+        return html_text
+    end_style_idx = html_text.rfind("</style>")
+    if end_style_idx < 0:
+        head_close = html_text.find("</head>")
+        if head_close < 0:
+            return html_text
+        injected = f"<style>\n{LINK_STYLE_CSS}\n</style>\n"
+        return html_text[:head_close] + injected + html_text[head_close:]
+    return html_text[:end_style_idx] + LINK_STYLE_CSS + html_text[end_style_idx:]
+
+
 # Sprint 5 (2026-05-03): 第1面の HTML 表示形式を「原文タイトル大 + 日本語小書き」に
 # 変更（選択肢 C）。CSS は inject_page_one_css でテンプレ </style> 直前に挿入。
 PAGE_ONE_CSS_MARKER = "/* === Page I title formatting (Sprint 5, 2026-05-03) === */"
@@ -509,10 +544,10 @@ def _esc(s: str) -> str:
 
 
 def _render_top_body(top: dict) -> str:
-    """Single-paragraph dropcap from desc_ja + a byline.
+    """Single-paragraph dropcap from desc_ja + a source byline.
 
-    Sprint 5: 原題は h2.article-title-original で表示するため、byline からは
-    「原題：<em>{title}</em>」を削除し、全文リンクのみ残す。
+    Sprint 6: byline を「出典：{label}」(plain text) に変更。タイトル h2 が
+    <a href> で URL を持つため、byline には URL リンクを置かない（重複回避）。
     """
     desc_ja = top.get("desc_ja", "") or top.get("description", "")
     paragraphs = [f'<p class="dropcap">{_esc(desc_ja)}</p>']
@@ -523,9 +558,7 @@ def _render_top_body(top: dict) -> str:
             label = kicker.split("・")[0]
             break
     paragraphs.append(
-        f'<p class="byline" style="margin-top:8px;">全文：'
-        f'<a href="{_esc(top.get("url", ""))}" target="_blank" '
-        f'rel="noopener noreferrer">{_esc(label)}</a></p>'
+        f'<p class="byline" style="margin-top:8px;">出典：{_esc(label)}</p>'
     )
     return "\n".join("          " + p for p in paragraphs)
 
@@ -540,9 +573,7 @@ def _render_secondary_body(sec: dict) -> str:
             break
     paragraphs = [f"        <p>{_esc(desc_ja)}</p>"]
     paragraphs.append(
-        f'        <p class="byline" style="margin-top:6px;">全文：'
-        f'<a href="{_esc(sec.get("url", ""))}" target="_blank" '
-        f'rel="noopener noreferrer">{_esc(label)}</a></p>'
+        f'        <p class="byline" style="margin-top:6px;">出典：{_esc(label)}</p>'
     )
     return "\n".join(paragraphs)
 
@@ -619,11 +650,17 @@ def build_page_one_v2(articles: list[dict]) -> str:
             "" if s_is_ja
             else f'\n        <p class="article-title-japanese">{_esc(s_title_ja)}</p>'
         )
+        # Sprint 6: タイトルにリンク。URL があれば <a> で囲む。
+        s_url = s.get("url", "")
+        s_title_html = (
+            f'<a href="{_esc(s_url)}" target="_blank" rel="noopener noreferrer">{_esc(s_title_orig)}</a>'
+            if s_url else _esc(s_title_orig)
+        )
         secondaries_html.append(
             f"""
       <div class="col" lang="ja">
         <div class="kicker">{_esc(kicker)}</div>
-        <h3 class="headline-l article-title-original">{_esc(s_title_orig)}</h3>{s_jp_line}
+        <h3 class="headline-l article-title-original">{s_title_html}</h3>{s_jp_line}
         <p class="byline">{_esc(byline)}</p>
 {_render_secondary_body(s)}
       </div>""".rstrip()
@@ -643,6 +680,12 @@ def build_page_one_v2(articles: list[dict]) -> str:
         "" if top_is_ja
         else f'\n        <p class="article-title-japanese">{_esc(top_title_ja)}</p>'
     )
+    # Sprint 6: top のタイトルにリンク。URL があれば <a> で囲む。
+    top_url = top.get("url", "")
+    top_title_html = (
+        f'<a href="{_esc(top_url)}" target="_blank" rel="noopener noreferrer">{_esc(top_title_orig)}</a>'
+        if top_url else _esc(top_title_orig)
+    )
 
     page = f"""<section class="page page-one">
     <div class="page-banner"><span class="pg-num">— Page I —</span> The Front Page · World &amp; Business</div>
@@ -650,7 +693,7 @@ def build_page_one_v2(articles: list[dict]) -> str:
     <article class="front-top">
       <div class="lead-story" lang="ja">
         <div class="kicker">{_esc(top_kicker)}</div>
-        <h2 class="headline-xl article-title-original">{_esc(top_title_orig)}</h2>{top_jp_line}
+        <h2 class="headline-xl article-title-original">{top_title_html}</h2>{top_jp_line}
         <p class="deck">{_esc(top.get("desc_ja", ""))}</p>
         <p class="byline">{_esc(top_byline)}</p>
         <div class="body-3col">
@@ -869,15 +912,21 @@ def _render_page3_item(article: dict, region: str) -> str:
     title = article.get("title") or ""
     description = article.get("description") or ""
     source_name = article.get("source_name") or ""
+    url = article.get("url") or ""
     date_label = _format_publish_date_ja(article.get("pub_date"))
     if date_label:
         byline_text = f"出典：{source_name} · {date_label}"
     else:
         byline_text = f"出典：{source_name}"
+    # Sprint 6: タイトルにリンク。URL があれば <a> で囲む（Page IV academic と同形）。
+    title_html = (
+        f'<a href="{_esc(url)}" target="_blank" rel="noopener noreferrer">{_esc(title)}</a>'
+        if url else _esc(title)
+    )
     return f"""
       <div class="item"{lang_attr}>
         <div class="kicker">{_esc(kicker)}</div>
-        <h5 class="headline-s">{_esc(title)}</h5>
+        <h5 class="headline-s">{title_html}</h5>
         <p>{_esc(description)}</p>
         <p class="byline" style="font-size: 11px; color: #666; margin-top: 4px;">{_esc(byline_text)}</p>
       </div>""".rstrip()
@@ -1286,6 +1335,7 @@ def _render_page_five(serendipity: dict, column: dict) -> str:
     article = serendipity["article"]
     title = (article.get("title") or "").strip()
     source_name = (article.get("source_name") or "").strip()
+    url = (article.get("url") or "").strip()
     description = _truncate_to_chars(article.get("description") or "", 120)
     date_label = _format_publish_date_ja(article.get("pub_date"))
     if date_label:
@@ -1296,13 +1346,20 @@ def _render_page_five(serendipity: dict, column: dict) -> str:
     column_title = column.get("column_title", "")
     column_body = column.get("column_body", "")
 
+    # Sprint 6: serendipity の article-title を <a> で囲む。元記事タイトルが
+    # 見える場所なので、Q2 設計原則に従いタイトルにリンク。
+    title_html = (
+        f'<a href="{_esc(url)}" target="_blank" rel="noopener noreferrer">{_esc(title)}</a>'
+        if url else _esc(title)
+    )
+
     return f"""<section class="page page-five">
     <div class="page-banner"><span class="pg-num">— Page V —</span> Columns &amp; Serendipity · A Room with a Different Window</div>
 
     <div class="page-five-content" lang="ja">
       <aside class="serendipity-article">
         <div class="kicker">今朝出会った1本</div>
-        <h3 class="article-title">{_esc(title)}</h3>
+        <h3 class="article-title">{title_html}</h3>
         <p class="description">{_esc(description)}</p>
         <p class="serendipity-byline">{_esc(article_byline)}</p>
       </aside>
@@ -1437,6 +1494,9 @@ def _render_leisure_column(
     """One column for books / music / outdoor.
 
     ``result`` is the dict returned by ``leisure_recommender.recommend_for_area``.
+
+    Sprint 6: column-title は Tribune オリジナルのコラム題目（元記事タイトルでは
+    ない）のためリンクしない。元記事への動線は byline の出典名にリンクを置く。
     """
     column_title = result.get("column_title", "")
     column_body = result.get("column_body", "")
@@ -1444,13 +1504,20 @@ def _render_leisure_column(
 
     if article is not None:
         source_name = article.get("source_name", "")
+        url = article.get("url", "")
         date_label = _format_publish_date_ja(article.get("pub_date"))
+        # Sprint 6: 出典名に <a>。{byline_html} は f-string 内で _esc() を通さず
+        # そのまま挿入する（<a> タグを保持するため、source_name は事前 escape 済）。
+        source_html = (
+            f'<a href="{_esc(url)}" target="_blank" rel="noopener noreferrer">{_esc(source_name)}</a>'
+            if url else _esc(source_name)
+        )
         if date_label:
-            byline_text = f"出典：{source_name} · {date_label}"
+            byline_html = f"出典：{source_html} · {_esc(date_label)}"
         else:
-            byline_text = f"出典：{source_name}"
+            byline_html = f"出典：{source_html}"
     else:
-        byline_text = "本紙編集部"
+        byline_html = "本紙編集部"
 
     return f"""
     <article class="leisure-column-v2 {column_class}" lang="ja">
@@ -1459,7 +1526,7 @@ def _render_leisure_column(
       <div class="column-body">
         <p>{_esc(column_body)}</p>
       </div>
-      <p class="byline-v2">{_esc(byline_text)}</p>
+      <p class="byline-v2">{byline_html}</p>
     </article>""".rstrip()
 
 
@@ -2234,6 +2301,8 @@ def main(argv: list[str] | None = None) -> int:
     print(f"Loading template: {TEMPLATE_PATH}", file=sys.stderr)
     template = TEMPLATE_PATH.read_text(encoding="utf-8")
     dated = update_template_date_strings(template, target)
+    # Sprint 6: 全面共通のリンクスタイル（color inherit + dotted underline）。
+    dated = inject_link_style_css(dated)
     # Sprint 5: Page I も常に CSS injection（タイトル原文大 + 日本語小書き）。
     dated = inject_page_one_css(dated)
     if page_two_html is not None:
