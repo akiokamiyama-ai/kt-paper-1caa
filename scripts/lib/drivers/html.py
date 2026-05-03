@@ -50,6 +50,7 @@ class HtmlScrapeDriver(SourceDriver):
                     "RSS unavailable. Add a per-site HtmlScrapeDriver subclass "
                     "to populate articles for this source."
                 ),
+                source_language=source.language,
             )
         ]
 

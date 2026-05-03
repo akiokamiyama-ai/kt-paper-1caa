@@ -102,6 +102,10 @@ class Source:
     rss_url: str | None = None
     site_file: str = ""      # e.g. "business.md"
     description: str = ""    # body text (対象 / 位置付け), kept for prompt context
+    # language: "ja" / "en". sources/*.md に - **language**: en と書かれていれば
+    # "en"、未指定は "ja" デフォルト。Sprint 5 (2026-05-03) で導入。翻訳の
+    # 発火条件（en の記事のみタイトル翻訳）と HTML 表示分岐に使う。
+    language: str = "ja"
     raw_fields: dict[str, str] = field(default_factory=dict)
 
     @property
@@ -120,6 +124,10 @@ class Article:
     description: str = ""
     pub_date: datetime | None = None
     body_paragraphs: list[str] = field(default_factory=list)
+    # source_language: 親 Source.language から伝播。"ja" / "en"。
+    # Sprint 5 (2026-05-03) で導入。翻訳判定の primary signal、
+    # _is_japanese_source の name-heuristic は fallback として残置。
+    source_language: str = "ja"
     raw: dict = field(default_factory=dict)
 
     @property
@@ -238,6 +246,10 @@ def _parse_one_block(
         # Preserve the full sub-feed list so a future enhancement can iterate
         # them all (e.g. The Economist's 5 sections, Brookings' 3 topics).
         fields["RSS_extra"] = " ".join(rss_extra_urls)
+    # language field: "- **language**: en" / "ja"。未指定は "ja" デフォルト。
+    # 表記ゆれを吸収するため lowercase 比較、"en"/"english" → "en"、それ以外は "ja"。
+    lang_raw = fields.get("language", "").strip().lower()
+    language = "en" if lang_raw in ("en", "english") else "ja"
     return Source(
         name=name,
         url=main_url,
@@ -248,6 +260,7 @@ def _parse_one_block(
         rss_url=rss_url,
         site_file=site_file,
         description=desc,
+        language=language,
         raw_fields=fields,
     )
 

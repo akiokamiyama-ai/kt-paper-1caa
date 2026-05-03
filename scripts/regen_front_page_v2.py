@@ -293,6 +293,9 @@ def _article_to_pipeline_dict(article: Article) -> dict:
         "source_name": article.source_name,
         "source_url": None,
         "pub_date": article.pub_date.isoformat() if article.pub_date else None,
+        # Sprint 5: Source.language を Article.source_language 経由で伝播。
+        # 翻訳判定 (_translate_article) と HTML 表示分岐 (build_page_one_v2) で使用。
+        "source_language": article.source_language,
     }
 
 

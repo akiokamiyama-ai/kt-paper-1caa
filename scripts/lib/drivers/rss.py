@@ -162,4 +162,5 @@ class RssDriver(SourceDriver):
                 link=link,
                 description=desc,
                 pub_date=_parse_date(date_text),
+                source_language=source.language,
             )
