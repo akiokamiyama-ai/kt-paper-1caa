@@ -986,12 +986,42 @@ PAGE_FIVE_CSS_MARKER = "/* === Page V (Sprint 4 layout swap, was Sprint 3 Step D
 PAGE_FIVE_CSS = f"""
 {PAGE_FIVE_CSS_MARKER}
 .page-five-content {{
+  display: grid;
+  grid-template-rows: 40% 60%;
   padding: 16px 24px;
 }}
-.ai-kamiyama-column {{
-  margin-bottom: 24px;
+.serendipity-article {{
   padding-bottom: 24px;
+  margin-bottom: 24px;
   border-bottom: 1px solid #ccc;
+}}
+.serendipity-article .kicker {{
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #666;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}}
+.serendipity-article .article-title {{
+  font-family: 'Noto Serif JP', 'Old Standard TT', serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.5;
+  margin: 0 0 10px;
+}}
+.serendipity-article .description {{
+  font-family: 'Noto Serif JP', 'Old Standard TT', serif;
+  font-size: 14px;
+  line-height: 1.8;
+  color: #333;
+  margin-bottom: 8px;
+}}
+.serendipity-article .serendipity-byline {{
+  font-size: 11px;
+  color: #888;
+  border-top: 1px dotted #ccc;
+  padding-top: 6px;
 }}
 .ai-kamiyama-column .kicker {{
   font-size: 11px;
@@ -1022,34 +1052,6 @@ PAGE_FIVE_CSS = f"""
   text-align: right;
   font-style: italic;
   margin-top: 12px;
-}}
-.serendipity-article .kicker {{
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  color: #666;
-  text-transform: uppercase;
-  margin-bottom: 8px;
-}}
-.serendipity-article .article-title {{
-  font-family: 'Noto Serif JP', 'Old Standard TT', serif;
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1.5;
-  margin: 0 0 10px;
-}}
-.serendipity-article .description {{
-  font-family: 'Noto Serif JP', 'Old Standard TT', serif;
-  font-size: 14px;
-  line-height: 1.8;
-  color: #333;
-  margin-bottom: 8px;
-}}
-.serendipity-article .serendipity-byline {{
-  font-size: 11px;
-  color: #888;
-  border-top: 1px dotted #ccc;
-  padding-top: 6px;
 }}
 .page-five-placeholder {{
   text-align: center;
@@ -1120,7 +1122,10 @@ def build_page_five_v2(
 
 
 def _render_page_five(serendipity: dict, column: dict) -> str:
-    """Render Page V: AIかみやま column (top 60%) + serendipity (bottom 40%)."""
+    """Render Page V: serendipity article (top 40%) + AIかみやま column (bottom 60%).
+
+    Sprint 4 Phase 2: order flipped from Sprint 3 Step D layout (was AI on top).
+    """
     article = serendipity["article"]
     title = (article.get("title") or "").strip()
     source_name = (article.get("source_name") or "").strip()
@@ -1138,6 +1143,13 @@ def _render_page_five(serendipity: dict, column: dict) -> str:
     <div class="page-banner"><span class="pg-num">— Page V —</span> Columns &amp; Serendipity · A Room with a Different Window</div>
 
     <div class="page-five-content" lang="ja">
+      <aside class="serendipity-article">
+        <div class="kicker">今朝出会った1本</div>
+        <h3 class="article-title">{_esc(title)}</h3>
+        <p class="description">{_esc(description)}</p>
+        <p class="serendipity-byline">{_esc(article_byline)}</p>
+      </aside>
+
       <article class="ai-kamiyama-column">
         <div class="kicker">AIかみやまの一筆</div>
         <h3 class="column-title">{_esc(column_title)}</h3>
@@ -1146,13 +1158,6 @@ def _render_page_five(serendipity: dict, column: dict) -> str:
         </div>
         <p class="ai-byline">— AIかみやま</p>
       </article>
-
-      <aside class="serendipity-article">
-        <div class="kicker">今朝出会った1本</div>
-        <h3 class="article-title">{_esc(title)}</h3>
-        <p class="description">{_esc(description)}</p>
-        <p class="serendipity-byline">{_esc(article_byline)}</p>
-      </aside>
     </div>
   </section>"""
 
