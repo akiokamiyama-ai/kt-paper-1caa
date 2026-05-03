@@ -566,6 +566,57 @@ def build_page_one_v2(articles: list[dict]) -> str:
 # Rendering — Page II ("社長の朝会")
 # ---------------------------------------------------------------------------
 
+# 第2面 各社ロゴ（assets/logos/ 配置、archive/ から相対参照で ../assets/logos/）。
+# default は grayscale 100%。神山さん帰宅後の目視で別パターンに切替可能。
+COMPANY_LOGOS: dict[str, str] = {
+    "cocolomi":     "../assets/logos/cocolomi.svg",
+    "human_energy": "../assets/logos/HE.png",
+    "web_repo":     "../assets/logos/web-repo.png",
+}
+
+# 第2面 ロゴ用 CSS。inject_page_two_css で </style> 直前に挿入。
+PAGE_TWO_CSS_MARKER = "/* === Page II logos (2026-05-03) === */"
+
+PAGE_TWO_CSS = f"""
+{PAGE_TWO_CSS_MARKER}
+.briefing-row .company .company-logo {{
+  height: 22px;
+  width: auto;
+  vertical-align: middle;
+  margin-right: 10px;
+  margin-bottom: 4px;
+  filter: grayscale(100%) contrast(1.3);  /* pattern-3 採用 (2026-05-03) */
+}}
+"""
+
+
+def inject_page_two_css(html_text: str) -> str:
+    """Idempotently inject Page II logo CSS just before the closing </style> tag.
+
+    Skipped if the marker comment already present (safe re-runs).
+    """
+    if PAGE_TWO_CSS_MARKER in html_text:
+        return html_text
+    end_style_idx = html_text.rfind("</style>")
+    if end_style_idx < 0:
+        head_close = html_text.find("</head>")
+        if head_close < 0:
+            return html_text
+        injected = f"<style>\n{PAGE_TWO_CSS}\n</style>\n"
+        return html_text[:head_close] + injected + html_text[head_close:]
+    return html_text[:end_style_idx] + PAGE_TWO_CSS + html_text[end_style_idx:]
+
+
+def _company_logo_html(company_key: str) -> str:
+    """<img> tag for a company's logo, or empty string if no logo registered."""
+    src = COMPANY_LOGOS.get(company_key)
+    if not src:
+        return ""
+    display_name, _ = COMPANY_DISPLAY_META.get(company_key, ("", ""))
+    alt = f"{display_name} logo" if display_name else "company logo"
+    return f'<img class="company-logo" src="{_esc(src)}" alt="{_esc(alt)}" />'
+
+
 def _kicker_for_page2(source_name: str | None) -> str:
     """Return a clean kicker label for Page II briefing rows.
 
@@ -597,13 +648,14 @@ def _render_briefing_row(company_key: str, sel) -> str:
       minimal placeholder per Sprint 2 Step B 設計（神山さん指定の最小形式）.
     """
     display_name, biz_label = COMPANY_DISPLAY_META[company_key]
+    logo_html = _company_logo_html(company_key)
 
     # 該当なし: minimal placeholder.
     if sel.article is None or sel.morning_question is None:
         return f"""
     <div class="briefing-row" lang="ja">
       <div class="company">
-        {_esc(display_name)}
+        {logo_html}{_esc(display_name)}
         <span class="jp">{_esc(biz_label)}</span>
       </div>
       <div class="story">
@@ -626,7 +678,7 @@ def _render_briefing_row(company_key: str, sel) -> str:
     return f"""
     <div class="briefing-row" lang="ja">
       <div class="company">
-        {_esc(display_name)}
+        {logo_html}{_esc(display_name)}
         <span class="jp">{_esc(biz_label)}</span>
       </div>
       <div class="story">
@@ -2077,6 +2129,8 @@ def main(argv: list[str] | None = None) -> int:
     print(f"Loading template: {TEMPLATE_PATH}", file=sys.stderr)
     template = TEMPLATE_PATH.read_text(encoding="utf-8")
     dated = update_template_date_strings(template, target)
+    if page_two_html is not None:
+        dated = inject_page_two_css(dated)
     if page_four_html is not None:
         dated = inject_page_four_css(dated)
     if page_five_html is not None:
