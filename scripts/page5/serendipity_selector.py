@@ -1,4 +1,4 @@
-"""第6面 セレンディピティ記事選定。
+"""第5面 セレンディピティ記事選定（Sprint 4 layout swap で旧 page6 から移動）。
 
 Strategy:
 1. 過去 LOOKBACK_DAYS=30 日の displayed_urls_*.json を全 page 横断で読み込み
@@ -7,7 +7,7 @@ Strategy:
 4. 最も少ない category を「今日の未読領域」として特定（tie はランダム選択）
 5. 該当 category の sources/*.md から、過去30日に未表示の記事候補を取得
 6. final_score 上位 SELECTION_POOL_SIZE=5 本から random.choice で1本選定
-7. logs/page6_history.json に追記
+7. logs/page5_history.json に追記
 
 Why "上位 N からランダム抽選"：score 1位固定だと毎日同じ記事になる懸念。
 未読領域に出会う「セレンディピティ」を最大化するため、品質の足切りはしつつ
@@ -37,7 +37,7 @@ from ..selector.stage3 import integrate_scores
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 SOURCES_DIR = PROJECT_ROOT / "sources"
 LOG_DIR = PROJECT_ROOT / "logs"
-HISTORY_PATH = LOG_DIR / "page6_history.json"
+HISTORY_PATH = LOG_DIR / "page5_history.json"
 
 LOOKBACK_DAYS: int = 30
 SELECTION_POOL_SIZE: int = 5
@@ -185,20 +185,20 @@ def _collect_displayed_urls_with_categories(
                 cat = category_for_url(u)
                 if cat in ELIGIBLE_CATEGORIES:
                     category_counts[cat] += 1
-        # page5 (per-area dict)
-        for u in (log.get("page5_urls", {}) or {}).values():
-            if u:
-                displayed_urls.add(u)
-                cat = category_for_url(u)
-                if cat in ELIGIBLE_CATEGORIES:
-                    category_counts[cat] += 1
-        # page6 (single URL or null)
-        u = log.get("page6_url")
+        # page5 (single URL or null — Sprint 4 layout swap, was page6_url)
+        u = log.get("page5_url")
         if u:
             displayed_urls.add(u)
             cat = category_for_url(u)
             if cat in ELIGIBLE_CATEGORIES:
                 category_counts[cat] += 1
+        # page6 (per-area dict — Sprint 4 layout swap, was page5_urls)
+        for u in (log.get("page6_urls", {}) or {}).values():
+            if u:
+                displayed_urls.add(u)
+                cat = category_for_url(u)
+                if cat in ELIGIBLE_CATEGORIES:
+                    category_counts[cat] += 1
 
     return displayed_urls, category_counts
 

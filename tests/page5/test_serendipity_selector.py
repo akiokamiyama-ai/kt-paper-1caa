@@ -1,8 +1,8 @@
-"""Unit tests for scripts/page6/serendipity_selector.py.
+"""Unit tests for scripts/page5/serendipity_selector.py.
 
 Run::
 
-    python3 -m tests.page6.test_serendipity_selector
+    python3 -m tests.page5.test_serendipity_selector
 
 External dependencies (fetch / Stage 1+2+3 / dedup_filter / source_registry)
 are mocked; pure logic only.
@@ -18,7 +18,7 @@ from collections import Counter
 from datetime import date, timedelta
 from pathlib import Path
 
-from scripts.page6 import serendipity_selector
+from scripts.page5 import serendipity_selector
 
 PASS = 0
 FAIL = 0

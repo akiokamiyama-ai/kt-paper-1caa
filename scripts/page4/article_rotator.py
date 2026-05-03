@@ -73,7 +73,7 @@ HUMANITIES_IMPRINTS: tuple[str, ...] = (
 
 # 意図的な除外：
 # - ブルーバックス（科学新書）→ page3 R6 の自然科学枠
-# - 角川文庫（小説）→ page5 leisure
+# - 角川文庫（小説）→ page6 leisure
 # - マンガ・ラノベ系インプリント → 第3〜6面のいずれにも該当せず
 
 

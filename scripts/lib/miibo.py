@@ -224,7 +224,7 @@ def call_ai_kamiyama(
     ----------
     utterance :
         The user message (Japanese) to send to the agent. Constructed by
-        ``scripts.page6.ai_kamiyama_writer`` from the prompt template.
+        ``scripts.page5.ai_kamiyama_writer`` from the prompt template.
     api_key, agent_id :
         Optional explicit credentials (mostly for tests). Defaults to env.
     uid :

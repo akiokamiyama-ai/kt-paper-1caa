@@ -1,8 +1,8 @@
-"""Unit tests for scripts/page5/cooking_generator.py.
+"""Unit tests for scripts/page6/cooking_generator.py.
 
 Run::
 
-    python3 -m tests.page5.test_cooking_generator
+    python3 -m tests.page6.test_cooking_generator
 """
 
 from __future__ import annotations
@@ -14,7 +14,7 @@ from datetime import date, timedelta
 from pathlib import Path
 
 from scripts.lib import llm
-from scripts.page5 import cooking_generator
+from scripts.page6 import cooking_generator
 
 PASS = 0
 FAIL = 0

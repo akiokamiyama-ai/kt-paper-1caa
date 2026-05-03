@@ -1,11 +1,13 @@
-"""第5面 Leisure: 読書 / 音楽 / アウトドア 共通の RAG + コラム生成。
+"""第6面 Leisure: 読書 / 音楽 / アウトドア 共通の RAG + コラム生成。
+
+Sprint 4 layout swap で旧 page5 から移動（実装は Sprint 3 Step C）。
 
 Pipeline (per area = books | music | outdoor):
 
 1. ``{area}.md`` の High+Medium から記事候補取得 (default_fetcher)
 2. Stage 1（機械フィルタ：description 30字以上 / podcast 除外 等）
 3. Stage 2（美意識 LLM）→ Stage 3（final_score 統合）
-4. dedup：過去 N=30 日に page5 で表示済の URL を除外
+4. dedup：過去 N=30 日に page6 で表示済の URL を除外
 5. final_score 上位 1 本を選定
 6. 候補ゼロ：``is_fallback=True``、placeholder dict を返す
 7. LLM コラム生成（領域別 EVAL_GUIDE を system に注入）
@@ -336,9 +338,9 @@ def recommend_for_area(
     if not scored:
         return _placeholder_result(area, "no_candidates_after_stage123")
 
-    # 4) Dedup against past 30 days page5
+    # 4) Dedup against past 30 days page6 (Sprint 4 layout swap, was page5)
     past_urls = load_recently_displayed_urls(
-        days_back=HISTORY_LOOKBACK_DAYS, page="page5", until_date=target_date,
+        days_back=HISTORY_LOOKBACK_DAYS, page="page6", until_date=target_date,
     )
     if past_urls:
         before = len(scored)

@@ -1,8 +1,8 @@
-"""Unit tests for scripts/page6/ai_kamiyama_writer.py.
+"""Unit tests for scripts/page5/ai_kamiyama_writer.py.
 
 Run::
 
-    python3 -m tests.page6.test_ai_kamiyama_writer
+    python3 -m tests.page5.test_ai_kamiyama_writer
 
 miibo API is fully mocked at the lib level. No real network call.
 """
@@ -13,7 +13,7 @@ import json
 import sys
 
 from scripts.lib import miibo
-from scripts.page6 import ai_kamiyama_writer, prompts
+from scripts.page5 import ai_kamiyama_writer, prompts
 
 PASS = 0
 FAIL = 0

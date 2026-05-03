@@ -2,7 +2,7 @@
 
 Run::
 
-    python3 -m tests.page6.test_miibo_lib
+    python3 -m tests.page5.test_miibo_lib
 
 External HTTP is fully mocked via monkey-patching ``urllib.request.urlopen``
 at the miibo module level. No real API call ever fires.

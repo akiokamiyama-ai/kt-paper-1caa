@@ -1,8 +1,10 @@
-"""Phase 2 Sprint 3 Step D: 第6面（Columns & Serendipity）の動的化。
+"""第6面（Leisure）の動的化サブパッケージ。
 
-* ``serendipity_selector`` — 過去30日の表示履歴から最少 category を特定し
-  該当領域から1記事を選定（上位5本プールからランダム）。
-* ``ai_kamiyama_writer``   — miibo API 経由で AI 神山に300字の一筆を生成
-  依頼。失敗時は休載 fallback（Anthropic 代替生成は使わない、AI神山の声を真似ない設計）。
-* ``prompts``              — AI神山への発話テンプレート。
+Sprint 4 layout swap で旧 page5 から移動（実装は Sprint 3 Step C）。
+
+* ``leisure_recommender`` — 読書 / 音楽 / アウトドアの3領域共通の RAG +
+  コラム生成（books.md / music.md / outdoor.md から記事1本選定 → LLM コラム）
+* ``cooking_generator`` — 料理コラムを LLM で自律生成（RAG なし、
+  cooking_history.json で30日履歴管理）
+* ``prompts`` — 全領域のプロンプト定義（保守性のため一元管理）
 """

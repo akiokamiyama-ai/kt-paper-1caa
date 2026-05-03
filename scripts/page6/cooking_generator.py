@@ -1,4 +1,4 @@
-"""第5面 Leisure: 料理コラムを LLM で自律生成（RAG なし）。
+"""第6面 Leisure: 料理コラムを LLM で自律生成（RAG なし、Sprint 4 layout swap で旧 page5 から移動）。
 
 Pipeline:
 

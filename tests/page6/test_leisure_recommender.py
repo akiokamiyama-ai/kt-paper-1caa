@@ -1,8 +1,8 @@
-"""Unit tests for scripts/page5/leisure_recommender.py.
+"""Unit tests for scripts/page6/leisure_recommender.py.
 
 Run::
 
-    python3 -m tests.page5.test_leisure_recommender
+    python3 -m tests.page6.test_leisure_recommender
 """
 
 from __future__ import annotations
@@ -11,7 +11,7 @@ import sys
 from datetime import date
 
 from scripts.lib import llm
-from scripts.page5 import leisure_recommender, prompts
+from scripts.page6 import leisure_recommender, prompts
 
 PASS = 0
 FAIL = 0
@@ -218,14 +218,14 @@ def test_recommend_for_area_no_candidates_returns_placeholder(monkeypatch_compat
 # ---------------------------------------------------------------------------
 
 def test_books_filter_excludes_quanta():
-    """Quanta Magazine = 自然科学ノンフ → page3 R6, must be excluded from page5 books."""
+    """Quanta Magazine = 自然科学ノンフ → page3 R6, must be excluded from page6 books."""
     art = {"source_name": "Quanta Magazine", "title": "x", "description": "y"}
     _check("d1 books area excludes Quanta Magazine",
            leisure_recommender._belongs_to_area(art, "books") is False)
 
 
 def test_books_filter_excludes_aeon():
-    """Aeon = 人文 → page4, must be excluded from page5 books."""
+    """Aeon = 人文 → page4, must be excluded from page6 books."""
     art = {"source_name": "Aeon", "title": "x", "description": "y"}
     _check("d2 books area excludes Aeon",
            leisure_recommender._belongs_to_area(art, "books") is False)
