@@ -1165,6 +1165,9 @@ def default_fetcher(
             "source_name": a.source_name,
             "source_url": None,
             "pub_date": a.pub_date.isoformat() if a.pub_date else None,
+            # Sprint 5 (2026-05-03): Source.language → article dict 伝播。
+            # _translate_article で title-only 翻訳判定に使用。
+            "source_language": getattr(a, "source_language", "ja"),
         })
 
     s1_out = run_stage1(pipeline_dicts)

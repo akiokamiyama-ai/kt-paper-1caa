@@ -389,10 +389,36 @@ def run_pipeline(
 # Translation
 # ---------------------------------------------------------------------------
 
+def _is_japanese_article(article: dict) -> bool:
+    """記事の言語判定。primary signal は Article.source_language（Sprint 5、
+    sources/*.md の language: ja|en に基づき drivers から伝播）。
+
+    source_language キーが存在しない場合（page2 経路など、まだ伝播路が
+    通っていない経路の article dict 等）は _is_japanese_source heuristic に
+    フォールバックする。RSS 仕様変更や source 未タグ漏れの保険も兼ねる。
+    """
+    sl = article.get("source_language")
+    if sl == "en":
+        return False
+    if sl == "ja":
+        return True
+    # source_language キー無し or 不正値 → heuristic にフォールバック
+    return _is_japanese_source(article.get("source_name", ""))
+
+
 def _translate_article(article: dict) -> None:
-    """Populate ``title_ja`` / ``desc_ja`` in-place. JA sources pass through."""
-    source_name = article.get("source_name", "")
-    if _is_japanese_source(source_name):
+    """Populate ``title_ja`` / ``desc_ja`` in-place.
+
+    翻訳ポリシー Sprint 5 で「タイトルのみ翻訳」に変更（2026-05-03）。
+    本文（description）は原文のまま desc_ja に代入する。
+
+    本文翻訳を復活させる場合：
+      1. ↓ ブロックコメントを解除（下の `# desc_ja = translate(desc)` 等）
+      2. その下の `desc_ja = desc  # passthrough (Sprint 5)` 行を削除
+      3. ``translate_for_render`` のログメッセージ "(title only)" を戻す
+      4. テスト ``test_translate_*_passthrough_desc`` を更新
+    """
+    if _is_japanese_article(article):
         article["title_ja"] = article.get("title", "")
         article["desc_ja"] = article.get("description", "")
         return
@@ -400,17 +426,26 @@ def _translate_article(article: dict) -> None:
     desc = article.get("description", "") or ""
     title_ja = translate(title) if title else ""
     time.sleep(TRANSLATE_DELAY)
-    desc_ja = translate(desc) if desc else ""
-    time.sleep(TRANSLATE_DELAY)
+    # --- Sprint 5 (2026-05-03): 本文翻訳を停止、原文 passthrough ---
+    # desc_ja = translate(desc) if desc else ""
+    # time.sleep(TRANSLATE_DELAY)
+    desc_ja = desc  # passthrough (Sprint 5)
+    # --- end Sprint 5 ---
     article["title_ja"] = title_ja or title
     article["desc_ja"] = desc_ja or desc
 
 
 def translate_for_render(articles: list[dict]) -> None:
-    """Add title_ja and desc_ja to each article in the selected list."""
+    """Add title_ja (translated) and desc_ja (= description passthrough) to each article.
+
+    Sprint 5 (2026-05-03): タイトルのみ翻訳、本文は原文 passthrough。
+    """
     for i, a in enumerate(articles):
-        is_ja = _is_japanese_source(a.get("source_name", ""))
-        marker = " (JA passthrough)" if is_ja else ""
+        is_ja = _is_japanese_article(a)
+        if is_ja:
+            marker = " (JA passthrough)"
+        else:
+            marker = " (title only)"
         print(
             f"  [{i+1}] translating: {a.get('title', '')[:60]}{marker}",
             file=sys.stderr,
