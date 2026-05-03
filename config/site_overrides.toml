@@ -24,6 +24,10 @@ note = "Tor.com → Reactor rebrand 2024. Default UA returns 403; Chrome UA OK."
 user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 note = "2026-04-27 初検証時に 403 on default UA、200 on browser UA。2026-05-02 再検証では /feed/ は default UA でも 200。HTML scraping 経路（top page）が将来 403 化する保険として override 残置。"
 
+[sites."www.wired.com"]
+user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+note = "2026-05-03 検証：全カテゴリ feed (backchannel/ai/etc.) が default UA で 403、Chrome UA で 200。Sprint 5 で WIRED.com Backchannel + AI を business.md Medium として採用。"
+
 # --- Documented notes for sites with non-obvious behavior ----------------
 
 [sites."feeds.hbr.org"]

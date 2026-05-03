@@ -102,11 +102,29 @@
 - **対象**: ビジネス全般、業界分析、企業経営、政策論考
 - **位置付け**: **`companies.md` でも参照** されている共通ソース（Web-Repo の Reference）。本紙では国内ビジネス論考のサブとして運用。日経が見出ししか取れない場合の **本文付きの代替** として価値が高い。重複排除ロジック（`logs/urls_*.json`）で `companies.md` 側との二重採用を防ぐ
 
+### 9. WIRED.com Backchannel ✅
+- **URL**: https://www.wired.com/category/backchannel/
+- **RSS**: https://www.wired.com/feed/category/backchannel/latest/rss
+- **language**: en
+- **形式**: RSS 2.0（**ブラウザUAが必要**、デフォルトUAでは 403。`config/site_overrides.toml` で `www.wired.com` に Chrome UA を設定済）
+- **mainstream**: true
+- **対象**: テック × 社会の長文ジャーナリズム。Apple / OpenAI / Tesla / 政府機関の深い取材記事、業界人物ルポ、検証記事
+- **位置付け**: 神山さんの「**AI関連、テック関連をビジネスとして読んで、学びにしたい**」要請への直接対応。Backchannel は WIRED の長文枠で、**業界の構造変化を物語の形で読める**。McKinsey/HBR/Strategy+Business が「経営論考」、WIRED Backchannel は「**当事者ルポ**」という相補配置。**更新頻度は週1〜2本（2026-05-03 計測：直近5本の平均間隔 ≈4日）**
+
+### 10. WIRED.com AI ✅
+- **URL**: https://www.wired.com/tag/ai/
+- **RSS**: https://www.wired.com/feed/tag/ai/latest/rss
+- **language**: en
+- **形式**: RSS 2.0（**ブラウザUAが必要**、`www.wired.com` UA override に依存）
+- **mainstream**: true
+- **対象**: AI 業界動向、規制、企業戦略、AI 倫理、当局報道。OpenAI / Anthropic / Google / Meta / Microsoft の動き、AI Act / EU AI 規制等
+- **位置付け**: 神山さんの **AI 推進機構監査役** としての情報収集に直結。日次 1〜2 本の安定供給で、Backchannel と組み合わせて WIRED.com からの AI 関連カバレッジを完結させる。**更新頻度は1日1〜2本（2026-05-03 計測：直近5本が48時間以内）**
+
 ---
 
 ## Reference（月1の俯瞰用）
 
-### 9. Strategy+Business（PwC） ✅
+### 11. Strategy+Business（PwC） ✅
 - **URL**: https://www.strategy-business.com/
 - **RSS**: https://www.strategy-business.com/rss
 - **language**: en
@@ -115,7 +133,7 @@
 - **対象**: 経営戦略、リーダーシップ、組織、テクノロジー戦略（PwC 系列の経営思想誌）
 - **位置付け**: **BCG が取れない穴を埋める** PwC 系経営思想ソース。McKinsey Insights が「コンサル現場の論考」とすれば、Strategy+Business は **アカデミックと実務の中間**。月1俯瞰で十分だが、特集号が出た月は High 扱いに引き上げる
 
-### 10. Behavioral Scientist ✅
+### 12. Behavioral Scientist ✅
 - **URL**: https://behavioralscientist.org/
 - **RSS**: https://behavioralscientist.org/feed/
 - **language**: en
@@ -124,7 +142,7 @@
 - **対象**: 行動経済学、認知バイアス、意思決定科学、ナッジ理論、応用心理学
 - **位置付け**: **news_profile.md §4.1 の特記要件**「行動経済学的視点をビジネス記事の選定フィルタとして組み込む」の **直接的な情報源**。カーネマン、セイラー、アリエリー、チャルディーニ系の論考が中心。本文丸ごと配信のため、本紙取り込み時の追加スクレイピング不要
 
-### 11. NBER Working Papers ✅
+### 13. NBER Working Papers ✅
 - **URL**: https://www.nber.org/papers
 - **RSS**: https://back.nber.org/rss/new.xml（旧 `www.nber.org/rss/new.xml` は 301、新ドメイン `back.nber.org` で配信）
 - **language**: en
