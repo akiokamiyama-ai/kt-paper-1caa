@@ -161,6 +161,7 @@
 #### 8. MIT Sloan Management Review ✅
 - **URL**: https://sloanreview.mit.edu/
 - **RSS**: https://sloanreview.mit.edu/feed/
+- **language**: en
 - **形式**: RSS 2.0
 - **mainstream**: true
 - **対象**: AI、リーダーシップ&カルチャー、戦略、ハイブリッドワーク、変革管理
@@ -169,6 +170,7 @@
 #### 9. Harvard Business Review（HBR.org） ✅
 - **URL**: https://hbr.org/
 - **RSS**: http://feeds.hbr.org/harvardbusiness （正しいパスは末尾 `.rss` なし。FeedBurner経由で配信中、検証時にAtom形式で最新エントリ取得確認。`.rss` 付きURLは無応答なので注意）
+- **language**: en
 - **形式**: Atom
 - **mainstream**: true
 - **対象**: リーダーシップ、戦略、組織、テクノロジー（英語原文）
@@ -177,6 +179,7 @@
 #### 10. Aeon（Psychology / Philosophy） ✅
 - **URL**: https://aeon.co/
 - **RSS**: https://aeon.co/feed.rss
+- **language**: en
 - **形式**: RSS 2.0（サイト全体。Psychology単独のカテゴリRSSは無し、タイトル/本文でフィルタ）
 - **mainstream**: false
 - **対象**: 心理学、認知科学、哲学、神経科学、人間性、文学

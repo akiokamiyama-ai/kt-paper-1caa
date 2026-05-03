@@ -27,6 +27,7 @@
 ### 2. Foreign Affairs（CFR） ✅
 - **URL**: https://www.foreignaffairs.com/
 - **RSS**: https://www.foreignaffairs.com/rss.xml
+- **language**: en
 - **形式**: RSS（13KB、Cloudflare 配信）
 - **mainstream**: true
 - **対象**: 国際関係論、地政学、外交政策、軍事戦略、グローバル経済秩序（英語原文）
@@ -35,6 +36,7 @@
 ### 3. Project Syndicate ✅
 - **URL**: https://www.project-syndicate.org/
 - **RSS**: https://www.project-syndicate.org/rss
+- **language**: en
 - **形式**: RSS（32KB、cache無効ヘッダで常に最新）
 - **mainstream**: false
 - **対象**: 国際関係、経済、政治、社会のオピニオンコラム配信（150カ国以上のメディアにシンジケーション）
@@ -43,6 +45,7 @@
 ### 4. Reuters World ⚠️
 - **URL**: https://www.reuters.com/world/
 - **RSS**: **公式RSS廃止**（business.md と同じ事情）。代替として **Google News RSS プロキシ** `https://news.google.com/rss/search?q=site:reuters.com+world&hl=en-US&gl=US&ceid=US:en` で間接取得可（200確認）
+- **language**: en
 - **形式**: RSS 2.0（Google News 経由）
 - **mainstream**: false
 - **対象**: グローバル速報（紛争・選挙・外交・首脳会談）
@@ -55,6 +58,7 @@
 ### 5. Foreign Policy ✅
 - **URL**: https://foreignpolicy.com/
 - **RSS**: https://foreignpolicy.com/feed/
+- **language**: en
 - **形式**: RSS 2.0（Cloudflare 配信、CORS 全開放）
 - **mainstream**: false
 - **対象**: 外交政策、地政学、グローバル経済、テクノロジー外交（Foreign Affairs より速報＋論考の中間層）
@@ -66,6 +70,7 @@
   - 研究全般: https://www.brookings.edu/research/feed
   - トピック別（外交政策）: https://www.brookings.edu/topic/foreign-policy/feed
   - ブログ「Order from Chaos」: https://www.brookings.edu/blog/order-from-chaos/feed
+- **language**: en
 - **形式**: RSS 2.0
 - **mainstream**: false
 - **対象**: 米シンクタンク Brookings の研究レポート・コラム（外交、経済、ガバナンス、技術政策）
@@ -74,6 +79,7 @@
 ### 7. CSIS（戦略国際問題研究所） ✅
 - **URL**: https://www.csis.org/
 - **RSS**: https://www.csis.org/rss.xml（`/analysis/feed` は 404、サイトルートのみ稼働）
+- **language**: en
 - **形式**: RSS 2.0
 - **mainstream**: false
 - **対象**: 安全保障、防衛、サイバー、宇宙、技術と安全保障の交差領域
@@ -82,6 +88,7 @@
 ### 8. War on the Rocks ✅
 - **URL**: https://warontherocks.com/
 - **RSS**: https://warontherocks.com/feed/
+- **language**: en
 - **形式**: RSS（Cloudflare、text/xml）
 - **mainstream**: false
 - **対象**: 軍事・国家安全保障・外交の長文論考（現役・退役軍人、研究者、ジャーナリストが執筆）
@@ -94,6 +101,7 @@
 ### 9. RAND Corporation ✅
 - **URL**: https://www.rand.org/
 - **RSS**: https://www.rand.org/pubs/commentary.xml（旧 `/blog.xml`、`/news/rss.xml` は 301、現行は `/pubs/commentary.xml` で配信、17.8KB）
+- **language**: en
 - **形式**: RSS（CloudFront 配信）
 - **mainstream**: false
 - **対象**: 国家安全保障、テクノロジーと社会、健康、教育、労働政策の研究レポート＋コメンタリー
@@ -102,6 +110,7 @@
 ### 10. NBR（National Bureau of Asian Research） ❌
 - **URL**: https://www.nbr.org/
 - **RSS**: **未検証完了**（`/feed/`、`/publication-feed/` ともに 403、複数UAでも遮断、WebFetch も 403）。Imperva 系のbot対策で完全に閉じている可能性大
+- **language**: en
 - **形式**: ❌ プログラマティック取得不可
 - **mainstream**: false
 - **対象**: アジア太平洋地域の戦略・経済・安全保障研究（米中、インド太平洋、東南アジア）

@@ -67,6 +67,7 @@
 ### 6. Backpacking Light ✅
 - **URL**: https://backpackinglight.com/
 - **RSS**: https://backpackinglight.com/feed/（Cloudflare 配信）
+- **language**: en
 - **形式**: RSS 2.0
 - **mainstream**: true
 - **対象**: **米UL業界の総本山**。ギアレビュー、ロングトレイル記、UL哲学の論考、有料フォーラム
@@ -81,6 +82,7 @@
 ### 7. The Trek ✅
 - **URL**: https://thetrek.co/
 - **RSS**: https://thetrek.co/feed/（Cloudflare 配信、default UA OK）
+- **language**: en
 - **形式**: RSS 2.0
 - **mainstream**: false
 - **対象**: 米長距離縦走（Appalachian Trail / Pacific Crest Trail / Continental Divide Trail）の専門メディア。**ハイカー本人による日記形式の記事** が中心
@@ -89,6 +91,7 @@
 ### 8. Section Hiker ✅
 - **URL**: https://sectionhiker.com/
 - **RSS**: https://sectionhiker.com/feed/（Cloudflare 配信、default UA OK）
+- **language**: en
 - **形式**: RSS 2.0
 - **mainstream**: false
 - **対象**: 米個人ハイカー Philip Werner 運営のブログ。**ガレージブランド製品の徹底レビュー**、ロングトレイル記、UL ノウハウ
@@ -97,6 +100,7 @@
 ### 9. CleverHiker ✅
 - **URL**: https://www.cleverhiker.com/
 - **RSS**: https://www.cleverhiker.com/feed/
+- **language**: en
 - **形式**: RSS 2.0
 - **mainstream**: false
 - **対象**: 米ギアレビューサイト。テント・バックパック・スリーピング系の比較レビュー、UL寄り

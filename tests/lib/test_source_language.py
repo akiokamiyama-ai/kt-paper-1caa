@@ -192,13 +192,7 @@ def test_rss_driver_propagates_language():
 # (e) Real registry sanity check
 # ---------------------------------------------------------------------------
 
-def test_real_registry_known_ja_sources():
-    """Default language case: registry returns "ja" for unannotated sources.
-
-    EN-tagging 検証は (B) commit で sources/*.md に language: en を追加した後の
-    別コミットで補強する。本コミット (A) はパーサと dataclass の field 追加が
-    主眼。
-    """
+def test_real_registry_known_en_sources():
     project_root = Path(__file__).resolve().parent.parent.parent
     sources_dir = project_root / "sources"
     if not sources_dir.exists():
@@ -206,17 +200,32 @@ def test_real_registry_known_ja_sources():
         return
     reg = build_registry(sources_dir)
     by_name = reg.sources_by_name
+    known_en = [
+        "The Economist",
+        "BBC Business（本紙第1面で稼働中）",
+        "Pitchfork",
+        "Stanford Encyclopedia of Philosophy（SEP）",
+        "Foreign Affairs（CFR）",
+        "The Trek",
+        "Backpacking Light",
+    ]
     known_ja = [
         "Foresight（新潮社）",
         "TABI LABO",
         "AXIS",
     ]
+    en_ok = all(by_name.get(n) and by_name[n].language == "en" for n in known_en)
     ja_ok = all(by_name.get(n) and by_name[n].language == "ja" for n in known_ja)
+    en_detail = ", ".join(
+        f"{n}={by_name[n].language!r}" if n in by_name else f"{n}=MISSING"
+        for n in known_en
+    )
     ja_detail = ", ".join(
         f"{n}={by_name[n].language!r}" if n in by_name else f"{n}=MISSING"
         for n in known_ja
     )
-    _check("e1 known JA sources default to language='ja'", ja_ok, ja_detail)
+    _check("e1 known EN sources tagged language='en'", en_ok, en_detail)
+    _check("e2 known JA sources tagged language='ja'", ja_ok, ja_detail)
 
 
 def main() -> int:
@@ -238,7 +247,7 @@ def main() -> int:
     test_rss_driver_propagates_language()
     print()
     print("(e) Real registry sanity:")
-    test_real_registry_known_ja_sources()
+    test_real_registry_known_en_sources()
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")
     return 0 if FAIL == 0 else 1

@@ -93,6 +93,7 @@
 ### 9. NME ✅
 - **URL**: https://www.nme.com/
 - **RSS**: https://www.nme.com/feed
+- **language**: en
 - **形式**: RSS 2.0
 - **mainstream**: true
 - **対象**: UK音楽メディアの代表格。新譜・ライブ・フェス・インタビュー（英語原文）
@@ -101,6 +102,7 @@
 ### 10. Pitchfork ✅
 - **URL**: https://pitchfork.com/
 - **RSS**: https://pitchfork.com/feed/feed-news/rss（旧 `/rss/news/` は 301 リダイレクト）
+- **language**: en
 - **形式**: RSS（CloudFront 配信、21KB）
 - **mainstream**: false
 - **対象**: 米インディー音楽の権威メディア。新譜レビュー（10点満点採点が看板）、コーチェラ等の海外フェスレポート
@@ -109,6 +111,7 @@
 ### 11. The Quietus ❌
 - **URL**: https://thequietus.com/
 - **RSS**: **未検証完了**（`/feed/`、`/feed.rss` ともに 403、ブラウザUA・Feedly bot UA・Feedburner UA すべて遮断）。Imperva 系 WAF で完全に閉じている
+- **language**: en
 - **形式**: ❌ プログラマティック取得不可
 - **mainstream**: false
 - **対象**: UK alternative/avant rock メディア。商業性より目利き重視のレビュー、実験音楽・アンビエント・ポストロックも扱う

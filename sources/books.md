@@ -51,6 +51,7 @@
 #### 4. New York Review of Books（NYRB） ✅
 - **URL**: https://www.nybooks.com/
 - **RSS**: https://www.nybooks.com/feed/
+- **language**: en
 - **形式**: RSS 2.0（nginx 配信）
 - **mainstream**: true
 - **対象**: 海外文学・哲学・歴史・社会論考の長文書評（英語原文）
@@ -59,6 +60,7 @@
 #### 5. The Paris Review ✅
 - **URL**: https://www.theparisreview.org/
 - **RSS**: https://www.theparisreview.org/blog/feed/（ブログ枠、Cloudflare 配信）。本誌（季刊）の `/feed/` 単独は 403
+- **language**: en
 - **形式**: RSS 2.0
 - **mainstream**: false
 - **対象**: 短編小説、詩、著者インタビュー（"Art of Fiction" シリーズが看板）
@@ -69,6 +71,7 @@
 #### 6. Words Without Borders ✅
 - **URL**: https://wordswithoutborders.org/（apex ドメイン、`www.` 付きは 301 リダイレクト）
 - **RSS**: https://wordswithoutborders.org/feed/
+- **language**: en
 - **形式**: RSS 2.0
 - **mainstream**: false
 - **対象**: 世界各国の翻訳文学（英語以外の文学を英訳して紹介）。アフリカ・南米・東欧・中東・東南アジア
@@ -83,6 +86,7 @@
 #### 7. Reactor（旧 Tor.com） ✅
 - **URL**: https://reactormag.com/
 - **RSS**: https://reactormag.com/feed/（**ブラウザUAが必要**、デフォルトUAでは 403）
+- **language**: en
 - **形式**: RSS 2.0
 - **mainstream**: true
 - **対象**: 米SF出版社 Tor の公式オンライン誌（2024年に Tor.com から Reactor に改称）。SF短編、書評、コラム、新刊情報
@@ -101,6 +105,7 @@
 #### 9. Locus Magazine ✅
 - **URL**: https://locusmag.com/
 - **RSS**: https://locusmag.com/feed/（Sucuri WAF 経由配信）
+- **language**: en
 - **形式**: RSS 2.0
 - **mainstream**: false
 - **対象**: SF/Fantasy 業界誌（米）。新刊レビュー、Hugo/Nebula/Locus 賞関連、作家訃報・受賞歴
@@ -115,6 +120,7 @@
 #### 10. Quanta Magazine ✅
 - **URL**: https://www.quantamagazine.org/
 - **RSS**: https://www.quantamagazine.org/feed/（Cloudflare 配信）
+- **language**: en
 - **形式**: RSS 2.0
 - **mainstream**: true
 - **対象**: 数学・物理・生命科学・コンピュータサイエンスの最新研究を一般向け長文記事で解説（Simons 財団運営）
@@ -125,6 +131,7 @@
 #### 11. Nautilus ✅
 - **URL**: https://nautil.us/
 - **RSS**: https://nautil.us/feed（10KB、`/feed/` は 308 → `/feed`）
+- **language**: en
 - **形式**: RSS 2.0
 - **mainstream**: false
 - **対象**: テーマ別科学エッセイ誌。脳科学・認知科学・物理・生物・哲学を文学的な筆致で
@@ -143,6 +150,7 @@
 #### 13. The Marginalian（旧 Brain Pickings） ✅
 - **URL**: https://www.themarginalian.org/
 - **RSS**: https://www.themarginalian.org/feed/（Cloudflare 配信）
+- **language**: en
 - **形式**: RSS 2.0
 - **mainstream**: false
 - **対象**: マリア・ポポバ運営の文学・科学・哲学エッセイ誌（**科学・哲学・文学の交差**）

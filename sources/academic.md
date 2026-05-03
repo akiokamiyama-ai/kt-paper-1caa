@@ -72,11 +72,13 @@
 ### 6. Aeon 🔗（既出：companies.md Reference #10）
 - **URL**: https://aeon.co/
 - **RSS**: https://aeon.co/feed.rss
+- **language**: en
 - **学術観点での位置付け**: news_profile.md §4.4 関心領域(i) 現象学・(ii) 認知科学を **英語圏の一般読者向けエッセイで深める** 用途。Aeon Psychology / Philosophy カテゴリは入門〜中級者向けに学問領域を架橋する記事を提供（例：「Yorùbá の世界観は意識をどう捉えるか」「ユクスキュルの環世界と現代の精神医学」）。**詳細は `companies.md` を参照、本ファイルでは学術フィルタの追加適用が論点**
 
 ### 7. Philosophy Now ✅
 - **URL**: https://philosophynow.org/
 - **RSS**: https://philosophynow.org/rss
+- **language**: en
 - **形式**: RSS 2.0（隔月刊誌、現在号の記事を配信）
 - **mainstream**: true
 - **対象**: 英国の哲学雑誌。**入門〜中級者向けの哲学入門** に定評、フッサール・メルロ＝ポンティ・哲学者特集号が定期刊行
@@ -85,6 +87,7 @@
 ### 8. Stanford Encyclopedia of Philosophy（SEP） ✅
 - **URL**: https://plato.stanford.edu/
 - **RSS**: https://plato.stanford.edu/rss/sep.xml（新項目・改訂項目通知）
+- **language**: en
 - **形式**: RSS 2.0
 - **mainstream**: true
 - **対象**: スタンフォード大学運営の **哲学百科事典**。専門家による項目別の包括的解説。新項目追加・既存項目改訂の通知 RSS
@@ -93,11 +96,13 @@
 ### 9. The Marginalian 🔗（既出：books.md Reference #13）
 - **URL**: https://www.themarginalian.org/
 - **RSS**: https://www.themarginalian.org/feed/
+- **language**: en
 - **学術観点での位置付け**: マリア・ポポバの **科学・哲学・文学の交差** エッセイ。news_profile.md §4.4 設計方針「**学問領域を架橋する論考を高評価（現象学×仏教、認知科学×質的研究等）**」を **個人エッセイの形** で実現するソース。ポパー・クーン等の **科学哲学** 系エッセイは §4.5.4「未踏だが関心高（朝刊が入り口提案を担う）」枠とも重複。**詳細は `books.md` を参照**
 
 ### 10. PhilPapers ❌
 - **URL**: https://philpapers.org/
 - **RSS**: **未検証完了**（`/feed/` 403、ブラウザUAでも 403、Cloudflare 系 bot 対策で完全閉鎖）
+- **language**: en
 - **形式**: ❌
 - **mainstream**: false
 - **対象**: 哲学論文・書籍の総合インデックス（学術検索データベース）

@@ -36,6 +36,7 @@
   - Leaders（社説）: https://www.economist.com/leaders/rss.xml
   - Briefing（深掘り解説）: https://www.economist.com/briefing/rss.xml
   - Science and Technology: https://www.economist.com/science-and-technology/rss.xml
+- **language**: en
 - **形式**: RSS 2.0
 - **mainstream**: true
 - **対象**: グローバル経済・金融・ビジネス・科学技術の論考。英語原文
@@ -44,6 +45,7 @@
 ### 3. BBC Business（本紙第1面で稼働中） ✅
 - **URL**: https://www.bbc.com/business
 - **RSS**: https://feeds.bbci.co.uk/news/business/rss.xml
+- **language**: en
 - **形式**: RSS 2.0
 - **mainstream**: true
 - **対象**: グローバル経済・企業・市場の速報＋分析（英国視点が強め）
@@ -52,6 +54,7 @@
 ### 4. Reuters Business ⚠️
 - **URL**: https://www.reuters.com/business/
 - **RSS**: **公式RSSは2020年以降廃止**（旧 `/arc/outboundfeeds/` 系も404、`reutersagency.com/feed/` も最新フィード非公開）。代替として **Google News RSS プロキシ** `https://news.google.com/rss/search?q=site:reuters.com+business&hl=en-US&gl=US&ceid=US:en` で間接取得可（200確認、最新エントリ含む）
+- **language**: en
 - **形式**: RSS 2.0（Google News 経由）
 - **mainstream**: false
 - **対象**: グローバル経済・市場・企業の速報、事実関係に強い
@@ -64,6 +67,7 @@
 ### 5. McKinsey Insights ✅
 - **URL**: https://www.mckinsey.com/insights
 - **RSS**: https://www.mckinsey.com/insights/rss
+- **language**: en
 - **形式**: RSS 2.0（Sitecore 配信、検証時に最新記事「From promise to impact: How companies can measure—and realize—the full value of AI」を取得確認）
 - **mainstream**: false
 - **対象**: 経営戦略、デジタル・AI、組織、リーダーシップ、産業別分析（QuantumBlack の AI 特化記事も含む）
@@ -72,6 +76,7 @@
 ### 6. BCG Insights / Henderson Institute ❌
 - **URL**: https://www.bcg.com/about/insights / https://bcghendersoninstitute.com/
 - **RSS**: **未提供**（HTML上に明示なし）。`feed.xml`、`/publications/rss`、sitemap.xml すべて Akamai が 403 で遮断。WebFetch も 403
+- **language**: en
 - **形式**: ❌ プログラマティック取得不可
 - **mainstream**: false
 - **対象**: 経営戦略、企業文化、長期トレンド分析、産業別レポート
@@ -83,6 +88,7 @@
   - https://feeds.bloomberg.com/markets/news.rss（市場ニュース＋一部Opinion混在、200確認）
   - https://feeds.bloomberg.com/wealth/news.rss（200確認）
   - https://feeds.bloomberg.com/politics/news.rss（200確認）
+- **language**: en
 - **形式**: RSS 2.0
 - **mainstream**: false
 - **対象**: マーケット解説、コラム、政治経済論考
@@ -103,6 +109,7 @@
 ### 9. Strategy+Business（PwC） ✅
 - **URL**: https://www.strategy-business.com/
 - **RSS**: https://www.strategy-business.com/rss
+- **language**: en
 - **形式**: RSS（HTML内 `href="https://www.strategy-business.com/rss"` で発見、200確認）
 - **mainstream**: false
 - **対象**: 経営戦略、リーダーシップ、組織、テクノロジー戦略（PwC 系列の経営思想誌）
@@ -111,6 +118,7 @@
 ### 10. Behavioral Scientist ✅
 - **URL**: https://behavioralscientist.org/
 - **RSS**: https://behavioralscientist.org/feed/
+- **language**: en
 - **形式**: RSS 2.0（検証時 371KB の本文付きフィード、LiteSpeed 配信）
 - **mainstream**: false
 - **対象**: 行動経済学、認知バイアス、意思決定科学、ナッジ理論、応用心理学
@@ -119,6 +127,7 @@
 ### 11. NBER Working Papers ✅
 - **URL**: https://www.nber.org/papers
 - **RSS**: https://back.nber.org/rss/new.xml（旧 `www.nber.org/rss/new.xml` は 301、新ドメイン `back.nber.org` で配信）
+- **language**: en
 - **形式**: RSS（Apache/2.4.66 + mod_perl 配信、40KB）
 - **mainstream**: false
 - **対象**: 経済学一次情報（労働経済学、マクロ、行動経済学、産業組織論、教育経済学等）。世界中の経済学者の Working Paper
