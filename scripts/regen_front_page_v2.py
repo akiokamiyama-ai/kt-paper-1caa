@@ -457,12 +457,63 @@ def translate_for_render(articles: list[dict]) -> None:
 # Rendering — source-aware Page I builder
 # ---------------------------------------------------------------------------
 
+# Sprint 5 (2026-05-03): 第1面の HTML 表示形式を「原文タイトル大 + 日本語小書き」に
+# 変更（選択肢 C）。CSS は inject_page_one_css でテンプレ </style> 直前に挿入。
+PAGE_ONE_CSS_MARKER = "/* === Page I title formatting (Sprint 5, 2026-05-03) === */"
+
+PAGE_ONE_CSS = f"""
+{PAGE_ONE_CSS_MARKER}
+.article-title-original {{
+  font-family: 'Noto Serif JP', 'Times New Roman', serif;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0 0 6px;
+}}
+.article-title-japanese {{
+  font-family: 'Noto Serif JP', serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: #666;
+  line-height: 1.5;
+  margin: 0 0 12px;
+  padding-left: 2px;
+}}
+/* Top の lead-story では h2.headline-xl をそのまま original 用に流用、サイズだけ拡張 */
+.lead-story h2.article-title-original {{
+  font-size: 36px;
+  line-height: 1.2;
+}}
+.secondaries .col h3.article-title-original {{
+  font-size: 20px;
+}}
+"""
+
+
+def inject_page_one_css(html_text: str) -> str:
+    """Idempotently inject Page I title CSS just before </style>."""
+    if PAGE_ONE_CSS_MARKER in html_text:
+        return html_text
+    end_style_idx = html_text.rfind("</style>")
+    if end_style_idx < 0:
+        head_close = html_text.find("</head>")
+        if head_close < 0:
+            return html_text
+        injected = f"<style>\n{PAGE_ONE_CSS}\n</style>\n"
+        return html_text[:head_close] + injected + html_text[head_close:]
+    return html_text[:end_style_idx] + PAGE_ONE_CSS + html_text[end_style_idx:]
+
+
 def _esc(s: str) -> str:
     return html.escape(s or "")
 
 
 def _render_top_body(top: dict) -> str:
-    """Single-paragraph dropcap from desc_ja + a byline."""
+    """Single-paragraph dropcap from desc_ja + a byline.
+
+    Sprint 5: 原題は h2.article-title-original で表示するため、byline からは
+    「原題：<em>{title}</em>」を削除し、全文リンクのみ残す。
+    """
     desc_ja = top.get("desc_ja", "") or top.get("description", "")
     paragraphs = [f'<p class="dropcap">{_esc(desc_ja)}</p>']
     source_name = top.get("source_name", "") or "外部ソース"
@@ -472,8 +523,7 @@ def _render_top_body(top: dict) -> str:
             label = kicker.split("・")[0]
             break
     paragraphs.append(
-        f'<p class="byline" style="margin-top:8px;">原題：'
-        f'<em>{_esc(top.get("title", ""))}</em>　全文：'
+        f'<p class="byline" style="margin-top:8px;">全文：'
         f'<a href="{_esc(top.get("url", ""))}" target="_blank" '
         f'rel="noopener noreferrer">{_esc(label)}</a></p>'
     )
@@ -490,8 +540,7 @@ def _render_secondary_body(sec: dict) -> str:
             break
     paragraphs = [f"        <p>{_esc(desc_ja)}</p>"]
     paragraphs.append(
-        f'        <p class="byline" style="margin-top:6px;">原題：'
-        f'<em>{_esc(sec.get("title", ""))}</em>　全文：'
+        f'        <p class="byline" style="margin-top:6px;">全文：'
         f'<a href="{_esc(sec.get("url", ""))}" target="_blank" '
         f'rel="noopener noreferrer">{_esc(label)}</a></p>'
     )
@@ -561,11 +610,20 @@ def build_page_one_v2(articles: list[dict]) -> str:
         date_label = _format_publish_date_ja(s.get("pub_date"))
         if date_label:
             byline = f"{byline} · {date_label}"
+        # Sprint 5: 原文タイトル大 + 日本語小書き。JA ソースは title_ja=title なので
+        # 二重表示を避けて jp タイトル行を出さない。
+        s_title_orig = s.get("title", "")
+        s_title_ja = s.get("title_ja", "")
+        s_is_ja = _is_japanese_article(s)
+        s_jp_line = (
+            "" if s_is_ja
+            else f'\n        <p class="article-title-japanese">{_esc(s_title_ja)}</p>'
+        )
         secondaries_html.append(
             f"""
       <div class="col" lang="ja">
         <div class="kicker">{_esc(kicker)}</div>
-        <h3 class="headline-l">{_esc(s.get("title_ja", ""))}</h3>
+        <h3 class="headline-l article-title-original">{_esc(s_title_orig)}</h3>{s_jp_line}
         <p class="byline">{_esc(byline)}</p>
 {_render_secondary_body(s)}
       </div>""".rstrip()
@@ -577,13 +635,22 @@ def build_page_one_v2(articles: list[dict]) -> str:
     if top_date_label:
         top_byline = f"{top_byline} · {top_date_label}"
 
+    # Sprint 5: top の表示も原文大 + 日本語小書き。
+    top_title_orig = top.get("title", "")
+    top_title_ja = top.get("title_ja", "")
+    top_is_ja = _is_japanese_article(top)
+    top_jp_line = (
+        "" if top_is_ja
+        else f'\n        <p class="article-title-japanese">{_esc(top_title_ja)}</p>'
+    )
+
     page = f"""<section class="page page-one">
     <div class="page-banner"><span class="pg-num">— Page I —</span> The Front Page · World &amp; Business</div>
 
     <article class="front-top">
       <div class="lead-story" lang="ja">
         <div class="kicker">{_esc(top_kicker)}</div>
-        <h2 class="headline-xl">{_esc(top.get("title_ja", ""))}</h2>
+        <h2 class="headline-xl article-title-original">{_esc(top_title_orig)}</h2>{top_jp_line}
         <p class="deck">{_esc(top.get("desc_ja", ""))}</p>
         <p class="byline">{_esc(top_byline)}</p>
         <div class="body-3col">
@@ -2167,6 +2234,8 @@ def main(argv: list[str] | None = None) -> int:
     print(f"Loading template: {TEMPLATE_PATH}", file=sys.stderr)
     template = TEMPLATE_PATH.read_text(encoding="utf-8")
     dated = update_template_date_strings(template, target)
+    # Sprint 5: Page I も常に CSS injection（タイトル原文大 + 日本語小書き）。
+    dated = inject_page_one_css(dated)
     if page_two_html is not None:
         dated = inject_page_two_css(dated)
     if page_four_html is not None:
