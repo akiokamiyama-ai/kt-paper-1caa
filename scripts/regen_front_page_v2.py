@@ -69,6 +69,8 @@ from .selector.why_important import (
     generate_why_important,
     static_why_important,
 )
+from .editorial import context_builder as editorial_context
+from .editorial import editorial_writer
 from .page4 import article_rotator as page4_rotator
 from .page4 import concept_selector as page4_concept_selector
 from .page4 import concept_writer as page4_concept_writer
@@ -504,6 +506,61 @@ def translate_for_render(articles: list[dict]) -> None:
 # ---------------------------------------------------------------------------
 # Rendering — source-aware Page I builder
 # ---------------------------------------------------------------------------
+
+# Sprint 4 Phase 3 (2026-05-03): Tribune 編集後記の CSS。第6面と colophon の
+# 間に挟まれる。is_fallback=True 時は HTML 自体が出ないため、CSS は常に
+# inject されるが効くのは編集後記が描画された日のみ。
+EDITORIAL_CSS_MARKER = "/* === Editorial postscript (Sprint 4 Phase 3) === */"
+
+EDITORIAL_CSS = f"""
+{EDITORIAL_CSS_MARKER}
+.editorial-footer {{
+  margin-top: 32px;
+  padding: 24px 24px 32px;
+  border-top: 2px solid #333;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 13px;
+  line-height: 1.9;
+  color: #444;
+  text-align: justify;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}}
+.editorial-footer .label {{
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: #888;
+  margin-bottom: 8px;
+  text-align: center;
+}}
+.editorial-footer .body p {{
+  text-indent: 1em;
+  margin: 0;
+}}
+.editorial-footer .signature {{
+  text-align: right;
+  font-style: italic;
+  color: #888;
+  font-size: 11px;
+  margin-top: 12px;
+}}
+"""
+
+
+def inject_editorial_css(html_text: str) -> str:
+    """Idempotently inject the editorial-footer CSS just before </style>."""
+    if EDITORIAL_CSS_MARKER in html_text:
+        return html_text
+    end_style_idx = html_text.rfind("</style>")
+    if end_style_idx < 0:
+        head_close = html_text.find("</head>")
+        if head_close < 0:
+            return html_text
+        injected = f"<style>\n{EDITORIAL_CSS}\n</style>\n"
+        return html_text[:head_close] + injected + html_text[head_close:]
+    return html_text[:end_style_idx] + EDITORIAL_CSS + html_text[end_style_idx:]
+
 
 # Sprint 6 (2026-05-03): 全面共通のリンクスタイル統一。color: inherit + dotted
 # underline + hover で solid。新聞らしい硬質な見た目を保つ。
@@ -1648,6 +1705,54 @@ def build_page_six_v2(
     return page, telemetry
 
 
+# ---------------------------------------------------------------------------
+# Editorial postscript (Sprint 4 Phase 3, 2026-05-03)
+# ---------------------------------------------------------------------------
+
+def _render_editorial_footer(editorial_result: dict) -> str:
+    """Build the <footer class="editorial-footer"> HTML block.
+
+    Returns "" when the editorial generation fell back, so the caller can skip
+    inserting the footer entirely (paper ends at Page VI on fallback days).
+    """
+    if not editorial_result or editorial_result.get("is_fallback"):
+        return ""
+    body = editorial_result.get("body") or ""
+    if not body.strip():
+        return ""
+    return f"""<footer class="editorial-footer">
+    <div class="label">編集後記</div>
+    <div class="body">
+      <p>{_esc(body)}</p>
+    </div>
+    <div class="signature">— Tribune 編集部</div>
+  </footer>
+
+  """
+
+
+def insert_editorial_footer(html_text: str, footer_html: str) -> str:
+    """Insert the editorial footer just before <footer class="colophon">.
+
+    Idempotent on empty footer_html (returns html_text unchanged). If the
+    colophon marker is missing (template malformed), inserts before </body>
+    as a defensive fallback so the editorial isn't silently dropped.
+    """
+    if not footer_html:
+        return html_text
+    # Avoid double insertion: if our editorial-footer already exists, skip.
+    if '<footer class="editorial-footer">' in html_text:
+        return html_text
+    marker = '<footer class="colophon">'
+    pos = html_text.find(marker)
+    if pos >= 0:
+        return html_text[:pos] + footer_html + html_text[pos:]
+    body_close = html_text.rfind("</body>")
+    if body_close < 0:
+        return html_text  # malformed template, give up silently
+    return html_text[:body_close] + footer_html + html_text[body_close:]
+
+
 def replace_page_six(html_text: str, new_page_html: str) -> str:
     """Surgical replace for Page VI."""
     start_marker = '<section class="page page-six">'
@@ -2129,6 +2234,10 @@ def main(argv: list[str] | None = None) -> int:
         "--skip-page6", action="store_true",
         help="skip Page VI generation (Page I+II+III+IV+V only, debug aid)",
     )
+    p.add_argument(
+        "--skip-editorial", action="store_true",
+        help="skip the Tribune editorial postscript (cost-saving / debug aid)",
+    )
     args = p.parse_args(argv)
 
     if args.date:
@@ -2333,6 +2442,30 @@ def main(argv: list[str] | None = None) -> int:
             )
             page_six_html = None
 
+    # 4e) Editorial postscript (Sprint 4 Phase 3) — depends on all pages above.
+    editorial_result: dict | None = None
+    if not args.skip_editorial:
+        ctx = editorial_context.build_editorial_context(
+            page_one_selected=result.selected,
+            page_two_selections=(
+                page2_result.selections if page2_result is not None else None
+            ),
+            page_three_selections=(
+                page3_result.selections if page3_result is not None else None
+            ),
+            page_four_telemetry=page_four_telemetry,
+            page_five_telemetry=page_five_telemetry,
+            page_six_telemetry=page_six_telemetry,
+        )
+        try:
+            editorial_result = editorial_writer.write_editorial(ctx)
+        except Exception as e:
+            print(
+                f"[editorial] FAILED (unhandled): {type(e).__name__}: {e}",
+                file=sys.stderr,
+            )
+            editorial_result = {"body": "", "is_fallback": True, "cost_usd": 0.0}
+
     # 5) Render Page I + Page II + Page III
     print("Building Page I HTML...", file=sys.stderr)
     page_one_html = build_page_one_v2(result.selected)
@@ -2361,6 +2494,9 @@ def main(argv: list[str] | None = None) -> int:
         dated = inject_page_five_css(dated)
     if page_six_html is not None:
         dated = inject_page_six_css(dated)
+    # Sprint 4 Phase 3: 編集後記の CSS は常に inject（idempotent、guarded by marker）。
+    # is_fallback=True の日は HTML 自体が出ないため、CSS は遊休状態で残るが副作用なし。
+    dated = inject_editorial_css(dated)
     final_html = replace_page_one(dated, page_one_html)
     if page_two_html is not None:
         final_html = replace_page_two(final_html, page_two_html)
@@ -2372,6 +2508,11 @@ def main(argv: list[str] | None = None) -> int:
         final_html = replace_page_five(final_html, page_five_html)
     if page_six_html is not None:
         final_html = replace_page_six(final_html, page_six_html)
+    # Sprint 4 Phase 3: 編集後記を <footer class="colophon"> の直前に挿入。
+    # is_fallback=True なら footer_html="" で no-op、紙面は Page VI で終わる。
+    if editorial_result is not None:
+        editorial_footer_html = _render_editorial_footer(editorial_result)
+        final_html = insert_editorial_footer(final_html, editorial_footer_html)
 
     out_path = _archive_path(target)
     if out_path.exists():
