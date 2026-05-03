@@ -264,6 +264,46 @@ def test_select_for_today_normal_path():
 
 
 # ---------------------------------------------------------------------------
+# (f) Culture category integration (added 2026-05-03)
+# ---------------------------------------------------------------------------
+
+def test_culture_in_eligible_categories():
+    _check("f1 'culture' is in ELIGIBLE_CATEGORIES",
+           "culture" in serendipity_selector.ELIGIBLE_CATEGORIES,
+           f"ELIGIBLE_CATEGORIES={serendipity_selector.ELIGIBLE_CATEGORIES}")
+
+
+def test_culture_pickable_when_least_shown():
+    """culture が単独で最少表示なら必ず選ばれる。"""
+    counts = Counter({
+        "business": 5, "geopolitics": 4, "academic": 6,
+        "books": 3, "music": 4, "outdoor": 3, "cooking": 2,
+        "culture": 0,
+    })
+    rng = random.Random(0)
+    chosen, ties = serendipity_selector.pick_target_category(counts, rng=rng)
+    _check("f2 culture が単独最少なら必ず選ばれる",
+           chosen == "culture" and ties == ["culture"],
+           f"chosen={chosen}, ties={ties}")
+
+
+def test_culture_participates_in_tie_random():
+    """全カテゴリが count=0 の初日想定で、culture が選ばれる seed が存在する。"""
+    counts = Counter()  # 全 category で 0 → 8-way tie
+    chosen_set = set()
+    for seed in range(50):
+        chosen, ties = serendipity_selector.pick_target_category(
+            counts, rng=random.Random(seed),
+        )
+        chosen_set.add(chosen)
+        # ties に culture が含まれる
+        assert "culture" in ties, f"seed={seed}: culture missing from ties={ties}"
+    _check("f3 culture は tie に含まれ、seed を変えれば実際に選ばれる",
+           "culture" in chosen_set,
+           f"50 seeds で観測された choice 集合={sorted(chosen_set)}")
+
+
+# ---------------------------------------------------------------------------
 # Test runner
 # ---------------------------------------------------------------------------
 
@@ -293,6 +333,11 @@ def main() -> int:
     print("(e) select_for_today end-to-end:")
     test_select_for_today_zero_candidates_placeholder()
     test_select_for_today_normal_path()
+    print()
+    print("(f) Culture category integration:")
+    test_culture_in_eligible_categories()
+    test_culture_pickable_when_least_shown()
+    test_culture_participates_in_tie_random()
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")
     return 0 if FAIL == 0 else 1

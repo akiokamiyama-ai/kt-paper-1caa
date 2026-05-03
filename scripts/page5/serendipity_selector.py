@@ -54,6 +54,7 @@ ELIGIBLE_CATEGORIES: tuple[str, ...] = (
     "music",
     "outdoor",
     "cooking",
+    "culture",
 )
 
 
