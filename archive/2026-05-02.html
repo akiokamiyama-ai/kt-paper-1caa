@@ -351,14 +351,93 @@
     [lang="ja"] h2.headline-xl { font-size: 26px; }
   }
 
-/* === Page VI (Sprint 3 Step D) === */
-.page-six-content {
+/* === Page IV (Sprint 3 Step B) === */
+.page-four-grid {
+  display: grid;
+  grid-template-columns: 55% 45%;
+  gap: 24px;
   padding: 16px 24px;
 }
-.ai-kamiyama-column {
-  margin-bottom: 24px;
+.concept-column {
+  border-right: 1px solid #ddd;
+  padding-right: 24px;
+}
+.concept-title {
+  font-family: 'Noto Serif JP', 'Old Standard TT', serif;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 8px 0 4px;
+  line-height: 1.3;
+}
+.concept-en {
+  display: block;
+  font-size: 14px;
+  font-weight: 400;
+  color: #666;
+  font-style: italic;
+  margin-top: 2px;
+}
+.concept-meta {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px dotted #ccc;
+}
+.concept-meta .domain { margin-right: 12px; font-weight: 600; }
+.concept-meta .thinkers { font-style: italic; }
+.concept-essay p {
+  font-family: 'Noto Serif JP', 'Old Standard TT', serif;
+  font-size: 15px;
+  line-height: 1.9;
+  text-align: justify;
+  text-indent: 1em;
+}
+.academic-column .item {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px dotted #ccc;
+}
+.academic-column .item:last-child { border-bottom: none; }
+
+/* === Page V (Sprint 4 layout swap, was Sprint 3 Step D) === */
+.page-five-content {
+  display: grid;
+  grid-template-rows: 40% 60%;
+  padding: 16px 24px;
+}
+.serendipity-article {
   padding-bottom: 24px;
+  margin-bottom: 24px;
   border-bottom: 1px solid #ccc;
+}
+.serendipity-article .kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #666;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.serendipity-article .article-title {
+  font-family: 'Noto Serif JP', 'Old Standard TT', serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.5;
+  margin: 0 0 10px;
+}
+.serendipity-article .description {
+  font-family: 'Noto Serif JP', 'Old Standard TT', serif;
+  font-size: 14px;
+  line-height: 1.8;
+  color: #333;
+  margin-bottom: 8px;
+}
+.serendipity-article .serendipity-byline {
+  font-size: 11px;
+  color: #888;
+  border-top: 1px dotted #ccc;
+  padding-top: 6px;
 }
 .ai-kamiyama-column .kicker {
   font-size: 11px;
@@ -390,7 +469,27 @@
   font-style: italic;
   margin-top: 12px;
 }
-.serendipity-article .kicker {
+.page-five-placeholder {
+  text-align: center;
+  padding: 60px 24px;
+  color: #888;
+  font-style: italic;
+}
+
+/* === Page VI (Sprint 4 layout swap, was Sprint 3 Step C) === */
+.page-six-grid-v2 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  padding: 16px 24px;
+}
+.leisure-column-v2 {
+  padding: 0 16px;
+  border-right: 1px solid #ccc;
+}
+.leisure-column-v2:last-child { border-right: none; }
+.leisure-column-v2:first-child { padding-left: 0; }
+.leisure-column-v2 .kicker {
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -398,31 +497,41 @@
   text-transform: uppercase;
   margin-bottom: 8px;
 }
-.serendipity-article .article-title {
+.leisure-column-v2 .column-title {
   font-family: 'Noto Serif JP', 'Old Standard TT', serif;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 700;
-  line-height: 1.5;
-  margin: 0 0 10px;
+  line-height: 1.4;
+  margin: 0 0 12px;
 }
-.serendipity-article .description {
+.leisure-column-v2 .column-body p {
   font-family: 'Noto Serif JP', 'Old Standard TT', serif;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.8;
-  color: #333;
+  text-align: justify;
   margin-bottom: 8px;
 }
-.serendipity-article .serendipity-byline {
-  font-size: 11px;
+.leisure-column-v2 .byline-v2 {
+  font-size: 10px;
   color: #888;
+  margin-top: 8px;
   border-top: 1px dotted #ccc;
   padding-top: 6px;
 }
-.page-six-placeholder {
-  text-align: center;
-  padding: 60px 24px;
-  color: #888;
+.cooking-column-v2 .dish-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 4px;
+}
+.cooking-column-v2 .ingredients {
+  font-size: 12px;
+  color: #555;
   font-style: italic;
+  margin-bottom: 10px;
+  padding: 6px 8px;
+  background: #f8f5f0;
+  border-left: 2px solid #c0a060;
 }
 </style>
 </head>
@@ -463,13 +572,13 @@
 
     <article class="front-top">
       <div class="lead-story" lang="ja">
-        <div class="kicker">BBC ビジネス・トップ</div>
-        <h2 class="headline-xl">AIはより正確な世論調査につながるのでしょうか？</h2>
-        <p class="deck">AI を使用して人々の意見を収集する方が安価で迅速ですが、世論調査はより正確になるでしょうか?</p>
-        <p class="byline">本紙編集部　BBC ビジネスより構成 · 2026年5月1日</p>
+        <div class="kicker">Foresight・国際情勢・トップ</div>
+        <h2 class="headline-xl">トランプ大統領の発言とアクション（4月23日～29日）：ベッセント氏の開く新戦線、中国封じ込め「ドル・スワップ網」構想</h2>
+        <p class="deck">ベッセント財務長官はドル・スワップ網を地政学的に活用している （C）REUTERS/Annabelle Gordon 財務省のスワップラインをUAEほかに拡げる狙い 通貨スワップとは、二国間で自国通貨を一定期間交換し、相手国の外貨流動性を確保する仕組みだ。米国のドル・スワップには二つの経路が存在する。一つはFRB（連邦準備制度理事会）が運営するスワップライン、もう一つは米財務省が管轄するESF（為替安定基金）を活用したスワップラインだ…</p>
+        <p class="byline">本紙編集部　Foresightより構成 · 2026年5月2日</p>
         <div class="body-3col">
-          <p class="dropcap">AI を使用して人々の意見を収集する方が安価で迅速ですが、世論調査はより正確になるでしょうか?</p>
-          <p class="byline" style="margin-top:8px;">原題：<em>Will AI lead to more accurate opinion polls?</em>　全文：<a href="https://www.bbc.com/news/articles/cwyw6rylzepo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener noreferrer">BBC ビジネス</a></p>
+          <p class="dropcap">ベッセント財務長官はドル・スワップ網を地政学的に活用している （C）REUTERS/Annabelle Gordon 財務省のスワップラインをUAEほかに拡げる狙い 通貨スワップとは、二国間で自国通貨を一定期間交換し、相手国の外貨流動性を確保する仕組みだ。米国のドル・スワップには二つの経路が存在する。一つはFRB（連邦準備制度理事会）が運営するスワップライン、もう一つは米財務省が管轄するESF（為替安定基金）を活用したスワップラインだ…</p>
+          <p class="byline" style="margin-top:8px;">原題：<em>トランプ大統領の発言とアクション（4月23日～29日）：ベッセント氏の開く新戦線、中国封じ込め「ドル・スワップ網」構想</em>　全文：<a href="https://www.fsight.jp/articles/-/52058" target="_blank" rel="noopener noreferrer">Foresight</a></p>
         </div>
       </div>
 
@@ -478,9 +587,9 @@
         <h4 class="headline-m">本日のトップから読み取るべきこと</h4>
         <p>読み解きのための3点：</p>
         <hr class="dotted" />
-        <p><strong>1・</strong>BBC Business が、AI を活用した世論調査の低コスト・高速化という実態を伝えつつ、精度という本質的な問いに迫る。従来型調査との比較を軸に、手法の転換点を報じる。</p>
-        <p><strong>2・</strong>世論調査の信頼性は政策立案・選挙分析・市場調査の根幹に関わる。AIが「速く安く」を実現しても、精度の検証軸が変わらなければ意思決定の質そのものが問い直される局面となる。</p>
-        <p><strong>3・</strong>AI技術・政治学・認識論という複数領域が交差する問いの構造を読むと、「精度」の定義自体が測定主体によって異なることが浮き彫りになる。多数派が効率化を称賛する裏で、捕捉困難な意見の扱いが静かに論点化しつつある。</p>
+        <p><strong>1・</strong>ベッセント財務長官がFRBのスワップラインとは別にESF（為替安定基金）を活用し、UAEなど新興国・非同盟国へのドル・スワップ網を地政学的ツールとして拡張する構想を進めていると Foresight が報じた。</p>
+        <p><strong>2・</strong>ドルの流動性供給を外交手段として再設計するこの動きは、中国の人民元圏形成への対抗策として機能しうる。国際通貨秩序の地形が財務省主導で静かに塗り替えられつつある局面である。</p>
+        <p><strong>3・</strong>金融制度と地政学が交差するこの構図では、どの国がドル網に取り込まれ、どの国が人民元圏に傾くかが中期のサプライチェーン設計と決済インフラ選択に直結する。構造と個別事例を往復して読む視座が問われる。</p>
         <hr class="dotted" />
         <p class="byline" style="margin-top:8px;">出典：3ソース合議 · 翻訳：Google／MyMemory（日本語ソースは原文）</p>
       </aside>
@@ -489,24 +598,24 @@
     <div class="secondaries">
       <div class="col" lang="ja">
         <div class="kicker">Foresight・国際情勢</div>
-        <h3 class="headline-l">ハンガリー「マジャル新政権」は親EU・親ウクライナへ傾くのか？（下）</h3>
-        <p class="byline">本紙編集部　Foresightより構成 · 2026年5月1日</p>
-        <p>オルバーン政権とその与党フィデスはウクライナを事実上の「敵対国家」と位置づけてきた［総選挙前日、ウクライナのゼレンスキー大統領とマジャル氏を非難するプラカードを掲げたフィデス支持者＝2026年4月11日、ハンガリー・ブダペスト］（C）Krisztian Elek / SOPA Images via Reuters Connect ハンガリー「マジャル新政権」は親EU・親ウクライナへ傾くのか？（上） 対ウクライナ関係：「…</p>
-        <p class="byline" style="margin-top:6px;">原題：<em>ハンガリー「マジャル新政権」は親EU・親ウクライナへ傾くのか？（下）</em>　全文：<a href="https://www.fsight.jp/articles/-/52061" target="_blank" rel="noopener noreferrer">Foresight</a></p>
-      </div>
-      <div class="col" lang="ja">
-        <div class="kicker">Foresight・国際情勢</div>
         <h3 class="headline-l">ハンガリー「マジャル新政権」は親EU・親ウクライナへ傾くのか？（上）</h3>
         <p class="byline">本紙編集部　Foresightより構成 · 2026年5月1日</p>
         <p>ポーランドをはじめとするヴィシェグラード4カ国との関係改善も課題に［アントニオ・コスタ欧州理事会議長（右）と握手するマジャル次期首相（左）＝2026年4月30日、ベルギー・ブリュッセル］（C）REUTERS/Yves Herman 2026年4月12日のハンガリー総選挙では、16年にわたり政権を担ってきたオルバーン・ヴィクトル首相率いる与党フィデスが大敗し、ティサ党による政権交代が実現することになった。 オルバーン政権は、従来よりEUに対して懐疑的な姿…</p>
         <p class="byline" style="margin-top:6px;">原題：<em>ハンガリー「マジャル新政権」は親EU・親ウクライナへ傾くのか？（上）</em>　全文：<a href="https://www.fsight.jp/articles/-/52060" target="_blank" rel="noopener noreferrer">Foresight</a></p>
       </div>
       <div class="col" lang="ja">
-        <div class="kicker">Foresight・国際情勢</div>
-        <h3 class="headline-l">トランプ大統領の発言とアクション（4月23日～29日）：ベッセント氏の開く新戦線、中国封じ込め「ドル・スワップ網」構想</h3>
-        <p class="byline">本紙編集部　Foresightより構成 · 2026年5月2日</p>
-        <p>ベッセント財務長官はドル・スワップ網を地政学的に活用している （C）REUTERS/Annabelle Gordon 財務省のスワップラインをUAEほかに拡げる狙い 通貨スワップとは、二国間で自国通貨を一定期間交換し、相手国の外貨流動性を確保する仕組みだ。米国のドル・スワップには二つの経路が存在する。一つはFRB（連邦準備制度理事会）が運営するスワップライン、もう一つは米財務省が管轄するESF（為替安定基金）を活用したスワップラインだ…</p>
-        <p class="byline" style="margin-top:6px;">原題：<em>トランプ大統領の発言とアクション（4月23日～29日）：ベッセント氏の開く新戦線、中国封じ込め「ドル・スワップ網」構想</em>　全文：<a href="https://www.fsight.jp/articles/-/52058" target="_blank" rel="noopener noreferrer">Foresight</a></p>
+        <div class="kicker">BBC ビジネス</div>
+        <h3 class="headline-l">AIはより正確な世論調査につながるのでしょうか？</h3>
+        <p class="byline">本紙編集部　BBC ビジネスより構成 · 2026年5月1日</p>
+        <p>AI を使用して人々の意見を収集する方が安価で迅速ですが、世論調査はより正確になるでしょうか?</p>
+        <p class="byline" style="margin-top:6px;">原題：<em>Will AI lead to more accurate opinion polls?</em>　全文：<a href="https://www.bbc.com/news/articles/cwyw6rylzepo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener noreferrer">BBC ビジネス</a></p>
+      </div>
+      <div class="col" lang="ja">
+        <div class="kicker">The Economist</div>
+        <h3 class="headline-l">インド通貨安はイラン戦争よりも深刻な問題を反映している</h3>
+        <p class="byline">本紙編集部　The Economistより構成 · 2026年4月30日</p>
+        <p>外国人投資家を呼び込むことが依然として不可能であることを浮き彫りにしている</p>
+        <p class="byline" style="margin-top:6px;">原題：<em>India’s weak currency reflects deeper problems than the Iran war</em>　全文：<a href="https://www.economist.com/finance-and-economics/2026/04/30/indias-weak-currency-reflects-deeper-problems-than-the-iran-war" target="_blank" rel="noopener noreferrer">The Economist</a></p>
       </div>
     </div>
   </section>
@@ -522,57 +631,54 @@
       Cocolomi・Human Energy・Web-Repo3社の事業文脈に関わる今朝の話題を、各社につき1本——朝の経営判断のための短い問いを添えて。
     </p>
 
-    <!-- KOKOROMI -->
     <div class="briefing-row" lang="ja">
       <div class="company">
         Cocolomi
         <span class="jp">生成AI導入支援</span>
       </div>
       <div class="story">
-        <div class="kicker">経産省・導入ガイドライン</div>
-        <h4 class="headline-m">経産省、中堅製造業向け「生成AI導入参照アーキテクチャ」を公表</h4>
-        <p class="byline">産業部</p>
-        <p>経済産業省は24日、待たれていた『中堅製造業における生成AI導入参照アーキテクチャ』全92ページを公表した。題名の堅さに反し、本文書は今後2年間の購買が日本のどこで起きるかを示す、現時点でもっとも明瞭な政策的シグナルである。参照アーキテクチャは検索拡張パターンに大きく寄りかかり、調達手続きについて異例に詳細な手引きを示す。そして経産省の最近の文書としては初めて、「実装パートナーの実装能力」を補助金支給要件として明記した。</p>
+        <div class="kicker">経済産業省ニュースリリース</div>
+        <h4 class="headline-m"><a href="https://www.meti.go.jp/press/2026/05/20260501001/20260501001.html" target="_blank" rel="noopener noreferrer">高性能AIへの対応に関して赤澤経済産業大臣が重要インフラ事業者との意見交換を実施しました</a></h4>
+        <p class="byline">本紙編集部　経済産業省ニュースリリースより構成 · 2026年5月1日</p>
+        <p>ソフトウェアの脆弱性発見について高い能力を有するAIの開発が進んでいる状況を踏まえ、本日、赤澤経済産業大臣は、電気事業連合会の森会長、送配電網協議会の白銀会長、日本ガス協会の内田会長、石油化学工業協会の野田副会長、日本クレジット協会の山本会長、石油連盟の森下危機管理委員長、電力分野の重要インフラ事業者（計24社）の代表者等との意見交換を実施しました。 会談では高性能AIの出現を踏まえた影響と重要インフラ分野（電力、ガス、化学、クレジット、石油）におけるリスクを低減する観点から必要な対応について、関係者で認</p>
       </div>
       <div class="insight">
         <span class="label">Editor's Note · 社長への朝の覚え書き</span>
-        <p>注目すべき構造変化は文書そのものではなく要件条項にある——補助金は「実績のあるパートナー」を辿るのであって、「技術を持つベンダー」を辿るのではない。これによりインテグレーション市場は、断片的なサービス事業から「参照可能なサプライヤー登録簿」に近い形へと位置づけが変わる。<br/><br/><strong>今朝の問い：</strong>7月までに執筆・公開できれば、競合がリストの存在に気付く前にCocolomiを参照リストの中に置けるであろう、製造業の事例研究2本はどれか？</p>
+        <p><strong>今朝の問い：</strong>経産省が重要インフラ24社と高性能AIの脆弱性リスクを協議した今、顧客の生成AI導入提案に「セキュリティ影響評価」の章を加えることで差別化できる案件は現在いくつあるか？</p>
       </div>
     </div>
 
-    <!-- HUMAN ENERGY -->
     <div class="briefing-row" lang="ja">
       <div class="company">
         Human Energy
         <span class="jp">企業向け研修</span>
       </div>
       <div class="story">
-        <div class="kicker">愛知・現場研究</div>
-        <h4 class="headline-m">シャイン後継ラボのフィールドスタディ、愛知3社で「謙虚な問いかけ」を追跡</h4>
-        <p class="byline">組織開発部</p>
-        <p>故エドガー・シャインの最終ゼミ生らが設立したボストン拠点のラボの研究者が、愛知の工場現場で14ヶ月間、監督職を追跡した異例に粒度の細かいフィールドスタディを公表した。見出しの結論——KPI構造を変えずに「謙虚な問いかけ」を持続的に実践したことで、現場の問題提起率が38%上昇——よりも興味深いのは方法論的注記である。チームはアンケートではなく、参加者ジャーナルと四半期ごとの対話的インタビューを用いた。換言すれば、結論を可視化したのは<em>計測の道具立てそのもの</em>だった。</p>
+        <div class="kicker">ITmedia ビジネスオンライン</div>
+        <h4 class="headline-m"><a href="https://www.itmedia.co.jp/business/articles/2605/03/news016.html" target="_blank" rel="noopener noreferrer">「退職代行」を利用していた内定者　一度出した「内定」を取り消せる？</a></h4>
+        <p class="byline">本紙編集部　ITmedia ビジネスオンラインより構成 · 2026年5月3日</p>
+        <p>内定者が、前職を退職代行で辞めていたことが分かりました。退職代行を否定するわけではありませんが、今回も退職代行を使っていきなり辞めてしまう危険性があります。退職代行を使ったことを理由に、内定を取り消してもいいのでしょうか。</p>
       </div>
       <div class="insight">
         <span class="label">Editor's Note · 社長への朝の覚え書き</span>
-        <p>方法論として、本研究はHuman Energyが研修の場で既に行っていることに非常に近い——計測ではなく構造化された対話を通して、暗黙のものを明示化する。機会はシャインのラボを模倣することではなく、貴社のトレーナーが彼らの計測道具に「似たことをしている」という事実を、クライアントが買える言葉で言語化することにある。<br/><br/><strong>今朝の問い：</strong>Human Energy版「フィールドスタディ」のパンフレット——3ページ、1クライアント、観察記録（証言ではなく）——は、次回の営業レビューまでに草稿化できるか？</p>
+        <p><strong>今朝の問い：</strong>退職代行を使わざるを得なかった背景——対話できない職場文化——は、Human Energyのクライアント企業にも潜んでいるか？</p>
       </div>
     </div>
 
-    <!-- WEB-LIPO -->
     <div class="briefing-row" lang="ja">
       <div class="company">
         Web-Repo
         <span class="jp">フランチャイズ業界</span>
       </div>
       <div class="story">
-        <div class="kicker">東京地裁・開示</div>
-        <h4 class="headline-m">東京地裁、フランチャイザーの収益見込み開示基準を厳格化</h4>
-        <p class="byline">法務部</p>
-        <p>23日に公表された東京地裁判決は、フランチャイザーが加盟希望者に提示する想定営業利益の表現に許される裁量を実質的に狭めた。中堅外食チェーンを巡る長期係争での同判決は、「地域平均」値を提示する場合、その背後の分布と募集期間中の母集団比率を併せて示すべきだとした。業界顧問団は6週間以内に日本フランチャイズチェーン協会から開示モデル雛形の改訂が出ると見ており、自主的なテンプレ改訂の波が続くと予想している。</p>
+        <div class="kicker">ビジネスチャンス</div>
+        <h4 class="headline-m"><a href="https://www.bc01.net/seminar/myfarm-2_202604/" target="_blank" rel="noopener noreferrer">【セミナーレポート】テナント・土地活用展2025大阪</a></h4>
+        <p class="byline">本紙編集部　ビジネスチャンスより構成 · 2026年4月22日</p>
+        <p>多様化を見せる農地活用方法の可能性 教育や観光など複合的なビジネスモデルを展開 フランチャイズビジネスの専門誌「ビジネスチャンス」が主催する「テナント・土地活用展」は、出店地を探す事業者と、遊休地の活用を模索する不動産 […] The post 【セミナーレポート】テナント・土地活用展2025大阪 first appeared on ビジネスチャンス .</p>
       </div>
       <div class="insight">
         <span class="label">Editor's Note · 社長への朝の覚え書き</span>
-        <p>これはWeb-Repoのディレクトリ事業にとって構造的な瞬間である——開示基準が厳格化されると、平易に提示され、出典の確かなFC案件情報の<em>編集的プレミアム</em>が急上昇する。加盟希望者からの引き合いは1四半期以内に、案件の「目立ち具合」よりも「透明性」を重視するようになる。<br/><br/><strong>今朝の問い：</strong>「この見込み数字が何を意味するか」を平易に解説するサイドバーを付加した場合、最も恩恵が大きいのはWeb-Repo上のどの上位50案件か？ そしてそのコストは？</p>
+        <p><strong>今朝の問い：</strong>農地×教育×観光という複合FCモデルは、加盟者が農地法・都市計画規制のリスクを正確に把握できているか、Web-Repo で取り上げる際に「規制の落とし穴」を解説するコンテンツとして成立するか？</p>
       </div>
     </div>
   </section>
@@ -587,33 +693,43 @@
     <div class="general-grid">
 
       <div class="item">
-        <div class="kicker">Singapore</div>
-        <h5 class="headline-s">GIC Trims US Tech, Adds Japanese Industrials</h5>
-        <p>Singapore's sovereign fund quietly rotated about 2.4 per cent of its US-equity book into Japanese mid-cap industrials over the first quarter, according to a partner-presentation deck circulating in Singapore. The reweighting is small but unusually directional — a vote, in capital terms, on Japan's industrial-policy moment rather than its index.</p>
+        <div class="kicker">国際金融</div>
+        <h5 class="headline-s">When the Confederacy Came to LA</h5>
+        <p>“The nation is splattered with these zombie structures, or sutures, with nowhere to be and no path to total erasure.”</p>
+        <p class="byline" style="font-size: 11px; color: #666; margin-top: 4px;">出典：The Paris Review · 2026年5月1日</p>
       </div>
 
       <div class="item" lang="ja">
-        <div class="kicker">東京・人口</div>
-        <h5 class="headline-s">2026年の人口断崖：生産年齢人口、初めて60%割れ</h5>
-        <p>今週確定した2025年国勢調査により、長く予期されてきた閾値が確認された——日本の生産年齢人口は総人口の59.3%まで低下した。数字自体は誰も驚かせない。注目は2020年比の低下速度がプロジェクションよりやや速い点にある。秋以前の補正予算論議よりも、今回はさらに労働力不足対策に重心が傾く見通しだ。</p>
+        <div class="kicker">国内マクロ・産業</div>
+        <h5 class="headline-s" style="font-style: italic; color: #666;">本日該当なし</h5>
       </div>
 
       <div class="item">
-        <div class="kicker">Brussels</div>
-        <h5 class="headline-s">EU AI Act: First Enforcement Cases Target Hiring Tools</h5>
-        <p>The Commission opened the first three formal enforcement actions under the AI Act this week, all of them against vendors of recruitment-screening tools rather than against the more politically conspicuous foundation-model providers. The signal is methodological: the Commission is starting where the harms are most legally legible, not where the headlines are loudest.</p>
+        <div class="kicker">New York・科学</div>
+        <h5 class="headline-s">How Does Your Brain Know a Cat Is a Cat?</h5>
+        <p>A conversation with renowned neuroscientists Lisa Feldman Barrett and Earl Miller about categories, “folk psychology,” beginner’s mind, and thinking fast and slow The post How Does Your Brain Know a Cat Is a Cat? appeared first on Nautilus .</p>
+        <p class="byline" style="font-size: 11px; color: #666; margin-top: 4px;">出典：Nautilus · 2026年5月2日</p>
+      </div>
+
+      <div class="item">
+        <div class="kicker">New York・経営</div>
+        <h5 class="headline-s">Author Talks: What makes teams effective under pressure</h5>
+        <p>What keeps teams from speaking up when it matters most? NASA’s Lindy Elkins-Tanton explains how trust and openness fuel better decisions—and surface critical problems sooner.</p>
+        <p class="byline" style="font-size: 11px; color: #666; margin-top: 4px;">出典：McKinsey Insights</p>
       </div>
 
       <div class="item" lang="ja">
-        <div class="kicker">豊田市・産業</div>
-        <h5 class="headline-s">トヨタの水素戦略、EVの波を生き延びる——なぜか</h5>
-        <p>動力源論争を決着させるはずだった世界的なEVリセットから3年——トヨタの第4四半期水素関連開示は、商用車・定置型燃料プログラムの加速を示している。社内の見立て：水素は元々「乗用車」の話ではなかった。EV論が応えられない<em>産業需要市場</em>の話であり続けてきた。三品和広のプラットフォーム戦略における忍耐論を再読する価値がある。</p>
+        <div class="kicker">文化・社会</div>
+        <h5 class="headline-s">日本翻訳大賞、『チョルノービリ・マニュアル』など２作 - 新文化</h5>
+        <p>日本翻訳大賞実行委員会は4月27日、第12回「日本翻訳大賞」にケイト・ブラウン『チョルノービリ・マニュアル 原発事故を生きる』（阿部純子氏訳、緑風出版）と閻連科...</p>
+        <p class="byline" style="font-size: 11px; color: #666; margin-top: 4px;">出典：本の雑誌オンライン · 2026年4月30日</p>
       </div>
 
-      <div class="item" lang="ja">
-        <div class="kicker">ヴェローナ・新刊</div>
-        <h5 class="headline-s">ロヴェッリの新エッセイ集、来週日本の書店に</h5>
-        <p>河出書房新社による『L'ordine del tempo, ancora』——アナクシマンドロスを伴って「時間と熱力学」のテーマに再交渉する——の翻訳が、5月1日に書店に並ぶ。ロヴェッリ愛読者には馴染みの動き：物理学を前ソクラテスの哲学者と共に語り、マッハとフッサールが静かに同席する。物理学を「人文学的な縫い目」が見える形で読みたい読者にとって、自然な架橋の1冊。</p>
+      <div class="item">
+        <div class="kicker">国際・論考</div>
+        <h5 class="headline-s">What China Will Learn from Orbán’s Defeat</h5>
+        <p>After watching Nikita Khrushchev’s repudiation of Stalin lead to a revolution in Hungary, Mao Zedong concluded that under one-party rule, no amount of political liberalization is safe. The defeat of Viktor Orbán in Hungary’s parliamentary elections last month most likely reinforced that lesson for Chinese President Xi Jinping.</p>
+        <p class="byline" style="font-size: 11px; color: #666; margin-top: 4px;">出典：Project Syndicate · 2026年5月1日</p>
       </div>
 
     </div>
@@ -626,54 +742,44 @@
   <section class="page page-four">
     <div class="page-banner"><span class="pg-num">— Page IV —</span> Arts &amp; Letters · A Page for Slow Reading</div>
 
-    <div class="arts-grid">
+    <div class="page-four-grid">
 
-      <article class="concept-of-week" lang="ja">
-        <span class="label">— Concept of the Week ／ 今週の概念 —</span>
-        <h3>暗黙知とSECIスパイラル、再訪</h3>
-        <p class="byline">本紙編集部　2026年4月20日—26日号</p>
-        <div class="body">
-          <p class="dropcap">ポラニーの有名すぎるあの1句——「我々は語りうる以上のことを知っている」——は、引用が反復されるうちに、その奇妙さが摩耗してしまった。むしろ、その逆命題から始めたい。野中郁次郎が1つのキャリアをかけて打ち立てた命題：「組織はそのいずれの構成員が語りうる以上のことを知っており、その知は構成員と構成員の隙間に保持されている」。隙間は暗黙である。経営の仕事は、その隙間を凍結させずに可読化することにある。</p>
-          <p>SECIモデル——共同化・表出化・連結化・内面化——は通常、「暗黙／明示」と「個人／集団」を交差させた平らな2×2として描かれる。野中本人は、紺野登・遠山亮子との後年の論考で、この平面的な読み方を放棄し、螺旋へと差し替えている。4つのモードを1巡するごとに抽象度は1段上がる。そして螺旋は安定した均衡点を持たない。あるのは「次の1巡」だけである。</p>
-          <p>経営文献ではあまり語られないが、この描像は、約1世紀前にフッサールが展開していた現象学に驚くほど近い——その現象学を、日本語で根気よく可読化してきたのが竹田青嗣である。フッサールの本質直観（Wesenschau）は実務的な言葉に置き換えれば、現象に対する反省以前の把握（暗黙）から、別の意識による検証に耐える記述（明示）へと、構造化された手順で移行する技法である。現象学者の「エポケー」——自然的態度の慎重な括弧入れ——は、熟練のファシリテーターがワークショップに課す対話的規律と本質的に異なるものではない。</p>
-          <p>この架橋は、修辞以上の含意を持つ。<em>ディープリスニング</em>を名乗るあらゆる実践にとって、実務的な含意がある。深く聞くとは、引き出すことではない。話し手がまだ言葉にできていない暗黙の輪郭が、共有された焦点に立ち上がってくるまで、場に留まり続けることである。SECIの螺旋をフッサールから読み返したとき、「留まる」ことの工学が見えてくる。</p>
-          <p>実務に持ち帰るべき注意点が2つある。第1に、<em>表出化</em>の段階こそ多くの組織がもっとも誤る場面である——「文字に起こす」ことを「共有する」ことと取り違えるからである。第2に、螺旋はどのモードからでも入れるわけではない。実践上はほぼ常に、記憶に残るほど密度の高い「共同化のエピソード」から始まる。設計されたワークショップへの含意は鋭い：何も「成果」が産み出されていないように見える初期の時間を、惜しまずに予算化すべきである。</p>
-        </div>
-        <div class="further">
-          <strong>For Further Reading ／ 関連書誌</strong>
-          野中郁次郎・紺野登「『場』の概念」（1998）——引用されないが本質的な論文。竹田青嗣『現代思想の冒険』『フッサール「現象学の理念」入門』——日本語の入口。ポラニー『暗黙知の次元』第1章——短く、再読の価値。野矢茂樹の最新論考『記述とその限界』——本面の関連短信を参照。
-          <br/><br/>
-          <strong>Application Note · ディープリスニング実務への含意</strong>
-          Human Energyのファシリテーターが、参加者の「うまく言葉にできないのですが…」という瞬間に気付いたとき、取るべき動きは要約ではなく、こう問うことである——「もし答えに出会ったら、どんな状況でそれが『答えだ』と分かりますか」。この動きは構造的に、SECI螺旋における<em>表出化</em>のステップそのものである。
-        </div>
-      </article>
-
-      <aside class="academic-news" lang="ja">
-        <div class="kicker">岩波書店・春の新刊</div>
-        <h4 class="headline-m">野矢茂樹『記述とその限界』、岩波春の目玉</h4>
-        <p class="byline">書評部</p>
-        <p>野矢茂樹の近刊——仮題『記述とその限界』——が、岩波書店春のカタログの中心に据えられた。本書は、ウィトゲンシュタイン後期は「何が、誰によって、どんな共有された背景を伴って語りうるか」の探究として読むのが最も生産的だ、という野矢の長年の議論を1段押し進める。現象学に注意深い読者にとって特に興味深いのは、野矢がこれまでより直接的に<em>間主観性</em>の問題に踏み込む1章である。</p>
-        <hr class="dotted" />
-        <p>予約は丸の内丸善でも金曜朝から受付開始。初版部数は野矢の通例より大きいと伝えられる——アカデミー外への到達への、版元の賭けである。</p>
-        <hr class="thin" />
-        <div class="kicker">Also Worth Noting</div>
-        <h5 class="headline-s" style="margin-top:6px;">Aeon's Long Essay on the Yorùbá Storyteller</h5>
-        <p style="font-family:'Merriweather',serif; line-height:1.55;">An Aeon essay published this week makes a careful case for treating the West-African oral tradition as a living theory of mind, not a corpus of folktales. Useful pairing for readers of Tutuola.</p>
-      </aside>
-
-    </div>
-
-    <!-- THINK LOG STUB -->
-    <hr class="thick" />
-    <div lang="ja" style="display:grid; grid-template-columns: 1fr 2fr; gap:24px; align-items:start;">
-      <div>
-        <div class="kicker">— 思索ログ —</div>
-        <h4 class="headline-m">先週のメモが今週の読みに出会う場所</h4>
-        <p class="byline">本面常設欄・読者の余白用</p>
+    <article class="concept-column" lang="ja">
+      <div class="kicker">今週の概念</div>
+      <h3 class="concept-title">
+        心の理論
+        <span class="concept-en">Theory of Mind</span>
+      </h3>
+      <div class="concept-meta">
+        <span class="domain">発達心理学・認知科学</span>
+        <span class="thinkers">代表：プレマック, ウッドラフ</span>
       </div>
-      <div>
-        <p style="color: var(--ink-soft);">この欄は、読者自身の手帳と本紙が選んだ記事との対話に充てられる。仕組み——直近のメモの核片を、関連する記事と編集部が出会わせる——は、合宿後の組み立てに向けて準備中である。本格運用までの間、この欄は、いずれ本紙のもっとも個性的な企画になるはずの仕組みのプレースホルダーとして立つ。</p>
+      <div class="concept-essay">
+        <p>他者の頭の中に、自分とは異なる信念や意図が宿っていると気づく能力――それが「心の理論（Theory of Mind）」である。チンパンジーの行動研究からこの概念を切り出したプレマックとウッドラフの1978年の論文は、「他者を心を持つ存在として理解する」という営みが自明でも普遍でもなく、むしろ習得される認知的スキルであることを示唆した。その後、発達心理学における「誤信念課題」――他者が自分と異なる誤った信念を持ちうると理解できるかを問う実験――によって、この能力はおよそ4歳前後に臨界的に発達することが明らかにされ、自閉スペクトラム症の認知的特性との関連でも広く議論されてきた。興味深いのは、この能力が「察する」「空気を読む」といった日本語の慣用句が捉えてきた暗黙の社会技術と深く重なりながらも、その前提として「他者は私とは異なる内部モデルを持っている」という根本的な他者性の承認を必要とする点である。経営の場面に置き換えれば、優れた意思決定者とは、自分のメンタルモデルが他者のそれと一致しないことを常に前提として動ける人物、すなわち心の理論を組織的思考の基底に置いている人物ではないか。メルロ＝ポンティが身体を通じた他者理解を論じたように、この能力もまた純粋な推論ではなく、関係の中でほぐれてゆく生きた知覚に根ざしているのかもしれない。</p>
       </div>
+    </article>
+
+    <aside class="academic-column" lang="ja">
+      <div class="kicker">学術ニュース</div>
+
+      <div class="item" lang="ja">
+        <h5 class="headline-s"><a href="https://www.shunjusha.co.jp/news/n126097.html" target="_blank" rel="noopener noreferrer">サティ生誕160年記念 青柳いづみこ×高橋悠治 ダンスと画像とピアノ</a></h5>
+        <p>サティ生誕160年記念 青柳いづみこ×高橋悠治 ダンスと画像とピアノについて</p>
+        <p class="byline" style="font-size: 11px; color: #666; margin-top: 4px;">出典：春秋社 · 2026年4月28日</p>
+      </div>
+
+      <div class="item" lang="ja">
+        <h5 class="headline-s"><a href="https://shinsho-plus.shueisha.co.jp/column/gendai_majyo/34527" target="_blank" rel="noopener noreferrer">今日のウイッチクラフト</a></h5>
+        <p>2024年、私はミーアンジンに降り立った。 現在ではブリスベンという名で知られるこの土地は、はるか以前からトゥルバル族やユガラ族が暮らしてきた場所であり、彼らはここをミーアンジンと呼んできた。ヤガラ語を話す先住民たちが、 […]</p>
+        <p class="byline" style="font-size: 11px; color: #666; margin-top: 4px;">出典：集英社新書プラス · 2026年4月24日</p>
+      </div>
+
+      <div class="item" lang="ja">
+        <h5 class="headline-s"><a href="https://www.shunjusha.co.jp/news/n126016.html" target="_blank" rel="noopener noreferrer">アジア文芸ライブラリー『シュグデン』訳者 阿比留美帆氏×作家 万城目学氏 トークイベント開催</a></h5>
+        <p>アジア文芸ライブラリー『シュグデン』訳者 阿比留美帆氏×作家 万城目学氏 トークイベント開催について</p>
+        <p class="byline" style="font-size: 11px; color: #666; margin-top: 4px;">出典：春秋社 · 2026年4月23日</p>
+      </div>
+    </aside>
     </div>
   </section>
 
@@ -682,46 +788,24 @@
   <!--                  PAGE FIVE — LEISURE                            -->
   <!-- ═══════════════════════════════════════════════════════════════ -->
   <section class="page page-five">
-    <div class="page-banner"><span class="pg-num">— Page V —</span> Leisure · Reading, Music, Trail &amp; Table</div>
+    <div class="page-banner"><span class="pg-num">— Page V —</span> Columns &amp; Serendipity · A Room with a Different Window</div>
 
-    <div class="leisure-grid">
+    <div class="page-five-content" lang="ja">
+      <aside class="serendipity-article">
+        <div class="kicker">今朝出会った1本</div>
+        <h3 class="article-title">Day 6: A push into Dick’s Creek Gap</h3>
+        <p class="description">Before I started hiking and was reading these kinds of blogs – just like you are right now – I didn’t understand why hik…</p>
+        <p class="serendipity-byline">出典：The Trek · 2026年5月3日</p>
+      </aside>
 
-      <!-- BOOKS -->
-      <div class="leisure-card" lang="ja">
-        <span class="section-tag">Books</span>
-        <div class="meta">近刊・翻訳</div>
-        <h5 class="headline-s">テッド・チャン新短編集、5月14日に早川書房から</h5>
-        <p>早川書房は、テッド・チャン新短編集の日本語版を5月14日に発売すると発表した。全4編のうち2編が、「あなたの人生の物語」以来チャンの仕事を貫く問いを再訪する——<em>ある精神が「いまある以外の仕方で」考えるためには、何を支払う必要があるか</em>。昨年のSynodos掲載のチャン・インタビューが巻末に再録される。</p>
-        <p class="byline" style="margin-top:8px;">本紙の覚え書き：SF領域の「思弁的・哲学的」端を読みたいが、グレッグ・イーガンの長編にはまだ踏み込みたくない読者にとって、自然な架橋の1冊。</p>
-      </div>
-
-      <!-- MUSIC -->
-      <div class="leisure-card" lang="ja">
-        <span class="section-tag">Music</span>
-        <div class="meta">苗場・開幕まで64日</div>
-        <h5 class="headline-s">フジロック'26第1弾発表、2日目をストーン・ローゼズが飾る</h5>
-        <p>スマッシュ・コーポレーションは23日、フジロック'26の出演者第1弾を発表した。長く通っている読者にとっての朗報：噂されていたストーン・ローゼズの再結成が確定、土曜夜のグリーンステージに名を連ねた。サカナクションは新しいライブ編成で、金曜の同ステージに帰還する。小規模ステージで丸を付けるべき箇所：クーラ・シェイカーの午後セッション、そして西アフリカのアンサンブル2組を含む異例に深い「フィールド・オブ・ヘヴン」のキュレーション。</p>
-        <p class="byline" style="margin-top:8px;">朝霧JAM日程告知：10月10・11・12日。チケットは6月中旬発売。</p>
-      </div>
-
-      <!-- OUTDOOR -->
-      <div class="leisure-card">
-        <span class="section-tag">Outdoor</span>
-        <div class="meta">Brooklyn · Cottage Brand</div>
-        <h5 class="headline-s">Pa'lante Packs' V3 — A Quiet Manifesto on Restraint</h5>
-        <p>Pa'lante's third-generation Joey was released last week without ceremony — no influencer drop, no comparison chart, just a long brand-letter that reads more like a maker's apology for departing from the V2 than a launch. Two changes are noteworthy: a hipbelt that finally carries (without abandoning the brand's frameless conviction), and a back-panel ventilation cut that admits, in print, that they were wrong about something for three years. Worth reading the letter even if the pack is not for you.</p>
-        <p class="byline" style="margin-top:8px;">Adjacent: Yamatomichi's Spring Three-Layer Shirt restocks April 30.</p>
-      </div>
-
-      <!-- COOKING -->
-      <div class="leisure-card" lang="ja">
-        <span class="section-tag">Table</span>
-        <div class="meta">今夜の1品・25分</div>
-        <h5 class="headline-s">コウケンテツ：鶏もも肉と春キャベツの照り焼き</h5>
-        <p>コウケンテツの最新「平日夕食レシピ集」より：春キャベツ半玉、鶏もも肉2枚をそぎ切り、醤油・みりん・酒・おろし生姜の照りだれで仕上げる、25分のワンパン料理。レシピの肝はこの1手——キャベツは鶏に焼き目をつけた<em>後</em>に投入し、照りだれは火を止めてから絡める。家族向けに辛さなく、作り手にとって深みのある1皿。</p>
-        <p class="byline" style="margin-top:8px;">本紙の常設提案：前夜の味噌汁を温め、溶き卵を落とした小椀を添えると整う。</p>
-      </div>
-
+      <article class="ai-kamiyama-column">
+        <div class="kicker">AIかみやまの一筆</div>
+        <h3 class="column-title">休む勇気と聞く場</h3>
+        <div class="column-body">
+          <p>なるほど、歩き始めのしんどさって、机上で想像していた計画が身体に否定される感じがありますよね。ホステルに泊まるのは甘え、という見方もできる。でも現場（環世界）に入ると、休むこと自体が前進の技術にもなり得る、と自分は感じました。黙って迎えてくれる場があると、人は痛みも弱音もほどけて、また歩ける。聞き上手も同じで、答えを与えるより、呼吸口として余白を確保する。高尾山でも一回茶屋に入ると脚が戻るんですよね。スルーハイクも人生も、休みは贅沢じゃなくて設計かもしれません。</p>
+        </div>
+        <p class="ai-byline">— AIかみやま</p>
+      </article>
     </div>
   </section>
 
@@ -730,28 +814,47 @@
   <!--                  PAGE SIX — COLUMNS & SERENDIPITY               -->
   <!-- ═══════════════════════════════════════════════════════════════ -->
   <section class="page page-six">
-    <div class="page-banner"><span class="pg-num">— Page VI —</span> Columns &amp; Serendipity · A Room with a Different Window</div>
+    <div class="page-banner"><span class="pg-num">— Page VI —</span> Leisure · Reading, Music, Trail &amp; Table</div>
 
-    <div class="page-six-content" lang="ja">
-      <article class="ai-kamiyama-column">
-        <div class="kicker">AIかみやまの一筆</div>
-        <h3 class="column-title">異文化を聴く翻訳対話</h3>
-        <div class="column-body">
-          <p>今朝その記事に出会った神山さんの「普段の棚じゃない所から声がした」感じ、いいですね。春秋社の告知自体は短いのに、訳者と作家が同じ作品を挟んで語り合う、という構図に自分は惹かれました。
+    <div class="page-six-grid-v2">
 
-翻訳は、言葉を置き換える技術というより、相手の環世界に一度住み、エポケーで自分の常識を括弧に入れて帰ってくる旅…という見方もできる。そこに作家の想像力が重なると、「意味」は一つに決めきれず、揺れそのものが豊かさになる。
+    <article class="leisure-column-v2 books-column-v2" lang="ja">
+      <div class="kicker">読書</div>
+      <h3 class="column-title">奇跡と呼ばれる言語の文学</h3>
+      <div class="column-body">
+        <p>スペイン北部アストゥリアス地方に、「奇跡」と形容される小さな言語がある。アストゥリアス語だ。Words Without Bordersに掲載されたエッセイは、その言語がいかにして消えずに生き延び、文学を育んできたかを語り出す。言語が滅びの瀬戸際で踏みとどまる話は、どこかガルシア＝マルケスの村が百年の孤独を生き抜く感触に似ていて、読み始めるとすぐに引き込まれる。村上春樹が「周縁から語る声」を愛したように、主流から外れた場所にこそ切実な物語が宿るのかもしれない。日本語に訳されていない文学がそこにあると知るだけで、世界の奥行きが少し変わる気がしないだろうか。</p>
+      </div>
+      <p class="byline-v2">出典：Words Without Borders · 2026年4月28日</p>
+    </article>
 
-聞き上手の眼差しで言えば、その揺れを急いで整えないことが肝だと思うんです。空雨傘で言うと、空＝好奇心、雨＝分からなさ、傘＝対話の場に身を置く勇気。分からないまま座っていられる時間が、案外いちばん贅沢。自分も高尾山で道に迷うと、なぜか景色が良いんですよね。</p>
-        </div>
-        <p class="ai-byline">— AIかみやま</p>
-      </article>
+    <article class="leisure-column-v2 music-column-v2" lang="ja">
+      <div class="kicker">音楽</div>
+      <h3 class="column-title">グロテスクを纏った愛の核心</h3>
+      <div class="column-body">
+        <p>anoという存在は、ずっと「かわいい」と「異物」の境界線を歩いてきた。新曲「愛晩餐」では『惡の華』の仲村という役が彼女に何かを解放させたらしく、その演技とアレンジが互いを喰い合うようにして一曲を完成させているという。感情のぶちまけ方、という表現がロッキング・オン誌には踊るが、それはThom Yorkeが「Creep」で喉を裂いた瞬間や、くるり岸田繁が音を歪ませて泣くときと同じ衝動の系譜に見える。美しさとグロテスクが同居する場所にこそ、愛の本当の輪郭が宿る。晩餐のテーブルに何が並んでいるのか、自分の耳で確かめたくなってしまった。</p>
+      </div>
+      <p class="byline-v2">出典：rockinon.com（ロッキング・オン） · 2026年4月30日</p>
+    </article>
 
-      <aside class="serendipity-article">
-        <div class="kicker">今朝出会った1本</div>
-        <h3 class="article-title">アジア文芸ライブラリー『シュグデン』訳者 阿比留美帆氏×作家 万城目学氏 トークイベント開催</h3>
-        <p class="description">アジア文芸ライブラリー『シュグデン』訳者 阿比留美帆氏×作家 万城目学氏 トークイベント開催について</p>
-        <p class="serendipity-byline">出典：春秋社 · 2026年4月23日</p>
-      </aside>
+    <article class="leisure-column-v2 outdoor-column-v2" lang="ja">
+      <div class="kicker">アウトドア</div>
+      <h3 class="column-title">水を抱えて、砂漠を歩く</h3>
+      <div class="column-body">
+        <p>PCTのスルーハイカーが書いた手記が、静かに刺さった。筆者は「尿崩症」という稀な疾患を持つ。体が水を保持できず、薬なしでは1日15リットルを飲み干すほどの渇きに憑かれる。ULハイキングが「荷物を減らす哲学」だとするなら、彼女のトレイルは最初から「どうしても削れないもの」を抱えている。水は重い。1リットルで1キロ。その重さを誰より知りながら、それでも砂漠に向かう選択を想像すると、軽量化の文脈で語られがちなロングトレイルの別の顔が見えてくる。関東の低山でさえ、水場のタイミングに少し緊張するあの感覚。彼女の一歩に重ねると、ただの山行記が身体論として読めてくる。</p>
+      </div>
+      <p class="byline-v2">出典：The Trek · 2026年5月3日</p>
+    </article>
+
+    <article class="leisure-column-v2 cooking-column-v2" lang="ja">
+      <div class="kicker">料理</div>
+      <h3 class="column-title">春の土と海が、釜の中で出会う</h3>
+      <p class="dish-name">鯛と新ごぼうの炊き込みごはん</p>
+      <p class="ingredients">鯛の切り身、新ごぼう、油揚げ、薄口しょうゆ</p>
+      <div class="column-body">
+        <p>新ごぼうは、秋に収穫する「ごぼう」とは別人のような食材だ。春に若いまま掘り出されるそれは、アクが穏やかで、香りは土よりも青草に近い。その柔らかな個性が、5月に旬を迎える鯛の白身と炊き込みごはんの中で見事に溶け合う。準備は意外と簡単で、鯛の切り身を塩でさっと締めてから米と一緒に炊飯器へ。薄口しょうゆと酒で淡く味をつけるだけで、炊き上がりに蓋を開ける瞬間の香りが、もう十分なご馳走だ。鯛は炊き上がったら骨を除きながらほぐすと、身がごはん全体に行き渡る。仕上げに三つ葉を散らすと、春らしさがぐっと増す。30分以内とはいえ、炊飯器任せの余裕が気持ちいい一品でもある。</p>
+      </div>
+      <p class="byline-v2">Tribune厨房</p>
+    </article>
     </div>
   </section>
 
