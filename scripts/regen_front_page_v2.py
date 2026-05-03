@@ -136,6 +136,37 @@ PER_SOURCE_LIMIT = 8  # cap per source so a chatty feed cannot dominate Stage 2
 # Translation pacing.
 TRANSLATE_DELAY = 0.3
 
+# ---------------------------------------------------------------------------
+# Page I source-based soft penalties (Sprint 6, 2026-05-03)
+# ---------------------------------------------------------------------------
+# 神山さんが既に有料購読しており、いずれ必ず読む媒体は Tribune が再露出する
+# 価値が低い。第1面選定で final_score 計算後に減点する形で頻出を抑制する。
+#
+# 適用範囲：第1面（``run_pipeline``）のみ。Page IV academic / Page V serendipity /
+# Page VI leisure は別の選定経路を通り、本 penalty の影響を受けない。
+#
+# 30 日運用後の観察ポイント：
+#   - 第1面の Foresight 出現頻度（logs/scores_*.json と displayed_urls_*.json から集計）
+#   - 出現頻度が依然として高い場合：penalty を -10 に強化検討
+#   - Foresight 以外の媒体も減点したくなった場合：sources/*.md に penalty
+#     フィールドを追加する設計（B3 拡張）に移行検討
+FORESIGHT_PENALTY: float = -5.0
+FORESIGHT_PATTERNS: tuple[str, ...] = ("Foresight",)
+
+
+def _apply_page1_source_penalty(article: dict) -> float:
+    """Return the Page-I-only soft penalty for an article based on source name.
+
+    Returns 0.0 when no penalty applies. Currently only Foresight is penalised
+    (神山さんの確認済の購読中媒体). Other paid-subscription sources (HBR /
+    WSJ / FT / 日経 等) は据え置き。
+    """
+    source_name = article.get("source_name", "") or ""
+    for pattern in FORESIGHT_PATTERNS:
+        if pattern in source_name:
+            return FORESIGHT_PENALTY
+    return 0.0
+
 # Source-name prefix → kicker ja text.
 KICKER_PREFIXES: tuple[tuple[str, str], ...] = (
     ("BBC Business",  "BBC ビジネス"),
@@ -370,6 +401,23 @@ def run_pipeline(
         if url and url in by_url:
             art.update(by_url[url])
             scored.append(art)
+    # Sprint 6 (2026-05-03): Page I source-based soft penalty。
+    # final_score sort の直前で source_name に基づく減点を適用。
+    # 神山さんが既に購読中の媒体（Foresight）の頻出抑制。
+    for art in scored:
+        penalty = _apply_page1_source_penalty(art)
+        if penalty != 0.0:
+            original_score = float(art.get("final_score", 0.0))
+            new_score = round(original_score + penalty, 2)
+            art["final_score"] = new_score
+            art["page1_source_penalty"] = penalty
+            print(
+                f"  [page1] source penalty: "
+                f"{(art.get('source_name') or '')[:30]} "
+                f"({original_score:.2f} → {new_score:.2f}, {penalty:+.1f})  "
+                f"{(art.get('title') or '')[:40]}",
+                file=sys.stderr,
+            )
     scored.sort(key=lambda a: a.get("final_score", 0.0), reverse=True)
 
     return PipelineResult(
