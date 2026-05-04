@@ -72,6 +72,7 @@ from .selector.why_important import (
 from .editorial import context_builder as editorial_context
 from .editorial import editorial_writer
 from .header import header_builder as header_module
+from .page1 import lead_deck_writer as page1_lead_deck
 from .page4 import article_rotator as page4_rotator
 from .page4 import concept_selector as page4_concept_selector
 from .page4 import concept_writer as page4_concept_writer
@@ -862,14 +863,35 @@ def build_page_one_v2(articles: list[dict]) -> str:
         if top_url else _esc(top_title_orig)
     )
 
+    # Sprint 5 task #3 (2026-05-04): top のリード deck を LLM 生成。
+    # deck と dropcap が同じ desc_ja を表示していた重複を解消する。
+    # deck = LLM が記事核心を 60-100 字に圧縮、dropcap は desc_ja のまま（本文）。
+    # LLM 失敗時は desc_ja[:80] フォールバック。deck が空文字列なら <p> 自体を出さない。
+    try:
+        lead_deck_result = page1_lead_deck.write_lead_deck(top)
+    except Exception as e:
+        print(
+            f"[lead_deck] FAILED (unhandled): {type(e).__name__}: {e}",
+            file=sys.stderr,
+        )
+        lead_deck_result = {
+            "deck": (top.get("desc_ja") or "")[:80],
+            "is_fallback": True,
+            "cost_usd": 0.0,
+        }
+    lead_deck = lead_deck_result.get("deck") or ""
+    deck_line = (
+        f'\n        <p class="deck">{_esc(lead_deck)}</p>'
+        if lead_deck else ""
+    )
+
     page = f"""<section class="page page-one">
     <div class="page-banner"><span class="pg-num">— Page I —</span> The Front Page · World &amp; Business</div>
 
     <article class="front-top">
       <div class="lead-story" lang="ja">
         <div class="kicker">{_esc(top_kicker)}</div>
-        <h2 class="headline-xl article-title-original">{top_title_html}</h2>{top_jp_line}
-        <p class="deck">{_esc(top.get("desc_ja", ""))}</p>
+        <h2 class="headline-xl article-title-original">{top_title_html}</h2>{top_jp_line}{deck_line}
         <p class="byline">{_esc(top_byline)}</p>
         <div class="body-3col">
 {_render_top_body(top)}
