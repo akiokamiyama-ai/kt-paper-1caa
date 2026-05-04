@@ -45,14 +45,14 @@ def _check(label: str, condition: bool, detail: str = "") -> bool:
 def test_penalty_foresight_detected():
     article = {"source_name": "Foresight（新潮社）", "title": "x"}
     p = regen._apply_page1_source_penalty(article)
-    _check("a1 'Foresight（新潮社）' → -5.0", p == -5.0, f"got {p}")
+    _check("a1 'Foresight（新潮社）' → -10.0", p == -10.0, f"got {p}")
 
 
 def test_penalty_foresight_short_form():
     """Substring match should work for 'Foresight' in any wrapping."""
     article = {"source_name": "Foresight", "title": "x"}
     p = regen._apply_page1_source_penalty(article)
-    _check("a2 plain 'Foresight' → -5.0", p == -5.0, f"got {p}")
+    _check("a2 plain 'Foresight' → -10.0", p == -10.0, f"got {p}")
 
 
 def test_penalty_other_sources_zero():
@@ -83,7 +83,7 @@ def test_penalty_empty_source_zero():
 # ---------------------------------------------------------------------------
 
 def test_penalty_constant_magnitude():
-    _check("b1 FORESIGHT_PENALTY == -5.0", regen.FORESIGHT_PENALTY == -5.0)
+    _check("b1 FORESIGHT_PENALTY == -10.0", regen.FORESIGHT_PENALTY == -10.0)
     _check("b2 'Foresight' in FORESIGHT_PATTERNS",
            "Foresight" in regen.FORESIGHT_PATTERNS)
 
@@ -93,7 +93,11 @@ def test_penalty_constant_magnitude():
 # ---------------------------------------------------------------------------
 
 def test_run_pipeline_demotes_foresight():
-    """Foresight at score 38 + Economist at 36: penalty pushes Foresight below."""
+    """Foresight at score 38 + Economist at 36: penalty pushes Foresight below.
+
+    Sprint 5 ポストモーメント (2026-05-04): penalty -10 強化後、Foresight 38 →
+    28 に降格、Economist 36 が TOP に。
+    """
     # Mock the pipeline internals so we don't run actual LLM/network.
     from scripts.lib.source import Article
     from datetime import datetime
@@ -138,18 +142,18 @@ def test_run_pipeline_demotes_foresight():
         regen.integrate_scores = original_int
 
     log = captured.getvalue()
-    # Top after sort should be Economist (36.0) since Foresight was demoted to 33.0
+    # Top after sort should be Economist (36.0) since Foresight was demoted to 28.0
     top = result.candidates_scored[0]
     foresight_demoted = any(
         a.get("source_name") == "Foresight（新潮社）"
-        and a.get("final_score") == 33.0
-        and a.get("page1_source_penalty") == -5.0
+        and a.get("final_score") == 28.0
+        and a.get("page1_source_penalty") == -10.0
         for a in result.candidates_scored
     )
-    _check("c1 Economist (36.0) outranks demoted Foresight (38→33)",
+    _check("c1 Economist (36.0) outranks demoted Foresight (38→28)",
            top.get("source_name") == "The Economist",
            f"top={top.get('source_name')}/{top.get('final_score')}")
-    _check("c2 Foresight final_score updated 38→33, penalty recorded",
+    _check("c2 Foresight final_score updated 38→28, penalty recorded (-10)",
            foresight_demoted,
            f"foresight={[a for a in result.candidates_scored if 'Foresight' in (a.get('source_name') or '')]}")
     _check("c3 stderr log mentions 'source penalty'", "source penalty" in log,

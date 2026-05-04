@@ -149,12 +149,16 @@ TRANSLATE_DELAY = 0.3
 # 適用範囲：第1面（``run_pipeline``）のみ。Page IV academic / Page V serendipity /
 # Page VI leisure は別の選定経路を通り、本 penalty の影響を受けない。
 #
-# 30 日運用後の観察ポイント：
+# Sprint 5 ポストモーメント (2026-05-04): -5 では Foresight が第1面 TOP に
+# 出ることが 5/4 archive で実証された（"UAE OPEC 離脱" 38.30 で TOP）。
+# 30 日観察を待たず -10 に強化、約 26% 削減効果（スケール 31-38 に対して）。
+#
+# 30 日運用後の観察ポイント（-10 強化済み）：
 #   - 第1面の Foresight 出現頻度（logs/scores_*.json と displayed_urls_*.json から集計）
-#   - 出現頻度が依然として高い場合：penalty を -10 に強化検討
-#   - Foresight 以外の媒体も減点したくなった場合：sources/*.md に penalty
-#     フィールドを追加する設計（B3 拡張）に移行検討
-FORESIGHT_PENALTY: float = -5.0
+#   - 出現頻度が依然として高い場合：penalty を -15 に強化、または B3
+#     （sources/*.md に penalty フィールド追加）への移行検討
+#   - Foresight 以外の媒体も減点したくなった場合も B3 拡張で対応
+FORESIGHT_PENALTY: float = -10.0
 FORESIGHT_PATTERNS: tuple[str, ...] = ("Foresight",)
 
 
