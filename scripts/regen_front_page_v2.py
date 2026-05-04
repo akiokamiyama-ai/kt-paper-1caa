@@ -1427,6 +1427,18 @@ def build_page_five_v2(
     article = serendipity["article"]
     column = page5_ai_kamiyama.write_column(article)
 
+    # Sprint 5 task #5 (2026-05-04): selector は column 生成前に history へ
+    # placeholder 値（false 固定）で書込済。column 生成結果を反映するため
+    # 同じ entry を見つけて上書きする（責務分離：history I/O は selector 内、
+    # caller は column status を渡すのみ）。
+    page5_serendipity.update_history_column_fields(
+        target_date=target_date,
+        article_url=(article.get("url") or ""),
+        ai_kamiyama_called=bool(column.get("ai_kamiyama_called", False)),
+        ai_kamiyama_failed=bool(column.get("ai_kamiyama_failed", False)),
+        fallback_used=bool(column.get("fallback_used", False)),
+    )
+
     # 4) Render full structure
     html = _render_page_five(serendipity, column)
     return html, {"serendipity": serendipity, "column": column}

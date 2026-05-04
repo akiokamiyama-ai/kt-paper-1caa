@@ -119,6 +119,74 @@ def append_history_entry(entry: dict, *, path: Path | None = None) -> None:
     save_history(h, path=path)
 
 
+def update_history_column_fields(
+    *,
+    target_date: date,
+    article_url: str,
+    ai_kamiyama_called: bool,
+    ai_kamiyama_failed: bool,
+    fallback_used: bool,
+    history_path: Path | None = None,
+) -> bool:
+    """Update the most recent matching history entry with column-gen status.
+
+    selector が select_for_today で history に書く時点では column 生成が
+    まだ走っていないため、3 つのステータスフィールドは placeholder の False で
+    記録される。caller (build_page_five_v2) が column 生成後に本関数を呼んで
+    実際のステータス値で上書きする設計（責務分離：history I/O は selector 内に
+    閉じ込める、caller は column status を渡すのみ）。
+
+    Sprint 5 task #5 (2026-05-04 修正): 過去の history (5/2, 5/3 の 6 entries) は
+    bug 期間データとして false のまま放置。本修正以降のデータから有効。
+
+    Parameters
+    ----------
+    target_date :
+        対象記事が表示された日（history entry の displayed_on に一致）
+    article_url :
+        対象記事の URL（history entry の article_url に一致）
+    ai_kamiyama_called :
+        column 生成 API が呼ばれたか
+    ai_kamiyama_failed :
+        column 生成が失敗したか（API 接続失敗 / 空応答）
+    fallback_used :
+        fallback テキストが使われたか
+    history_path :
+        テスト用に history JSON のパスを上書き可能。None で本番 HISTORY_PATH
+
+    Returns
+    -------
+    bool
+        True if an entry was updated, False otherwise. False の場合は
+        stderr に warning を出力するが、caller の処理は継続される
+        （紙面生成本体への影響なし、ログの不整合のみ残る）。
+    """
+    h = load_history(path=history_path)
+    entries = h.get("history") or []
+    target_iso = target_date.isoformat()
+    # 同じ (displayed_on, article_url) が複数あれば「最新（末尾）」を更新する。
+    matched_idx = -1
+    for i, entry in enumerate(entries):
+        if (
+            entry.get("displayed_on") == target_iso
+            and entry.get("article_url") == article_url
+        ):
+            matched_idx = i  # keep the latest (last) match
+    if matched_idx < 0:
+        print(
+            f"[page5] history update: entry not found for "
+            f"{article_url!r} on {target_iso}",
+            file=sys.stderr,
+        )
+        return False
+    entries[matched_idx]["ai_kamiyama_called"] = ai_kamiyama_called
+    entries[matched_idx]["ai_kamiyama_failed"] = ai_kamiyama_failed
+    entries[matched_idx]["fallback_used"] = fallback_used
+    h["history"] = entries
+    save_history(h, path=history_path)
+    return True
+
+
 # ---------------------------------------------------------------------------
 # Step 1〜2: walk past 30 days' displayed_urls_*.json across all pages
 # ---------------------------------------------------------------------------
