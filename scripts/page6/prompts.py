@@ -124,12 +124,43 @@ COLUMN_PROMPT_TEMPLATE = """以下の{area_label}記事をもとに、第6面 {a
 - 出典明記は不要（HTML 側で別途表示）
 - column_title は短い気の利いたコラムタイトル（10〜20字）
 
+【focus_work（題材表記、Sprint 5 task #4 で追加）】
+- 元記事の題材を **コンパクトに整形した題材表記** を返す
+- 領域別フォーマット：
+{focus_work_format}
+- 元記事の title をそのまま貼らず、コンパクトに整形すること
+- 著者名 / アーティスト名 / トレイル名が記事に明記されていない場合は推測せず、
+  タイトル単独で可（例：『Zombie Structures』のみ）
+- 抽出が困難（記事が抽象的、複数題材を扱う等）な場合は **空文字列** を返す
+
 【出力フォーマット】
 JSON で以下を返す（前置き・後置き・コードフェンス禁止）：
 {{
   "column_title": "...",
+  "focus_work": "...",
   "column_body": "..."
 }}"""
+
+
+# 領域別 focus_work フォーマット指示（COLUMN_PROMPT_TEMPLATE に注入）。
+# books / music / outdoor それぞれの慣例に合わせた表記を要求。
+FOCUS_WORK_FORMAT_BY_AREA: dict[str, str] = {
+    "books": (
+        '  「『本タイトル』 著者名」形式（半角スペース区切り、新聞慣例）\n'
+        "  例：「『Zombie Structures』 Jonathan Lethem」"
+        "「『言葉と物』 ミシェル・フーコー」"
+    ),
+    "music": (
+        '  「『曲名/アルバム名』 / アーティスト名」形式（スラッシュ区切り、音楽誌慣例）\n'
+        "  例：「『愛して愛して愛して』 / きくお」"
+        "「『The Eraser』 / Thom Yorke」"
+    ),
+    "outdoor": (
+        '  「場所 / トレイル名」形式（スラッシュ区切り、登山誌慣例）\n'
+        "  例：「ウェールズ北西部 / Wales Coast Path カーナーヴォン」"
+        "「Mt. Whitney / John Muir Trail」"
+    ),
+}
 
 
 # ---------------------------------------------------------------------------

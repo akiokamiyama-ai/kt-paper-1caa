@@ -265,6 +265,154 @@ def test_user_message_contains_article_fields():
 
 
 # ---------------------------------------------------------------------------
+# (f) Sprint 5 task #4: focus_work field (2026-05-04)
+# ---------------------------------------------------------------------------
+
+import json as _json
+
+
+def test_focus_work_in_response_extracted():
+    """LLM が focus_work を返す → return dict に正しく入る。"""
+    payload = _json.dumps({
+        "column_title": "ボカロが大西洋を渡る日",
+        "focus_work": "『愛して愛して愛して』 / きくお",
+        "column_body": "Yeの長女ノース・ウェストが1st EPに収録した楽曲が、ボカロP・きくおの『愛して愛して愛して』をサンプリングしているという。",
+    }, ensure_ascii=False)
+    with _StubLLM(text=payload):
+        result, cost, is_fallback = leisure_recommender._generate_column("music", _sample_article())
+    _check("f1 focus_work present in response → extracted",
+           result.get("focus_work") == "『愛して愛して愛して』 / きくお"
+           and is_fallback is False,
+           f"got focus_work={result.get('focus_work')!r}, is_fallback={is_fallback}")
+
+
+def test_focus_work_missing_in_response_defaults_to_empty():
+    """LLM が focus_work キーを返さない → 空文字列。"""
+    payload = _json.dumps({
+        "column_title": "Title",
+        "column_body": "本文の一段落、200字以上の十分な長さ。" + "あ" * 100,
+        # focus_work missing
+    }, ensure_ascii=False)
+    with _StubLLM(text=payload):
+        result, cost, is_fallback = leisure_recommender._generate_column("books", _sample_article())
+    _check("f2 focus_work missing → empty string",
+           result.get("focus_work") == "" and is_fallback is False,
+           f"got focus_work={result.get('focus_work')!r}")
+
+
+def test_focus_work_empty_string_preserved():
+    """LLM が focus_work='' を返す → そのまま空文字列（HTML 側で <p> 省略）。"""
+    payload = _json.dumps({
+        "column_title": "T",
+        "focus_work": "",
+        "column_body": "本文" + "あ" * 100,
+    }, ensure_ascii=False)
+    with _StubLLM(text=payload):
+        result, _cost, is_fallback = leisure_recommender._generate_column("outdoor", _sample_article())
+    _check("f3 focus_work='' preserved",
+           result.get("focus_work") == "" and is_fallback is False)
+
+
+def test_focus_work_non_string_treated_as_empty():
+    """LLM が focus_work に文字列以外を返す → 空文字列に正規化。"""
+    payload = _json.dumps({
+        "column_title": "T",
+        "focus_work": ["array", "not", "string"],  # 不正
+        "column_body": "本文" + "あ" * 100,
+    }, ensure_ascii=False)
+    with _StubLLM(text=payload):
+        result, _cost, _is_fallback = leisure_recommender._generate_column("books", _sample_article())
+    _check("f4 non-string focus_work → ''", result.get("focus_work") == "")
+
+
+def test_description_fallback_includes_empty_focus_work():
+    """LLM 失敗時の fallback でも focus_work=空文字列キーが入る。"""
+    fb = leisure_recommender._description_fallback(_sample_article())
+    _check("f5 fallback dict has focus_work key set to ''",
+           "focus_work" in fb and fb["focus_work"] == "")
+
+
+def test_user_message_includes_focus_work_format():
+    """COLUMN_PROMPT_TEMPLATE の {focus_work_format} が領域別に正しく差し込まれる。"""
+    msg_books = leisure_recommender._build_column_user(_sample_article(), "books")
+    msg_music = leisure_recommender._build_column_user(_sample_article(), "music")
+    msg_outdoor = leisure_recommender._build_column_user(_sample_article(), "outdoor")
+    _check("f6 books prompt: 「『本タイトル』 著者名」",
+           "本タイトル" in msg_books and "著者名" in msg_books)
+    _check("f7 music prompt: 「『曲名/アルバム名』 / アーティスト名」",
+           "曲名" in msg_music and "アーティスト名" in msg_music)
+    _check("f8 outdoor prompt: 「場所 / トレイル名」",
+           "場所" in msg_outdoor and "トレイル名" in msg_outdoor)
+
+
+def test_user_message_requires_focus_work_in_output():
+    """JSON フォーマット指示に focus_work が含まれる。"""
+    msg = leisure_recommender._build_column_user(_sample_article(), "books")
+    _check("f9 user message asks for 'focus_work' in JSON output",
+           '"focus_work"' in msg)
+
+
+def test_focus_work_format_constants_defined():
+    """FOCUS_WORK_FORMAT_BY_AREA に 3 area 全部のキーがある。"""
+    fmt_map = prompts.FOCUS_WORK_FORMAT_BY_AREA
+    _check("f10 FOCUS_WORK_FORMAT_BY_AREA has all 3 areas",
+           set(fmt_map.keys()) == {"books", "music", "outdoor"})
+
+
+def test_render_leisure_column_with_focus_work():
+    """regen_v2._render_leisure_column: focus_work あり → <p class="focus-work"> 出力。"""
+    from scripts import regen_front_page_v2 as regen
+    result = {
+        "column_title": "ボカロが大西洋を渡る日",
+        "focus_work": "『愛して愛して愛して』 / きくお",
+        "column_body": "Yeの長女ノース・ウェスト...",
+        "article": {
+            "source_name": "Pitchfork",
+            "url": "https://example.test/article",
+            "pub_date": "2026-05-03",
+        },
+    }
+    html = regen._render_leisure_column(
+        area_label="音楽", column_class="music-column-v2", result=result,
+    )
+    has_focus = (
+        '<p class="focus-work">'
+        in html and "『愛して愛して愛して』 / きくお" in html
+    )
+    placement_ok = html.find("focus-work") < html.find("column-body")
+    _check("f11 focus_work → <p class='focus-work'> rendered above column-body",
+           has_focus and placement_ok)
+
+
+def test_render_leisure_column_without_focus_work():
+    """focus_work='' → <p class="focus-work"> が出力されない（紙面構造保持）。"""
+    from scripts import regen_front_page_v2 as regen
+    result = {
+        "column_title": "T",
+        "focus_work": "",
+        "column_body": "B",
+        "article": {
+            "source_name": "S",
+            "url": "https://example.test/article",
+            "pub_date": "2026-05-03",
+        },
+    }
+    html = regen._render_leisure_column(
+        area_label="読書", column_class="books-column-v2", result=result,
+    )
+    _check("f12 focus_work='' → no <p class='focus-work'> in HTML",
+           "focus-work" not in html)
+
+
+def test_focus_work_css_present_in_page_six_css():
+    """PAGE_SIX_CSS に .focus-work セレクタが含まれる。"""
+    from scripts import regen_front_page_v2 as regen
+    css = regen.PAGE_SIX_CSS
+    _check("f13 .focus-work CSS rule present",
+           ".leisure-column-v2 .focus-work" in css)
+
+
+# ---------------------------------------------------------------------------
 # Test runner
 # ---------------------------------------------------------------------------
 
@@ -293,6 +441,19 @@ def main() -> int:
     print()
     print("(e) Prompt building:")
     test_user_message_contains_article_fields()
+    print()
+    print("(f) Sprint 5 task #4: focus_work field:")
+    test_focus_work_in_response_extracted()
+    test_focus_work_missing_in_response_defaults_to_empty()
+    test_focus_work_empty_string_preserved()
+    test_focus_work_non_string_treated_as_empty()
+    test_description_fallback_includes_empty_focus_work()
+    test_user_message_includes_focus_work_format()
+    test_user_message_requires_focus_work_in_output()
+    test_focus_work_format_constants_defined()
+    test_render_leisure_column_with_focus_work()
+    test_render_leisure_column_without_focus_work()
+    test_focus_work_css_present_in_page_six_css()
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")
     return 0 if FAIL == 0 else 1

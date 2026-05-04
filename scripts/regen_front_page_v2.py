@@ -1648,6 +1648,19 @@ PAGE_SIX_CSS = f"""
   line-height: 1.4;
   margin: 0 0 12px;
 }}
+/* Sprint 5 task #4 (2026-05-04): focus-work（題材表記）のスタイル。
+   books / music / outdoor で column-title の直下に出る。cooking 用の
+   .dish-name とは別スタイルで、italic のメタ情報感を出す。 */
+.leisure-column-v2 .focus-work {{
+  font-family: 'Noto Serif JP', serif;
+  font-size: 12px;
+  font-style: italic;
+  color: #666;
+  margin: 4px 0 8px;
+  padding-left: 4px;
+  border-left: 2px solid #999;
+  line-height: 1.5;
+}}
 .leisure-column-v2 .column-body p {{
   font-family: 'Noto Serif JP', 'Old Standard TT', serif;
   font-size: 13px;
@@ -1706,10 +1719,19 @@ def _render_leisure_column(
 
     Sprint 6: column-title は Tribune オリジナルのコラム題目（元記事タイトルでは
     ない）のためリンクしない。元記事への動線は byline の出典名にリンクを置く。
+
+    Sprint 5 task #4 (2026-05-04): focus_work（題材表記）を column-title 直下に
+    表示。LLM が空文字列を返した場合 / fallback 時は <p> 自体を省略して
+    紙面構造を保つ（cooking の dish_name と対称構造）。
     """
     column_title = result.get("column_title", "")
     column_body = result.get("column_body", "")
+    focus_work = (result.get("focus_work") or "").strip()
     article = result.get("article")
+    focus_work_html = (
+        f'\n      <p class="focus-work">{_esc(focus_work)}</p>'
+        if focus_work else ""
+    )
 
     if article is not None:
         source_name = article.get("source_name", "")
@@ -1731,7 +1753,7 @@ def _render_leisure_column(
     return f"""
     <article class="leisure-column-v2 {column_class}" lang="ja">
       <div class="kicker">{_esc(area_label)}</div>
-      <h3 class="column-title">{_esc(column_title)}</h3>
+      <h3 class="column-title">{_esc(column_title)}</h3>{focus_work_html}
       <div class="column-body">
         <p>{_esc(column_body)}</p>
       </div>

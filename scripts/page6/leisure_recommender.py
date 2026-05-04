@@ -35,6 +35,7 @@ from .prompts import (
     AREA_LABEL_JA,
     COLUMN_PROMPT_TEMPLATE,
     EVAL_GUIDE_BY_AREA,
+    FOCUS_WORK_FORMAT_BY_AREA,
     INTEREST_SUMMARY,
     LEISURE_COLUMN_SYSTEM,
 )
@@ -222,6 +223,7 @@ def _build_column_user(article: dict, area: str) -> str:
         title=title, source=source, pub_date=pub_date,
         description=description,
         interest_summary=INTEREST_SUMMARY.get(area, ""),
+        focus_work_format=FOCUS_WORK_FORMAT_BY_AREA.get(area, ""),
     )
 
 
@@ -251,6 +253,9 @@ def _description_fallback(article: dict) -> dict:
     column_title = title[:20] if title else "本日の1本"
     return {
         "column_title": column_title,
+        # Sprint 5 task #4: focus_work は LLM 生成のため fallback では空
+        # （HTML 側で空文字列なら <p class="focus-work"> を出さない）。
+        "focus_work": "",
         "column_body": body,
     }
 
@@ -276,8 +281,14 @@ def _generate_column(area: str, article: dict) -> tuple[dict, float, bool]:
                 file=sys.stderr,
             )
             return _description_fallback(article), cost, True
+        # Sprint 5 task #4: focus_work は新規追加フィールド。LLM が出力しないか
+        # 型不正な場合は空文字列扱い（HTML 側で <p> を省略するため fallback でも
+        # 紙面構造は壊れない）。
+        focus_work_raw = parsed.get("focus_work", "")
+        focus_work = focus_work_raw.strip() if isinstance(focus_work_raw, str) else ""
         return {
             "column_title": parsed["column_title"].strip(),
+            "focus_work": focus_work,
             "column_body": parsed["column_body"].strip(),
         }, cost, False
     except Exception as e:
