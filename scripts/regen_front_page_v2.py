@@ -928,13 +928,22 @@ PAGE_TWO_CSS_MARKER = "/* === Page II logos (2026-05-03) === */"
 
 PAGE_TWO_CSS = f"""
 {PAGE_TWO_CSS_MARKER}
+/* Sprint 5 ポストモーメント (2026-05-04): ロゴを社名の上にセンター配置に変更。
+   神山さんレビュー「字の上にロゴが来て、センター合わせが一番きれい」を反映。
+   既存 template (archive/2026-04-25.html) の .briefing-row .company は
+   text-align 未指定なので、ここで center 指定して上書き。 */
+.briefing-row .company {{
+  text-align: center;
+}}
 .briefing-row .company .company-logo {{
-  height: 22px;
+  display: block;
+  height: 28px;
   width: auto;
-  vertical-align: middle;
-  margin-right: 10px;
-  margin-bottom: 4px;
+  margin: 0 auto 4px;
   filter: grayscale(100%) contrast(1.3);  /* pattern-3 採用 (2026-05-03) */
+}}
+.briefing-row .company .company-name {{
+  display: block;
 }}
 """
 
@@ -1004,7 +1013,8 @@ def _render_briefing_row(company_key: str, sel) -> str:
         return f"""
     <div class="briefing-row" lang="ja">
       <div class="company">
-        {logo_html}{_esc(display_name)}
+        {logo_html}
+        <div class="company-name">{_esc(display_name)}</div>
         <span class="jp">{_esc(biz_label)}</span>
       </div>
       <div class="story">
@@ -1027,7 +1037,8 @@ def _render_briefing_row(company_key: str, sel) -> str:
     return f"""
     <div class="briefing-row" lang="ja">
       <div class="company">
-        {logo_html}{_esc(display_name)}
+        {logo_html}
+        <div class="company-name">{_esc(display_name)}</div>
         <span class="jp">{_esc(biz_label)}</span>
       </div>
       <div class="story">
