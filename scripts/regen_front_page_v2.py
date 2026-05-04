@@ -589,18 +589,27 @@ EDITORIAL_CSS_MARKER = "/* === Editorial postscript (Sprint 4 Phase 3) === */"
 
 EDITORIAL_CSS = f"""
 {EDITORIAL_CSS_MARKER}
+/* Sprint 5 ポストモーメント (2026-05-04): 神山さんレビュー
+   「6面と編集後記を分けるラインは横いっぱいに引いたほうがいい」を反映。
+   旧構造では .editorial-footer に max-width: 800px が掛かり、border-top も
+   800px に縛られていた。inner wrapper を新設して責務分離：
+     - .editorial-footer       : 横幅 100%、border-top + 上下 padding
+     - .editorial-footer-inner : max-width 800px + 中央寄せ + 左右 padding */
 .editorial-footer {{
   margin-top: 32px;
-  padding: 24px 24px 32px;
+  padding: 24px 0 32px;
   border-top: 2px solid #333;
   font-family: 'Noto Serif JP', serif;
   font-size: 13px;
   line-height: 1.9;
   color: #444;
-  text-align: justify;
+}}
+.editorial-footer-inner {{
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
+  padding: 0 24px;
+  text-align: justify;
 }}
 .editorial-footer .label {{
   font-size: 10px;
@@ -1862,11 +1871,13 @@ def _render_editorial_footer(editorial_result: dict) -> str:
     if not body.strip():
         return ""
     return f"""<footer class="editorial-footer">
-    <div class="label">編集後記</div>
-    <div class="body">
-      <p>{_esc(body)}</p>
+    <div class="editorial-footer-inner">
+      <div class="label">編集後記</div>
+      <div class="body">
+        <p>{_esc(body)}</p>
+      </div>
+      <div class="signature">— Tribune 編集部</div>
     </div>
-    <div class="signature">— Tribune 編集部</div>
   </footer>
 
   """

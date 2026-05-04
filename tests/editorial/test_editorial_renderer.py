@@ -49,15 +49,28 @@ def test_render_emits_footer():
     }
     html = regen._render_editorial_footer(result)
     has_class = '<footer class="editorial-footer">' in html
+    has_inner = '<div class="editorial-footer-inner">' in html
     has_label = '<div class="label">編集後記</div>' in html
     has_body = '<div class="body">' in html
     has_signature = '<div class="signature">— Tribune 編集部</div>' in html
     has_text = result["body"] in html
+    # Sprint 5 ポストモーメント: label/body/signature は inner 内に配置される
+    inner_idx = html.find('<div class="editorial-footer-inner">')
+    label_idx = html.find('<div class="label">')
+    sig_idx = html.find('<div class="signature">')
+    inner_wraps_content = (
+        inner_idx >= 0 and label_idx > inner_idx and sig_idx > inner_idx
+    )
     _check("a1 footer has class='editorial-footer'", has_class)
     _check("a2 footer has 編集後記 label", has_label)
     _check("a3 footer has body div", has_body)
     _check("a4 footer has Tribune signature", has_signature)
     _check("a5 body text rendered into footer", has_text)
+    _check("a6 footer has editorial-footer-inner wrapper (Sprint 5 post)",
+           has_inner)
+    _check("a7 inner wrapper precedes label/body/signature",
+           inner_wraps_content,
+           f"inner={inner_idx}, label={label_idx}, sig={sig_idx}")
 
 
 # ---------------------------------------------------------------------------
@@ -106,6 +119,17 @@ def test_editorial_css_contents():
            ".editorial-footer .label" in css)
     _check("d3 EDITORIAL_CSS contains .signature rule",
            ".editorial-footer .signature" in css)
+    # Sprint 5 ポストモーメント: 横幅責務分離
+    _check("d6 .editorial-footer-inner で max-width 800px を担う",
+           ".editorial-footer-inner" in css and "max-width: 800px" in css)
+    # .editorial-footer 自体には max-width: 800px が掛からない
+    # （横いっぱいの border-top のため）。check by absence in the container rule.
+    container_block_start = css.find(".editorial-footer {")
+    container_block_end = css.find("}", container_block_start)
+    container_block = css[container_block_start:container_block_end]
+    _check("d7 .editorial-footer 自体に max-width 制限なし（紙面横いっぱい）",
+           "max-width" not in container_block,
+           f"container_block snippet: {container_block[:200]!r}")
 
 
 def test_inject_editorial_css_idempotent():
