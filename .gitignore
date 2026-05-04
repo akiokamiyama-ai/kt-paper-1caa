@@ -17,8 +17,9 @@ experiment/
 # Backup files from local edits
 *.backup
 
-# Local Claude Code settings (in case any are added later)
-.claude/
+# Local Claude Code settings — track shared settings.json, ignore the rest
+.claude/*
+!.claude/settings.json
 
 # Python artifacts
 __pycache__/

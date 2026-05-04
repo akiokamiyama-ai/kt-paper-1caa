@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -m scripts.regen_front_page_v2:*)",
+      "Bash(python3 -m tests.*)",
+      "Bash(python3 -m scripts.selector.test_*)",
+      "Bash(python3 -m scripts.lib.drivers.test_rss)",
+      "Bash(python3 -m scripts.test_format_publish_date)"
+    ]
+  }
+}
