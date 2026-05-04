@@ -71,6 +71,7 @@ from .selector.why_important import (
 )
 from .editorial import context_builder as editorial_context
 from .editorial import editorial_writer
+from .header import header_builder as header_module
 from .page4 import article_rotator as page4_rotator
 from .page4 import concept_selector as page4_concept_selector
 from .page4 import concept_writer as page4_concept_writer
@@ -506,6 +507,75 @@ def translate_for_render(articles: list[dict]) -> None:
 # ---------------------------------------------------------------------------
 # Rendering — source-aware Page I builder
 # ---------------------------------------------------------------------------
+
+# Sprint 5 task #2 (2026-05-04): masthead-data 2-row block の CSS。
+# 既存の <div class="strip">（4/25 template ダミー）を置換する形で挿入。
+MASTHEAD_DATA_CSS_MARKER = "/* === Masthead data (Sprint 5 task #2, 2026-05-04) === */"
+
+MASTHEAD_DATA_CSS = f"""
+{MASTHEAD_DATA_CSS_MARKER}
+.masthead-data {{
+  margin: 8px 0 16px;
+  padding: 8px 0;
+  border-top: 1px solid #999;
+  border-bottom: 1px solid #999;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 12px;
+  text-align: center;
+  color: #444;
+}}
+.masthead-data-row1,
+.masthead-data-row2 {{
+  margin: 2px 0;
+  letter-spacing: 0.05em;
+}}
+.masthead-data .separator {{
+  margin: 0 8px;
+  color: #999;
+}}
+"""
+
+
+def inject_masthead_data_css(html_text: str) -> str:
+    """Idempotently inject masthead-data CSS just before </style>."""
+    if MASTHEAD_DATA_CSS_MARKER in html_text:
+        return html_text
+    end_style_idx = html_text.rfind("</style>")
+    if end_style_idx < 0:
+        head_close = html_text.find("</head>")
+        if head_close < 0:
+            return html_text
+        injected = f"<style>\n{MASTHEAD_DATA_CSS}\n</style>\n"
+        return html_text[:head_close] + injected + html_text[head_close:]
+    return html_text[:end_style_idx] + MASTHEAD_DATA_CSS + html_text[end_style_idx:]
+
+
+def replace_strip_with_masthead_data(html_text: str, new_block: str) -> str:
+    """Replace ``<div class="strip">...</div>`` with ``new_block``.
+
+    The static template's strip is a single non-nested div. We find the
+    opening tag and the next ``</div>`` after it. Idempotent on empty
+    new_block (returns html_text unchanged) and on missing strip (template
+    might have been edited).
+    """
+    if not new_block:
+        return html_text
+    start_marker = '<div class="strip">'
+    pos = html_text.find(start_marker)
+    if pos < 0:
+        # No strip in template (already replaced or template changed) — defensive
+        # fallback: insert masthead-data immediately after </header> instead.
+        header_close = html_text.find("</header>")
+        if header_close < 0:
+            return html_text
+        insert_at = header_close + len("</header>")
+        return html_text[:insert_at] + "\n\n  " + new_block + html_text[insert_at:]
+    end = html_text.find("</div>", pos)
+    if end < 0:
+        return html_text
+    end += len("</div>")
+    return html_text[:pos] + new_block.rstrip() + html_text[end:]
+
 
 # Sprint 4 Phase 3 (2026-05-03): Tribune 編集後記の CSS。第6面と colophon の
 # 間に挟まれる。is_fallback=True 時は HTML 自体が出ないため、CSS は常に
@@ -2496,6 +2566,8 @@ def main(argv: list[str] | None = None) -> int:
     dated = update_template_date_strings(template, target)
     # Sprint 6: 全面共通のリンクスタイル（color inherit + dotted underline）。
     dated = inject_link_style_css(dated)
+    # Sprint 5 task #2: masthead-data の CSS は常に inject。
+    dated = inject_masthead_data_css(dated)
     # Sprint 5: Page I も常に CSS injection（タイトル原文大 + 日本語小書き）。
     dated = inject_page_one_css(dated)
     if page_two_html is not None:
@@ -2520,6 +2592,18 @@ def main(argv: list[str] | None = None) -> int:
         final_html = replace_page_five(final_html, page_five_html)
     if page_six_html is not None:
         final_html = replace_page_six(final_html, page_six_html)
+    # Sprint 5 task #2: masthead-data 2-row block で <div class="strip"> を置換。
+    # 全 fetch が失敗した場合は build_header_html() が "" を返し、no-op。
+    print("Building masthead-data...", file=sys.stderr)
+    try:
+        masthead_data_html = header_module.build_header_html(today=target)
+    except Exception as e:
+        print(
+            f"[masthead-data] FAILED (unhandled): {type(e).__name__}: {e}",
+            file=sys.stderr,
+        )
+        masthead_data_html = ""
+    final_html = replace_strip_with_masthead_data(final_html, masthead_data_html)
     # Sprint 4 Phase 3: 編集後記を <footer class="colophon"> の直前に挿入。
     # is_fallback=True なら footer_html="" で no-op、紙面は Page VI で終わる。
     if editorial_result is not None:
