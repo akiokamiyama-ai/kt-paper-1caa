@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Kamiyama Tribune — Monday, May 4, 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,400&family=Noto+Serif+JP:wght@400;500;700;900&family=Old+Standard+TT:wght@400;700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f6f1e7;
+    --ink: #16140f;
+    --ink-soft: #3d3a32;
+    --rule: #1c1a14;
+    --accent: #6a1b14;
+    --muted: #6e6a5e;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #d9d2bf;
+    color: var(--ink);
+    font-family: 'Merriweather', 'Noto Serif JP', Georgia, serif;
+    font-size: 15.5px;
+    line-height: 1.6;
+  }
+
+  .paper {
+    max-width: 1180px;
+    margin: 36px auto;
+    background: var(--paper);
+    padding: 48px 56px 64px;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.18);
+    background-image:
+      radial-gradient(rgba(0,0,0,0.018) 1px, transparent 1px),
+      radial-gradient(rgba(0,0,0,0.018) 1px, transparent 1px);
+    background-position: 0 0, 3px 3px;
+    background-size: 6px 6px;
+  }
+
+  /* ─────────────  MASTHEAD  ───────────── */
+  .masthead { text-align: center; border-bottom: 3px double var(--rule); padding-bottom: 14px; }
+  .masthead .topline {
+    display: flex; justify-content: space-between;
+    font-family: 'Old Standard TT', 'Playfair Display', serif;
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ink-soft); border-bottom: 1px solid var(--rule);
+    padding-bottom: 6px; margin-bottom: 10px;
+  }
+  .masthead h1 {
+    font-family: 'UnifrakturMaguntia', 'Old English Text MT', 'Old Standard TT', serif;
+    font-weight: 400;
+    font-size: 104px;
+    margin: 8px 0 4px;
+    letter-spacing: 0;
+    line-height: 0.98;
+    color: var(--ink);
+    text-rendering: geometricPrecision;
+    font-feature-settings: "liga" 1, "dlig" 1;
+  }
+  .masthead .latin-motto {
+    font-family: 'Old Standard TT', serif; font-style: italic;
+    font-size: 14px; color: var(--ink-soft); margin-top: 6px;
+  }
+  .masthead .meta {
+    display: flex; justify-content: space-between; align-items: center;
+    border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+    margin-top: 12px; padding: 6px 4px;
+    font-family: 'Old Standard TT', serif;
+    font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .masthead .meta .center { font-weight: 700; }
+
+  /* ─────────────  PAGE BANNERS  ───────────── */
+  .page-banner {
+    margin: 48px 0 18px; text-align: center;
+    border-top: 4px solid var(--rule); border-bottom: 1px solid var(--rule);
+    padding: 8px 0 6px;
+    font-family: 'Playfair Display', serif;
+    text-transform: uppercase; letter-spacing: 0.32em; font-size: 12px;
+    color: var(--ink); position: relative;
+  }
+  .page-banner .pg-num {
+    font-family: 'Old Standard TT', serif; font-style: italic;
+    text-transform: none; letter-spacing: 0.05em;
+    color: var(--accent); font-size: 11px; margin-right: 10px;
+  }
+
+  /* ─────────────  TYPOGRAPHY  ───────────── */
+  .kicker {
+    font-family: 'Old Standard TT', serif; font-style: italic;
+    color: var(--accent); font-size: 11px;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  h2.headline-xl {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900; font-size: 46px; line-height: 1.05;
+    margin: 6px 0 6px; letter-spacing: -0.005em;
+  }
+  h2.headline-xl em { font-style: italic; font-weight: 700; }
+  h3.headline-l {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700; font-size: 24px; line-height: 1.15; margin: 4px 0 6px;
+  }
+  h4.headline-m {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700; font-size: 18px; line-height: 1.2; margin: 4px 0 4px;
+  }
+  h5.headline-s {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700; font-size: 15px; line-height: 1.25; margin: 0 0 4px;
+  }
+  .deck {
+    font-family: 'Playfair Display', serif; font-style: italic;
+    font-weight: 400; font-size: 16px; color: var(--ink-soft);
+    line-height: 1.35; margin: 0 0 10px;
+  }
+  .byline {
+    font-family: 'Old Standard TT', serif;
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); margin: 0 0 8px;
+  }
+  .byline .author { color: var(--ink); font-weight: 700; }
+
+  p { margin: 0 0 10px; text-align: justify; hyphens: auto; }
+  p.lede::first-letter, p.dropcap::first-letter {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900; font-size: 64px; line-height: 0.85;
+    float: left; padding: 6px 8px 0 0; color: var(--accent);
+  }
+  p.lede { font-weight: 700; }
+
+  /* ─────────────  JAPANESE LANGUAGE STYLING  ───────────── */
+  [lang="ja"], [lang="ja"] p, [lang="ja"] li {
+    font-family: 'Noto Serif JP', 'Merriweather', serif;
+    line-height: 1.85;
+    hyphens: none;
+    text-justify: inter-character;
+    word-break: break-strict;
+  }
+  [lang="ja"] h2.headline-xl,
+  [lang="ja"] h3.headline-l,
+  [lang="ja"] h4.headline-m,
+  [lang="ja"] h5.headline-s {
+    font-family: 'Noto Serif JP', 'Playfair Display', serif;
+    font-weight: 900; letter-spacing: 0.01em; line-height: 1.3;
+  }
+  [lang="ja"] h2.headline-xl { font-size: 36px; line-height: 1.25; }
+  [lang="ja"] h3.headline-l  { font-size: 21px; }
+  [lang="ja"] h4.headline-m  { font-size: 17px; }
+  [lang="ja"] h5.headline-s  { font-size: 15px; line-height: 1.4; }
+  [lang="ja"] .deck {
+    font-family: 'Noto Serif JP', serif;
+    font-style: normal; font-weight: 400;
+    color: var(--ink-soft); font-size: 14.5px; line-height: 1.7;
+  }
+  [lang="ja"] p.dropcap::first-letter {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 52px; line-height: 1; padding: 4px 8px 0 0;
+    font-weight: 900; color: var(--accent);
+  }
+  [lang="ja"] .byline { font-family: 'Noto Serif JP', 'Old Standard TT', serif; letter-spacing: 0.02em; text-transform: none; font-size: 11.5px; }
+  [lang="ja"] em { font-style: normal; font-weight: 700; border-bottom: 1px solid var(--accent); padding-bottom: 1px; }
+  /* keep latin chrome inside JP regions in the latin font */
+  [lang="ja"] .en, [lang="ja"] .section-tag, [lang="ja"] .corner, [lang="ja"] .label {
+    font-family: 'Old Standard TT', 'Playfair Display', serif;
+  }
+
+  /* ─────────────  RULES  ───────────── */
+  hr.thin   { border: 0; border-top: 1px solid var(--rule); margin: 14px 0; }
+  hr.thick  { border: 0; border-top: 3px solid var(--rule); margin: 14px 0; }
+  hr.dotted { border: 0; border-top: 1px dotted var(--rule); margin: 14px 0; }
+
+  /* ─────────────  GRIDS  ───────────── */
+  .front-top {
+    display: grid; grid-template-columns: 2fr 1fr; gap: 28px;
+    border-bottom: 1px solid var(--rule); padding-bottom: 22px;
+  }
+  .front-top .body-3col { columns: 2; column-gap: 22px; column-rule: 1px solid #c9c2ad; }
+  .secondaries { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-top: 20px; }
+  .secondaries .col { border-left: 1px solid #c9c2ad; padding-left: 18px; }
+  .secondaries .col:first-child { border-left: 0; padding-left: 0; }
+
+  .briefing-row {
+    display: grid; grid-template-columns: 0.6fr 1.4fr 1fr; gap: 24px;
+    padding: 16px 0; border-bottom: 1px solid #c9c2ad;
+  }
+  .briefing-row:last-child { border-bottom: 0; }
+  .briefing-row .company {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900; font-size: 22px;
+    text-transform: uppercase; letter-spacing: 0.04em;
+    border-right: 1px solid #c9c2ad; padding-right: 16px;
+  }
+  .briefing-row .company .jp {
+    display: block; font-family: 'Noto Serif JP', serif;
+    font-weight: 400; font-size: 12px; color: var(--muted);
+    letter-spacing: 0; text-transform: none; margin-top: 4px;
+  }
+  .briefing-row .insight {
+    background: #efe9da; border-left: 3px solid var(--accent);
+    padding: 14px 16px; font-size: 14px; line-height: 1.55;
+  }
+  .briefing-row .insight .label {
+    display: block;
+    font-family: 'Old Standard TT', serif;
+    font-style: italic; font-size: 10px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 4px;
+  }
+  [lang="ja"] .briefing-row .insight { line-height: 1.85; font-size: 14px; font-family: 'Noto Serif JP', serif; }
+  [lang="ja"] .briefing-row .insight .label { font-family: 'Old Standard TT', serif; }
+
+  .general-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 0;
+    row-gap: 0;
+  }
+  .general-grid .item {
+    padding: 0 22px 22px;
+    margin-bottom: 22px;
+    border-bottom: 1px dotted #b9b1a0;
+    border-right: 1px solid #c9c2ad;
+  }
+  .general-grid .item:nth-child(3n+1) { padding-left: 0; }
+  .general-grid .item:nth-child(3n) {
+    padding-right: 0;
+    border-right: 0;
+  }
+  .general-grid .item:nth-child(n+4) {
+    border-bottom: 0;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+  .general-grid .item:last-child { border-right: 0; }
+  .general-grid .item .kicker { font-size: 12px; }
+  .general-grid .item h5 { font-size: 18px; line-height: 1.3; margin-bottom: 6px; }
+  .general-grid .item p { font-size: 14px; line-height: 1.65; }
+  [lang="ja"].general-grid .item p,
+  .general-grid .item[lang="ja"] p { font-size: 14px; line-height: 1.9; }
+  [lang="ja"].general-grid .item h5,
+  .general-grid .item[lang="ja"] h5 { font-size: 17px; line-height: 1.5; }
+
+  .arts-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 28px; }
+  .concept-of-week {
+    border: 1px solid var(--rule); padding: 20px 22px; background: #efe9da;
+  }
+  .concept-of-week .label {
+    font-family: 'Old Standard TT', serif; font-style: italic;
+    font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent);
+  }
+  .concept-of-week h3 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900; font-size: 28px; line-height: 1.1; margin: 4px 0 6px;
+  }
+  [lang="ja"] .concept-of-week h3 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 26px; line-height: 1.35;
+  }
+  .concept-of-week .body { columns: 2; column-gap: 22px; column-rule: 1px solid #c9c2ad; }
+  .concept-of-week .further {
+    margin-top: 14px; padding-top: 12px; border-top: 1px solid #c9c2ad;
+    font-size: 13px; line-height: 1.6;
+  }
+  [lang="ja"] .concept-of-week .further { font-size: 13.5px; line-height: 1.85; }
+  .concept-of-week .further strong {
+    font-family: 'Old Standard TT', serif; font-style: italic;
+    text-transform: uppercase; letter-spacing: 0.14em;
+    font-size: 11px; color: var(--accent); display: block; margin-bottom: 4px;
+  }
+
+  .leisure-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 22px; }
+  .leisure-card {
+    border: 1px solid var(--rule); padding: 14px 16px 16px;
+    background: var(--paper); position: relative;
+  }
+  .leisure-card .section-tag {
+    position: absolute; top: -10px; left: 12px;
+    background: var(--paper); padding: 0 8px;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900; font-size: 11px;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent);
+  }
+  .leisure-card h5 { font-size: 17px; }
+  .leisure-card .meta {
+    font-family: 'Old Standard TT', serif; font-style: italic;
+    font-size: 11px; color: var(--muted); margin-bottom: 6px;
+  }
+  [lang="ja"] .leisure-card .meta { font-family: 'Noto Serif JP', serif; font-style: normal; }
+  .leisure-card p { font-size: 14px; line-height: 1.55; }
+  [lang="ja"] .leisure-card p { font-size: 14px; line-height: 1.85; }
+
+  .columns-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .columns-grid .col {
+    border: 1px solid var(--rule); padding: 22px 24px; position: relative;
+  }
+  .columns-grid .col .corner {
+    position: absolute; top: -12px; left: 16px;
+    background: var(--paper); padding: 0 10px;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900; font-size: 12px;
+    letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent);
+  }
+  .columns-grid .col h3 { margin-top: 0; }
+  .columns-grid .col .body { columns: 1; }
+
+  /* ─────────────  WEATHER & STRIP  ───────────── */
+  .strip {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 14px; padding: 10px 12px;
+    border: 1px solid var(--rule);
+    font-family: 'Old Standard TT', serif;
+    font-size: 12px; letter-spacing: 0.06em;
+  }
+  .strip .item { display: inline-flex; gap: 6px; align-items: baseline; }
+  .strip .item strong {
+    font-family: 'Playfair Display', serif;
+    text-transform: uppercase; letter-spacing: 0.2em; font-size: 11px; color: var(--accent);
+  }
+
+  /* ─────────────  COLOPHON  ───────────── */
+  footer.colophon {
+    margin-top: 48px; border-top: 3px double var(--rule); padding-top: 14px;
+    text-align: center;
+    font-family: 'Old Standard TT', serif;
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ─────────────  RESPONSIVE  ───────────── */
+  @media (max-width: 880px) {
+    .paper { padding: 24px 18px; margin: 12px; }
+    .masthead h1 { font-size: 56px; }
+    .masthead .topline, .masthead .meta { font-size: 10px; }
+    .front-top, .secondaries, .briefing-row,
+    .general-grid, .arts-grid, .leisure-grid, .columns-grid {
+      grid-template-columns: 1fr;
+    }
+    .briefing-row .company { border-right: 0; padding-right: 0; }
+    .secondaries .col { border-left: 0; padding-left: 0; }
+    .general-grid .item { border-left: 0; padding-left: 0; }
+    .front-top .body-3col, .concept-of-week .body { columns: 1; }
+    h2.headline-xl { font-size: 32px; }
+    [lang="ja"] h2.headline-xl { font-size: 26px; }
+  }
+
+/* === Sprint 6 unified link style === */
+a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px dotted #888;
+  padding-bottom: 1px;
+}
+a:hover {
+  border-bottom-style: solid;
+}
+a:visited {
+  color: inherit;
+}
+
+/* === Masthead data (Sprint 5 task #2, 2026-05-04) === */
+.masthead-data {
+  margin: 8px 0 16px;
+  padding: 8px 0;
+  border-top: 1px solid #999;
+  border-bottom: 1px solid #999;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 12px;
+  text-align: center;
+  color: #444;
+}
+.masthead-data-row1,
+.masthead-data-row2 {
+  margin: 2px 0;
+  letter-spacing: 0.05em;
+}
+.masthead-data .separator {
+  margin: 0 8px;
+  color: #999;
+}
+
+/* === Page I title formatting (Sprint 5, 2026-05-03) === */
+.article-title-original {
+  font-family: 'Noto Serif JP', 'Times New Roman', serif;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0 0 6px;
+}
+.article-title-japanese {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: #666;
+  line-height: 1.5;
+  margin: 0 0 12px;
+  padding-left: 2px;
+}
+/* Top の lead-story では h2.headline-xl をそのまま original 用に流用、サイズだけ拡張 */
+.lead-story h2.article-title-original {
+  font-size: 36px;
+  line-height: 1.2;
+}
+.secondaries .col h3.article-title-original {
+  font-size: 20px;
+}
+
+/* === Page II logos (2026-05-03) === */
+.briefing-row .company .company-logo {
+  height: 22px;
+  width: auto;
+  vertical-align: middle;
+  margin-right: 10px;
+  margin-bottom: 4px;
+  filter: grayscale(100%) contrast(1.3);  /* pattern-3 採用 (2026-05-03) */
+}
+
+/* === Page IV (Sprint 3 Step B) === */
+.page-four-grid {
+  display: grid;
+  grid-template-columns: 55% 45%;
+  gap: 24px;
+  padding: 16px 24px;
+}
+.concept-column {
+  border-right: 1px solid #ddd;
+  padding-right: 24px;
+}
+.concept-title {
+  font-family: 'Noto Serif JP', 'Old Standard TT', serif;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 8px 0 4px;
+  line-height: 1.3;
+}
+.concept-en {
+  display: block;
+  font-size: 14px;
+  font-weight: 400;
+  color: #666;
+  font-style: italic;
+  margin-top: 2px;
+}
+.concept-meta {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px dotted #ccc;
+}
+.concept-meta .domain { margin-right: 12px; font-weight: 600; }
+.concept-meta .thinkers { font-style: italic; }
+.concept-essay p {
+  font-family: 'Noto Serif JP', 'Old Standard TT', serif;
+  font-size: 15px;
+  line-height: 1.9;
+  text-align: justify;
+  text-indent: 1em;
+}
+.academic-column .item {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px dotted #ccc;
+}
+.academic-column .item:last-child { border-bottom: none; }
+
+/* === Page V (Sprint 4 layout swap, was Sprint 3 Step D) === */
+.page-five-content {
+  display: grid;
+  grid-template-rows: 40% 60%;
+  padding: 16px 24px;
+}
+.serendipity-article {
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #ccc;
+}
+.serendipity-article .kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #666;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.serendipity-article .article-title {
+  font-family: 'Noto Serif JP', 'Old Standard TT', serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.5;
+  margin: 0 0 10px;
+}
+.serendipity-article .description {
+  font-family: 'Noto Serif JP', 'Old Standard TT', serif;
+  font-size: 14px;
+  line-height: 1.8;
+  color: #333;
+  margin-bottom: 8px;
+}
+.serendipity-article .serendipity-byline {
+  font-size: 11px;
+  color: #888;
+  border-top: 1px dotted #ccc;
+  padding-top: 6px;
+}
+.ai-kamiyama-column .kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #666;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.ai-kamiyama-column .column-title {
+  font-family: 'Noto Serif JP', 'Old Standard TT', serif;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0 0 16px;
+}
+.ai-kamiyama-column .column-body p {
+  font-family: 'Noto Serif JP', 'Old Standard TT', serif;
+  font-size: 15px;
+  line-height: 1.9;
+  text-align: justify;
+  text-indent: 1em;
+  margin-bottom: 12px;
+}
+.ai-kamiyama-column .ai-byline {
+  font-size: 11px;
+  color: #888;
+  text-align: right;
+  font-style: italic;
+  margin-top: 12px;
+}
+.page-five-placeholder {
+  text-align: center;
+  padding: 60px 24px;
+  color: #888;
+  font-style: italic;
+}
+
+/* === Page VI (Sprint 4 layout swap, was Sprint 3 Step C) === */
+.page-six-grid-v2 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  padding: 16px 24px;
+}
+.leisure-column-v2 {
+  padding: 0 16px;
+  border-right: 1px solid #ccc;
+}
+.leisure-column-v2:last-child { border-right: none; }
+.leisure-column-v2:first-child { padding-left: 0; }
+.leisure-column-v2 .kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #666;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.leisure-column-v2 .column-title {
+  font-family: 'Noto Serif JP', 'Old Standard TT', serif;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0 0 12px;
+}
+/* Sprint 5 task #4 (2026-05-04): focus-work（題材表記）のスタイル。
+   books / music / outdoor で column-title の直下に出る。cooking 用の
+   .dish-name とは別スタイルで、italic のメタ情報感を出す。 */
+.leisure-column-v2 .focus-work {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 12px;
+  font-style: italic;
+  color: #666;
+  margin: 4px 0 8px;
+  padding-left: 4px;
+  border-left: 2px solid #999;
+  line-height: 1.5;
+}
+.leisure-column-v2 .column-body p {
+  font-family: 'Noto Serif JP', 'Old Standard TT', serif;
+  font-size: 13px;
+  line-height: 1.8;
+  text-align: justify;
+  margin-bottom: 8px;
+}
+.leisure-column-v2 .byline-v2 {
+  font-size: 10px;
+  color: #888;
+  margin-top: 8px;
+  border-top: 1px dotted #ccc;
+  padding-top: 6px;
+}
+.cooking-column-v2 .dish-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 4px;
+}
+.cooking-column-v2 .ingredients {
+  font-size: 12px;
+  color: #555;
+  font-style: italic;
+  margin-bottom: 10px;
+  padding: 6px 8px;
+  background: #f8f5f0;
+  border-left: 2px solid #c0a060;
+}
+
+/* === Editorial postscript (Sprint 4 Phase 3) === */
+.editorial-footer {
+  margin-top: 32px;
+  padding: 24px 24px 32px;
+  border-top: 2px solid #333;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 13px;
+  line-height: 1.9;
+  color: #444;
+  text-align: justify;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.editorial-footer .label {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: #888;
+  margin-bottom: 8px;
+  text-align: center;
+}
+.editorial-footer .body p {
+  text-indent: 1em;
+  margin: 0;
+}
+.editorial-footer .signature {
+  text-align: right;
+  font-style: italic;
+  color: #888;
+  font-size: 11px;
+  margin-top: 12px;
+}
+</style>
+</head>
+<body>
+
+<div class="paper">
+
+  <!-- ════════════════════  MASTHEAD  ════════════════════ -->
+  <header class="masthead">
+    <div class="topline">
+      <span>Founded MMXXVI · Tokyo</span>
+      <span>Edited for Akio Kamiyama</span>
+      <span>An Editorial Companion · For the Reader's Eyes Only</span>
+    </div>
+    <h1>Kamiyama Tribune</h1>
+    <div class="latin-motto">Audi alteram partem — let the other side be heard.</div>
+    <div class="meta">
+      <span>Vol. 1, No. 1</span>
+      <span class="center">Monday, May 4, 2026 ／ 2026年5月4日　月曜日</span>
+      <span>Six Pages · 22記事</span>
+    </div>
+  </header>
+
+  <!-- ════════════════════  WEATHER / STRIP  ════════════════════ -->
+  <div class="masthead-data">
+    <div class="masthead-data-row1">
+      <span class="weather-tokyo">東京 16-26℃ 霧雨</span>
+      <span class="separator">／</span>
+      <span class="weather-takao">高尾山 13-28℃ 霧雨</span>
+      <span class="separator">／</span>
+      <span class="countdown">フジロックまで 81日</span>
+    </div>
+    <div class="masthead-data-row2">
+      <span class="market-nikkei">日経 59,513 (-)</span>
+      <span class="separator">／</span>
+      <span class="market-dji">NYダウ 49,499 (-)</span>
+      <span class="separator">／</span>
+      <span class="market-spx">S&amp;P 500 7,230 (-)</span>
+      <span class="separator">／</span>
+      <span class="forex-usd">USD 156.82</span>
+      <span class="separator">／</span>
+      <span class="forex-eur">EUR 184.01</span>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--                       PAGE ONE — FRONT PAGE                     -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <section class="page page-one">
+    <div class="page-banner"><span class="pg-num">— Page I —</span> The Front Page · World &amp; Business</div>
+
+    <article class="front-top">
+      <div class="lead-story" lang="ja">
+        <div class="kicker">Foresight・国際情勢・トップ</div>
+        <h2 class="headline-xl article-title-original"><a href="https://www.fsight.jp/articles/-/52062" target="_blank" rel="noopener noreferrer">UAE「OPEC離脱」は「湾岸国際政治」激変の序章</a></h2>
+        <p class="deck">UAEのOPEC脱退は単なる産油政策の転換ではなく、湾岸の盟主秩序と米・中・ロをめぐる地政学的再編の号砲として、今朝の国際情勢に重い含意を投げかける。</p>
+        <p class="byline">本紙編集部　Foresightより構成 · 2026年5月3日</p>
+        <div class="body-3col">
+          <p class="dropcap">UAEのOPEC離脱は、国際関係において持つ意味も重い［UAEのムハンマド・ビン・ザイド大統領］（C）Abdulla Al Neyadi / UAE Presidential Court/Handout via REUTERS OPEC（石油輸出国機構）で第3位の産油国だったUAE（アラブ首長国連邦）が、5月1日に同機構から脱退しました。OPECとロシアなどの協調産油国で作るOPECプラスからも離脱します。カルテルとしてのOPECの影響力がどう変化するかに注目…</p>
+          <p class="byline" style="margin-top:8px;">出典：Foresight</p>
+        </div>
+      </div>
+
+      <aside class="lead-sidebar" lang="ja">
+        <div class="kicker">なぜ重要か</div>
+        <h4 class="headline-m">本日のトップから読み取るべきこと</h4>
+        <p>読み解きのための3点：</p>
+        <hr class="dotted" />
+        <p><strong>1・</strong>UAEが2026年5月1日にOPECおよびOPECプラスから正式脱退した。産油量世界3位の湾岸主要国の離脱は、カルテルとしてのOPECの結束と価格調整力に直接的な影響を与える構造変化として位置づけられる。</p>
+        <p><strong>2・</strong>OPECの減産協調が機能する前提は加盟国の利害一致だが、UAEの離脱はサウジ主導の秩序への亀裂を可視化する。エネルギー市場の価格形成メカニズムそのものが問い直される転換点として今日読まれる意味がある。</p>
+        <p><strong>3・</strong>湾岸地域固有のロジックを内側から読む視点が要る。国際政治学とエネルギー経済学を架橋すると、UAEの離脱は単なる産油政策の逸脱ではなく、脱炭素時代における産油国の生き残り戦略の先行事例として浮き彫りになる。</p>
+        <hr class="dotted" />
+        <p class="byline" style="margin-top:8px;">出典：3ソース合議 · 翻訳：Google／MyMemory（日本語ソースは原文）</p>
+      </aside>
+    </article>
+
+    <div class="secondaries">
+      <div class="col" lang="ja">
+        <div class="kicker">BBC ビジネス</div>
+        <h3 class="headline-l article-title-original"><a href="https://www.bbc.com/news/articles/crl1l6g9264o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener noreferrer">Struggling High Streets fuel sense of neglect for voters ahead of local elections</a></h3>
+        <p class="article-title-japanese">地方選挙を前に、大通りの苦境が有権者の無視感を煽る</p>
+        <p class="byline">本紙編集部　BBC ビジネスより構成 · 2026年5月3日</p>
+        <p>Failing High Streets fuel a wider sense of political discontent which could prove crucial in the upcoming elections for English councils in May.</p>
+        <p class="byline" style="margin-top:6px;">出典：BBC ビジネス</p>
+      </div>
+      <div class="col" lang="ja">
+        <div class="kicker">BBC ビジネス</div>
+        <h3 class="headline-l article-title-original"><a href="https://www.bbc.com/news/articles/c9wejdekpwyo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener noreferrer">Amsterdam bans public adverts for meat and fossil fuels</a></h3>
+        <p class="article-title-japanese">アムステルダム、肉と化石燃料の公共広告を禁止</p>
+        <p class="byline">本紙編集部　BBC ビジネスより構成 · 2026年5月4日</p>
+        <p>Local politicians say the move is in line with the Dutch capital&#x27;s environmental targets.</p>
+        <p class="byline" style="margin-top:6px;">出典：BBC ビジネス</p>
+      </div>
+      <div class="col" lang="ja">
+        <div class="kicker">BBC ビジネス</div>
+        <h3 class="headline-l article-title-original"><a href="https://www.bbc.com/news/articles/c86d9v28qxxo?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener noreferrer">The threat to summer holidays looming from jet fuel shortages</a></h3>
+        <p class="article-title-japanese">ジェット燃料不足で迫る夏休みの脅威</p>
+        <p class="byline">本紙編集部　BBC ビジネスより構成 · 2026年5月4日</p>
+        <p>What impact might shortages have on our summer holidays - and what could be done about it?</p>
+        <p class="byline" style="margin-top:6px;">出典：BBC ビジネス</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--                  PAGE TWO — PRESIDENT'S MORNING BRIEFING        -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <section class="page page-two">
+    <div class="page-banner"><span class="pg-num">— Page II —</span> The President's Morning Briefing · Three Companies, One Desk</div>
+
+    <p class="deck" lang="ja" style="text-align:center; margin-bottom:18px;">
+      Cocolomi・Human Energy・Web-Repo3社の事業文脈に関わる今朝の話題を、各社につき1本——朝の経営判断のための短い問いを添えて。
+    </p>
+
+    <div class="briefing-row" lang="ja">
+      <div class="company">
+        <img class="company-logo" src="../assets/logos/cocolomi.svg" alt="Cocolomi logo" />Cocolomi
+        <span class="jp">生成AI導入支援</span>
+      </div>
+      <div class="story">
+        <div class="kicker">ITmedia AI＋</div>
+        <h4 class="headline-m"><a href="https://atmarkit.itmedia.co.jp/ait/articles/2605/01/news057.html" target="_blank" rel="noopener noreferrer">NVIDIA「NemoClaw」がAIエージェント推進の転換点に　Clawブームで直面する「特権リスク」</a></h4>
+        <p class="byline">本紙編集部　ITmedia AI＋より構成 · 2026年5月1日</p>
+        <p>企業の関心が「対話型AI」から「AIエージェント」へと移り変わる中、ABI ResearchはNVIDIAのNemoClawを「エンタープライズにおけるAIエージェント採用を加速させるための転換点になる」との見解を示した。</p>
+      </div>
+      <div class="insight">
+        <span class="label">Editor's Note · 社長への朝の覚え書き</span>
+        <p><strong>今朝の問い：</strong>顧客が「対話型AI」から「AIエージェント」へ移行し始めた今、自社の支援事例の中でエージェント領域に転用できる案件は何件あり、最初に提案できる顧客はどこか？</p>
+      </div>
+    </div>
+
+    <div class="briefing-row" lang="ja">
+      <div class="company">
+        <img class="company-logo" src="../assets/logos/HE.png" alt="Human Energy logo" />Human Energy
+        <span class="jp">企業向け研修</span>
+      </div>
+      <div class="story">
+        <div class="kicker">日本の人事部 プロネット</div>
+        <h4 class="headline-m"><a href="https://jinjibu.jp/news/detl/26335/" target="_blank" rel="noopener noreferrer">第３回「企業の変革に関する従業員意識調査」を実施</a></h4>
+        <p class="byline">本紙編集部　日本の人事部 プロネットより構成 · 2026年5月1日</p>
+        <p>企業変革の停滞感が漂う中、動かす鍵は&quot;ポジティブ・ミドル&quot;と約15％の変革推進層株式会社電通（本社：東京都港区、代表取締役 社長執行役員：松本 千里）は、国内電通グループ5社の横断組織として人的...</p>
+      </div>
+      <div class="insight">
+        <span class="label">Editor's Note · 社長への朝の覚え書き</span>
+        <p><strong>今朝の問い：</strong>Human Energyの顧客企業で「ポジティブ・ミドル」に該当する人材は誰か——その15%を研修設計の起点に据えると、プログラムの構造はどう変わるか？</p>
+      </div>
+    </div>
+
+    <div class="briefing-row" lang="ja">
+      <div class="company">
+        <img class="company-logo" src="../assets/logos/web-repo.png" alt="Web-Repo logo" />Web-Repo
+        <span class="jp">フランチャイズ業界</span>
+      </div>
+      <div class="story">
+        <div class="kicker">ビジネスチャンス</div>
+        <h4 class="headline-m"><a href="https://www.bc01.net/column/openaccount/" target="_blank" rel="noopener noreferrer">フランチャイズのオープンアカウント制とは？仕組みやメリット、導入本部を徹底解説【2026年最新】</a></h4>
+        <p class="byline">本紙編集部　ビジネスチャンスより構成 · 2026年4月23日</p>
+        <p>フランチャイズ（FC）加盟を検討していると、「日々の売上をすべて本部に送金しなければならない」というルールに驚く方が少なくありません。これは「オープンアカウント制」と呼ばれる会計処理手法で、特にコンビニや学習塾などの大手 […] The post フランチャイズのオープンアカウント制とは？仕組みやメリット、導入本部を徹底解説【2026年最新】 first appeared on ビジネスチャンス .</p>
+      </div>
+      <div class="insight">
+        <span class="label">Editor's Note · 社長への朝の覚え書き</span>
+        <p><strong>今朝の問い：</strong>オープンアカウント制の「売上全額送金」という構造を加盟者保護・独禁法の観点で解説した記事は、Web-Repo上のどのFC本部案件に隣接コンテンツとして付加すれば、閲覧者の意思決定の質が最も上がるか？</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--                  PAGE THREE — GENERAL NEWS                      -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <section class="page page-three">
+    <div class="page-banner"><span class="pg-num">— Page III —</span> General News · The Wider World, in Brief</div>
+
+    <div class="general-grid">
+
+      <div class="item">
+        <div class="kicker">Washington・国際</div>
+        <h5 class="headline-s"><a href="https://foreignpolicy.com/2026/05/01/blood-countess-shelley-puhak-review-historical-record/" target="_blank" rel="noopener noreferrer">The Real Origin of the World’s Most Famous Female Serial Killer</a></h5>
+        <p>A new book explores the geopolitical scheming that created the blood countess legend.</p>
+        <p class="byline" style="font-size: 11px; color: #666; margin-top: 4px;">出典：Foreign Policy · 2026年5月2日</p>
+      </div>
+
+      <div class="item" lang="ja">
+        <div class="kicker">国内マクロ</div>
+        <h5 class="headline-s"><a href="http://www3.nhk.or.jp/news/html/20260501/k10015113001000.html" target="_blank" rel="noopener noreferrer">高性能AI悪用に備え 経産省が電力事業者に緊急点検要請</a></h5>
+        <p>アメリカの企業が開発した高性能なAIモデルにより、重要な社会基盤がサイバー攻撃を受けるリスクが指摘される中、経済産業省は、電力分野の事業者に対して、自社の情報通信システムに弱い点がないか緊急点検するよう要請しました。</p>
+        <p class="byline" style="font-size: 11px; color: #666; margin-top: 4px;">出典：NHK ニュース 経済 · 2026年5月1日</p>
+      </div>
+
+      <div class="item" lang="ja">
+        <div class="kicker">国際規制・テクノ覇権</div>
+        <h5 class="headline-s" style="font-style: italic; color: #666;">本日該当なし</h5>
+      </div>
+
+      <div class="item">
+        <div class="kicker">New York・経営</div>
+        <h5 class="headline-s"><a href="https://www.mckinsey.com/capabilities/people-and-organizational-performance/our-insights/the-rise-of-the-human-ai-workforce" target="_blank" rel="noopener noreferrer">The rise of the human–AI workforce</a></h5>
+        <p>New research shows AI could take on more than half of US working hours—today. What do you need to know to lead a human–agent hybrid team?</p>
+        <p class="byline" style="font-size: 11px; color: #666; margin-top: 4px;">出典：McKinsey Insights</p>
+      </div>
+
+      <div class="item" lang="ja">
+        <div class="kicker">文化・社会</div>
+        <h5 class="headline-s"><a href="https://www.webdoku.jp/mettakuta/takeshi_uchida/20260504080000.html" target="_blank" rel="noopener noreferrer">庶民の声が活き活き伝わる中国珍神フィールドワーク - 新刊めったくたガイド</a></h5>
+        <p>地味な表紙の多い新書コーナーで飛び切り異彩を放っているのが『中国TikTok民俗学 スマホからはじまる珍神探訪』（ＮＨＫ出版新書）だ。何よりも斬新なタイトルと...</p>
+        <p class="byline" style="font-size: 11px; color: #666; margin-top: 4px;">出典：本の雑誌オンライン · 2026年5月4日</p>
+      </div>
+
+      <div class="item">
+        <div class="kicker">New York・科学</div>
+        <h5 class="headline-s"><a href="https://nautil.us/the-rapid-evolution-of-giant-daisies-1280384/" target="_blank" rel="noopener noreferrer">The Rapid Evolution of Giant Daisies</a></h5>
+        <p>They’re the botanical versions of Darwin’s finches The post The Rapid Evolution of Giant Daisies appeared first on Nautilus .</p>
+        <p class="byline" style="font-size: 11px; color: #666; margin-top: 4px;">出典：Nautilus · 2026年5月1日</p>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--                  PAGE FOUR — ARTS & LETTERS                     -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <section class="page page-four">
+    <div class="page-banner"><span class="pg-num">— Page IV —</span> Arts &amp; Letters · A Page for Slow Reading</div>
+
+    <div class="page-four-grid">
+
+    <article class="concept-column" lang="ja">
+      <div class="kicker">今週の概念</div>
+      <h3 class="concept-title">
+        我と汝
+        <span class="concept-en">Ich und Du / I-Thou</span>
+      </h3>
+      <div class="concept-meta">
+        <span class="domain">対話の哲学・ユダヤ思想</span>
+        <span class="thinkers">代表：マルティン・ブーバー</span>
+      </div>
+      <div class="concept-essay">
+        <p>マルティン・ブーバーが1923年に提示した「我と汝」という思想の核心は、人間の世界との関わり方を二つの根本語に分けたことにある。「我―それ（Ich-Es）」は相手を分析・利用・観察すべき対象として扱う態度であり、「我―汝（Ich-Du）」は相手の全体性と向き合い、自分もまた全体性をもって応答する出会いの態度だ。ブーバーにとって後者こそが「真の対話」であり、そこでは「汝」を通じてのみ「我」もまた真に成立する——逆説めいた構造が、この思想の深みをつくっている。ブーバーはハシディズム（18世紀東欧ユダヤ教の神秘主義的潮流）の精神的遺産を背景に持ちながら、フッサールの現象学とも共鳴する形で人格的関係の哲学を打ち立てた。その視点は、意識の志向性を解析する哲学的伝統に「あなたに向かう」という関係性の次元を呼び込んだとも言える。現代の経営やマネジメントの文脈で「傾聴」や「心理的安全性」が語られるとき、その言葉の多くが「我―それ」の語彙体系に留まっていることに、読む者は気づかされる。相手のデータを収集し、反応を最適化しようとする関与のあり方は、どれほど洗練されていても「それ」への関与にとどまる。ブーバーが問うているのは技法ではなく、向き合う姿勢そのものの存在論的構え——暗黙知の層に刻まれた「出会い方」の問題なのだ。</p>
+      </div>
+    </article>
+
+    <aside class="academic-column" lang="ja">
+      <div class="kicker">学術ニュース</div>
+
+      <div class="item" lang="ja">
+        <h5 class="headline-s"><a href="https://www.shunjusha.co.jp/news/n126097.html" target="_blank" rel="noopener noreferrer">サティ生誕160年記念 青柳いづみこ×高橋悠治 ダンスと画像とピアノ</a></h5>
+        <p>サティ生誕160年記念 青柳いづみこ×高橋悠治 ダンスと画像とピアノについて</p>
+        <p class="byline" style="font-size: 11px; color: #666; margin-top: 4px;">出典：春秋社 · 2026年4月28日</p>
+      </div>
+
+      <div class="item" lang="ja">
+        <h5 class="headline-s"><a href="https://shinsho-plus.shueisha.co.jp/column/gendai_majyo/34527" target="_blank" rel="noopener noreferrer">今日のウイッチクラフト</a></h5>
+        <p>2024年、私はミーアンジンに降り立った。 現在ではブリスベンという名で知られるこの土地は、はるか以前からトゥルバル族やユガラ族が暮らしてきた場所であり、彼らはここをミーアンジンと呼んできた。ヤガラ語を話す先住民たちが、 […]</p>
+        <p class="byline" style="font-size: 11px; color: #666; margin-top: 4px;">出典：集英社新書プラス · 2026年4月24日</p>
+      </div>
+
+      <div class="item" lang="ja">
+        <h5 class="headline-s"><a href="https://www.shunjusha.co.jp/news/n126016.html" target="_blank" rel="noopener noreferrer">アジア文芸ライブラリー『シュグデン』訳者 阿比留美帆氏×作家 万城目学氏 トークイベント開催</a></h5>
+        <p>アジア文芸ライブラリー『シュグデン』訳者 阿比留美帆氏×作家 万城目学氏 トークイベント開催について</p>
+        <p class="byline" style="font-size: 11px; color: #666; margin-top: 4px;">出典：春秋社 · 2026年4月23日</p>
+      </div>
+    </aside>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--                  PAGE FIVE — LEISURE                            -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <section class="page page-five">
+    <div class="page-banner"><span class="pg-num">— Page V —</span> Columns &amp; Serendipity · A Room with a Different Window</div>
+
+    <div class="page-five-content" lang="ja">
+      <aside class="serendipity-article">
+        <div class="kicker">今朝出会った1本</div>
+        <h3 class="article-title"><a href="https://news.cookpad.com/articles/63794" target="_blank" rel="noopener noreferrer">鶏むね1枚で40個作れる！驚きのかさ増し「ふわふわビックリナゲット」</a></h3>
+        <p class="description">鶏むね1枚で40個作れる「ふわふわビックリナゲット」のレシピをご紹介。 刻んだえのきとホットケーキミックスで、かさ増しになるだけでなく、驚くほどふわふわに仕上がります。玉ねぎとじゃがいもを入れて...</p>
+        <p class="serendipity-byline">出典：cookpad ニュース · 2026年5月4日</p>
+      </aside>
+
+      <article class="ai-kamiyama-column">
+        <div class="kicker">AIかみやまの一筆</div>
+        <h3 class="column-title">ふわふわに宿る聞く力</h3>
+        <div class="column-body">
+          <p>今朝このレシピに出会って、ちょっと救われる感じがしました。鶏むね1枚という制約に、えのきやホットケーキミックスが「自分も混ぜて」と名乗り出る。聞き上手の場づくりって、案外これに近いとも言えます。空（家計や時間）に対して、雨（足りない、飽きる）が降る。そこで傘（かさ増しの工夫）を差すと、量だけでなく“ふわふわ”という質が生まれる。人も会議も、足りなさを隠すより、混ぜ方を丁寧にすると案外おいしくなる気がします。</p>
+        </div>
+        <p class="ai-byline">— AIかみやま</p>
+      </article>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!--                  PAGE SIX — COLUMNS & SERENDIPITY               -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <section class="page page-six">
+    <div class="page-banner"><span class="pg-num">— Page VI —</span> Leisure · Reading, Music, Trail &amp; Table</div>
+
+    <div class="page-six-grid-v2">
+
+    <article class="leisure-column-v2 books-column-v2" lang="ja">
+      <div class="kicker">読書</div>
+      <h3 class="column-title">「ほぼ本人」という自由</h3>
+      <div class="column-body">
+        <p>フリーダ・カーロとディエゴ・リベラを主人公にしたオペラ、と聞けば「ああ、あの二人の波乱の生涯ね」と構えてしまう。ところがニロ・クルスがThe Paris Reviewで語るのは、「彼ら自身ではない」という逆説的な出発点だ。史実の人物をモデルにしながら、あえてその「ずれ」に創作の核を置く——この感覚、平野啓一郎が小説で歴史上の人物の「分人」を探るときの緊張感と、どこか響き合わないだろうか。台本（リブレット）という形式は、散文でも詩でもなく、音楽に身を預けることで初めて完結する不思議な文学だ。言葉が旋律に乗った瞬間、「ほぼ本人」は何者になるのか。その問いだけで、コーヒーがもう一杯飲めそうだ。</p>
+      </div>
+      <p class="byline-v2">出典：<a href="https://www.theparisreview.org/blog/2026/04/23/art-of-the-libretto-nilo-cruz/" target="_blank" rel="noopener noreferrer">The Paris Review</a> · 2026年4月23日</p>
+    </article>
+
+    <article class="leisure-column-v2 music-column-v2" lang="ja">
+      <div class="kicker">音楽</div>
+      <h3 class="column-title">バズの向こう側、音楽は本物か</h3>
+      <div class="column-body">
+        <p>SNSで火がつき、一夜にして数百万再生——そんな物語が珍しくなくなった時代に、クレイジーウォウウォ!!という名前が浮上している。10年代ダンスロックとネットカルチャーが交差した地点に生まれたそのサウンドは、サカナクションやceroが切り拓いた「踊れるのに考えさせる」系譜と、どこかで通じているように聞こえる。ロッキング・オン誌のインタビューが伝えるのは、やっている音楽と話した印象の乖離が驚くほど少ないバンドだという一言。くるりもZAZEN BOYSも、言葉と音が地続きだったからこそ長く聴かれてきた。特大バズの先に何を見るのか——その答えは、まだ音の中に隠れているような気がして、続きを聴かずにいられない。</p>
+      </div>
+      <p class="byline-v2">出典：<a href="https://rockinon.com/news/detail/214945" target="_blank" rel="noopener noreferrer">rockinon.com（ロッキング・オン）</a> · 2026年4月30日</p>
+    </article>
+
+    <article class="leisure-column-v2 outdoor-column-v2" lang="ja">
+      <div class="kicker">アウトドア</div>
+      <h3 class="column-title">スマーフ色の正直さ</h3>
+      <div class="column-body">
+        <p>梅雨の低山歩きで、グローブ選びに迷った経験はないだろうか。ゴアテックスの高級モデルを買い揃える前に、ULハイカーたちの間でひそかに支持を集める選択肢がある。Showa 281 Temres——通称「スマーフグローブ」だ。あの鮮やかなコバルトブルーは、80年代ベルギー産のキャラクターから来た愛称で、本来は商業漁業や清掃現場向けのワーキンググローブ。PUコーティングによる防水性と、指先の細やかな操作性を両立しており、価格は驚くほど控えめ。高尾や奥多摩の濡れた稜線、あるいはロングトレイルの雨中のコンパス操作にも、この「ちゃんと機能する安物」は静かに応えてくれる。道具に物語を求めるか、性能を求めるか——その問いをあの青い色が少し笑い飛ばしてくれる気がする。</p>
+      </div>
+      <p class="byline-v2">出典：<a href="https://sectionhiker.com/review-showa-281-temres-gloves/" target="_blank" rel="noopener noreferrer">Section Hiker</a> · 2026年5月1日</p>
+    </article>
+
+    <article class="leisure-column-v2 cooking-column-v2" lang="ja">
+      <div class="kicker">料理</div>
+      <h3 class="column-title">そら豆が教えてくれる、初夏の手加減</h3>
+      <p class="dish-name">そら豆とベーコンのリゾット</p>
+      <p class="ingredients">そら豆、ベーコン、米、パルメザンチーズ</p>
+      <div class="column-body">
+        <p>そら豆の旬は、気づけば駆け足で通り過ぎる。5月のこの短い窓を逃さずに、今朝はリゾットをご提案したい。米は洗わずにそのまま鍋へ。オリーブオイルでベーコンを軽く炒めたら米を加えて全体に油をなじませ、白ワインをひと回し。温めたスープ（顆粒でじゅうぶん）を2〜3回に分けて注ぎながら、約18分ほどゆっくり混ぜるだけだ。そら豆は最後の5分で加えると、あの翡翠色が生きてくる。仕上げにパルメザンをひとつまみ。塩はスープとベーコンの塩気で整うので、追加はほぼ不要。薄味好みの神山さんには、むしろチーズの量で調節するほうが自在が利く。鍋の前に立ちながら、木べらでゆっくり混ぜるこの時間が、案外よい朝の余白になる。</p>
+      </div>
+      <p class="byline-v2">Tribune厨房</p>
+    </article>
+    </div>
+  </section>
+
+  <!-- ════════════════════  COLOPHON  ════════════════════ -->
+  <footer class="editorial-footer">
+    <div class="label">編集後記</div>
+    <div class="body">
+      <p>UAEのOPEC離脱観測が湾岸秩序の地殻変動を示唆する一方、アムステルダムは肉と化石燃料の広告を街頭から消し始めた。巨大な構造が揺れるとき、人はその亀裂をどう埋めようとするのか。今朝の紙面は、制度の終わりと新たな約束の間で揺れる世界の輪郭を、静かに描き出している。</p>
+    </div>
+    <div class="signature">— Tribune 編集部</div>
+  </footer>
+
+  <footer class="colophon">
+    Kamiyama Tribune · An editorial morning paper · Built in residence on May 4, 2026 · Vol. 1, No. 1 · Test Edition · For the reader's eyes only
+    <br/>
+    <span style="text-transform:none; letter-spacing:0; font-style:italic; color:var(--muted);">
+      All names, headlines and dispatches in this issue are illustrative dummies prepared for layout review.
+    </span>
+  </footer>
+
+</div>
+
+</body>
+</html>
