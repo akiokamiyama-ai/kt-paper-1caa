@@ -118,6 +118,40 @@ _PODCAST_TEXT_MARKERS: tuple[str, ...] = (
 DESCRIPTION_MIN_CHARS: int = 30
 
 
+# Sprint 5 task #1 (2026-05-04): title-only feed の exempt 機能。
+# config/site_overrides.toml の [sites."<host>"] に description_exempt=true を
+# 設定したホストは description が空でも Stage 1 を通過する。朝日新聞デジタル
+# 経済（www.asahi.com）が初の対象。日経（assets.wor.jp）は意図的に exempt
+# しない（神山さん有料購読中、再露出価値が低いため現状の全弾きを維持）。
+_SITE_CONFIG_CACHE = None
+
+
+def _get_site_config():
+    """Lazy-load and cache SiteConfig from config/site_overrides.toml."""
+    global _SITE_CONFIG_CACHE
+    if _SITE_CONFIG_CACHE is None:
+        from ..lib.config_loader import load_site_config
+        _SITE_CONFIG_CACHE = load_site_config()
+    return _SITE_CONFIG_CACHE
+
+
+def _reset_site_config_cache_for_tests() -> None:
+    """Allow tests to force a fresh load (after monkey-patching the path)."""
+    global _SITE_CONFIG_CACHE
+    _SITE_CONFIG_CACHE = None
+
+
+def _is_description_exempt(url: str) -> bool:
+    """Return True if the article's host is in the description_exempt list."""
+    if not url:
+        return False
+    try:
+        return bool(_get_site_config().for_url(url).get("description_exempt", False))
+    except Exception:
+        # Defensive: corrupt config_loader shouldn't break Stage 1
+        return False
+
+
 def evaluate_description_length(article: dict) -> tuple[bool, str | None]:
     """Universal hard filter: exclude articles with description < 30 chars.
 
@@ -128,7 +162,12 @@ def evaluate_description_length(article: dict) -> tuple[bool, str | None]:
     descripton は事実上の「タイトルの繰り返し」「未完成の RSS 抜粋」で、
     紙面の本文として機能しない。30 字以上あれば最低限の論点提示が可能と
     判断（運用 1〜2 週間で頻度を見て v1.1 で調整）。
+
+    Sprint 5 task #1 (2026-05-04): site_overrides.toml で description_exempt=true
+    の host は description=0 でも通過させる（title-only feed への対応）。
     """
+    if _is_description_exempt(article.get("url") or ""):
+        return False, None
     desc = article.get("description") or ""
     if len(desc.strip()) < DESCRIPTION_MIN_CHARS:
         return True, "description_too_short"

@@ -221,6 +221,113 @@ def test_stage1_excludes_short_description():
 
 
 # ---------------------------------------------------------------------------
+# Sprint 5 task #1 (2026-05-04): description_exempt for title-only feeds
+# ---------------------------------------------------------------------------
+
+def _patch_site_config(overrides: dict):
+    """Helper: install a stub SiteConfig so we don't read the real TOML."""
+    from ..lib.drivers.base import SiteConfig
+    hard_filter._SITE_CONFIG_CACHE = SiteConfig(overrides=overrides)
+
+
+def _restore_site_config():
+    hard_filter._reset_site_config_cache_for_tests()
+
+
+def test_desclen_asahi_exempt_passes():
+    """www.asahi.com is in description_exempt list → empty desc passes Stage 1."""
+    _patch_site_config({"www.asahi.com": {"description_exempt": True}})
+    try:
+        article = {
+            "url": "https://www.asahi.com/articles/ASV5412BTV54ULFA003M.html",
+            "title": "ロシア産原油、ホルムズ封鎖後初の調達 制裁適用外のサハリン2から",
+            "description": "",
+        }
+        excluded, reason = hard_filter.evaluate_description_length(article)
+    finally:
+        _restore_site_config()
+    _check("e1 asahi.com (description_exempt) + empty desc → NOT excluded",
+           excluded is False and reason is None,
+           f"excluded={excluded}, reason={reason}")
+
+
+def test_desclen_nikkei_not_exempt_excluded():
+    """assets.wor.jp is NOT in exempt list → empty desc excluded (Nikkei behavior)."""
+    _patch_site_config({"www.asahi.com": {"description_exempt": True}})
+    try:
+        article = {
+            "url": "https://www.nikkei.com/article/DGXZQOUC30ADB0Q6A430C2000000/",
+            "title": "テーマパークに新施設続々　体験レジャーの最前線がわかる10選",
+            "description": "",
+        }
+        excluded, reason = hard_filter.evaluate_description_length(article)
+    finally:
+        _restore_site_config()
+    _check("e2 nikkei.com (NOT exempt) + empty desc → excluded",
+           excluded is True and reason == "description_too_short")
+
+
+def test_desclen_other_host_normal_filter_still_works():
+    """Hosts not in the override map still use the 30-char threshold."""
+    _patch_site_config({"www.asahi.com": {"description_exempt": True}})
+    try:
+        article = {
+            "url": "https://example.test/short",
+            "title": "Some title",
+            "description": "too short",
+        }
+        excluded, reason = hard_filter.evaluate_description_length(article)
+    finally:
+        _restore_site_config()
+    _check("e3 unmapped host + short desc → normal exclusion",
+           excluded is True and reason == "description_too_short")
+
+
+def test_desclen_no_url_falls_back_to_normal_check():
+    """Article without URL (rare) falls back to normal description-length check."""
+    _patch_site_config({"www.asahi.com": {"description_exempt": True}})
+    try:
+        article = {"title": "T", "description": ""}  # no url
+        excluded, reason = hard_filter.evaluate_description_length(article)
+    finally:
+        _restore_site_config()
+    _check("e4 no URL + empty desc → excluded (normal path)",
+           excluded is True and reason == "description_too_short")
+
+
+def test_desclen_empty_overrides_normal_filter_unchanged():
+    """No exempt list configured → existing behavior unchanged."""
+    _patch_site_config({})  # no description_exempt anywhere
+    try:
+        article = {
+            "url": "https://www.asahi.com/articles/x",
+            "title": "T",
+            "description": "",
+        }
+        excluded, reason = hard_filter.evaluate_description_length(article)
+    finally:
+        _restore_site_config()
+    _check("e5 empty overrides → asahi gets normal filter (excluded)",
+           excluded is True and reason == "description_too_short")
+
+
+def test_desclen_exempt_with_existing_long_desc():
+    """Exempt host with normal-length desc also passes (descriptions are not required to be empty)."""
+    _patch_site_config({"www.asahi.com": {"description_exempt": True}})
+    try:
+        article = {
+            "url": "https://www.asahi.com/x",
+            "title": "T",
+            "description": "これは普通の長さの description です。30文字以上あります。",
+        }
+        excluded, reason = hard_filter.evaluate_description_length(article)
+    finally:
+        _restore_site_config()
+    _check("e6 exempt host + long desc → still passes",
+           excluded is False and reason is None)
+
+
+# ---------------------------------------------------------------------------
 # Test runner
 # ---------------------------------------------------------------------------
 
@@ -245,6 +352,14 @@ def main() -> int:
     test_desclen_100_chars()
     test_desclen_whitespace_only()
     test_stage1_excludes_short_description()
+    print()
+    print("(e) Sprint 5 task #1: description_exempt for title-only feeds:")
+    test_desclen_asahi_exempt_passes()
+    test_desclen_nikkei_not_exempt_excluded()
+    test_desclen_other_host_normal_filter_still_works()
+    test_desclen_no_url_falls_back_to_normal_check()
+    test_desclen_empty_overrides_normal_filter_unchanged()
+    test_desclen_exempt_with_existing_long_desc()
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")
     return 0 if FAIL == 0 else 1

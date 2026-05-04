@@ -52,6 +52,20 @@ note = "Third-party Nikkei mirror. Personal-run; monitor for outages and have Ya
 [sites."wordswithoutborders.org"]
 note = "Apex domain only; www.wordswithoutborders.org issues 301."
 
+# --- Title-only feed exempt (Sprint 5 task #1, 2026-05-04) ---------------
+# RSS の <description> が常時空（title-only feed）でも Stage 1 で弾かない。
+# 朝日新聞デジタル経済の RSS は全 item で description=""、しかし title が
+# 十分情報的（"OPECプラスの結束維持" "上場企業で金塊マネー循環か" 等）の
+# ため、title 重視で評価する。Stage 2 prompt にも title-only feed の評価
+# 指示を明示済み（scripts/selector/stage2.py）。
+#
+# 日経電子版（assets.wor.jp）は意図的に exempt しない：神山さんが有料購読中で
+# Tribune で再露出する価値が低いため、現状の Stage 1 全弾きを維持する。
+
+[sites."www.asahi.com"]
+description_exempt = true
+note = "朝日 RSS (business.rdf) は title-only feed、description 検査 skip"
+
 # --- Sites known to be programmatically blocked --------------------------
 # These sources are flagged Status.FAILED in their sources/*.md entries; they
 # are recorded here for documentation so the orchestrator can show "blocked"

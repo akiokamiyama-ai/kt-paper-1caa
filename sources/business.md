@@ -28,7 +28,17 @@
 - **対象**: 国内ビジネス・経済・国際ニュース全般。本紙の国内軸の中核
 - **位置付け**: **本紙第1面・第3面の国内軸の中核**。日経電子版本体は有料記事多数だが、**見出し・冒頭3〜4文は無料表示**されるため、見出し+リード文の取得で十分多くのケースに対応できる。ミラー経由のため Nikkei が静止画認証を強化すると破綻リスクあり、フェーズ1で日経本体の Atom 配信再開有無を継続監視
 
-### 2. The Economist ✅
+> **2026-05-04 状況メモ**：RSS（assets.wor.jp ミラー）の `<description>` は全 item で空文字列。Stage 1 description_length filter (30字未満) ですべて弾かれる。**これは現状維持**（神山さんが有料購読中のため Tribune で再露出する価値が低い、意図的に exempt list に入れない）。将来 RSS 仕様変更で description が復活した場合、自動的に Tribune 候補に復帰する。
+
+### 2. NHK ニュース 経済 ✅
+- **URL**: https://www3.nhk.or.jp/news/news_keizai.html
+- **RSS**: https://www3.nhk.or.jp/rss/news/cat5.xml
+- **形式**: RSS 2.0（default UA で 200、UA override 不要）
+- **mainstream**: true
+- **対象**: 国内経済・産業・為替・物価・主要企業ニュース。政府発表 / 公的データ中心の硬派なカバレッジ
+- **位置付け**: **第3面 R2「国内マクロ・産業」の主力ソース**。日経電子版が title-only feed のため Stage 1 で全弾きされる中、本ソースが事実上の代替。description が全 item に 65-130 字あり Stage 1 通過率 100%。日次 18 本ペースで R2 を安定供給する。NHK 独立した編集視点 + 信頼性 = 神山さんの経営者視点と整合。Sprint 5 task #1 (2026-05-04) で High Priority に採用
+
+### 3. The Economist ✅
 - **URL**: https://www.economist.com/
 - **RSS**: セクション別RSS稼働中
   - Finance and Economics: https://www.economist.com/finance-and-economics/rss.xml
@@ -42,7 +52,7 @@
 - **対象**: グローバル経済・金融・ビジネス・科学技術の論考。英語原文
 - **位置付け**: **グローバル分析・論考の最重要ソース**。news_profile.md §4.1 の「経営判断の合理性の限界」「構造と細部の往復」と最も親和性が高い。Leaders と Briefing は **構造的・長期視点**（§4.3）の記事の宝庫。本紙では「英語原文のまま採用」を基本方針（§5 編集ポリシー）
 
-### 3. BBC Business（本紙第1面で稼働中） ✅
+### 4. BBC Business（本紙第1面で稼働中） ✅
 - **URL**: https://www.bbc.com/business
 - **RSS**: https://feeds.bbci.co.uk/news/business/rss.xml
 - **language**: en
@@ -51,7 +61,7 @@
 - **対象**: グローバル経済・企業・市場の速報＋分析（英国視点が強め）
 - **位置付け**: **既に `experiment/regen_front_page.py` 経由で第1面のライブ動的生成に組み込み済み**。フェーズ1で `scripts/fetch.py` にリファクタリングする際もこのフィードを継続採用。BBC は CSS 命名規則変更で本文抽出が破綻しうる点が既知の脆さ（roadmap.md §4.2）
 
-### 4. Reuters Business ⚠️
+### 5. Reuters Business ⚠️
 - **URL**: https://www.reuters.com/business/
 - **RSS**: **公式RSSは2020年以降廃止**（旧 `/arc/outboundfeeds/` 系も404、`reutersagency.com/feed/` も最新フィード非公開）。代替として **Google News RSS プロキシ** `https://news.google.com/rss/search?q=site:reuters.com+business&hl=en-US&gl=US&ceid=US:en` で間接取得可（200確認、最新エントリ含む）
 - **language**: en
@@ -64,7 +74,7 @@
 
 ## Medium Priority（候補が薄い日に拾う）
 
-### 5. McKinsey Insights ✅
+### 6. McKinsey Insights ✅
 - **URL**: https://www.mckinsey.com/insights
 - **RSS**: https://www.mckinsey.com/insights/rss
 - **language**: en
@@ -73,7 +83,7 @@
 - **対象**: 経営戦略、デジタル・AI、組織、リーダーシップ、産業別分析（QuantumBlack の AI 特化記事も含む）
 - **位置付け**: **戦略コンサルの代表的論考ソース**。news_profile.md §4.1 の経営思想系（楠木建・三品和広・遠藤功）と並走させて、**実務側の視点** を補強する。AI実装の経営インパクトを扱う記事は Cocolomi 事業文脈（`companies.md`）とも横断する
 
-### 6. BCG Insights / Henderson Institute ❌
+### 7. BCG Insights / Henderson Institute ❌
 - **URL**: https://www.bcg.com/about/insights / https://bcghendersoninstitute.com/
 - **RSS**: **未提供**（HTML上に明示なし）。`feed.xml`、`/publications/rss`、sitemap.xml すべて Akamai が 403 で遮断。WebFetch も 403
 - **language**: en
@@ -82,7 +92,7 @@
 - **対象**: 経営戦略、企業文化、長期トレンド分析、産業別レポート
 - **位置付け**: コンテンツの質は McKinsey と並ぶが、**配信インフラが完全に閉じている**。フェーズ1では断念。代替として **Strategy+Business**（PwC、下記7番）と McKinsey で経営コンサル系論考をカバーする方針。BCG の重要レポートは Twitter/LinkedIn 経由で察知して個別 URL を手動取得する運用を検討
 
-### 7. Bloomberg Opinion ⚠️
+### 8. Bloomberg Opinion ⚠️
 - **URL**: https://www.bloomberg.com/opinion
 - **RSS**: **Opinion 単独フィードは公式廃止**（`/opinion.rss`、`/opinion/news.rss`、`/bview/opinion.rss` 全て404）。代替として近接フィード稼働中：
   - https://feeds.bloomberg.com/markets/news.rss（市場ニュース＋一部Opinion混在、200確認）
@@ -94,7 +104,7 @@
 - **対象**: マーケット解説、コラム、政治経済論考
 - **位置付け**: 本紙が望むのは **コラム・論考軸**（速報軸は Reuters・BBC でカバー済）。markets フィードから `byline` や記事URLパス `/opinion/` でフィルタする運用を想定。フェーズ1で Opinion 抽出ロジックを検討、効果が薄ければ優先度を Reference に下げる
 
-### 8. 東洋経済オンライン ✅
+### 9. 東洋経済オンライン ✅
 - **URL**: https://toyokeizai.net/
 - **RSS**: https://toyokeizai.net/list/feed/rss
 - **形式**: RSS 2.0
@@ -102,7 +112,16 @@
 - **対象**: ビジネス全般、業界分析、企業経営、政策論考
 - **位置付け**: **`companies.md` でも参照** されている共通ソース（Web-Repo の Reference）。本紙では国内ビジネス論考のサブとして運用。日経が見出ししか取れない場合の **本文付きの代替** として価値が高い。重複排除ロジック（`logs/urls_*.json`）で `companies.md` 側との二重採用を防ぐ
 
-### 9. WIRED.com Backchannel ✅
+### 10. 朝日新聞デジタル 経済 ⚠️
+- **URL**: https://www.asahi.com/business/
+- **RSS**: https://www.asahi.com/rss/asahi/business.rdf
+- **形式**: RSS 1.0 (RDF)、default UA で 200
+- **mainstream**: true
+- **対象**: 国内マクロ・産業、社会観察視点の経済記事。政府発表 / 企業ニュース / 国際エネルギー / 消費者問題 / 当事者取材記事
+- **位置付け**: **第3面 R2「国内マクロ・産業」の補完ソース**。NHK と編集視点が補完的（高島屋の視覚障害者向け売り場、上場企業金塊マネー等の独自切り口は NHK では拾われない領域）。Sprint 5 task #1 (2026-05-04) で Medium Priority に採用、7-14 日運用観察で R2 充足率改善を確認後 High 昇格を検討
+- **注意**：RSS の `<description>` は全 item で空文字列（title-only feed）。Stage 1 description_length filter (30字未満) ですべて弾かれるため、`config/site_overrides.toml` の `description_exempt = true` で **www.asahi.com を exempt list に登録**。Stage 2 LLM 評価は title 重視で行う設計（`stage2.py` の prompt で title-only feed の評価指示を明示）
+
+### 11. WIRED.com Backchannel ✅
 - **URL**: https://www.wired.com/category/backchannel/
 - **RSS**: https://www.wired.com/feed/category/backchannel/latest/rss
 - **language**: en
@@ -111,7 +130,7 @@
 - **対象**: テック × 社会の長文ジャーナリズム。Apple / OpenAI / Tesla / 政府機関の深い取材記事、業界人物ルポ、検証記事
 - **位置付け**: 神山さんの「**AI関連、テック関連をビジネスとして読んで、学びにしたい**」要請への直接対応。Backchannel は WIRED の長文枠で、**業界の構造変化を物語の形で読める**。McKinsey/HBR/Strategy+Business が「経営論考」、WIRED Backchannel は「**当事者ルポ**」という相補配置。**更新頻度は週1〜2本（2026-05-03 計測：直近5本の平均間隔 ≈4日）**
 
-### 10. WIRED.com AI ✅
+### 12. WIRED.com AI ✅
 - **URL**: https://www.wired.com/tag/ai/
 - **RSS**: https://www.wired.com/feed/tag/ai/latest/rss
 - **language**: en
@@ -124,7 +143,7 @@
 
 ## Reference（月1の俯瞰用）
 
-### 11. Strategy+Business（PwC） ✅
+### 13. Strategy+Business（PwC） ✅
 - **URL**: https://www.strategy-business.com/
 - **RSS**: https://www.strategy-business.com/rss
 - **language**: en
@@ -133,7 +152,7 @@
 - **対象**: 経営戦略、リーダーシップ、組織、テクノロジー戦略（PwC 系列の経営思想誌）
 - **位置付け**: **BCG が取れない穴を埋める** PwC 系経営思想ソース。McKinsey Insights が「コンサル現場の論考」とすれば、Strategy+Business は **アカデミックと実務の中間**。月1俯瞰で十分だが、特集号が出た月は High 扱いに引き上げる
 
-### 12. Behavioral Scientist ✅
+### 14. Behavioral Scientist ✅
 - **URL**: https://behavioralscientist.org/
 - **RSS**: https://behavioralscientist.org/feed/
 - **language**: en
@@ -142,7 +161,7 @@
 - **対象**: 行動経済学、認知バイアス、意思決定科学、ナッジ理論、応用心理学
 - **位置付け**: **news_profile.md §4.1 の特記要件**「行動経済学的視点をビジネス記事の選定フィルタとして組み込む」の **直接的な情報源**。カーネマン、セイラー、アリエリー、チャルディーニ系の論考が中心。本文丸ごと配信のため、本紙取り込み時の追加スクレイピング不要
 
-### 13. NBER Working Papers ✅
+### 15. NBER Working Papers ✅
 - **URL**: https://www.nber.org/papers
 - **RSS**: https://back.nber.org/rss/new.xml（旧 `www.nber.org/rss/new.xml` は 301、新ドメイン `back.nber.org` で配信）
 - **language**: en
