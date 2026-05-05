@@ -9,9 +9,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     # Sprint 5 ポストモーメント (2026-05-05): ラン #3 で 30:11 かかり 30 分 timeout
-    # で強制 cancel。実測値ベースで 45 分に拡張、約 50% の余裕。LLM 並列化による
-    # 短縮は Sprint 6 の検討対象。
-    timeout-minutes: 45
+    # で強制 cancel。当日のばらつき（RSS timeout / LLM 混雑時間帯 / runner 性能差）
+    # を考慮し 60 分に拡張、確実性を優先。GitHub Actions 無料枠（月 2000 分、
+    # private repo）に対し、60 分 × 30 日 = 1800 分は十分余裕内。
+    # Sprint 6 で LLM 並列化による短縮を検討、短縮できれば timeout を再調整。
+    timeout-minutes: 60
     permissions:
       contents: write
 
