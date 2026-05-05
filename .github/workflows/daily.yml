@@ -8,7 +8,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # Sprint 5 ポストモーメント (2026-05-05): ラン #3 で 30:11 かかり 30 分 timeout
+    # で強制 cancel。実測値ベースで 45 分に拡張、約 50% の余裕。LLM 並列化による
+    # 短縮は Sprint 6 の検討対象。
+    timeout-minutes: 45
     permissions:
       contents: write
 
