@@ -53,7 +53,7 @@ from .stage3 import integrate_scores
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 SOURCES_DIR = PROJECT_ROOT / "sources"
 LOG_DIR = PROJECT_ROOT / "logs"
-COMPANIES_CONTEXT_PATH = PROJECT_ROOT / "docs" / "companies_context_v1.md"
+COMPANIES_CONTEXT_PATH = PROJECT_ROOT / "config" / "companies_context.md"
 
 DEFAULT_MODEL = llm.DEFAULT_MODEL
 DEFAULT_MAX_TOKENS_STEP1 = 2048
@@ -112,7 +112,7 @@ SHORT_TO_DISPLAY: dict[str, str] = {
     "human_energy": "Human Energy",
     "web_repo":     "Web-Repo",
 }
-# companies_context_v1.md 内の見出しテキスト
+# companies_context.md 内の見出しテキスト
 CONTEXT_HEADERS: dict[str, str] = {
     "cocolomi":     "## 1. Cocolomi",
     "human_energy": "## 2. Human Energy",
@@ -336,7 +336,7 @@ def _now_iso() -> str:
 
 
 def extract_company_context(company_key: str, *, doc_text: str | None = None) -> str:
-    """Slice the per-company section out of companies_context_v1.md and
+    """Slice the per-company section out of companies_context.md and
     rename ``## 1. Cocolomi（…）`` → ``## 事業文脈``.
 
     Per docs/page2_prompts_v1.md §9.3, also strips any leading bracketed
