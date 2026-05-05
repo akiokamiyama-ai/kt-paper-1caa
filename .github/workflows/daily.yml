@@ -72,5 +72,8 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "chore(archive): ${{ steps.date.outputs.DATE }} 朝刊（自動生成）"
+            # ラン中に main が進んでいた場合に push reject されないよう rebase。
+            # archive/ や logs/ は workflow 専有なので conflict は理論的にあり得ない。
+            git pull --rebase origin main
             git push
           fi
