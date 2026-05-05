@@ -34,6 +34,11 @@
       "concept_id": "i_thou",
       "name_ja": "我と汝",
       "displayed_on": "2026-05-04"
+    },
+    {
+      "concept_id": "emergence",
+      "name_ja": "創発",
+      "displayed_on": "2026-05-05"
     }
   ]
 }

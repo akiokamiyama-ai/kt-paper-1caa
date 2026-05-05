@@ -1,0 +1,33 @@
+{
+  "date": "2026-05-05",
+  "page1_urls": [
+    "https://www.economist.com/finance-and-economics/2026/05/04/bad-government-statistics-can-cost-the-economy-billions",
+    "https://www.economist.com/finance-and-economics/2026/05/04/the-eu-wants-to-unshackle-its-economy-for-real-this-time",
+    "https://www.fsight.jp/articles/-/52063",
+    "https://www.bbc.com/news/articles/cvg0w84q1wyo?at_medium=RSS&at_campaign=rss"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/articles/2605/01/news108.html",
+    "human_energy": "https://jinjibu.jp/news/detl/26338/",
+    "web_repo": "https://www.bc01.net/new_fc/tenant-mado_202606/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/monetary-sovereignty-now-about-infrastructure-brazil-pix-cbdc-by-camila-villard-duran-2026-05",
+    "http://www3.nhk.or.jp/news/html/20260504/k10015114421000.html",
+    "https://www.bloomberg.com/opinion/newsletters/2026-05-05/iran-draws-a-line-and-puts-markets-on-notice",
+    "https://www.mckinsey.com/capabilities/strategy-and-corporate-finance/our-insights/bias-busters-escaping-the-echo-chamber-at-the-top",
+    "https://locusmag.com/2026/05/2026-locus-awards-emcees-sarah-gailey/",
+    "https://www.quantamagazine.org/what-can-we-gain-by-losing-infinity-20260429/"
+  ],
+  "page4_urls": [
+    "https://www.shunjusha.co.jp/news/n126097.html",
+    "https://shinsho-plus.shueisha.co.jp/column/gendai_majyo/34527",
+    "https://www.shunjusha.co.jp/news/n126016.html"
+  ],
+  "page5_url": "https://news.cookpad.com/articles/63797",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/05/04/wolfgang-koeppens-structural-musicality/",
+    "music": "https://natalie.mu/music/news/670867",
+    "outdoor": "https://thetrek.co/am-i-training-or-prepping-for-a-thru-hike-and-is-there-a-difference/"
+  }
+}

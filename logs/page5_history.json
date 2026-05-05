@@ -133,6 +133,21 @@
       "ai_kamiyama_failed": false,
       "fallback_used": false,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-05-05",
+      "article_url": "https://news.cookpad.com/articles/63797",
+      "article_title": "今夜のおつまみはコレで決まり！「壺にら」に箸が止まらない",
+      "article_category": "cooking",
+      "tie_candidates": [
+        "cooking",
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
     }
   ]
 }
