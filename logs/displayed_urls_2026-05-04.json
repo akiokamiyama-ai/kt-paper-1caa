@@ -1,0 +1,33 @@
+{
+  "date": "2026-05-04",
+  "page1_urls": [
+    "https://www.fsight.jp/articles/-/52062",
+    "https://www.bbc.com/news/articles/crl1l6g9264o?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/c9wejdekpwyo?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/c86d9v28qxxo?at_medium=RSS&at_campaign=rss"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://atmarkit.itmedia.co.jp/ait/articles/2605/01/news057.html",
+    "human_energy": "https://jinjibu.jp/news/detl/26335/",
+    "web_repo": "https://www.bc01.net/column/openaccount/"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/05/01/blood-countess-shelley-puhak-review-historical-record/",
+    "http://www3.nhk.or.jp/news/html/20260501/k10015113001000.html",
+    null,
+    "https://www.mckinsey.com/capabilities/people-and-organizational-performance/our-insights/the-rise-of-the-human-ai-workforce",
+    "https://www.webdoku.jp/mettakuta/takeshi_uchida/20260504080000.html",
+    "https://nautil.us/the-rapid-evolution-of-giant-daisies-1280384/"
+  ],
+  "page4_urls": [
+    "https://www.shunjusha.co.jp/news/n126097.html",
+    "https://shinsho-plus.shueisha.co.jp/column/gendai_majyo/34527",
+    "https://www.shunjusha.co.jp/news/n126016.html"
+  ],
+  "page5_url": "https://news.cookpad.com/articles/63794",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/04/23/art-of-the-libretto-nilo-cruz/",
+    "music": "https://rockinon.com/news/detail/214945",
+    "outdoor": "https://sectionhiker.com/review-showa-281-temres-gloves/"
+  }
+}

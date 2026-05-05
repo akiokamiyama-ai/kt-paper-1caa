@@ -1,0 +1,138 @@
+{
+  "history": [
+    {
+      "displayed_on": "2026-05-02",
+      "article_url": "https://rockinon.com/news/detail/214922",
+      "article_title": "ニュース - 【知りたい】Cloudyはこの5曲を聴いてハマれ！",
+      "article_category": "music",
+      "tie_candidates": [
+        "academic",
+        "books",
+        "music",
+        "outdoor",
+        "cooking"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": false,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-05-02",
+      "article_url": "https://news.cookpad.com/articles/63589",
+      "article_title": "【簡単10分】今が旬！「たけのこ」だけで作れる副菜レシピ",
+      "article_category": "cooking",
+      "tie_candidates": [
+        "academic",
+        "books",
+        "music",
+        "outdoor",
+        "cooking"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": false,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-05-02",
+      "article_url": "https://sectionhiker.com/review-showa-281-temres-gloves/",
+      "article_title": "Hike Like a Smurf in the Rain: Showa 281 Temres Gloves",
+      "article_category": "outdoor",
+      "tie_candidates": [
+        "academic",
+        "books",
+        "music",
+        "outdoor",
+        "cooking"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": false,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-05-02",
+      "article_url": "https://www.shunjusha.co.jp/news/n126016.html",
+      "article_title": "アジア文芸ライブラリー『シュグデン』訳者 阿比留美帆氏×作家 万城目学氏 トークイベント開催",
+      "article_category": "academic",
+      "tie_candidates": [
+        "academic",
+        "books",
+        "music",
+        "outdoor",
+        "cooking"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": false,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-05-02",
+      "article_url": "https://thetrek.co/appalachian-trail/day-6-a-push-into-dicks-creek-gap/",
+      "article_title": "Day 6: A push into Dick’s Creek Gap",
+      "article_category": "outdoor",
+      "tie_candidates": [
+        "academic",
+        "books",
+        "music",
+        "outdoor",
+        "cooking"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": false,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-05-03",
+      "article_url": "https://www.axismag.jp/posts/2026/05/708916.html",
+      "article_title": "建築を「見る」ためのもう一つの形式。瀧本幹也、国立西洋美術館の写真集を刊行",
+      "article_category": "culture",
+      "tie_candidates": [
+        "cooking",
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": false,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-05-03",
+      "article_url": "https://www.axismag.jp/posts/2026/05/708988.html",
+      "article_title": "世界的サウナブームの火付け役で「ロウリュ」の立役者、ヤスペル・ペーコネンに聞く",
+      "article_category": "culture",
+      "tie_candidates": [
+        "cooking",
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": false,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-05-04",
+      "article_url": "https://news.cookpad.com/articles/63794",
+      "article_title": "鶏むね1枚で40個作れる！驚きのかさ増し「ふわふわビックリナゲット」",
+      "article_category": "cooking",
+      "tie_candidates": [
+        "cooking"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
+    }
+  ]
+}

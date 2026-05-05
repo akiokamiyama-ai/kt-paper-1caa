@@ -1,0 +1,23 @@
+{
+  "date": "2026-05-01",
+  "page1_urls": [
+    "https://www.economist.com/finance-and-economics/2026/04/30/can-countries-grow-richer-by-exporting-people-not-goods",
+    "https://www.fsight.jp/articles/-/52053",
+    "https://www.economist.com/finance-and-economics/2026/04/30/how-kalshi-can-help-the-federal-reserve",
+    "https://www.fsight.jp/articles/-/52055"
+  ],
+  "page2_urls": {
+    "cocolomi": null,
+    "human_energy": null,
+    "web_repo": null
+  },
+  "page3_urls": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "page4_urls": []
+}

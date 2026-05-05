@@ -1,0 +1,14 @@
+{
+  "date": "2026-04-29",
+  "page1_urls": [
+    "https://www.economist.com/finance-and-economics/2026/04/26/san-francisco-ai-capital-of-the-world-is-an-economic-laggard",
+    "https://www.economist.com/finance-and-economics/2026/04/23/xi-jinping-wants-a-powerful-currency-americas-war-has-helped",
+    "https://www.fsight.jp/articles/-/52048",
+    "https://www.fsight.jp/articles/-/52045"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.meti.go.jp/press/2026/04/20260427002/20260427002.html",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2604/29/news002.html",
+    "web_repo": "https://www.bc01.net/column/openaccount/"
+  }
+}

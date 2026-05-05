@@ -1,0 +1,33 @@
+{
+  "date": "2026-05-02",
+  "page1_urls": [
+    "https://www.fsight.jp/articles/-/52058",
+    "https://www.fsight.jp/articles/-/52060",
+    "https://www.bbc.com/news/articles/cwyw6rylzepo?at_medium=RSS&at_campaign=rss",
+    "https://www.economist.com/finance-and-economics/2026/04/30/indias-weak-currency-reflects-deeper-problems-than-the-iran-war"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.meti.go.jp/press/2026/05/20260501001/20260501001.html",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2605/03/news016.html",
+    "web_repo": "https://www.bc01.net/seminar/myfarm-2_202604/"
+  },
+  "page3_urls": [
+    "https://www.theparisreview.org/blog/2026/05/01/when-the-confederacy-came-to-la/",
+    null,
+    "https://nautil.us/how-does-your-brain-know-a-cat-is-a-cat-1280394/",
+    "https://www.mckinsey.com/featured-insights/mckinsey-on-books/author-talks-what-makes-teams-effective-under-pressure",
+    "https://www.webdoku.jp/shinbunka/2026/04/30/183643.html",
+    "https://www.project-syndicate.org/commentary/orban-defeat-will-reinforce-dangers-of-political-liberalization-for-china-by-sam-chetwin-george-2026-05"
+  ],
+  "page4_urls": [
+    "https://www.shunjusha.co.jp/news/n126097.html",
+    "https://shinsho-plus.shueisha.co.jp/column/gendai_majyo/34527",
+    "https://www.shunjusha.co.jp/news/n126016.html"
+  ],
+  "page5_url": "https://thetrek.co/appalachian-trail/day-6-a-push-into-dicks-creek-gap/",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-04/against-all-odds-on-asturian-language-and-literature-marcos/",
+    "music": "https://rockinon.com/news/detail/214944",
+    "outdoor": "https://thetrek.co/pacific-crest-trail/hiking-the-pct-with-a-condition-that-makes-me-constantly-thirsty/"
+  }
+}

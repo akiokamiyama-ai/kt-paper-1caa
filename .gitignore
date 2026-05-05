@@ -8,8 +8,17 @@ docs/
 # Local session notes (prompt templates, scratch)
 archive/_*.txt
 
-# Future runtime artifacts
-logs/
+# Runtime state JSON — 6 categories committed for GHA dedup persistence
+# (concept_history / cooking_history / displayed_urls_*.json /
+# market_history / page4_rotation / page5_history). Audit logs (scores,
+# llm_usage, page2_scores, page3_selection) and the local cron wrapper
+# log are ignored; audit logs are kept for 90 days as GHA Artifacts.
+logs/scores_*.json
+logs/llm_usage_*.json
+logs/cron_*.log
+logs/*.bak
+logs/page2_scores_*.json
+logs/page3_selection_*.json
 
 # Local experimentation — scripts and outputs that should not deploy
 experiment/

@@ -1,0 +1,39 @@
+{
+  "history": [
+    {
+      "concept_id": "affordance",
+      "name_ja": "アフォーダンス",
+      "displayed_on": "2026-05-01"
+    },
+    {
+      "concept_id": "linguistic_relativity",
+      "name_ja": "言語相対論",
+      "displayed_on": "2026-05-02"
+    },
+    {
+      "concept_id": "anatman",
+      "name_ja": "無我",
+      "displayed_on": "2026-05-02"
+    },
+    {
+      "concept_id": "ethnography",
+      "name_ja": "エスノグラフィー",
+      "displayed_on": "2026-05-02"
+    },
+    {
+      "concept_id": "theory_of_mind",
+      "name_ja": "心の理論",
+      "displayed_on": "2026-05-02"
+    },
+    {
+      "concept_id": "conceptual_metaphor",
+      "name_ja": "概念メタファー",
+      "displayed_on": "2026-05-03"
+    },
+    {
+      "concept_id": "i_thou",
+      "name_ja": "我と汝",
+      "displayed_on": "2026-05-04"
+    }
+  ]
+}
