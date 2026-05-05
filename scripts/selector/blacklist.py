@@ -1,4 +1,4 @@
-"""Parse docs/blacklist_v1.md and score articles against it.
+"""Parse config/blacklist_keywords.md and score articles against it.
 
 Only the body of the ``## カテゴリ別キーワード`` section is parsed; all
 other sections (用途, ペナルティルール, 運用メモ, バージョン) are

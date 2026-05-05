@@ -27,7 +27,7 @@ from .source_registry import SourceRegistry, build_registry
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 SOURCES_DIR = PROJECT_ROOT / "sources"
-BLACKLIST_PATH = PROJECT_ROOT / "docs" / "blacklist_v1.md"
+BLACKLIST_PATH = PROJECT_ROOT / "config" / "blacklist_keywords.md"
 
 _HTML_TAG_RE = re.compile(r"<[^>]+>")
 
