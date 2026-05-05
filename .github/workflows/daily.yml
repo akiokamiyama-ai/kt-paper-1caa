@@ -1,0 +1,71 @@
+name: Daily Tribune Generation
+
+on:
+  schedule:
+    - cron: '0 20 * * *'  # 20:00 UTC = 05:00 JST
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Compute target date (JST)
+        id: date
+        run: echo "DATE=$(TZ='Asia/Tokyo' date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+
+      - name: Generate Tribune
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          MIIBO_API_KEY: ${{ secrets.MIIBO_API_KEY }}
+          MIIBO_AGENT_ID: ${{ secrets.MIIBO_AGENT_ID }}
+        run: |
+          python -m scripts.regen_front_page_v2 --date "${{ steps.date.outputs.DATE }}"
+
+      - name: Upload audit logs as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-logs-${{ steps.date.outputs.DATE }}
+          path: |
+            logs/scores_*.json
+            logs/llm_usage_*.json
+            logs/page2_scores_*.json
+            logs/page3_selection_*.json
+          retention-days: 90
+
+      - name: Refresh index.html with today's archive
+        run: |
+          cp "archive/${{ steps.date.outputs.DATE }}.html" index.html
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "archive/${{ steps.date.outputs.DATE }}.html" index.html
+          git add logs/concept_history.json logs/cooking_history.json
+          git add logs/displayed_urls_*.json logs/market_history.json
+          git add logs/page4_rotation.json logs/page5_history.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore(archive): ${{ steps.date.outputs.DATE }} 朝刊（自動生成）"
+            git push
+          fi

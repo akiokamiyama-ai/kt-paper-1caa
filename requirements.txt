@@ -8,3 +8,4 @@
 # venv が使える環境では以下が望ましい:
 #   python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 anthropic>=0.97,<1.0
+PyYAML>=6.0,<7.0
