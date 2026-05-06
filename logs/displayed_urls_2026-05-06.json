@@ -1,0 +1,33 @@
+{
+  "date": "2026-05-06",
+  "page1_urls": [
+    "https://www.bbc.com/news/articles/cn8dp2jwdnqo?at_medium=RSS&at_campaign=rss",
+    "https://www.economist.com/finance-and-economics/2026/05/05/can-bill-ackman-save-the-closed-end-fund",
+    "https://www.bbc.com/news/articles/ckgp7y5jg59o?at_medium=RSS&at_campaign=rss",
+    "https://www.fsight.jp/articles/-/52059"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/enterprise/articles/2605/05/news016.html",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2605/05/news015.html",
+    "web_repo": null
+  },
+  "page3_urls": [
+    "https://warontherocks.com/the-illusion-of-sovereignty-how-international-law-and-big-tech-are-eroding-the-state/",
+    null,
+    null,
+    "https://www.mckinsey.com/industries/healthcare/our-insights/ushering-in-the-next-era-of-frontline-nursing-with-ai",
+    "https://locusmag.com/2026/05/2026-pulitzer-prize-winners/",
+    "https://www.shunjusha.co.jp/news/n126097.html"
+  ],
+  "page4_urls": [
+    "https://www.shunjusha.co.jp/news/n120551.html",
+    "https://shinsho-plus.shueisha.co.jp/column/hibaku_nisei/34600",
+    "https://shinsho-plus.shueisha.co.jp/column/tadashi_tamura/34730"
+  ],
+  "page5_url": "https://www.axismag.jp/posts/2026/05/709740.html",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/05/05/the-ignorant-art-historian-ice-floes/",
+    "music": "https://greenroom.jp/post-5406/",
+    "outdoor": "https://sectionhiker.com/hiking-naked-what-the-law-says/"
+  }
+}

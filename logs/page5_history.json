@@ -148,6 +148,20 @@
       "ai_kamiyama_failed": false,
       "fallback_used": false,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-05-06",
+      "article_url": "https://www.axismag.jp/posts/2026/05/709740.html",
+      "article_title": "「感性」を実装する究極の未来型モビリティ  Sony Honda Mobility: AFEELA 1",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
     }
   ]
 }
