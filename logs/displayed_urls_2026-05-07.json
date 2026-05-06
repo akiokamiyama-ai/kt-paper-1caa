@@ -1,0 +1,33 @@
+{
+  "date": "2026-05-07",
+  "page1_urls": [
+    "https://www.bbc.com/news/articles/cvgz420ee0zo?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/c9wepldnl7po?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/c4g8zejyyr3o?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/c33243j44p8o?at_medium=RSS&at_campaign=rss"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://japan.zdnet.com/article/35247060/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2605/06/news005.html",
+    "web_repo": null
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/ai-can-close-performance-gap-between-higher-and-lower-educated-workers-by-maria-lombardi-2026-05",
+    "https://toyokeizai.net/articles/-/942822?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    null,
+    "https://www.mckinsey.com/featured-insights/future-of-asia/ayala-corporation-thriving-over-seven-generations",
+    "https://www.nikkei-science.com/?p=79507",
+    "https://www.mckinsey.com/capabilities/strategy-and-corporate-finance/our-insights/ai-strategy-and-the-future-of-work-oxford-economist-jean-paul-carvalho"
+  ],
+  "page4_urls": [
+    "https://www.shunjusha.co.jp/news/n120551.html",
+    "https://shinsho-plus.shueisha.co.jp/column/hibaku_nisei/34600",
+    "https://shinsho-plus.shueisha.co.jp/column/tadashi_tamura/34730"
+  ],
+  "page5_url": "https://news.cookpad.com/articles/63801",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-05/our-landscape-gutierrez-emblen-jarrett/",
+    "music": "https://natalie.mu/music/news/670894",
+    "outdoor": "https://thetrek.co/appalachian-trail/walking-to-mordor/"
+  }
+}
