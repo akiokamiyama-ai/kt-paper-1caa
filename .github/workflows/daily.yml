@@ -2,7 +2,10 @@ name: Daily Tribune Generation
 
 on:
   schedule:
-    - cron: '0 20 * * *'  # 20:00 UTC = 05:00 JST
+    # Sprint 5 ポストモーメント (2026-05-06): 5/6 朝刊が 9 時過ぎ着の遅延発生。
+    # GHA schedule の混雑時間帯遅延を回避するため、04:17 JST に変更。
+    # 中途半端な分数でジョブ集中時刻を避け、5:00 までの完了を狙う。
+    - cron: '17 19 * * *'  # 19:17 UTC = 04:17 JST
   workflow_dispatch: {}
 
 jobs:
