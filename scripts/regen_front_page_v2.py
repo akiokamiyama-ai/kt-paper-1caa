@@ -1924,6 +1924,40 @@ def replace_page_six(html_text: str, new_page_html: str) -> str:
 # Template date manipulation
 # ---------------------------------------------------------------------------
 
+def issue_number(target: date, archive_dir: Path | None = None) -> tuple[int, int]:
+    """Vol/No を archive ディレクトリ数ベースで計算する。
+
+    Vol: 年単位（2026 = Vol 1、2027 = Vol 2 ...）
+    No:  archive/YYYY-*.html のうち target.isoformat() 以下のファイル数
+         - 当日 archive が既存（再生成時）→ そのまま通番
+         - 当日 archive が無い（新規生成時）→ 既存数 + 1
+
+    archive_dir はテスト時に差し替え可能（デフォルトは ARCHIVE_DIR）。
+    """
+    if archive_dir is None:
+        archive_dir = ARCHIVE_DIR
+
+    vol = target.year - 2026 + 1
+
+    target_iso = target.isoformat()
+    target_year = str(target.year)
+
+    # YYYY-MM-DD.html パターンのみ対象（_logo_preview などは除外）
+    archives = sorted(
+        f.stem for f in archive_dir.glob(f"{target_year}-*.html")
+        if not f.stem.startswith("_")
+    )
+
+    earlier_or_same = [a for a in archives if a <= target_iso]
+
+    if target_iso in earlier_or_same:
+        no = len(earlier_or_same)
+    else:
+        no = len(earlier_or_same) + 1
+
+    return (vol, no)
+
+
 def _format_date_strings(target: date) -> dict[str, str]:
     """Return the strings used for masthead/title/footer substitution."""
     dow_en = _DOW_EN[target.weekday()]
@@ -1938,8 +1972,8 @@ def _format_date_strings(target: date) -> dict[str, str]:
 def update_template_date_strings(template_html: str, target: date) -> str:
     """Replace the 4/25 date strings in the template with target-date equivalents.
 
-    Also injects a 'Test Edition' tag into the colophon footer so the file
-    is unambiguously a Sprint 1 preview rather than a published issue.
+    Vol/No は ``issue_number(target)`` で動的採番し、masthead と colophon の
+    両方を一括置換する。
     """
     new = _format_date_strings(target)
     out = template_html
@@ -1959,12 +1993,9 @@ def update_template_date_strings(template_html: str, target: date) -> str:
         "Built in residence on April 25, 2026",
         f"Built in residence on {new['footer_built_in']}",
     )
-    # Inject "Test Edition" tag right before "For the reader's eyes only"
-    # in the colophon. Keep Vol. 1, No. 1 unchanged per Step B sign-off.
-    out = out.replace(
-        "Vol. 1, No. 1 · For the reader's eyes only",
-        "Vol. 1, No. 1 · Test Edition · For the reader's eyes only",
-    )
+    # Vol/No: 動的採番（archive 数ベース）。masthead と colophon の両方を置換。
+    vol, no = issue_number(target)
+    out = out.replace("Vol. 1, No. 1", f"Vol. {vol}, No. {no}")
     return out
 
 
