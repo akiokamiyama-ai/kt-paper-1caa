@@ -49,6 +49,11 @@
       "concept_id": "extended_mind",
       "name_ja": "拡張された心",
       "displayed_on": "2026-05-07"
+    },
+    {
+      "concept_id": "middle_voice",
+      "name_ja": "中動態",
+      "displayed_on": "2026-05-08"
     }
   ]
 }

@@ -177,6 +177,20 @@
       "ai_kamiyama_failed": false,
       "fallback_used": false,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-05-08",
+      "article_url": "https://www.axismag.jp/posts/2026/04/709651.html",
+      "article_title": "身体と心が立ち上がる杖  Karimoku Furniture: UP",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
     }
   ]
 }

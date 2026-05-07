@@ -1,0 +1,33 @@
+{
+  "date": "2026-05-08",
+  "page1_urls": [
+    "https://www.economist.com/finance-and-economics/2026/05/07/the-myth-of-the-petrodollar",
+    "https://www.economist.com/finance-and-economics/2026/05/07/deepseek-and-alibaba-rescue-chinas-office-landlords",
+    "https://www.fsight.jp/articles/-/52056",
+    "https://www.economist.com/finance-and-economics/2026/05/07/donald-trumps-foreign-policy-gets-a-muscular-finance-arm"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://japan.zdnet.com/article/35247000/",
+    "human_energy": "https://jinjibu.jp/news/detl/26346/",
+    "web_repo": "https://www.bc01.net/column/utilization-of-idle-land/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/viktor-orban-defeat-shows-why-authoritarian-efforts-to-control-the-press-tend-to-fail-by-amy-brouillette-2026-05",
+    "https://www.asahi.com/articles/ASV573JQTV57ULFA008M.html?ref=rss",
+    "https://foreignpolicy.com/2026/05/07/russsia-ukraine-war-putin-zelensky-victory-parade-attacks-drones-moscow/",
+    "https://www.mckinsey.com/featured-insights/mckinsey-on-books/author-talks-what-if-one-word-could-change-how-people-think",
+    "https://www.asahi.com/articles/ASV522FWXV52UHBI005M.html?ref=rss",
+    "https://www.project-syndicate.org/commentary/russia-democracy-at-local-government-level-can-spread-upward-by-roger-myerson-2026-05"
+  ],
+  "page4_urls": [
+    "https://www.shunjusha.co.jp/news/n120551.html",
+    "https://shinsho-plus.shueisha.co.jp/column/hibaku_nisei/34600",
+    "https://shinsho-plus.shueisha.co.jp/column/tadashi_tamura/34730"
+  ],
+  "page5_url": "https://www.axismag.jp/posts/2026/04/709651.html",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/05/06/rotten-dot-com/",
+    "music": "https://rockinon.com/news/detail/215095",
+    "outdoor": "https://thetrek.co/pacific-crest-trail/town-days-the-best-and-worst-part-of-the-pct/"
+  }
+}
