@@ -1,0 +1,33 @@
+{
+  "date": "2026-05-09",
+  "page1_urls": [
+    "https://www.bbc.com/news/articles/c62l9gnx775o?at_medium=RSS&at_campaign=rss",
+    "https://www.economist.com/finance-and-economics/2026/04/30/can-countries-grow-richer-by-exporting-people-not-goods",
+    "https://www.fsight.jp/articles/-/52057",
+    "https://www.fsight.jp/articles/-/52067"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/articles/2605/08/news073.html",
+    "human_energy": "https://jinjibu.jp/news/detl/26347/",
+    "web_repo": "https://www.bc01.net/new_fc/tenant-mado_202606/"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/05/08/george-schaller-biography-review-modern-conservation-environment-extinction/",
+    null,
+    "https://foreignpolicy.com/2026/05/08/brazil-china-byd-car-auto-ev-industry-labor/",
+    "https://www.mckinsey.com/industries/technology-media-and-telecommunications/our-insights/the-case-for-data-centers-in-space",
+    "https://www.webdoku.jp/shinbunka/2026/05/08/154254.html",
+    "https://nautil.us/where-does-novelty-come-from-1280609/"
+  ],
+  "page4_urls": [
+    "https://www.shunjusha.co.jp/news/n120551.html",
+    "https://shinsho-plus.shueisha.co.jp/column/hibaku_nisei/34600",
+    "https://shinsho-plus.shueisha.co.jp/column/tadashi_tamura/34730"
+  ],
+  "page5_url": "https://news.cookpad.com/articles/63810",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-04/i-bend-the-rivers-to-my-whim-six-poems-garcia-diaz-munby/",
+    "music": "https://natalie.mu/music/news/671330",
+    "outdoor": "https://sectionhiker.com/pennine-way-gear-list/"
+  }
+}

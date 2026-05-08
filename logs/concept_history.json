@@ -54,6 +54,11 @@
       "concept_id": "middle_voice",
       "name_ja": "中動態",
       "displayed_on": "2026-05-08"
+    },
+    {
+      "concept_id": "qualia",
+      "name_ja": "クオリア",
+      "displayed_on": "2026-05-09"
     }
   ]
 }
