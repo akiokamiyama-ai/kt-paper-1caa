@@ -59,6 +59,11 @@
       "concept_id": "qualia",
       "name_ja": "クオリア",
       "displayed_on": "2026-05-09"
+    },
+    {
+      "concept_id": "abduction",
+      "name_ja": "アブダクション",
+      "displayed_on": "2026-05-10"
     }
   ]
 }

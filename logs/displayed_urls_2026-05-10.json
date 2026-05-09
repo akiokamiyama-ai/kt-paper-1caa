@@ -1,0 +1,33 @@
+{
+  "date": "2026-05-10",
+  "page1_urls": [
+    "https://www.bbc.com/news/articles/cg4pkqv1lewo?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/clypzxl3lvqo?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/ce8pyyz5e0ro?at_medium=RSS&at_campaign=rss",
+    "https://www.fsight.jp/articles/-/52064"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://japan.zdnet.com/article/35247250/",
+    "human_energy": "https://jinjibu.jp/news/detl/26340/",
+    "web_repo": "https://www.bc01.net/new_fc/unimocc_202606/"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/05/08/iran-war-tehran-streets-normal-life-civilians-internet-protest/",
+    "https://www.fsight.jp/articles/-/52069",
+    "https://www.asahi.com/articles/ASV583QN4V58ULFA01PM.html?ref=rss",
+    "https://www.mckinsey.com/capabilities/operations/our-insights/global-lighthouse-voices-a-talk-with-citic-dicastals-badr-lahmoudi",
+    "https://www.webdoku.jp/shoten/takasaka/2026/05/09/110000.html",
+    "https://www.mckinsey.com/capabilities/mckinsey-technology/our-insights/quantums-bold-promise-what-business-leaders-need-to-know"
+  ],
+  "page4_urls": [
+    "https://shinsho-plus.shueisha.co.jp/column/bunkaisan_kodure/34449",
+    "https://shinsho-plus.shueisha.co.jp/news/34634",
+    "https://shinsho-plus.shueisha.co.jp/interview/watano_nishimura/34711"
+  ],
+  "page5_url": "https://www.houyhnhnm.jp/news/1124355/",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-05/a-little-blue-tail-sakisaka-kobayashi/",
+    "music": "https://greenroom.jp/post-5458/",
+    "outdoor": "https://thetrek.co/gr-131-volcanoes-clouds-and-lava-fields-on-la-palma/"
+  }
+}

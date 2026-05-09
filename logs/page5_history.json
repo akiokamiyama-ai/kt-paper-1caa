@@ -206,6 +206,20 @@
       "ai_kamiyama_failed": false,
       "fallback_used": false,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-05-10",
+      "article_url": "https://www.houyhnhnm.jp/news/1124355/",
+      "article_title": "メゾン マルジェラの白のハンドペイントを服ではなく空間に。2つのポップアップストアが伊勢丹新宿店にオープン。",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
     }
   ]
 }
