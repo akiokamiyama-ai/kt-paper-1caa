@@ -132,6 +132,12 @@ def is_pool_active(rotation: dict, today: date) -> bool:
     pool=[] + 将来 expires_on のとき「active と判定 → cache rebuild branch
     を試行 → 0件 → fall through で regenerate」という二重 fetch を引き起
     こしていた。空 pool は invalidate 扱いに統一。
+
+    v1.2（Sprint 6 Phase 2 / 2026-05-10 fix）: ``expires_on`` は
+    ``today + ROTATION_DAYS`` で計算されるが、``>=`` 比較だと
+    ``ROTATION_DAYS=3`` の意図に反して 4 日連続 active となる
+    (fence-post error)。``>`` 比較に変えて正しい 3 日サイクルに。
+    意味的には ``expires_on`` を「最初の inactive 日」と解釈する。
     """
     pool = rotation.get("pool")
     if not pool:
@@ -143,7 +149,10 @@ def is_pool_active(rotation: dict, today: date) -> bool:
         exp_d = date.fromisoformat(exp)
     except (ValueError, TypeError):
         return False
-    return exp_d >= today
+    # ``>`` で「expires_on の前日まで active、expires_on 当日から inactive」。
+    # 既存 page4_rotation.json (expires_on = generated_on + ROTATION_DAYS) を
+    # そのまま正しく解釈できる。
+    return exp_d > today
 
 
 # ---------------------------------------------------------------------------
