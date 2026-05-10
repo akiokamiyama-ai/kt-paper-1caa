@@ -45,8 +45,26 @@ import json
 from dataclasses import dataclass
 from datetime import date, datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 LOG_DIR = Path(__file__).resolve().parent.parent.parent / "logs"
+
+# Sprint 6 Phase 1 (2026-05-10): GHA runner is UTC, so the previous
+# ``date.today()`` (UTC-based) wrote llm_usage_<UTC date>.json — at JST
+# 06:29 the UTC clock still reads the previous day, so the 5/10 archive's
+# costs landed in llm_usage_2026-05-09.json. We anchor all "today" lookups
+# to JST so the log path matches the archive date.
+JST = ZoneInfo("Asia/Tokyo")
+
+
+def _jst_today() -> date:
+    """Return today's date in JST (Tribune's editorial day)."""
+    return datetime.now(JST).date()
+
+
+def _jst_now_iso() -> str:
+    """Return current JST timestamp (seconds precision, no tz suffix)."""
+    return datetime.now(JST).replace(tzinfo=None).isoformat(timespec="seconds")
 
 # Caps. Override at runtime by editing this file (intentionally not exposed
 # via env vars — these are durable safety bounds, not per-run knobs).
@@ -157,7 +175,7 @@ def check_caps(today: date | None = None) -> CapStatus:
     Phase 2 callers should consult this *before* each LLM call. ``ok=False``
     means the daily cap has been reached and further calls must be skipped.
     """
-    d = today or date.today()
+    d = today or _jst_today()
     data = _load_today(d)
     totals = data["totals"]
     calls = totals.get("calls", 0)
@@ -199,7 +217,7 @@ def record_call(
     Sprint 6 Phase 1 added it for per-page cost analysis. Defaults to
     ``"untagged"`` so call sites can be migrated incrementally.
     """
-    d = today or date.today()
+    d = today or _jst_today()
     data = _load_today(d)
     cost = estimate_cost(
         model,
@@ -209,7 +227,7 @@ def record_call(
         cache_read_tokens=cache_read_tokens,
     )
     entry = {
-        "ts": datetime.now().isoformat(timespec="seconds"),
+        "ts": _jst_now_iso(),
         "tag": tag,
         "model": model,
         "input_tokens": int(input_tokens),
@@ -237,5 +255,5 @@ def record_call(
 
 def daily_summary(today: date | None = None) -> dict:
     """Return today's totals (or zeroed totals if no log yet)."""
-    d = today or date.today()
+    d = today or _jst_today()
     return _load_today(d)["totals"]
