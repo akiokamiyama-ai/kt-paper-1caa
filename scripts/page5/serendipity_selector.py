@@ -61,19 +61,28 @@ LOOKBACK_DAYS: int = 30
 SELECTION_POOL_SIZE: int = 5
 PER_FETCH_LIMIT: int = 8
 
-# 第6面で対象とする category（sources/*.md ファイル名 stem 由来）。
-# companies は 3社事業文脈なので除外（page2 専用）、
-# それ以外は全 category を未読領域候補に含める。
+# Page V serendipity 対象 category（sources/*.md ファイル名 stem 由来）。
+#
+# Sprint 6 Phase 2 (2026-05-10) で 8 種 → 5 種に絞った：
+#   除外: cooking      (Page VI 専用、URL 持たない設計で count に積まれず常に最少候補)
+#   除外: business     (Page I/II/III の本領、重複領域)
+#   除外: geopolitics  (Page I/III の本領、重複領域)
+#   採用: culture, academic, books, music, outdoor
+#
+# share/01 の「普段読まない領域」設計思想と整合。companies はそもそも
+# page2 専用なので最初から除外。
 ELIGIBLE_CATEGORIES: tuple[str, ...] = (
-    "business",
-    "geopolitics",
     "academic",
     "books",
+    "culture",
     "music",
     "outdoor",
-    "cooking",
-    "culture",
 )
+
+# Sprint 6 Phase 2: page5 自身の過去採用カテゴリに penalty を加算して
+# 連続採用を構造的に抑制する。
+HISTORY_PENALTY_DAYS: int = 7
+HISTORY_PENALTY_PER_USE: int = 50  # 他 page の category counts (~30) を上回る重み
 
 
 _HTML_TAG_RE = re.compile(r"<[^>]+>")
@@ -294,6 +303,44 @@ def _collect_displayed_urls_with_categories(
 # Step 3〜4: identify least-shown category (with random tie-break)
 # ---------------------------------------------------------------------------
 
+def _apply_history_penalty(
+    counts: Counter,
+    history: list[dict],
+    today: date,
+    *,
+    days_back: int = HISTORY_PENALTY_DAYS,
+    penalty_per_use: int = HISTORY_PENALTY_PER_USE,
+) -> Counter:
+    """page5 自身の過去採用カテゴリに penalty を加算したカウントを返す.
+
+    Sprint 6 Phase 2 (2026-05-10) 追加。``_collect_displayed_urls_with_categories``
+    が返す全 page 横断の counts では、business / geopolitics / academic / books が
+    他面で頻繁に表示されるため count が高い → 低 count の category（特に
+    culture）が serendipity で連続採用される偏りが発生（5/4-5/10 観察）。
+
+    page5 自身の history から過去 ``days_back`` 日に採用された category を
+    抽出し、count に ``penalty_per_use`` × 採用回数を加算することで、
+    最少候補から押し出す。``penalty_per_use=50`` は他 page の典型的な
+    category count (~30) を上回るよう設定。
+
+    今日 (``today``) の採用は history にまだ無いので除外される。
+    ``cutoff = today - days_back``、対象期間は ``[cutoff, today)``。
+    """
+    penalized = Counter(counts)
+    cutoff = today - timedelta(days=days_back)
+    for entry in history:
+        try:
+            d = date.fromisoformat(entry.get("displayed_on", ""))
+        except (ValueError, TypeError):
+            continue
+        if d < cutoff or d >= today:
+            continue
+        cat = entry.get("article_category")
+        if cat:
+            penalized[cat] += penalty_per_use
+    return penalized
+
+
 def _least_shown_categories(
     counts: Counter,
     *,
@@ -478,6 +525,11 @@ def select_for_today(
     displayed_urls, counts = _collect_displayed_urls_with_categories(
         today=target_date, registry=registry,
     )
+
+    # Sprint 6 Phase 2: page5 自身の過去採用 category に penalty 加算
+    # （連続採用を構造的に抑制）
+    page5_history = load_history(path=history_path).get("history", [])
+    counts = _apply_history_penalty(counts, page5_history, target_date)
 
     # Step 3〜4: pick target category (with tie randomization)
     chosen_cat, tie_candidates = pick_target_category(counts, rng=rng)
