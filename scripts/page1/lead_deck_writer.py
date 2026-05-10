@@ -198,6 +198,7 @@ def write_lead_deck(
             model=model or llm.DEFAULT_MODEL,
             max_tokens=max_tokens,
             cache_system=True,
+            tag="page1.lead_deck",
         )
     except Exception as e:
         elapsed_ms = int((time.monotonic() - started) * 1000)

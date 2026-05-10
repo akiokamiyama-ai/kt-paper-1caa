@@ -100,6 +100,7 @@ def write_editorial(
             model=model or llm.DEFAULT_MODEL,
             max_tokens=max_tokens,
             cache_system=False,
+            tag="editorial",
         )
     except Exception as e:
         elapsed_ms = int((time.monotonic() - started) * 1000)

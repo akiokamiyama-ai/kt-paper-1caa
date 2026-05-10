@@ -272,6 +272,7 @@ def generate_cooking_column(
             model=model,
             max_tokens=DEFAULT_MAX_TOKENS,
             cache_system=True,
+            tag="page6.cooking",
         )
         cost = response.cost_usd
         parsed, parse_err = _parse_response(response.text)

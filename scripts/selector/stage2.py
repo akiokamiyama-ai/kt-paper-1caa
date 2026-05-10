@@ -466,6 +466,7 @@ def evaluate_batch(
             model=model,
             max_tokens=max_tokens,
             cache_system=True,
+            tag="stage2",
         )
         raw_excerpt = llm.redact_key((last_response.text or "")[:400])
         parsed, parse_err = _parse_response_json(last_response.text)

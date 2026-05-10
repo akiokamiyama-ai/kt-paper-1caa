@@ -678,6 +678,7 @@ def evaluate_management_relevance(
             model=model,
             max_tokens=DEFAULT_MAX_TOKENS_STEP1,
             cache_system=True,
+            tag="page2.step1",
         )
         cost += last_response.cost_usd
         raw_excerpt = llm.redact_key((last_response.text or "")[:400])
@@ -1089,6 +1090,7 @@ def generate_morning_question(
             model=model,
             max_tokens=DEFAULT_MAX_TOKENS_STEP2,
             cache_system=True,
+            tag="page2.step2",
         )
         total_cost += last_response.cost_usd
         raw_excerpt = llm.redact_key((last_response.text or "")[:400])

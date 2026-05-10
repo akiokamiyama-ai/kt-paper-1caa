@@ -187,12 +187,17 @@ def record_call(
     *,
     cache_creation_tokens: int = 0,
     cache_read_tokens: int = 0,
+    tag: str = "untagged",
 ) -> dict:
     """Append one call's usage to today's log and return updated totals.
 
     Cache token fields are keyword-only with default 0, so existing callers
     keep working unchanged. Stage 2 passes them so the cost estimate reflects
     Anthropic's tiered cache pricing.
+
+    ``tag`` identifies the caller (e.g. ``"page2.step1"``, ``"editorial"``);
+    Sprint 6 Phase 1 added it for per-page cost analysis. Defaults to
+    ``"untagged"`` so call sites can be migrated incrementally.
     """
     d = today or date.today()
     data = _load_today(d)
@@ -205,6 +210,7 @@ def record_call(
     )
     entry = {
         "ts": datetime.now().isoformat(timespec="seconds"),
+        "tag": tag,
         "model": model,
         "input_tokens": int(input_tokens),
         "output_tokens": int(output_tokens),

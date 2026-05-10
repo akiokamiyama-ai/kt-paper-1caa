@@ -426,6 +426,7 @@ def generate_why_important(
             model=model,
             max_tokens=DEFAULT_MAX_TOKENS,
             cache_system=True,
+            tag="page1.why_important",
         )
         cost += response.cost_usd
         parsed, parse_err = _parse_response(response.text)

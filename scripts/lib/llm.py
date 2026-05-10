@@ -104,6 +104,7 @@ def call_claude(
     max_tokens: int = DEFAULT_MAX_TOKENS,
     cache_system: bool = True,
     temperature: float | None = None,
+    tag: str = "untagged",
 ) -> ClaudeResponse:
     """Single-turn call to Claude with optional prompt caching on the system message.
 
@@ -202,6 +203,7 @@ def call_claude(
         output_tokens,
         cache_creation_tokens=cache_creation_tokens,
         cache_read_tokens=cache_read_tokens,
+        tag=tag,
     )
 
     cost = llm_usage.estimate_cost(
@@ -233,6 +235,7 @@ def call_claude_with_retry(
     max_tokens: int = DEFAULT_MAX_TOKENS,
     cache_system: bool = True,
     max_attempts: int = 3,
+    tag: str = "untagged",
 ) -> ClaudeResponse:
     """Wrap call_claude with exponential backoff for transient API errors.
 
@@ -251,6 +254,7 @@ def call_claude_with_retry(
                 model=model,
                 max_tokens=max_tokens,
                 cache_system=cache_system,
+                tag=tag,
             )
         except CapExceededError:
             # The cap is a hard wall — no point retrying.

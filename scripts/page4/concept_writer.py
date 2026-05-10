@@ -73,6 +73,7 @@ def write_essay(
             model=model,
             max_tokens=max_tokens,
             cache_system=True,
+            tag="page4.concept",
         )
         essay = (response.text or "").strip()
         cost = response.cost_usd

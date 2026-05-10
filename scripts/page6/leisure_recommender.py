@@ -271,6 +271,7 @@ def _generate_column(area: str, article: dict) -> tuple[dict, float, bool]:
             model=DEFAULT_MODEL,
             max_tokens=DEFAULT_MAX_TOKENS,
             cache_system=True,
+            tag="page6.leisure",
         )
         cost = response.cost_usd
         parsed, err = _parse_column_response(response.text)
