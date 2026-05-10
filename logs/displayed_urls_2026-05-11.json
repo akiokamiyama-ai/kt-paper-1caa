@@ -1,0 +1,33 @@
+{
+  "date": "2026-05-11",
+  "page1_urls": [
+    "https://www.fsight.jp/articles/-/52070",
+    "https://www.fsight.jp/articles/-/52069",
+    "https://www.bbc.com/news/articles/cgjpv9pdnpwo?at_medium=RSS&at_campaign=rss",
+    "https://www.economist.com/finance-and-economics/2026/05/07/unicredits-lowball-bid-for-commerzbank-causes-consternation"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://japan.zdnet.com/article/35247253/",
+    "human_energy": "https://jinjibu.jp/news/detl/26336/",
+    "web_repo": "https://www.bc01.net/new_fc/kxpilates_202606/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/could-russia-follow-the-hormuz-playbook-in-the-baltic-and-black-seas/",
+    "https://www.asahi.com/articles/ASV5B0SZ6V5BULFA00BM.html?ref=rss",
+    "http://www3.nhk.or.jp/news/html/20260508/k10015116961000.html",
+    "https://www.mckinsey.com/industries/logistics/our-insights/code-and-cargo-how-ai-could-change-freight-logistics",
+    "https://www.webdoku.jp/shoten/takasaka/2026/05/07/110000.html",
+    "https://warontherocks.com/between-intent-and-capability-assessing-the-lack-of-iranian-attacks-on-the-u-s-homeland/"
+  ],
+  "page4_urls": [
+    "https://shinsho-plus.shueisha.co.jp/column/bunkaisan_kodure/34449",
+    "https://shinsho-plus.shueisha.co.jp/news/34634",
+    "https://shinsho-plus.shueisha.co.jp/interview/watano_nishimura/34711"
+  ],
+  "page5_url": "https://natalie.mu/music/news/671454",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/04/29/all-my-dads-sons/",
+    "music": "https://greenroom.jp/post-5417/",
+    "outdoor": "https://thetrek.co/hhh-chapter-11-too-much-baggage/"
+  }
+}

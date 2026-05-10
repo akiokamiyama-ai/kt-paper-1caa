@@ -220,6 +220,20 @@
       "ai_kamiyama_failed": false,
       "fallback_used": false,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-05-11",
+      "article_url": "https://natalie.mu/music/news/671454",
+      "article_title": "日向坂46四期生が大都会を駆け巡る、映画「ゼンブ・オブ・トーキョー」をNetflixで",
+      "article_category": "music",
+      "tie_candidates": [
+        "music"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
     }
   ]
 }

@@ -64,6 +64,11 @@
       "concept_id": "abduction",
       "name_ja": "アブダクション",
       "displayed_on": "2026-05-10"
+    },
+    {
+      "concept_id": "falsifiability",
+      "name_ja": "反証可能性",
+      "displayed_on": "2026-05-11"
     }
   ]
 }
