@@ -1,0 +1,32 @@
+{
+  "date": "2026-05-12",
+  "page1_urls": [
+    "https://www.economist.com/finance-and-economics/2026/05/11/china-wants-more-robots-but-not-fewer-workers",
+    "https://www.economist.com/finance-and-economics/2026/05/11/america-is-experiencing-a-productivity-miracle",
+    "https://www.bbc.com/news/articles/cd9pn581xzwo?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/cr71d8vyjv0o?at_medium=RSS&at_campaign=rss"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://japan.zdnet.com/article/35247344/",
+    "human_energy": "https://jinjibu.jp/news/detl/26346/",
+    "web_repo": "https://www.bc01.net/column/utilization-of-idle-land/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/conflict-casevac-and-the-golden-hour-in-the-age-of-persistent-surveillance/",
+    null,
+    "https://foreignpolicy.com/2026/05/11/governance-artificial-intelligence-ai-superintelligence-agi/",
+    "https://www.mckinsey.com/capabilities/tech-and-ai/our-insights/rewiring-for-ai-from-ambition-to-advantage",
+    "https://wordswithoutborders.org/read/article/2026-05/a-fist-loaded-with-the-future-three-microessays-texon-howard/",
+    "https://www.shunjusha.co.jp/news/n126016.html"
+  ],
+  "page4_urls": [
+    "https://shinsho-plus.shueisha.co.jp/news/34634",
+    "https://shinsho-plus.shueisha.co.jp/interview/watano_nishimura/34711"
+  ],
+  "page5_url": "https://thetrek.co/gr-131-a-stormy-ending-on-el-hierro/",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-05/a-fist-loaded-with-the-future-three-microessays-texon-howard/",
+    "music": "https://greenroom.jp/post-5381/",
+    "outdoor": "https://thetrek.co/gr-131-a-stormy-ending-on-el-hierro/"
+  }
+}

@@ -69,6 +69,11 @@
       "concept_id": "falsifiability",
       "name_ja": "反証可能性",
       "displayed_on": "2026-05-11"
+    },
+    {
+      "concept_id": "dissipative_structure",
+      "name_ja": "散逸構造",
+      "displayed_on": "2026-05-12"
     }
   ]
 }
