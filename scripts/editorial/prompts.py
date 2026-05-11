@@ -18,7 +18,7 @@ EDITORIAL_PROMPT_TEMPLATE = """\
   Page I    国際ニュース + sidebar
   Page II   自社グループ news（こころみ、ヒューマンエナジー、ウェブリポ）
   Page III  General News（地政学・経済・規制・経営・テック・自然科学）
-  Page IV   Arts & Letters（今週の概念 + 学術記事）
+  Page IV   Arts & Letters（今日の概念 + 学術記事）
   Page V    Columns & Serendipity（セレンディピティ記事 + AIかみやまの一筆）
   Page VI   Leisure（読書・音楽・アウトドア・料理）
 

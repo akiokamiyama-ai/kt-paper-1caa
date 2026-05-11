@@ -1296,7 +1296,7 @@ def _render_page4_concept_column(concept: dict, essay: str) -> str:
     thinkers = _esc(", ".join(concept.get("thinkers", [])))
     return f"""
     <article class="concept-column" lang="ja">
-      <div class="kicker">今週の概念</div>
+      <div class="kicker">今日の概念</div>
       <h3 class="concept-title">
         {name_ja}
         <span class="concept-en">{name_en}</span>

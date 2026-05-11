@@ -160,7 +160,7 @@ def test_system_prompt_passed():
     with _StubLLM(text="ok") as stub:
         concept_writer.write_essay(_sample_concept())
     sys_arg = stub.calls[0].get("system", "")
-    ok = "今週の概念" in sys_arg and "400〜600字" in sys_arg
+    ok = "今日の概念" in sys_arg and "400〜600字" in sys_arg
     _check("c1 system prompt sent: includes spec rules", ok)
 
 
