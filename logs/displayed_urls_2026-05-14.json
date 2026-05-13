@@ -1,0 +1,33 @@
+{
+  "date": "2026-05-14",
+  "page1_urls": [
+    "https://www.economist.com/finance-and-economics/2026/05/12/how-the-world-has-avoided-an-oil-catastrophe-so-far",
+    "https://www.bbc.com/news/articles/crmp428zylko?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/cj37z8357e5o?at_medium=RSS&at_campaign=rss",
+    "https://www.fsight.jp/articles/-/52072"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/news/articles/2605/13/news097.html",
+    "human_energy": "https://jinjibu.jp/news/detl/26340/",
+    "web_repo": "https://www.bc01.net/new_fc/unimocc_202606/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/america-autism-obsession-reflects-anxieties-future-tech-identity-by-ivan-ascher-2026-05",
+    "https://www.asahi.com/articles/ASV5F3WJMV5FULFA019M.html?ref=rss",
+    "https://warontherocks.com/analyzing-trumps-foreign-policy-and-its-international-implications/",
+    "https://www.mckinsey.com/mhi/our-insights/care-for-women-investing-in-care-delivery-to-improve-womens-lives-and-livelihoods",
+    null,
+    "https://www.shunjusha.co.jp/news/n126097.html"
+  ],
+  "page4_urls": [
+    "https://shinsho-plus.shueisha.co.jp/interview/higuchi_nakaji/34865",
+    "https://shinsho-plus.shueisha.co.jp/column/bunkaisan_kodure/34467",
+    "https://shinsho-plus.shueisha.co.jp/news/34822"
+  ],
+  "page5_url": "https://plato.stanford.edu/entries/buber/",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-05/the-city-and-the-writer-in-al-kabri-with-mai-serhan-nathalie-handal/",
+    "music": "https://natalie.mu/music/news/671900",
+    "outdoor": "https://thetrek.co/trump-administration-repeals-public-lands-conservation-rule/"
+  }
+}
