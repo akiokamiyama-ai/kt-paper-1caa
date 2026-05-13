@@ -1,0 +1,33 @@
+{
+  "date": "2026-05-13",
+  "page1_urls": [
+    "https://www.economist.com/finance-and-economics/2026/05/12/america-and-china-are-shielding-the-world-from-an-oil-catastrophe",
+    "https://www.bbc.com/news/articles/cwy2rnyg50zo?at_medium=RSS&at_campaign=rss",
+    "https://www.economist.com/finance-and-economics/2026/05/12/index-rebalancing-is-now-the-biggest-event-in-markets",
+    "https://www.fsight.jp/articles/-/52074"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/articles/2605/12/news144.html",
+    "human_energy": "https://jinjibu.jp/news/detl/26347/",
+    "web_repo": null
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/05/12/tooze-k-shaped-economy-us-ai-cantillon-wealth-distribution/",
+    "https://toyokeizai.net/articles/-/944012?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://www.bloomberg.com/news/videos/2026-05-12/buyers-holding-off-on-nyc-brown-harris-stevens-ceo-video",
+    "https://www.mckinsey.com/mgi/our-research/agents-robots-and-us-how-ai-reshapes-work-and-skills-in-europe",
+    "https://www.webdoku.jp/shoten/takasaka/2026/05/12/113044.html",
+    "https://www.mckinsey.com/industries/financial-services/our-insights/talking-with-nigel-morris-cofounder-of-qed-investors"
+  ],
+  "page4_urls": [
+    "https://shinsho-plus.shueisha.co.jp/interview/higuchi_nakaji/34865",
+    "https://shinsho-plus.shueisha.co.jp/column/bunkaisan_kodure/34467",
+    "https://shinsho-plus.shueisha.co.jp/news/34822"
+  ],
+  "page5_url": "https://www.theparisreview.org/blog/2026/05/12/the-ignorant-art-historian-the-blind-mans-meal/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/05/12/the-ignorant-art-historian-the-blind-mans-meal/",
+    "music": "https://natalie.mu/music/news/671742",
+    "outdoor": "https://thetrek.co/appalachian-trail/appalachian-trail-two-month-update/"
+  }
+}

@@ -248,6 +248,20 @@
       "ai_kamiyama_failed": false,
       "fallback_used": false,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-05-13",
+      "article_url": "https://www.theparisreview.org/blog/2026/05/12/the-ignorant-art-historian-the-blind-mans-meal/",
+      "article_title": "The Ignorant Art Historian: The Blind Man’s Meal",
+      "article_category": "books",
+      "tie_candidates": [
+        "books"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
     }
   ]
 }
