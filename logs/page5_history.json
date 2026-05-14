@@ -276,6 +276,20 @@
       "ai_kamiyama_failed": false,
       "fallback_used": false,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-05-15",
+      "article_url": "https://natalie.mu/music/news/672056",
+      "article_title": "ひなた坂46「Empty」ミュージックビデオ公開、葛藤を抱えながら前へ進もうともがく姿を描く",
+      "article_category": "music",
+      "tie_candidates": [
+        "music"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
     }
   ]
 }

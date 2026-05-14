@@ -1,0 +1,32 @@
+{
+  "date": "2026-05-15",
+  "page1_urls": [
+    "https://www.economist.com/finance-and-economics/2026/05/14/the-jobs-apocalypse-a-very-short-history",
+    "https://www.economist.com/finance-and-economics/2026/05/13/is-ai-putting-graduates-out-of-work-already",
+    "https://www.fsight.jp/articles/-/52075",
+    "https://www.bbc.com/news/articles/c99l1zzp8xzo?at_medium=RSS&at_campaign=rss"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/news/articles/2605/14/news054.html",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2605/14/news006.html",
+    "web_repo": null
+  },
+  "page3_urls": [
+    "https://warontherocks.com/the-missing-navies-the-hormuz-crisis-and-the-limits-of-americas-indo-pacific-partnerships/",
+    "http://www3.nhk.or.jp/news/html/20260514/k10015121241000.html",
+    "https://www.project-syndicate.org/commentary/uzbekistan-uznif-ipo-marks-turning-point-for-central-asia-economy-by-djoomart-otorbaev-2026-05",
+    "https://www.mckinsey.com/industries/education/how-we-help-clients/ehbcu-a-first-of-its-kind-hbcu-online-consortium-to-expand-economic-mobility-through-education",
+    "https://www.webdoku.jp/column/sugie/2026/05/14/172718.html",
+    "https://shinsho-plus.shueisha.co.jp/interview/higuchi_nakaji/34865"
+  ],
+  "page4_urls": [
+    "https://shinsho-plus.shueisha.co.jp/interview/higuchi_nakaji/34865",
+    "https://shinsho-plus.shueisha.co.jp/news/34822"
+  ],
+  "page5_url": "https://natalie.mu/music/news/672056",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/05/14/the-literary-agents-invisible-hand-laura-b-mcgrath-on-middlemen/",
+    "music": "https://natalie.mu/music/news/672056",
+    "outdoor": "https://thetrek.co/from-burnout-to-the-backcountry/"
+  }
+}
