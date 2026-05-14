@@ -103,39 +103,53 @@ def test_format_weather_none():
 # ---------------------------------------------------------------------------
 
 def test_fetch_weather_success():
+    """5/14 失敗パターン再現：早朝/夜の霧雨 (51) はあるが、日中 6-18 時は晴れ (1)。
+
+    Sprint 6 fix 後は hourly[6:19] の最頻値を採用するため、code=1 が選ばれる。
+    旧実装（daily.weather_code）なら 51 になっていた問題を解消。
+    """
     payload = {
         "daily": {
             "time": ["2026-05-04"],
             "temperature_2m_max": [25.1],
             "temperature_2m_min": [15.2],
-            "weather_code": [51],
-        }
+        },
+        "hourly": {
+            # 24 時間：00-05 時は霧雨 (51)、06-18 時は晴れ (1)、19-23 時は曇り (3)
+            "weather_code": (
+                [51] * 6   # 00:00-05:59
+                + [1] * 13  # 06:00-18:59 ← daytime window
+                + [3] * 5   # 19:00-23:59
+            ),
+        },
     }
     orig = _install_mock_urlopen(payload=payload)
     try:
         w = weather.fetch_weather(latitude=35.6895, longitude=139.6917)
     finally:
         _restore_urlopen(orig)
-    _check("c1 fetch_weather OK → {min:15, max:25, code:51}",
-           w == {"min": 15, "max": 25, "code": 51}, f"got {w}")
+    _check("c1 fetch_weather OK → {min:15, max:25, code:1 (日中代表)}",
+           w == {"min": 15, "max": 25, "code": 1}, f"got {w}")
 
 
 def test_fetch_weather_rounds():
-    """Floats like 25.7 are rounded to 26."""
+    """Floats like 25.7 are rounded to 26. weather_code は hourly から."""
     payload = {
         "daily": {
             "time": ["2026-05-04"],
             "temperature_2m_max": [25.7],
             "temperature_2m_min": [15.4],
-            "weather_code": [3],
-        }
+        },
+        "hourly": {
+            "weather_code": [3] * 24,  # 終日 曇り
+        },
     }
     orig = _install_mock_urlopen(payload=payload)
     try:
         w = weather.fetch_weather(latitude=35.6895, longitude=139.6917)
     finally:
         _restore_urlopen(orig)
-    _check("c2 rounding: 25.7→26, 15.4→15",
+    _check("c2 rounding: 25.7→26, 15.4→15, code=3",
            w == {"min": 15, "max": 26, "code": 3}, f"got {w}")
 
 
@@ -163,13 +177,94 @@ def test_fetch_weather_missing_daily():
 
 
 def test_fetch_weather_empty_arrays():
-    payload = {"daily": {"temperature_2m_max": [], "temperature_2m_min": [], "weather_code": []}}
+    payload = {
+        "daily": {"temperature_2m_max": [], "temperature_2m_min": []},
+        "hourly": {"weather_code": []},
+    }
     orig = _install_mock_urlopen(payload=payload)
     try:
         w = weather.fetch_weather(latitude=35.6895, longitude=139.6917)
     finally:
         _restore_urlopen(orig)
     _check("d3 empty arrays → None", w is None)
+
+
+def test_fetch_weather_hourly_missing():
+    """daily の温度はあるが hourly が空 → None で fallback（中途半端な表示を避ける）."""
+    payload = {
+        "daily": {
+            "time": ["2026-05-14"],
+            "temperature_2m_max": [24.0],
+            "temperature_2m_min": [14.0],
+        },
+        "hourly": {"weather_code": []},
+    }
+    orig = _install_mock_urlopen(payload=payload)
+    try:
+        w = weather.fetch_weather(latitude=35.6895, longitude=139.6917)
+    finally:
+        _restore_urlopen(orig)
+    _check("d4 hourly 欠落 → None（caller の fallback 経路へ）",
+           w is None, f"got {w}")
+
+
+# ---------------------------------------------------------------------------
+# (f) 5/14 実データ回帰テスト：早朝の minor 霧雨に引っ張られない
+# ---------------------------------------------------------------------------
+
+def test_5_14_regression():
+    """5/14 失敗パターンの再現：実観測 hourly で晴れ系が支配的なケース.
+
+    実 API レスポンスから取った 24 時間分の値（[2,1,1,2,2,2,2,1,1,1,1,1,0,1,
+    1,2,1,0,1,1,1,1,1,1]）で、daytime 6-18 時の最頻値が 1 (晴れ) となる
+    ことを確認。旧 daily ロジックでは 51 (霧雨) を返していた問題が解消。
+    """
+    payload = {
+        "daily": {
+            "time": ["2026-05-14"],
+            "temperature_2m_max": [23.3],
+            "temperature_2m_min": [14.9],
+        },
+        "hourly": {
+            "weather_code": [
+                2, 1, 1, 2, 2, 2,    # 00-05 時
+                2, 1, 1, 1, 1, 1, 0, 1, 1, 2, 1, 0, 1,  # 06-18 時 (13)
+                1, 1, 1, 1, 1,        # 19-23 時
+            ],
+        },
+    }
+    orig = _install_mock_urlopen(payload=payload)
+    try:
+        w = weather.fetch_weather(latitude=35.6895, longitude=139.6917)
+    finally:
+        _restore_urlopen(orig)
+    _check("f1 5/14 実データ：晴れ (1) が選ばれる（霧雨ではない）",
+           w == {"min": 15, "max": 23, "code": 1}, f"got {w}")
+
+
+def test_drizzle_dominant_daytime():
+    """日中が霧雨支配なら、霧雨 (51) が選ばれる（過剰修正していないこと）."""
+    payload = {
+        "daily": {
+            "time": ["2026-05-14"],
+            "temperature_2m_max": [18.0],
+            "temperature_2m_min": [12.0],
+        },
+        "hourly": {
+            "weather_code": (
+                [1] * 6      # 00-05 朝までは晴れ
+                + [51] * 13  # 06-18 終日霧雨 ← daytime window
+                + [1] * 5    # 19-23 夜は晴れ
+            ),
+        },
+    }
+    orig = _install_mock_urlopen(payload=payload)
+    try:
+        w = weather.fetch_weather(latitude=35.6895, longitude=139.6917)
+    finally:
+        _restore_urlopen(orig)
+    _check("f2 日中霧雨支配 → 霧雨 (51) を正しく選ぶ",
+           w == {"min": 12, "max": 18, "code": 51}, f"got {w}")
 
 
 # ---------------------------------------------------------------------------
@@ -203,6 +298,11 @@ def main() -> int:
     test_fetch_weather_network_error()
     test_fetch_weather_missing_daily()
     test_fetch_weather_empty_arrays()
+    test_fetch_weather_hourly_missing()
+    print()
+    print("(f) 5/14 回帰テスト & 日中支配の確認:")
+    test_5_14_regression()
+    test_drizzle_dominant_daytime()
     print()
     print("(e) Location constants:")
     test_location_constants()

@@ -20,9 +20,18 @@ import json
 import sys
 import urllib.error
 import urllib.request
+from collections import Counter
 
 OPEN_METEO_BASE = "https://api.open-meteo.com/v1/forecast"
 TIMEOUT_SEC = 3
+
+# Sprint 6 (2026-05-14 fix): hourly weather_code の集約時間帯。
+# Open-Meteo の daily.weather_code は「minor 現象含む最 severe」を返す仕様
+# のため、朝の数時間の霧雨予報が daily 代表となって日中の実天気と乖離する
+# 問題があった。日中 6-18 時 (13 時間) の最頻値を採用することで、新聞らしい
+# 「今日の代表天気」表現に揃える。
+DAYTIME_START_HOUR: int = 6
+DAYTIME_END_HOUR_EXCLUSIVE: int = 19  # hourly[6:19] = 6:00〜18:00 の値
 
 
 # WMO Weather Interpretation Codes → 日本語簡潔表現。新聞風の硬さを優先、
@@ -91,7 +100,8 @@ def fetch_weather(
     """
     params = (
         f"latitude={latitude}&longitude={longitude}"
-        "&daily=temperature_2m_max,temperature_2m_min,weather_code"
+        "&daily=temperature_2m_max,temperature_2m_min"
+        "&hourly=weather_code"
         "&timezone=Asia/Tokyo&forecast_days=1"
     )
     if elevation is not None:
@@ -104,16 +114,25 @@ def fetch_weather(
         print(f"  [weather] FAIL {latitude},{longitude}: {type(e).__name__}", file=sys.stderr)
         return None
     daily = data.get("daily") or {}
+    hourly = data.get("hourly") or {}
     try:
         max_arr = daily.get("temperature_2m_max") or []
         min_arr = daily.get("temperature_2m_min") or []
-        code_arr = daily.get("weather_code") or []
-        if not (max_arr and min_arr and code_arr):
+        if not (max_arr and min_arr):
             return None
+        # 日中 6-18 時 (13 時間) の最頻値で「今日の代表天気」を表現する。
+        # 朝刊生成時刻の forecast に含まれた minor 現象（早朝霧雨など）を希釈。
+        hourly_codes = hourly.get("weather_code") or []
+        daytime = hourly_codes[DAYTIME_START_HOUR:DAYTIME_END_HOUR_EXCLUSIVE]
+        if not daytime:
+            # hourly が欠落していると代表天気が決まらない。温度だけ表示する
+            # 中途半端な状態を避けて None で fallback（caller 側で "-" 等）。
+            return None
+        code = Counter(daytime).most_common(1)[0][0]
         return {
             "min": round(min_arr[0]),
             "max": round(max_arr[0]),
-            "code": int(code_arr[0]),
+            "code": int(code),
         }
     except (TypeError, ValueError, IndexError) as e:
         print(f"  [weather] parse error: {e}", file=sys.stderr)
