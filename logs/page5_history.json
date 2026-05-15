@@ -290,6 +290,20 @@
       "ai_kamiyama_failed": false,
       "fallback_used": false,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-05-16",
+      "article_url": "https://www.axismag.jp/posts/2026/05/707251.html",
+      "article_title": "都市交通における「迷い」をデザインで解消。セビリア地下鉄、新たな統合サインシステムを導入",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
     }
   ]
 }

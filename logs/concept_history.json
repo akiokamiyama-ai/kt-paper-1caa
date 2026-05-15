@@ -89,6 +89,11 @@
       "concept_id": "ma",
       "name_ja": "間（ま）",
       "displayed_on": "2026-05-15"
+    },
+    {
+      "concept_id": "embodiment",
+      "name_ja": "身体性",
+      "displayed_on": "2026-05-16"
     }
   ]
 }

@@ -1,0 +1,33 @@
+{
+  "date": "2026-05-16",
+  "page1_urls": [
+    "https://www.economist.com/finance-and-economics/2026/05/07/the-myth-of-the-petrodollar",
+    "https://www.bbc.com/news/articles/cly039rr2mgo?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/cg7pj8p5mv4o?at_medium=RSS&at_campaign=rss",
+    "https://www.fsight.jp/articles/-/52078"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/articles/2605/15/news094.html",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2605/15/news020.html",
+    "web_repo": "https://www.bc01.net/article/cocofump_202606/"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/05/15/russia-war-game-nato-invasion-baltics-ukraine-putin-germany-ernstfall/",
+    "http://www3.nhk.or.jp/news/html/20260515/k10015122241000.html",
+    "https://locusmag.com/2026/05/2026-british-book-awards-book-of-the-year-winners/",
+    "https://www.mckinsey.com/institute-for-economic-mobility/our-insights/sell-close-or-continue-the-transfer-of-us-businesses-is-at-a-crossroads",
+    "https://www.project-syndicate.org/commentary/california-capitalism-ai-worker-protections-taxation-strategies-by-lenny-mendonca-and-laura-tyson-2026-05",
+    "https://shinsho-plus.shueisha.co.jp/column/sleep_ito/34877"
+  ],
+  "page4_urls": [
+    "https://shinsho-plus.shueisha.co.jp/column/sleep_ito/34877",
+    "https://shinsho-plus.shueisha.co.jp/column/hajimetenokoukyousosyou/34899",
+    "https://shinsho-plus.shueisha.co.jp/interview/nakaji_higuchi/34868"
+  ],
+  "page5_url": "https://www.axismag.jp/posts/2026/05/707251.html",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/05/15/in-mutual-analysis-with-wallace-shawns-moth-days/",
+    "music": "https://natalie.mu/music/news/672120",
+    "outdoor": "https://thetrek.co/pacific-crest-trail/suddenly-i-understood-how-easy-it-would-be-to-die-out-here/"
+  }
+}
