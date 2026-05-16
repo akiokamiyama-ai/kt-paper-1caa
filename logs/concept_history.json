@@ -94,6 +94,11 @@
       "concept_id": "embodiment",
       "name_ja": "身体性",
       "displayed_on": "2026-05-16"
+    },
+    {
+      "concept_id": "umwelt",
+      "name_ja": "環世界",
+      "displayed_on": "2026-05-17"
     }
   ]
 }

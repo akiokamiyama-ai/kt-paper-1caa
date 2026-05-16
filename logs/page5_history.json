@@ -304,6 +304,20 @@
       "ai_kamiyama_failed": false,
       "fallback_used": false,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-05-17",
+      "article_url": "https://thetrek.co/mud-water-and-the-wild-hayduke-trail/",
+      "article_title": "Mud, Water and the Wild Hayduke Trail",
+      "article_category": "outdoor",
+      "tie_candidates": [
+        "outdoor"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
     }
   ]
 }
