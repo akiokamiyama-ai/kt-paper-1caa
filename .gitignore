@@ -3,7 +3,10 @@ CLAUDE.md
 design_spec.md
 news_profile.md
 roadmap.md
-docs/
+# docs/ 配下はファイル単位で ignore（ディレクトリ単位だと re-include が効かない）。
+# themes.md だけは Sprint 7 Phase 3 (Page I 再設計) で runtime 参照するため track。
+docs/*
+!docs/themes.md
 
 # Local session notes (prompt templates, scratch)
 archive/_*.txt
