@@ -27,6 +27,7 @@ EDITORIAL_PROMPT_TEMPLATE = """\
 
 【執筆指示】
 今朝の紙面全体を俯瞰し、編集後記を 100〜150 字で書いてください。
+**厳守：必ず 200 字以内（句読点・記号を含む）。これを超えると掲載されません。**
 
 執筆方針：
 - 媒体としての無人称、または「本紙は」「今朝の紙面は」のような客観視
@@ -73,6 +74,12 @@ BANNED_PHRASES: tuple[str, ...] = (
 )
 
 
-# Length bounds for is_fallback decision (50字未満 / 200字超 → fallback)
+# Length bounds for is_fallback decision (50字未満 / 300字超 → fallback)
+#
+# Sprint 7 (2026-05-17 fix): 5/17 朝刊で editorial が欠落。原因は出力 220
+# tokens (~220-330 字) が MAX_BODY_CHARS=200 を超えて FALLBACK 発動。
+# プロンプトでは「200 字以内」を厳守指示しつつ、300 字まで許容することで
+# 事故防止の余裕を確保（二重対策）。通常運用では LLM 側が 150 字前後に
+# 収まる方向にバイアスされる。
 MIN_BODY_CHARS = 50
-MAX_BODY_CHARS = 200
+MAX_BODY_CHARS = 300

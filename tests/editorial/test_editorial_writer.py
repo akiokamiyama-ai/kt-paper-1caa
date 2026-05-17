@@ -5,7 +5,7 @@ Tests:
   b) API exception → is_fallback=True
   c) JSON parse failure → is_fallback=True
   d) Body too short (<50) → is_fallback=True
-  e) Body too long (>200) → is_fallback=True
+  e) Body too long (>300) → is_fallback=True  (Sprint 7 fix: 200→300 緩和)
   f) Empty body string → is_fallback=True
   g) Banned-phrase leakage → is_fallback=True with reason
   h) Code-fence wrapped JSON tolerated
@@ -147,14 +147,16 @@ def test_too_short_body_fallback():
 # ---------------------------------------------------------------------------
 
 def test_too_long_body_fallback():
-    long_body = "あ" * 250  # 250 chars > 200
+    # Sprint 7 (2026-05-17): MAX_BODY_CHARS 200 → 300 緩和に追従。
+    # 350 chars で > 300 を超え fallback 発動を検証。
+    long_body = "あ" * 350  # 350 chars > 300
     text = json.dumps({"body": long_body}, ensure_ascii=False)
     orig = _install_mock_call(text=text)
     try:
         result = editorial_writer.write_editorial({})
     finally:
         _restore(orig)
-    _check("e1 body >200 chars → is_fallback=True", result["is_fallback"] is True)
+    _check("e1 body >300 chars → is_fallback=True", result["is_fallback"] is True)
     _check("e2 fallback_reason mentions 'too long'",
            "too long" in result.get("fallback_reason", ""))
 
@@ -219,7 +221,8 @@ def test_code_fenced_json_tolerated():
 
 def test_constants_sanity():
     _check("i1 MIN_BODY_CHARS == 50", editorial_prompts.MIN_BODY_CHARS == 50)
-    _check("i2 MAX_BODY_CHARS == 200", editorial_prompts.MAX_BODY_CHARS == 200)
+    _check("i2 MAX_BODY_CHARS == 300 (Sprint 7 緩和、5/17 欠落対応)",
+           editorial_prompts.MAX_BODY_CHARS == 300)
     _check("i3 BANNED_PHRASES contains '聞き上手' and '神山さん'",
            "聞き上手" in editorial_prompts.BANNED_PHRASES
            and "神山さん" in editorial_prompts.BANNED_PHRASES)
