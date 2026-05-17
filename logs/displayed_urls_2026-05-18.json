@@ -1,0 +1,32 @@
+{
+  "date": "2026-05-18",
+  "page1_urls": [
+    "https://www.bbc.com/news/articles/cq8p7l1y59lo?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/cx219pn5g70o?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/czr2pl5lj84o?at_medium=RSS&at_campaign=rss",
+    "https://www.fsight.jp/articles/-/52079"
+  ],
+  "page2_urls": {
+    "cocolomi": null,
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2605/16/news002.html",
+    "web_repo": "https://www.bc01.net/article/picmii/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/south-koreas-500000-drone-warriors-will-be-a-hollow-force/",
+    null,
+    null,
+    "https://www.mckinsey.com/institute-for-economic-mobility/our-insights/alabamas-playbook-for-jobs-growth-and-economic-opportunity",
+    "https://www.fsight.jp/articles/-/52076",
+    "https://shinsho-plus.shueisha.co.jp/column/hajimetenokoukyousosyou/34899"
+  ],
+  "page4_urls": [
+    "https://shinsho-plus.shueisha.co.jp/column/sleep_ito/34877",
+    "https://shinsho-plus.shueisha.co.jp/column/hajimetenokoukyousosyou/34899"
+  ],
+  "page5_url": "https://www.axismag.jp/posts/2026/05/710566.html",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/05/12/sheila-heti-on-andres-felipe-solanos-gloria/",
+    "music": "https://greenroom.jp/post-5534/",
+    "outdoor": "https://thetrek.co/appalachian-trail/hiking-hordes-at-dennis-cove-road/"
+  }
+}

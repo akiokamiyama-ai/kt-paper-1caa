@@ -99,6 +99,11 @@
       "concept_id": "umwelt",
       "name_ja": "環世界",
       "displayed_on": "2026-05-17"
+    },
+    {
+      "concept_id": "loop_quantum_gravity",
+      "name_ja": "ループ量子重力",
+      "displayed_on": "2026-05-18"
     }
   ]
 }
