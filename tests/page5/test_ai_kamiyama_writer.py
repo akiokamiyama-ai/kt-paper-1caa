@@ -147,10 +147,11 @@ def test_utterance_contains_article_meta():
     ok = (
         "サティ生誕160年" in utt
         and "春秋社" in utt
-        and "500 字前後" in utt
+        and "600 字前後" in utt
         and "JSON" in utt
     )
-    _check("a5 utterance includes title + source + 500字 + JSON instruction", ok,
+    _check("a5 utterance includes title + source + 600字 + JSON instruction "
+           "(Sprint 7 Phase 1 Step 3: 500→600 拡張)", ok,
            f"utt[:80]={utt[:80]!r}")
 
 
