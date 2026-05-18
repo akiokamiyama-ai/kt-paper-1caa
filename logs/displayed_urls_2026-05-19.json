@@ -1,0 +1,33 @@
+{
+  "date": "2026-05-19",
+  "page1_urls": [
+    "https://www.bbc.com/news/articles/ce8pqd54qneo?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/c936xeeye41o?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/cg7p5nr307mo?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/czx2ne2ryppo?at_medium=RSS&at_campaign=rss"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://kn.itmedia.co.jp/kn/articles/2605/18/news034.html",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2605/18/news003.html",
+    "web_repo": null
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/iran-war-exemplifies-thugocracy-in-action-by-mohammad-reza-farzanegan-2026-05",
+    "https://toyokeizai.net/articles/-/944368?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://www.bloomberg.com/news/articles/2026-05-18/us-futures-slip-as-inflation-worries-feed-risk-off-sentiment",
+    "https://www.mckinsey.com/industries/electric-power-and-natural-gas/our-insights/renewables-o-and-m-reimagined-boosting-performance-with-ai-and-conventional-levers",
+    "https://www.webdoku.jp/mettakuta/tadashi_oyama/20260518080000.html",
+    "https://shinsho-plus.shueisha.co.jp/column/hajimetenokoukyousosyou/34903"
+  ],
+  "page4_urls": [
+    "https://shinsho-plus.shueisha.co.jp/column/hajimetenokoukyousosyou/34903",
+    "https://shinsho-plus.shueisha.co.jp/column/hajimetenokoukyousosyou/34908",
+    "https://shinsho-plus.shueisha.co.jp/column/hajimetenokoukyousosyou/34901"
+  ],
+  "page5_url": "https://natalie.mu/music/news/672435",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-05/a-path-without-its-fence-three-poems-de-arriba-marcos-garcia-granda/",
+    "music": "https://natalie.mu/music/news/672508",
+    "outdoor": "https://thetrek.co/appalachian-trail/completing-the-triple-crown/"
+  }
+}

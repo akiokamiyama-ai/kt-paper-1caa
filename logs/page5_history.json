@@ -332,6 +332,23 @@
       "ai_kamiyama_failed": false,
       "fallback_used": false,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-05-19",
+      "article_url": "https://natalie.mu/music/news/672435",
+      "article_title": "細野晴臣が23枚目のアルバムリリース、YOASOBIらを擁するレーベルEchoesから",
+      "article_category": "music",
+      "tie_candidates": [
+        "music"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.bbc.com/news/articles/cewpyv79pw1o?at_medium=RSS&at_campaign=rss",
+      "ai_kamiyama_title": "Jury tosses Elon Musk's lawsuit against OpenAI and its boss Sam Altman",
+      "ai_kamiyama_source_name": "BBC Business（本紙第1面で稼働中）"
     }
   ]
 }
