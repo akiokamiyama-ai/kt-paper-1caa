@@ -56,6 +56,7 @@ from .selector.page2 import (
     default_fetcher as page2_default_fetcher,
     run_page2_pipeline,
 )
+from .selector import todays_headlines
 from .selector.page3 import (
     REGIONS as PAGE3_REGIONS,
     REGION_DISPLAY_NAMES as PAGE3_REGION_DISPLAY_NAMES,
@@ -954,6 +955,63 @@ PAGE_TWO_CSS = f"""
 .briefing-row .company .company-name {{
   display: block;
 }}
+
+/* Sprint 7 Phase 2 (2026-05-19): 2 面下段 Today's Headlines。
+   3 社の朝会セクションの下に、Page I/III 採用記事を除く許可ソース
+   (NHK 主要/経済、Yahoo! 経済、BBC、Economist) から top 3 を掲載。 */
+.todays-headlines {{
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid #ccc;
+}}
+.todays-headlines .headlines-banner {{
+  font-family: 'Playfair Display', serif;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin: 0 0 12px;
+  text-align: center;
+}}
+.todays-headlines .headlines-list {{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}}
+.todays-headlines .headline-item {{
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px dotted #ddd;
+}}
+.todays-headlines .headline-item:last-child {{
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}}
+.todays-headlines .headline-title {{
+  display: block;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.5;
+}}
+.todays-headlines .headline-title a {{
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px dotted var(--ink-soft);
+}}
+.todays-headlines .headline-title a:hover {{
+  border-bottom-style: solid;
+}}
+.todays-headlines .headline-summary {{
+  font-size: 12px;
+  color: #333;
+  line-height: 1.7;
+  margin: 4px 0;
+}}
+.todays-headlines .headline-byline {{
+  display: block;
+  font-size: 11px;
+  color: #888;
+}}
 """
 
 
@@ -1063,13 +1121,69 @@ def _render_briefing_row(company_key: str, sel) -> str:
     </div>""".rstrip()
 
 
-def build_page_two_v2(selections: dict) -> str:
+def _render_todays_headlines(headlines: list[dict] | None) -> str:
+    """Today's Headlines HTML を生成 (Sprint 7 Phase 2 Step 2, 2026-05-19).
+
+    Page II 下段に挿入する `<aside class="todays-headlines">` セクション。
+    headlines が空 or None なら空文字列を返し、Page II の HTML 末尾には何も
+    挿入されない（page2 の既存挙動を破壊しない）。
+
+    summary は ``todays_headlines.format_summary`` で 100 字 truncate。
+    description 空 (Yahoo! 等の title-only feed) なら summary <p> 自体を省略。
+    """
+    if not headlines:
+        return ""
+
+    items: list[str] = []
+    for art in headlines:
+        title = art.get("title") or ""
+        url = art.get("url") or ""
+        source = art.get("source_name") or ""
+        summary = todays_headlines.format_summary(art)
+
+        if url:
+            title_html = (
+                f'<a href="{_esc(url)}" target="_blank" rel="noopener noreferrer">'
+                f'{_esc(title)}</a>'
+            )
+        else:
+            title_html = _esc(title)
+
+        summary_html = (
+            f'      <p class="headline-summary">{_esc(summary)}</p>\n'
+            if summary else ""
+        )
+
+        items.append(
+            f"""    <li class="headline-item">
+      <span class="headline-title">{title_html}</span>
+{summary_html}      <span class="headline-byline">{_esc(source)}</span>
+    </li>"""
+        )
+    items_html = "\n".join(items)
+
+    return f"""
+<aside class="todays-headlines">
+  <h3 class="headlines-banner">Today's Headlines</h3>
+  <ol class="headlines-list">
+{items_html}
+  </ol>
+</aside>"""
+
+
+def build_page_two_v2(
+    selections: dict, *, headlines: list[dict] | None = None,
+) -> str:
     """Assemble the full Page II <section> block from page2 pipeline selections.
 
     ``selections`` is the ``Page2Result.selections`` dict mapping
     ``company_key`` (cocolomi / human_energy / web_repo) → ``CompanySelection``.
     Order is fixed (Cocolomi → Human Energy → Web-Repo) per the inaugural
     issue's Page II layout.
+
+    Sprint 7 Phase 2 Step 2 (2026-05-19): optional ``headlines`` 引数を追加。
+    None or 空 list なら従来の 3 社朝会のみのレイアウトに戻る（後方互換）。
+    与えられた場合は `<aside class="todays-headlines">` を </section> 直前に挿入。
     """
     rows: list[str] = []
     # COMPANY_KEYS は page2.py から import 済（cocolomi → human_energy → web_repo）
@@ -1087,6 +1201,7 @@ def build_page_two_v2(selections: dict) -> str:
         rows.append(_render_briefing_row(company_key, sel))
 
     rows_html = "\n".join(rows)
+    headlines_html = _render_todays_headlines(headlines)
     return f"""<section class="page page-two">
     <div class="page-banner"><span class="pg-num">— Page II —</span> The President's Morning Briefing · Three Companies, One Desk</div>
 
@@ -1094,6 +1209,7 @@ def build_page_two_v2(selections: dict) -> str:
       Cocolomi・Human Energy・Web-Repo3社の事業文脈に関わる今朝の話題を、各社につき1本——朝の経営判断のための短い問いを添えて。
     </p>
 {rows_html}
+{headlines_html}
   </section>"""
 
 
@@ -2771,7 +2887,23 @@ def main(argv: list[str] | None = None) -> int:
     page_two_html: str | None = None
     if page2_result is not None:
         print("Building Page II HTML...", file=sys.stderr)
-        page_two_html = build_page_two_v2(page2_result.selections)
+        # Sprint 7 Phase 2: Page I/III 採用 URL を除外して Today's Headlines top 3 を選定
+        headlines = todays_headlines.select_todays_headlines(
+            target_date=target,
+            candidates_scored=result.candidates_scored,
+            page1_selected=result.selected,
+            page3_selections=(
+                page3_result.selections if page3_result is not None else None
+            ),
+        )
+        print(
+            f"  Page II Today's Headlines: {len(headlines)} 件 "
+            f"({', '.join((h.get('source_name') or '')[:10] for h in headlines) or '(none)'})",
+            file=sys.stderr,
+        )
+        page_two_html = build_page_two_v2(
+            page2_result.selections, headlines=headlines,
+        )
     page_three_html: str | None = None
     if page3_result is not None:
         print("Building Page III HTML...", file=sys.stderr)
