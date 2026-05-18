@@ -136,6 +136,10 @@ def update_history_column_fields(
     ai_kamiyama_failed: bool,
     fallback_used: bool,
     history_path: Path | None = None,
+    ai_kamiyama_url: str | None = None,
+    ai_kamiyama_title: str | None = None,
+    ai_kamiyama_category: str | None = None,
+    ai_kamiyama_source_name: str | None = None,
 ) -> bool:
     """Update the most recent matching history entry with column-gen status.
 
@@ -148,12 +152,18 @@ def update_history_column_fields(
     Sprint 5 task #5 (2026-05-04 修正): 過去の history (5/2, 5/3 の 6 entries) は
     bug 期間データとして false のまま放置。本修正以降のデータから有効。
 
+    Sprint 7 Phase 1 Step 2 (2026-05-19): AIかみやま が serendipity 記事から
+    独立した記事に論評する構造に変更。AIかみやま が言及した記事のメタ情報
+    （url / title / category / source_name）を ai_kamiyama_* フィールドとして
+    同じ entry に追加。article_url は引き続き serendipity 記事の URL
+    (後方互換、_apply_history_penalty 等の既存ロジックは無修正)。
+
     Parameters
     ----------
     target_date :
         対象記事が表示された日（history entry の displayed_on に一致）
     article_url :
-        対象記事の URL（history entry の article_url に一致）
+        serendipity 記事の URL（history entry の article_url に一致、matching key）
     ai_kamiyama_called :
         column 生成 API が呼ばれたか
     ai_kamiyama_failed :
@@ -162,6 +172,10 @@ def update_history_column_fields(
         fallback テキストが使われたか
     history_path :
         テスト用に history JSON のパスを上書き可能。None で本番 HISTORY_PATH
+    ai_kamiyama_url / ai_kamiyama_title / ai_kamiyama_category /
+    ai_kamiyama_source_name :
+        Sprint 7 Phase 1 Step 2 追加。AIかみやま が論評した記事のメタ。
+        None の場合は entry に書き込まない（既存呼び出しの後方互換）。
 
     Returns
     -------
@@ -191,6 +205,15 @@ def update_history_column_fields(
     entries[matched_idx]["ai_kamiyama_called"] = ai_kamiyama_called
     entries[matched_idx]["ai_kamiyama_failed"] = ai_kamiyama_failed
     entries[matched_idx]["fallback_used"] = fallback_used
+    # Sprint 7 Phase 1 Step 2: AIかみやま 記事メタ（None なら書込み skip）
+    if ai_kamiyama_url is not None:
+        entries[matched_idx]["ai_kamiyama_url"] = ai_kamiyama_url
+    if ai_kamiyama_title is not None:
+        entries[matched_idx]["ai_kamiyama_title"] = ai_kamiyama_title
+    if ai_kamiyama_category is not None:
+        entries[matched_idx]["ai_kamiyama_category"] = ai_kamiyama_category
+    if ai_kamiyama_source_name is not None:
+        entries[matched_idx]["ai_kamiyama_source_name"] = ai_kamiyama_source_name
     h["history"] = entries
     save_history(h, path=history_path)
     return True

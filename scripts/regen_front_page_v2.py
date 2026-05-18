@@ -1458,6 +1458,25 @@ PAGE_FIVE_CSS = f"""
   text-transform: uppercase;
   margin-bottom: 8px;
 }}
+/* Sprint 7 Phase 1 Step 2 (2026-05-19): AIかみやま 対象記事の参照行。
+   下部 column の最初に「対象記事：title （source）」を 1 行表示し、
+   読者が「AIかみやま が何を論評しているか」を一目で把握できるようにする。 */
+.ai-kamiyama-column .ai-source-ref {{
+  font-size: 12px;
+  color: #555;
+  margin: 0 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px dotted #ccc;
+  line-height: 1.5;
+}}
+.ai-kamiyama-column .ai-source-ref a {{
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--ink-soft);
+}}
+.ai-kamiyama-column .ai-source-ref a:hover {{
+  border-bottom-style: solid;
+}}
 .ai-kamiyama-column .column-title {{
   font-family: 'Noto Serif JP', 'Old Standard TT', serif;
   font-size: 22px;
@@ -1522,13 +1541,25 @@ def build_page_five_v2(
     target_date: date,
     *,
     pre_evaluated: dict[str, dict] | None = None,
+    page1_result=None,
+    page3_result=None,
+    page4_telemetry: dict | None = None,
 ) -> tuple[str, dict]:
     """Build the full <section class="page page-five"> block (Columns & Serendipity).
 
     Returns (html, telemetry) — telemetry contains:
       - serendipity (article + category + tie_candidates + cost_usd)
+      - ai_article (AIかみやま 論評対象記事、Sprint 7 Phase 1 Step 2 追加)
       - column (column_title + column_body + is_fallback + elapsed_ms)
+
+    Sprint 7 Phase 1 Step 2 (2026-05-19):
+    - AIかみやま column の対象記事を serendipity から独立化
+    - page1_result / page3_result / page4_telemetry を引数に追加
+    - ai_kamiyama_selector で Page I/III/IV + serendipity の URL を除外して選定
+    - 候補ゼロなら ai_article=None で column も fallback
     """
+    from .page5 import ai_kamiyama_selector as page5_ai_selector
+
     # 1) Select the serendipity article
     serendipity = page5_serendipity.select_for_today(
         target_date=target_date, pre_evaluated=pre_evaluated,
@@ -1537,33 +1568,94 @@ def build_page_five_v2(
     # 2) Render placeholder if no candidates
     if serendipity["is_placeholder"]:
         html = _render_page_five_placeholder()
-        return html, {"serendipity": serendipity, "column": None}
+        return html, {
+            "serendipity": serendipity,
+            "ai_article": None,
+            "column": None,
+        }
 
-    # 3) AIかみやま column generation via miibo
-    article = serendipity["article"]
-    column = page5_ai_kamiyama.write_column(article)
+    serendipity_article = serendipity["article"]
+
+    # 3) AIかみやま 専用の記事選定（Sprint 7 Phase 1 Step 2）
+    # Page I/III/IV + serendipity 採用済み URL を除外
+    page3_selections = (
+        getattr(page3_result, "selections", None) if page3_result is not None else None
+    )
+    page4_articles = None
+    if page4_telemetry:
+        page4_articles = (page4_telemetry.get("articles_result") or {}).get("articles")
+    excluded = page5_ai_selector.collect_used_urls(
+        page1_selected=(page1_result.selected if page1_result is not None else None),
+        page3_selections=page3_selections,
+        page4_articles=page4_articles,
+        serendipity_article=serendipity_article,
+    )
+    candidates = page1_result.candidates_scored if page1_result is not None else []
+    # registry は build_registry の global cache を流用したいが、page5_serendipity
+    # 経由で取れない。安全策として None を渡して category フィルタは article.category
+    # フィールドベースで動作させる（Stage 1 で付与されていない場合は category フィルタ
+    # 自体が機能しないが、URL 除外と top_n random で十分機能する）。
+    ai_article = page5_ai_selector.select_ai_kamiyama_article(
+        target_date=target_date,
+        excluded_urls=excluded,
+        candidates_scored=candidates,
+        registry=None,
+        eligible_categories=page5_ai_selector.AI_KAMIYAMA_CATEGORIES,
+    )
+
+    # 4) AIかみやま column generation via miibo
+    #    ai_article がゼロ件なら fallback column を組み立てる（API は呼ばない）
+    if ai_article is not None:
+        column = page5_ai_kamiyama.write_column(ai_article)
+    else:
+        column = {
+            "column_title": "本日 AIかみやま休載",
+            "column_body": "本日は AIかみやま に渡す独立記事が候補ゼロでした。",
+            "is_fallback": True,
+            "raw_response": None,
+            "elapsed_ms": 0,
+            "ai_kamiyama_called": False,
+            "ai_kamiyama_failed": False,
+            "fallback_used": True,
+        }
 
     # Sprint 5 task #5 (2026-05-04): selector は column 生成前に history へ
-    # placeholder 値（false 固定）で書込済。column 生成結果を反映するため
-    # 同じ entry を見つけて上書きする（責務分離：history I/O は selector 内、
-    # caller は column status を渡すのみ）。
+    # placeholder 値（false 固定）で書込済。column 生成結果と AIかみやま 記事メタを
+    # 反映するため同じ entry を見つけて上書きする。
     page5_serendipity.update_history_column_fields(
         target_date=target_date,
-        article_url=(article.get("url") or ""),
+        article_url=(serendipity_article.get("url") or ""),
         ai_kamiyama_called=bool(column.get("ai_kamiyama_called", False)),
         ai_kamiyama_failed=bool(column.get("ai_kamiyama_failed", False)),
         fallback_used=bool(column.get("fallback_used", False)),
+        ai_kamiyama_url=(ai_article.get("url") if ai_article else None),
+        ai_kamiyama_title=(ai_article.get("title") if ai_article else None),
+        ai_kamiyama_category=(ai_article.get("category") if ai_article else None),
+        ai_kamiyama_source_name=(ai_article.get("source_name") if ai_article else None),
     )
 
-    # 4) Render full structure
-    html = _render_page_five(serendipity, column)
-    return html, {"serendipity": serendipity, "column": column}
+    # 5) Render full structure
+    html = _render_page_five(serendipity, ai_article, column)
+    return html, {
+        "serendipity": serendipity,
+        "ai_article": ai_article,
+        "column": column,
+    }
 
 
-def _render_page_five(serendipity: dict, column: dict) -> str:
+def _render_page_five(
+    serendipity: dict,
+    ai_article: dict | None,
+    column: dict,
+) -> str:
     """Render Page V: serendipity article (top 40%) + AIかみやま column (bottom 60%).
 
     Sprint 4 Phase 2: order flipped from Sprint 3 Step D layout (was AI on top).
+
+    Sprint 7 Phase 1 Step 2 (2026-05-19): AIかみやま column の対象記事を
+    serendipity から独立化。下部に「対象記事：title (source)」の 1 行を追加して
+    読者に「AIかみやま が何を論評しているか」を明示。
+    ``ai_article=None`` の場合は対象記事行を省略（AIかみやま 候補ゼロ時の fallback）。
     """
     article = serendipity["article"]
     title = (article.get("title") or "").strip()
@@ -1586,6 +1678,22 @@ def _render_page_five(serendipity: dict, column: dict) -> str:
         if url else _esc(title)
     )
 
+    # AIかみやま 対象記事の参照行（Sprint 7 Phase 1 Step 2）
+    ai_source_ref_html = ""
+    if ai_article:
+        ai_title = (ai_article.get("title") or "").strip()
+        ai_source = (ai_article.get("source_name") or "").strip()
+        ai_url = (ai_article.get("url") or "").strip()
+        if ai_title:
+            ai_title_html = (
+                f'<a href="{_esc(ai_url)}" target="_blank" rel="noopener noreferrer">{_esc(ai_title)}</a>'
+                if ai_url else _esc(ai_title)
+            )
+            source_suffix = f"（{_esc(ai_source)}）" if ai_source else ""
+            ai_source_ref_html = (
+                f'<p class="ai-source-ref">対象記事：{ai_title_html}{source_suffix}</p>'
+            )
+
     return f"""<section class="page page-five">
     <div class="page-banner"><span class="pg-num">— Page V —</span> Columns &amp; Serendipity · A Room with a Different Window</div>
 
@@ -1599,6 +1707,7 @@ def _render_page_five(serendipity: dict, column: dict) -> str:
 
       <article class="ai-kamiyama-column">
         <div class="kicker">AIかみやまの一筆</div>
+        {ai_source_ref_html}
         <h3 class="column-title">{_esc(column_title)}</h3>
         <div class="column-body">
           <p>{_esc(column_body)}</p>
@@ -2562,9 +2671,14 @@ def main(argv: list[str] | None = None) -> int:
         }
         try:
             page_five_html, page_five_telemetry = build_page_five_v2(
-                target, pre_evaluated=pre_evaluated_for_page5,
+                target,
+                pre_evaluated=pre_evaluated_for_page5,
+                page1_result=result,
+                page3_result=page3_result,
+                page4_telemetry=page_four_telemetry,
             )
             sty = page_five_telemetry["serendipity"]
+            ai_art = page_five_telemetry.get("ai_article")
             col = page_five_telemetry.get("column")
             if sty["is_placeholder"]:
                 print(
@@ -2578,10 +2692,12 @@ def main(argv: list[str] | None = None) -> int:
                     "fallback" if col["is_fallback"]
                     else f"AIかみやま OK ({col['elapsed_ms']}ms)"
                 )
+                ai_src = (
+                    ai_art.get("source_name", "")[:20] if ai_art else "(no candidate)"
+                )
                 print(
-                    f"  Page V: category={sty['category']} (tied: "
-                    f"{sty['tie_candidates']}), pool={sty['selected_from_pool_size']}, "
-                    f"article={article.get('source_name', '')[:25]}, "
+                    f"  Page V: serendipity={sty['category']} ({article.get('source_name', '')[:20]}), "
+                    f"ai_kamiyama={ai_src}, "
                     f"column={col_status}",
                     file=sys.stderr,
                 )

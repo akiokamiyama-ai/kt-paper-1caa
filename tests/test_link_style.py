@@ -172,6 +172,8 @@ def test_page_three_item_without_url_plain_title():
 # ---------------------------------------------------------------------------
 
 def test_page_five_serendipity_title_linked():
+    """Sprint 7 Phase 1 Step 2 (2026-05-19): _render_page_five は
+    3 引数 (serendipity, ai_article, column) signature に変更."""
     serendipity = {
         "is_placeholder": False,
         "article": {
@@ -182,11 +184,16 @@ def test_page_five_serendipity_title_linked():
             "pub_date": "2026-05-01",
         },
     }
+    ai_article = {
+        "title": "Strategy Note",
+        "source_name": "Economist",
+        "url": "https://example.test/ai-art",
+    }
     column = {
         "column_title": "Sauna Column Title",
         "column_body": "Column body...",
     }
-    html = regen._render_page_five(serendipity, column)
+    html = regen._render_page_five(serendipity, ai_article, column)
     title_linked = (
         '<h3 class="article-title">'
         '<a href="https://example.test/p5"' in html
@@ -194,8 +201,13 @@ def test_page_five_serendipity_title_linked():
     column_title_plain = (
         '<h3 class="column-title">Sauna Column Title</h3>' in html
     )
+    ai_source_ref = (
+        'class="ai-source-ref"' in html
+        and 'https://example.test/ai-art' in html
+    )
     _check("e1 serendipity article-title wrapped in <a>", title_linked)
     _check("e2 AIかみやま column-title is plain (no <a>)", column_title_plain)
+    _check("e3 AIかみやま ai-source-ref includes ai_article URL", ai_source_ref)
 
 
 # ---------------------------------------------------------------------------
