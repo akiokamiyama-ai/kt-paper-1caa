@@ -86,3 +86,7 @@ note = "Imperva-class WAF 403 across UAs and Feedly bot."
 [sites."philpapers.org"]
 blocked = true
 note = "Cloudflare-class WAF 403 across UAs."
+
+[sites."news.yahoo.co.jp"]
+description_exempt = true
+note = "Sprint 7 Phase 2 (2026-05-19): Yahoo! ニュース RSS は title-only feed (description 無し)。共同通信 RSS 不在の代替として第2面 Today's Headlines に投入、Stage 1 description フィルタを skip。"

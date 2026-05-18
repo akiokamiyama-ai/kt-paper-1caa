@@ -70,6 +70,24 @@
 - **対象**: グローバル経済・市場・企業の速報、事実関係に強い
 - **位置付け**: **速報軸**として The Economist（論考軸）と相補的に運用。news_profile.md §4.3 では「速報より深さ」の方針だが、Reuters の事実関係は他ソース記事の **裏取り** として有用。Google News プロキシ運用のリスク（Google 側 API 仕様変更）をフェーズ1で評価
 
+### 6. NHK ニュース 主要 ✅
+- **URL**: https://www3.nhk.or.jp/news/
+- **RSS**: https://www3.nhk.or.jp/rss/news/cat0.xml
+- **language**: ja
+- **形式**: RSS 2.0（default UA で 200、UA override 不要）
+- **mainstream**: true
+- **対象**: 政治・経済・社会・国際の主要ニュース。NHK 編集判断による「主要」枠で description あり
+- **位置付け**: **第2面下段 Today's Headlines の主力ソース**（Sprint 7 Phase 2、2026-05-19 追加）。NHK 経済 (cat5) は第3面 R2 担当で稼働中、本 cat0 はそれを補完して政治・社会・国際を網羅。共同通信 RSS が取得不可な中、国内主要ニュースの安定軸として機能。description が概ね全 item にあり Stage 1 通過率高
+
+### 7. Yahoo! ニュース 経済 ⚠️
+- **URL**: https://news.yahoo.co.jp/topics/business
+- **RSS**: https://news.yahoo.co.jp/rss/topics/business.xml
+- **language**: ja
+- **形式**: RSS 2.0（**title-only feed**、description フィールド無し）
+- **mainstream**: true
+- **対象**: 経済・市場・企業の主要トピックスのヘッドライン。共同通信・時事通信配信記事を多数含み、共同通信 RSS 不在の事実上の代替経路として機能
+- **位置付け**: **第2面下段 Today's Headlines の補完ソース**（Sprint 7 Phase 2、2026-05-19 追加）。共同通信 RSS 取得不可（公式・kiji.is・nordot・47news ハブ全て RSS なし、B2B 配信モデル）の代替として採用。title-only のため `config/site_overrides.toml` で `description_exempt = true` を設定し、Stage 1 description フィルタを skip させる必要あり
+
 ---
 
 ## Medium Priority（候補が薄い日に拾う）
