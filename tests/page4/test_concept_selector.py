@@ -42,9 +42,11 @@ YAML_PATH = PROJECT_ROOT / "data" / "concepts.yaml"
 # (a) concepts.yaml schema validation
 # ---------------------------------------------------------------------------
 
-def test_yaml_loads_as_list_of_52():
+def test_yaml_loads_as_list_of_66():
+    """Sprint 7 (2026-05-21): 神山さん要望で 14 件追加、52 → 66."""
     concepts = concept_selector.load_concepts()
-    _check("a1 yaml loads as list of 52", isinstance(concepts, list) and len(concepts) == 52,
+    _check("a1 yaml loads as list of 66 (Sprint 7 +14)",
+           isinstance(concepts, list) and len(concepts) == 66,
            f"got len={len(concepts) if isinstance(concepts, list) else type(concepts).__name__}")
 
 
@@ -203,7 +205,7 @@ def main() -> int:
     print("Page 4 — concept_selector + yaml schema tests")
     print()
     print("(a) concepts.yaml schema:")
-    test_yaml_loads_as_list_of_52()
+    test_yaml_loads_as_list_of_66()
     test_yaml_ids_are_unique()
     test_yaml_required_fields()
     test_yaml_related_references_valid()

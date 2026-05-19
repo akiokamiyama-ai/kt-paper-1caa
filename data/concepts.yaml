@@ -670,3 +670,175 @@
     生命や対流もこれに含まれる。
   related: [entropy, emergence]
   difficulty: 3
+
+# ============================================================
+# Sprint 7 追加（神山さん 5/8-5/9 要望、2026-05-21）
+# 経営・知識・人類学・思考フレーム系を 14 件補充。
+# Sprint 8 で「今日の概念」プール 365 個拡張予定、本追加はその布石。
+# ============================================================
+
+- id: business_anthropology
+  name_ja: ビジネス人類学
+  name_en: Business Anthropology
+  domain: 経営学・人類学
+  thinkers: [マリエッタ・バーバ, カレン・ホー]
+  seed: |
+    企業や市場をフィールドに、人類学の手法で
+    組織文化・消費者行動・経済慣行を読み解く分野。
+    参与観察を通じて統計では見えない構造を可視化する。
+  related: [ethnography, habitus, actor_network_theory]
+  difficulty: 2
+
+- id: design_anthropology
+  name_ja: デザイン人類学
+  name_en: Design Anthropology
+  domain: デザイン研究・人類学
+  thinkers: [ウェンディ・ガン, クリスチャン・マズビョア]
+  seed: |
+    デザインプロセスに参与観察やエスノグラフィを持ち込み、
+    ユーザーの生活世界からデザインを構想する。
+    「使われ方」よりも「生きられ方」を起点に据える。
+  related: [ethnography, lifeworld, business_anthropology]
+  difficulty: 2
+
+- id: knowledge_management
+  name_ja: 知識経営
+  name_en: Knowledge Management
+  domain: 経営学
+  thinkers: [野中郁次郎, ピーター・ドラッカー]
+  seed: |
+    組織内の知識を資産として捉え、創造・共有・活用するための
+    経営手法。暗黙知と形式知の相互変換を組織能力の源泉とする。
+  related: [tacit_knowledge, seci_model, knowledge_transfer]
+  difficulty: 1
+
+- id: knowledge_informatics
+  name_ja: 知識情報学
+  name_en: Knowledge Informatics
+  domain: 情報学・知識工学
+  thinkers: [上田完次]
+  seed: |
+    知識の構造化・流通・活用を情報技術で支える学際領域。
+    オントロジー設計、知識グラフ、推論システムを通じて
+    人間と機械の協働知を実装する。
+  related: [ontology, knowledge_management]
+  difficulty: 2
+
+- id: knowledge_transfer
+  name_ja: 知識伝承
+  name_en: Knowledge Transfer
+  domain: 組織論・教育学
+  thinkers: [野中郁次郎, ハロルド・パール]
+  seed: |
+    熟練者から後継者へ、暗黙知・形式知を意図的に伝える営み。
+    マニュアル化できない技能・判断・職場文化を、
+    対話・観察・共同作業を通じて受け渡す。
+  related: [tacit_knowledge, seci_model, knowledge_management]
+  difficulty: 1
+
+- id: service_innovation
+  name_ja: サービスイノベーション
+  name_en: Service Innovation
+  domain: 経営学・マーケティング
+  thinkers: [スティーブン・バーゴ, ロバート・ラッシュ]
+  seed: |
+    顧客との価値共創を軸に、サービスシステム全体を再設計する
+    革新の捉え方。製品中心からサービス・ドミナント・ロジックへの
+    視点転換を伴う。
+  related: [knowledge_management]
+  difficulty: 2
+
+- id: mot
+  name_ja: 技術経営
+  name_en: Management of Technology (MOT)
+  domain: 経営学・工学
+  thinkers: [延岡健太郎]
+  seed: |
+    技術資源を企業戦略と結びつけ、研究開発から事業化までを
+    統合的に管理する方法論。技術の不確実性と市場の動態を
+    同時に読み解く経営の知。
+  related: [knowledge_management, service_innovation]
+  difficulty: 2
+
+- id: wild_knowledge
+  name_ja: ワイルドナレッジ
+  name_en: Wild Knowledge
+  domain: 認識論・人類学
+  thinkers: [クロード・レヴィ=ストロース]
+  seed: |
+    体系化されない実践知、現場で生まれる即興的な知。
+    レヴィ=ストロース『野生の思考』が示した、
+    分類と隠喩で世界を読み解く非西欧的な知のあり方。
+  related: [tacit_knowledge, habitus]
+  difficulty: 2
+
+- id: systems_thinking
+  name_ja: システム思考
+  name_en: Systems Thinking
+  domain: システム科学・経営学
+  thinkers: [ピーター・センゲ, ジェイ・フォレスター]
+  seed: |
+    個別事象ではなく、要素間の相互作用とフィードバックループで
+    全体を捉える思考法。線形の因果ではなく循環構造から
+    レバレッジポイントを見出す。
+  related: [emergence, dissipative_structure]
+  difficulty: 1
+
+- id: ontology
+  name_ja: オントロジー
+  name_en: Ontology
+  domain: 哲学・情報科学
+  thinkers: [アリストテレス, トマス・グルーバー]
+  seed: |
+    存在を分類し関係を記述する形式的な体系。
+    情報科学では、ある領域の概念と関係を機械可読な形で共有する
+    仕組みとして知識基盤に応用される。
+  related: [knowledge_informatics, conceptual_metaphor]
+  difficulty: 2
+
+- id: collaborative_abduction
+  name_ja: 協働アブダクション
+  name_en: Collaborative Abduction
+  domain: 認識論・組織学習
+  thinkers: [チャールズ・パース, 組織学習研究者]
+  seed: |
+    複数の視点を持つメンバーが対話を通じて仮説を共同生成する
+    プロセス。個人の直観に閉じない、集団的な驚きと洞察の運動。
+  related: [abduction, knowledge_management, ethnography]
+  difficulty: 3
+
+- id: multimodal_communication
+  name_ja: マルチモーダルコミュニケーション
+  name_en: Multimodal Communication
+  domain: コミュニケーション論・記号論
+  thinkers: [ガンサー・クレス, テオ・ファン・ルーウェン]
+  seed: |
+    言語だけでなく、身振り・図像・音・空間配置などを
+    統合的に用いる伝達様式。意味は単一モードでは閉じず、
+    複数の様式の重なりとして生成される。
+  related: [language_game, embodied_cognition]
+  difficulty: 2
+
+- id: educational_anthropology
+  name_ja: 教育人類学
+  name_en: Educational Anthropology
+  domain: 人類学・教育学
+  thinkers: [マーガレット・ミード, ジェームズ・スピンドラー]
+  seed: |
+    文化が学習や教育の場をどのように形作るかを実地調査で探る分野。
+    教室・家庭・地域社会を文化的実践として読み解き、
+    教える/学ぶの普遍性と差異を見出す。
+  related: [ethnography, lifeworld, business_anthropology]
+  difficulty: 2
+
+- id: social_psychology
+  name_ja: 社会心理学
+  name_en: Social Psychology
+  domain: 心理学・社会学
+  thinkers: [クルト・レヴィン, ソロモン・アッシュ]
+  seed: |
+    個人の思考・感情・行動が、他者や集団からどう影響を受けるかを
+    実験的・体系的に研究する。同調・服従・偏見・態度変容など、
+    日常の社会場面を理解する鍵概念群を提供する。
+  related: [heuristics, dual_process_theory, habitus]
+  difficulty: 1
