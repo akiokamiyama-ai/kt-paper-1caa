@@ -842,3 +842,237 @@
     日常の社会場面を理解する鍵概念群を提供する。
   related: [heuristics, dual_process_theory, habitus]
   difficulty: 1
+
+# ============================================================
+# Sprint 8 Group A: 神山さん提案概念 19 件追加（2026-05-19）
+# 「ディープリスニング経営」と思考の刺激に資する経営・心理・意思決定の核概念群。
+# 既存 nudge と重複したため 20 件中 1 件を除外。
+# ============================================================
+
+- id: flow_experience
+  name_ja: フロー体験
+  name_en: Flow
+  domain: 心理学
+  thinkers: [チクセントミハイ]
+  seed: |
+    課題の難しさと自分のスキルが釣り合った時に訪れる、
+    時間感覚を忘れるほどの没入状態。
+    内発的動機づけと創造性の中核を成す経験。
+  related: [mindfulness, embodied_cognition, dual_process_theory]
+  difficulty: 1
+
+- id: servant_leadership
+  name_ja: サーバントリーダーシップ
+  name_en: Servant Leadership
+  domain: 経営学
+  thinkers: [ロバート・グリーンリーフ]
+  seed: |
+    リーダーは権威を振るうのではなく、まず仲間に仕える存在で
+    あるべきだとする経営哲学。傾聴と共感を中心に据える、
+    ディープリスニング経営の源流。
+  related: [psychological_safety, teal_organization, organizational_learning]
+  difficulty: 1
+
+- id: teal_organization
+  name_ja: ティール組織
+  name_en: Teal Organization
+  domain: 経営学
+  thinkers: [フレデリック・ラルー]
+  seed: |
+    自主経営・全体性・進化する目的を特徴とする組織形態。
+    ラルー『ティール組織』が提示した、意識の発達段階に
+    対応した組織モデル。
+  related: [servant_leadership, psychological_safety, organizational_learning]
+  difficulty: 2
+
+- id: psychological_safety
+  name_ja: 心理的安全性
+  name_en: Psychological Safety
+  domain: 組織行動学
+  thinkers: [エイミー・エドモンドソン]
+  seed: |
+    対人リスクを取っても罰せられないとメンバーが信じられる
+    職場の状態。Google『Project Aristotle』で実証された、
+    高業績チームの共通基盤。
+  related: [servant_leadership, organizational_learning, job_crafting]
+  difficulty: 1
+
+- id: job_crafting
+  name_ja: ジョブ・クラフティング
+  name_en: Job Crafting
+  domain: 組織行動学
+  thinkers: [エイミー・レズネスキー, ジェーン・ダットン]
+  seed: |
+    与えられた職務を、自らの強みや関心に合わせて意味的に
+    作り変える主体的行為。タスク・関係・認知の三層で
+    職務を再定義する自律的な働き方。
+  related: [career_anchor, flow_experience, human_capital]
+  difficulty: 1
+
+- id: career_anchor
+  name_ja: キャリア・アンカー
+  name_en: Career Anchor
+  domain: 組織心理学
+  thinkers: [エドガー・シャイン]
+  seed: |
+    自分が本当に大切にする能力・動機・価値観の核。
+    長期キャリアの選択を導く内的な錨。
+    技術専門、経営管理、自律独立など 8 つの類型で示される。
+  related: [job_crafting, human_capital, organizational_learning]
+  difficulty: 1
+
+- id: resilience
+  name_ja: レジリエンス
+  name_en: Resilience
+  domain: 心理学
+  thinkers: [アン・マステン]
+  seed: |
+    逆境や強いストレスから回復し、適応していく心理的・
+    社会的な能力。特別な資質ではなく『ありふれた魔法』
+    として誰もが備える適応の力。
+  related: [mindfulness, psychological_safety, predictive_processing]
+  difficulty: 1
+
+- id: human_capital
+  name_ja: 人的資本
+  name_en: Human Capital
+  domain: 経済学
+  thinkers: [ゲーリー・ベッカー, セオドア・シュルツ]
+  seed: |
+    人間の知識・技能・健康を、生産性を高める『資本』として
+    捉える経済学概念。教育・訓練への投資が長期的リターンを
+    生むという視座の転換。
+  related: [career_anchor, knowledge_management, knowledge_transfer]
+  difficulty: 1
+
+- id: mindfulness
+  name_ja: マインドフルネス
+  name_en: Mindfulness
+  domain: 心理学・瞑想科学
+  thinkers: [ジョン・カバットジン]
+  seed: |
+    『いま・ここ』の経験に評価を加えず気づき続ける心の状態。
+    仏教瞑想を医療・経営に応用、ストレス低減と注意制御の
+    科学的エビデンスを蓄積した。
+  related: [flow_experience, anatman, embodied_cognition]
+  difficulty: 1
+
+- id: organizational_learning
+  name_ja: 組織学習
+  name_en: Organizational Learning
+  domain: 経営学
+  thinkers: [ピーター・センゲ, クリス・アージリス]
+  seed: |
+    組織がメンバー個人の学習を超えて、共有された知識・
+    行動パターンを変容させていく過程。
+    『学習する組織』とダブルループ学習が古典。
+  related: [seci_model, knowledge_management, psychological_safety, ambidexterity]
+  difficulty: 1
+
+- id: visionary_company
+  name_ja: ビジョナリー・カンパニー
+  name_en: Built to Last
+  domain: 経営学
+  thinkers: [ジム・コリンズ, ジェリー・ポラス]
+  seed: |
+    18 組の企業比較から抽出した、時代を超えて卓越する
+    企業の条件。利益最大化ではなく中核理念の堅持と、
+    進歩への絶え間ない衝動が両立する。
+  related: [ambidexterity, organizational_learning, knowledge_management]
+  difficulty: 1
+
+- id: ambidexterity
+  name_ja: 両利きの経営
+  name_en: Ambidextrous Organization
+  domain: 経営学
+  thinkers: [チャールズ・オライリー, マイケル・タッシュマン]
+  seed: |
+    既存事業の深化（exploitation）と新規領域の探索
+    （exploration）を両立させる組織能力。
+    不確実な環境下の持続的競争力の鍵。
+  related: [innovators_dilemma, organizational_learning, blue_ocean_strategy]
+  difficulty: 2
+
+- id: blue_ocean_strategy
+  name_ja: ブルーオーシャン戦略
+  name_en: Blue Ocean Strategy
+  domain: 経営学
+  thinkers: [W・チャン・キム, レネ・モボルニュ]
+  seed: |
+    競争の激しい既存市場（赤い海）ではなく、競争のない
+    新市場（青い海）を創出する戦略論。価値とコストの
+    トレードオフを破壊する Value Innovation が核心。
+  related: [ambidexterity, innovators_dilemma, service_innovation]
+  difficulty: 1
+
+- id: innovators_dilemma
+  name_ja: イノベーションのジレンマ
+  name_en: Innovator's Dilemma
+  domain: 経営学
+  thinkers: [クレイトン・クリステンセン]
+  seed: |
+    優良企業ほど既存顧客の声に応えるあまり、破壊的
+    イノベーションに対応できず転落する逆説。
+    合理的経営判断こそが衰退の原因となる構造。
+  related: [ambidexterity, blue_ocean_strategy, organizational_learning]
+  difficulty: 1
+
+- id: pattern_language
+  name_ja: パターンランゲージ
+  name_en: Pattern Language
+  domain: 建築・思考論
+  thinkers: [クリストファー・アレグザンダー]
+  seed: |
+    街・建築・コミュニティの良きパターンを記述する『言語』。
+    後にソフトウェア設計、組織論、教育論に拡張された、
+    『繰り返し現れる良い形』を記述する思考の枠組み。
+  related: [tacit_knowledge, knowledge_transfer, ontology]
+  difficulty: 2
+
+- id: ooda_loop
+  name_ja: OODAループ
+  name_en: OODA Loop
+  domain: 意思決定論
+  thinkers: [ジョン・ボイド]
+  seed: |
+    Observe（観察）→ Orient（状況判断）→ Decide（決定）→
+    Act（行動）の循環を高速に回す意思決定モデル。
+    空戦理論として開発、ビジネスにも応用された俊敏性の原理。
+  related: [systems_thinking, dual_process_theory, abduction]
+  difficulty: 1
+
+- id: black_swan
+  name_ja: ブラックスワン
+  name_en: Black Swan
+  domain: 確率論・哲学
+  thinkers: [ナシム・ニコラス・タレブ]
+  seed: |
+    事前には予測不可能で、起きた後に振り返ると説明可能に
+    見える極稀で衝撃的な事象。確率論的世界観への根本的
+    批判であり、頑健性（antifragility）への問いかけ。
+  related: [heuristics, prospect_theory, falsifiability]
+  difficulty: 2
+
+- id: thinking_fast_and_slow
+  name_ja: ファスト&スロー
+  name_en: Thinking, Fast and Slow
+  domain: 認知科学
+  thinkers: [ダニエル・カーネマン]
+  seed: |
+    カーネマンが集大成した著作にして、システム 1（速・自動）
+    とシステム 2（遅・熟考）の協働と相克を中心テーマとする
+    認知科学の現代古典。
+  related: [dual_process_theory, heuristics, prospect_theory, behavioral_economics]
+  difficulty: 1
+
+- id: free_energy_principle
+  name_ja: 自由エネルギー原理
+  name_en: Free Energy Principle
+  domain: 神経科学・理論生物学
+  thinkers: [カール・フリストン]
+  seed: |
+    脳・生命・知能を貫く統一原理。あらゆる自己組織化系は
+    予測誤差（自由エネルギー）を最小化することで存在を
+    維持するという深い数理的枠組み。
+  related: [predictive_processing, conatus, embodied_cognition]
+  difficulty: 3
