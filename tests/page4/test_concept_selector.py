@@ -42,11 +42,17 @@ YAML_PATH = PROJECT_ROOT / "data" / "concepts.yaml"
 # (a) concepts.yaml schema validation
 # ---------------------------------------------------------------------------
 
-def test_yaml_loads_as_list_of_66():
-    """Sprint 7 (2026-05-21): 神山さん要望で 14 件追加、52 → 66."""
+def test_yaml_loads_as_list_of_217():
+    """Sprint 8 (2026-05-19): 神山さん要望で 151 件追加、66 → 217.
+
+    7 グループに分けて投入（A: 神山さん提案 19, B: 傾聴学術基盤 9,
+    C: 人名 38, D: 人名ひもづき概念 16, E: バランス補強 30,
+    F: 生命科学拡張 10, G: 神経/AI/システム/量子 29）。
+    目標 365 件に対し 217 件（59%）到達、残 148 件は Sprint 9+ で補充予定。
+    """
     concepts = concept_selector.load_concepts()
-    _check("a1 yaml loads as list of 66 (Sprint 7 +14)",
-           isinstance(concepts, list) and len(concepts) == 66,
+    _check("a1 yaml loads as list of 217 (Sprint 8 +151)",
+           isinstance(concepts, list) and len(concepts) == 217,
            f"got len={len(concepts) if isinstance(concepts, list) else type(concepts).__name__}")
 
 
@@ -205,7 +211,7 @@ def main() -> int:
     print("Page 4 — concept_selector + yaml schema tests")
     print()
     print("(a) concepts.yaml schema:")
-    test_yaml_loads_as_list_of_66()
+    test_yaml_loads_as_list_of_217()
     test_yaml_ids_are_unique()
     test_yaml_required_fields()
     test_yaml_related_references_valid()
