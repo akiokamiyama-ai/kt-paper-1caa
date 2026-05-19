@@ -976,10 +976,13 @@ PAGE_TWO_CSS = f"""
   list-style: none;
   padding: 0;
   margin: 0;
+  display: block;  /* 縦割り明示、横並び化を避ける */
 }}
 .todays-headlines .headline-item {{
-  margin-bottom: 12px;
-  padding-bottom: 12px;
+  display: block;
+  width: 100%;     /* 縦割りで全幅 */
+  margin-bottom: 20px;
+  padding-bottom: 14px;
   border-bottom: 1px dotted #ddd;
 }}
 .todays-headlines .headline-item:last-child {{
@@ -989,9 +992,11 @@ PAGE_TWO_CSS = f"""
 }}
 .todays-headlines .headline-title {{
   display: block;
+  font-family: 'Noto Serif JP', 'Old Standard TT', serif;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 16px;  /* 5/19 神山さん観察「縦割り格上げ」: 14 → 16 */
   line-height: 1.5;
+  margin: 0 0 6px;
 }}
 .todays-headlines .headline-title a {{
   color: inherit;
