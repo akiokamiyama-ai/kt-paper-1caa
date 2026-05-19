@@ -1076,3 +1076,117 @@
     維持するという深い数理的枠組み。
   related: [predictive_processing, conatus, embodied_cognition]
   difficulty: 3
+
+# ============================================================
+# Sprint 8 Group B: 傾聴・対話の学術基盤 9 件追加（2026-05-19）
+# 「ディープリスニング経営」を学術的に基礎づけるための、心理学・現象学・
+# 対話論の核概念群。既存 intersubjectivity と重複した 1 件を除外。
+# ============================================================
+
+- id: active_listening
+  name_ja: アクティブリスニング
+  name_en: Active Listening
+  domain: 人間性心理学
+  thinkers: [カール・ロジャース]
+  seed: |
+    相手の言葉を判断せず、感情と意味を全身で受け止める傾聴技法。
+    ロジャースが来談者中心療法の中核として体系化、
+    共感・受容・自己一致を治療関係の三条件とした。
+  related: [empathic_understanding, servant_leadership, dialogical_self]
+  difficulty: 1
+
+- id: dialogical_self
+  name_ja: 対話的自己
+  name_en: Dialogical Self
+  domain: 対話心理学
+  thinkers: [ヒューバート・ハーマンス]
+  seed: |
+    自己は単一の中心を持つ実体ではなく、複数の声（I-positions）が
+    対話する内的多元体だとする心理学的モデル。
+    心理療法と組織論を架橋する。
+  related: [intersubjectivity, i_thou, anatman]
+  difficulty: 2
+
+- id: communicative_competence
+  name_ja: コミュニケーション能力
+  name_en: Communicative Competence
+  domain: 社会言語学
+  thinkers: [デル・ハイムズ]
+  seed: |
+    文法的正しさを超え、状況・関係・目的に応じて適切に
+    言語を使う能力。ハイムズがチョムスキーの言語能力概念を
+    社会的次元に拡張、応用言語学・教育学の基礎となる。
+  related: [language_game, multimodal_communication, linguistic_relativity]
+  difficulty: 2
+
+- id: sorge
+  name_ja: 配慮（ゾルゲ）
+  name_en: Sorge / Care
+  domain: 現象学・実存哲学
+  thinkers: [ハイデガー]
+  seed: |
+    『存在と時間』でハイデガーが現存在の根本構造として提示した
+    『気遣い』。世界・道具・他者・自己への配慮として、
+    人間は単なる主体ではなく関係の網目に置かれている。
+  related: [being_in_the_world, responsibility_for_other, phenomenology]
+  difficulty: 3
+
+- id: responsibility_for_other
+  name_ja: 他者への応答可能性
+  name_en: Responsibility for the Other
+  domain: 倫理学・現象学
+  thinkers: [エマニュエル・レヴィナス]
+  seed: |
+    他者の顔の前で、応答せずにいられないという無限の倫理的
+    呼びかけ。レヴィナスは存在論を超えて『他者への応答可能性』
+    を第一哲学とし、暴力なき関係の可能性を問うた。
+  related: [i_thou, intersubjectivity, sorge]
+  difficulty: 3
+
+- id: empathic_understanding
+  name_ja: 共感的理解
+  name_en: Empathic Understanding
+  domain: 人間性心理学
+  thinkers: [カール・ロジャース]
+  seed: |
+    相手の内的世界を、あたかも自分のものであるかのように
+    感じ取る能力。ロジャースが人間性心理学の中核に置き、
+    対話と治療の前提条件として位置づけた『as if』性。
+  related: [active_listening, theory_of_mind, dialogical_self]
+  difficulty: 1
+
+- id: silence_in_dialogue
+  name_ja: 沈黙の意味
+  name_en: Meaning of Silence
+  domain: 対話論
+  thinkers: [ミハイル・バフチン]
+  seed: |
+    沈黙は対話の欠如ではなく、応答の準備・抵抗・意味の
+    生成の場である。バフチンは発話間の隙間に多声性の宿りを
+    見出し、対話論的人文学の鍵に据えた。
+  related: [ma, active_listening, dialogical_self]
+  difficulty: 2
+
+- id: metacommunication
+  name_ja: メタコミュニケーション
+  name_en: Metacommunication
+  domain: コミュニケーション論・人類学
+  thinkers: [グレゴリー・ベイトソン]
+  seed: |
+    『これは遊びだ』のように、メッセージそのものについて
+    伝えるコミュニケーション。動物の遊びと精神病理の研究から
+    抽出した、関係を規定する論理階型。
+  related: [language_game, communicative_competence, dual_process_theory]
+  difficulty: 2
+
+- id: hermeneutic_dialogue
+  name_ja: 解釈学的対話
+  name_en: Hermeneutic Dialogue
+  domain: 解釈学
+  thinkers: [ハンス＝ゲオルク・ガダマー]
+  seed: |
+    ガダマー解釈学が示す、テクスト・他者との『地平の融合』
+    としての対話。問いと答えの往復が解釈を深化させる構造、
+    傾聴と理解の哲学的基盤。
+  related: [intersubjectivity, lifeworld, active_listening]
+  difficulty: 3
