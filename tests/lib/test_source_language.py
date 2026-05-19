@@ -202,7 +202,7 @@ def test_real_registry_known_en_sources():
     by_name = reg.sources_by_name
     known_en = [
         "The Economist",
-        "BBC Business（本紙第1面で稼働中）",
+        "BBC Business",
         "Pitchfork",
         "Stanford Encyclopedia of Philosophy（SEP）",
         "Foreign Affairs（CFR）",

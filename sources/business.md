@@ -52,7 +52,7 @@
 - **対象**: グローバル経済・金融・ビジネス・科学技術の論考。英語原文
 - **位置付け**: **グローバル分析・論考の最重要ソース**。news_profile.md §4.1 の「経営判断の合理性の限界」「構造と細部の往復」と最も親和性が高い。Leaders と Briefing は **構造的・長期視点**（§4.3）の記事の宝庫。本紙では「英語原文のまま採用」を基本方針（§5 編集ポリシー）
 
-### 4. BBC Business（本紙第1面で稼働中） ✅
+### 4. BBC Business ✅
 - **URL**: https://www.bbc.com/business
 - **RSS**: https://feeds.bbci.co.uk/news/business/rss.xml
 - **language**: en

@@ -26,7 +26,7 @@ HEADLINES_ALLOWED_SOURCES: tuple[str, ...] = (
     "NHK ニュース 主要",
     "NHK ニュース 経済",
     "Yahoo! ニュース 経済",
-    "BBC Business（本紙第1面で稼働中）",
+    "BBC Business",
     "The Economist",
 )
 

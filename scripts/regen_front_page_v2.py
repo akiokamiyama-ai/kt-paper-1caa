@@ -250,7 +250,7 @@ def _is_japanese_source(source_name: str | None) -> bool:
         return False
     if any(pat in source_name for pat in JAPANESE_SOURCE_PATTERNS):
         return True
-    # Strip parenthetical metadata like "BBC Business（本紙第1面で稼働中）" or
+    # Strip parenthetical metadata like "Foresight（新潮社）" or
     # "Harvard Business Review（HBR.org）" — these annotations contain JA chars
     # but the actual content language is determined by the rest of the name.
     name_stripped = re.sub(r"[（(][^）)]*[）)]", "", source_name)

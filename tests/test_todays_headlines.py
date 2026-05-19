@@ -50,7 +50,7 @@ def _check(label: str, condition: bool, detail: str = "") -> bool:
 def _make_article(
     url: str,
     *,
-    source: str = "BBC Business（本紙第1面で稼働中）",
+    source: str = "BBC Business",
     score: float | None = 50.0,
     description: str = "デフォルト description 100 字未満のサンプル文",
 ) -> dict:
@@ -131,7 +131,7 @@ def test_excluded_page3_dict():
 def test_source_filter_allowed():
     candidates = [
         _make_article("https://nhk/", source="NHK ニュース 主要"),
-        _make_article("https://bbc/", source="BBC Business（本紙第1面で稼働中）"),
+        _make_article("https://bbc/", source="BBC Business"),
         _make_article("https://other/", source="Forbes Japan（リーダーシップ・組織論）"),
         _make_article("https://music/", source="natalie.mu"),
     ]
@@ -306,7 +306,7 @@ def test_allowed_sources_contents():
         "NHK ニュース 主要",
         "NHK ニュース 経済",
         "Yahoo! ニュース 経済",
-        "BBC Business（本紙第1面で稼働中）",
+        "BBC Business",
         "The Economist",
     }
     _check(
