@@ -2376,3 +2376,366 @@
     遺伝子―環境の関係を再定義した。
   related: [selfish_gene, extended_mind, autopoiesis]
   difficulty: 2
+
+# ============================================================
+# Sprint 8 Group G: 神経科学・AI/ML・システム論・量子哲学 29 件追加
+# （2026-05-19）Q3 拡張、現代科学の最前線 4 領域。
+# 31 件提案のうち既存 embodied_cognition / emergence と重複した
+# 2 件を除外し 29 件追加。
+# ============================================================
+
+# --- G-1: 神経科学 ---
+
+- id: neuroplasticity
+  name_ja: 神経可塑性
+  name_en: Neuroplasticity
+  domain: 神経科学
+  thinkers: [神経科学者群]
+  seed: |
+    脳は経験・学習・損傷に応じて構造と機能を変化させる
+    柔軟性を持つ—成人脳でも神経回路は再編成されるという
+    発見。リハビリ・教育・瞑想科学の基盤となった。
+  related: [predictive_processing, mindfulness, engram]
+  difficulty: 1
+
+- id: mirror_neurons
+  name_ja: ミラーニューロン
+  name_en: Mirror Neurons
+  domain: 神経科学
+  thinkers: [ジャコモ・リッツォラッティ]
+  seed: |
+    他者の行為を見たときに、自分が行為するときと同じ
+    パターンで発火するニューロン。リッツォラッティらが
+    1990 年代に発見、共感・模倣・言語の起源解明への手がかり。
+  related: [empathic_understanding, theory_of_mind, embodied_cognition]
+  difficulty: 2
+
+- id: default_mode_network
+  name_ja: デフォルトモードネットワーク
+  name_en: Default Mode Network
+  domain: 神経科学
+  thinkers: [マーカス・ライクル]
+  seed: |
+    何も意識的に課題に取り組んでいない静止時に活性化する
+    脳のネットワーク。ライクルらが同定、自己認識・想起・
+    想像・心の彷徨いの神経基盤として注目される。
+  related: [metacognition, mindfulness, interoception]
+  difficulty: 2
+
+- id: reward_prediction_error
+  name_ja: 報酬予測誤差
+  name_en: Reward Prediction Error
+  domain: 神経科学・強化学習
+  thinkers: [ウォルフラム・シュルツ]
+  seed: |
+    シュルツが発見した、予測した報酬と実際の報酬の差を
+    符号化するドーパミン信号。強化学習の理論と神経科学が
+    出会う中核機構。
+  related: [predictive_processing, reinforcement_learning_evolution, free_energy_principle]
+  difficulty: 2
+
+- id: interoception
+  name_ja: 内受容感覚
+  name_en: Interoception
+  domain: 神経科学
+  thinkers: [バド・クレイグ]
+  seed: |
+    心拍・呼吸・空腹など身体内部の状態の感覚。クレイグらが
+    脳島皮質を中核基盤と同定、情動・自己感覚・身体意識の
+    基盤として近年注目を集める。
+  related: [embodied_cognition, allostasis, default_mode_network]
+  difficulty: 2
+
+- id: engram
+  name_ja: エングラム
+  name_en: Engram
+  domain: 神経科学
+  thinkers: [リヒャルト・セモン, 利根川進]
+  seed: |
+    セモンが提唱、利根川進らが光遺伝学で実証した記憶痕跡の
+    物質的基盤。特定の神経細胞集団に符号化された記憶を
+    活性化・消去できることが示された。
+  related: [neuroplasticity, predictive_processing, qualia]
+  difficulty: 3
+
+- id: glia
+  name_ja: グリア細胞
+  name_en: Glia
+  domain: 神経科学
+  thinkers: [神経科学者群]
+  seed: |
+    ニューロンを支えると考えられてきたグリア細胞が、情報処理・
+    シナプス可塑性・脳の恒常性に能動的に関与することが近年
+    明らかに。脳の計算観を更新する細胞群。
+  related: [neuroplasticity, homeostasis, engram]
+  difficulty: 2
+
+# --- G-2: AI/ML 基礎 ---
+
+- id: inductive_bias
+  name_ja: 帰納バイアス
+  name_en: Inductive Bias
+  domain: 機械学習
+  thinkers: [トム・ミッチェル]
+  seed: |
+    機械学習モデルが訓練データから一般化する際に持ち込む
+    前提・仮定。ミッチェルが概念化、学習可能性と汎化性能を
+    決定づける『何を期待するか』の枠組み。
+  related: [overfitting, representation_learning, abduction]
+  difficulty: 2
+
+- id: overfitting
+  name_ja: 過学習
+  name_en: Overfitting
+  domain: 機械学習
+  thinkers: [統計学者・機械学習研究者群]
+  seed: |
+    訓練データに過剰適応し、未知データへの汎化性能を失う
+    機械学習の典型的失敗。バイアス―分散トレードオフ、
+    正則化・交差検証といった対策の動機となる中核概念。
+  related: [inductive_bias, transfer_learning, falsifiability]
+  difficulty: 1
+
+- id: representation_learning
+  name_ja: 表現学習
+  name_en: Representation Learning
+  domain: 機械学習
+  thinkers: [ヨシュア・ベンジオ]
+  seed: |
+    データから有用な特徴表現を自動的に学習する手法。
+    ベンジオが体系化、深層学習の本質を『表現の階層的
+    学習』として定式化した。
+  related: [attention_mechanism, foundation_model, embodied_cognition]
+  difficulty: 2
+
+- id: transfer_learning
+  name_ja: 転移学習
+  name_en: Transfer Learning
+  domain: 機械学習
+  thinkers: [機械学習研究者群]
+  seed: |
+    ある領域で学習した知識を別の領域に転用する技法。
+    事前学習済みモデルのファインチューニングが代表例、
+    人間の学習との類比でも注目される機械学習の戦略。
+  related: [foundation_model, representation_learning, knowledge_transfer]
+  difficulty: 2
+
+- id: alignment_problem
+  name_ja: アライメント問題
+  name_en: Alignment Problem
+  domain: AI 安全性
+  thinkers: [スチュアート・ラッセル]
+  seed: |
+    強力な AI が人間の価値観・意図と整合的に動作することを
+    保証する難題。ラッセルが体系化、安全な AI 開発の中心
+    テーマとして 2020 年代に重みを増した。
+  related: [emergent_abilities, foundation_model, responsibility_for_other]
+  difficulty: 2
+
+- id: emergent_abilities
+  name_ja: 創発能力
+  name_en: Emergent Abilities
+  domain: AI・大規模言語モデル
+  thinkers: [AI 研究者群]
+  seed: |
+    大規模言語モデルが規模を拡大する過程で、明示的に訓練
+    していない能力を突如示す現象。創発概念の AI への応用、
+    しかし測定方法依存とする批判もある論争中の現象。
+  related: [foundation_model, emergence, hallucination]
+  difficulty: 2
+
+- id: hallucination
+  name_ja: ハルシネーション
+  name_en: Hallucination
+  domain: AI・LLM
+  thinkers: [AI 研究者群]
+  seed: |
+    大規模言語モデルが事実に反する内容を自信を持って生成
+    する現象。確率的言語モデルの本質的傾向であり、検証・
+    グラウンディング・安全性研究の中心課題。
+  related: [foundation_model, alignment_problem, abduction]
+  difficulty: 1
+
+- id: attention_mechanism
+  name_ja: アテンション機構
+  name_en: Attention Mechanism
+  domain: 機械学習
+  thinkers: [アシシュ・ヴァスワニ]
+  seed: |
+    シーケンスの異なる位置間の重要性を動的に重み付けする
+    機構。ヴァスワニらの 2017 年 Transformer 論文で深層
+    学習の主流に、現代の大規模モデル全ての基盤となる。
+  related: [representation_learning, foundation_model, predictive_processing]
+  difficulty: 2
+
+- id: foundation_model
+  name_ja: 基盤モデル
+  name_en: Foundation Model
+  domain: AI
+  thinkers: [リシ・ボムマサニ, スタンフォード HAI]
+  seed: |
+    大量データで事前学習した汎用モデルを多様な下流タスクに
+    転用する AI 開発のパラダイム。スタンフォードの Bommasani
+    らが命名、GPT・BERT・CLIP などが該当する。
+  related: [transfer_learning, representation_learning, emergent_abilities]
+  difficulty: 2
+
+- id: bayesian_inference
+  name_ja: ベイズ推論
+  name_en: Bayesian Inference
+  domain: 統計学・認知科学
+  thinkers: [トマス・ベイズ]
+  seed: |
+    観測されたデータに照らして仮説の確率を逐次更新する
+    推論枠組み。ベイズに由来、機械学習・認知科学・予測脳
+    理論を貫く確率論的世界観の核心。
+  related: [predictive_processing, free_energy_principle, heuristics]
+  difficulty: 2
+
+# --- G-3: システム論 ---
+
+- id: cybernetics
+  name_ja: サイバネティクス
+  name_en: Cybernetics
+  domain: 制御理論・情報論
+  thinkers: [ノーバート・ウィーナー]
+  seed: |
+    ウィーナーが 1948 年に体系化、制御とコミュニケーションを
+    生物と機械に共通の問題として扱う学際領域。AI・認知科学・
+    経営の源流となる『関係の科学』。
+  related: [feedback_loop, systems_thinking, bateson]
+  difficulty: 2
+
+- id: feedback_loop
+  name_ja: フィードバックループ
+  name_en: Feedback Loop
+  domain: システム論
+  thinkers: [サイバネティクス研究者群]
+  seed: |
+    システムの出力が入力に戻って次の挙動を変える循環構造。
+    正のフィードバックは増幅、負のフィードバックは安定化に
+    働く—サイバネティクスと組織論の基本機構。
+  related: [cybernetics, homeostasis, systems_thinking]
+  difficulty: 1
+
+- id: complex_systems
+  name_ja: 複雑系
+  name_en: Complex Systems
+  domain: システム論・複雑性科学
+  thinkers: [ジョン・ホランド, サンタフェ研究所]
+  seed: |
+    多数の要素が局所的に相互作用し、全体として予測困難な
+    振る舞いを示すシステム。ホランドらが研究、適応・創発・
+    自己組織化を主要キーワードとする学際領域。
+  related: [emergence, network_science, dissipative_structure]
+  difficulty: 2
+
+- id: homeostasis
+  name_ja: ホメオスタシス
+  name_en: Homeostasis
+  domain: 生理学
+  thinkers: [ウォルター・キャノン]
+  seed: |
+    キャノンが命名、体温・血糖・pH など内部環境を一定範囲に
+    保つ生体の自己調節機構。ベルナールの内部環境概念を継承し、
+    生理学・医学の基本原理となる。
+  related: [feedback_loop, allostasis, autopoiesis]
+  difficulty: 1
+
+- id: allostasis
+  name_ja: アロスタシス
+  name_en: Allostasis
+  domain: 神経科学・生理学
+  thinkers: [ピーター・スターリング]
+  seed: |
+    スターリングが提唱、変化を通じた安定化—予測に基づき
+    先回りで内部状態を調整する生体の動的恒常性。慢性
+    ストレス・うつ病の理解にも応用される。
+  related: [homeostasis, predictive_processing, interoception]
+  difficulty: 3
+
+- id: tipping_point
+  name_ja: ティッピングポイント
+  name_en: Tipping Point
+  domain: 社会動態
+  thinkers: [マルコム・グラッドウェル]
+  seed: |
+    グラッドウェルが普及させた、量的変化が突如質的変化に
+    転じる閾値。社会動態・流行・気候変動・組織変革の
+    説明枠組みとして広く使われる。
+  related: [emergence, complex_systems, feedback_loop]
+  difficulty: 1
+
+- id: network_science
+  name_ja: ネットワーク科学
+  name_en: Network Science
+  domain: 複雑系
+  thinkers: [アルバート＝ラズロ・バラバシ, ダンカン・ワッツ]
+  seed: |
+    バラバシ、ワッツらが主導、点と線の集合としてのネット
+    ワーク構造を解析する学際分野。スケールフリー・スモール
+    ワールドが代表概念。
+  related: [complex_systems, emergence, echo_chamber]
+  difficulty: 2
+
+# --- G-4: 量子哲学 ---
+
+- id: copenhagen_interpretation
+  name_ja: コペンハーゲン解釈
+  name_en: Copenhagen Interpretation
+  domain: 量子力学
+  thinkers: [ニールス・ボーア, ヴェルナー・ハイゼンベルク]
+  seed: |
+    ボーアとハイゼンベルクが主導した、量子力学の標準的解釈。
+    観測前は波動関数として可能性が重畳、観測で確率的に
+    収縮する—測定の根源的役割を強調。
+  related: [uncertainty_principle, measurement_problem, schrodingers_cat]
+  difficulty: 3
+
+- id: many_worlds_interpretation
+  name_ja: 多世界解釈
+  name_en: Many-Worlds Interpretation
+  domain: 量子力学
+  thinkers: [ヒュー・エヴェレット]
+  seed: |
+    エヴェレットが 1957 年提示した、観測のたびに宇宙そのもの
+    が分岐するという解釈。波動関数の収縮を仮定せず、量子
+    重ね合わせを全宇宙規模で実在として扱う。
+  related: [copenhagen_interpretation, measurement_problem, schrodingers_cat]
+  difficulty: 3
+
+- id: quantum_computation
+  name_ja: 量子計算
+  name_en: Quantum Computation
+  domain: 計算機科学・量子物理学
+  thinkers: [リチャード・ファインマン, デイヴィッド・ドイチュ]
+  seed: |
+    ファインマン、ドイチュらが構想、量子重ね合わせと量子
+    もつれを計算資源として利用する新計算モデル。特定問題で
+    古典計算を指数的に凌駕しうる。
+  related: [quantum_entanglement, computability, turing]
+  difficulty: 3
+
+- id: measurement_problem
+  name_ja: 観測問題
+  name_en: Measurement Problem
+  domain: 量子力学
+  thinkers: [量子論研究者群]
+  seed: |
+    量子重ね合わせ状態がどのようにして観測時に確定値を取る
+    に至るのか、という量子力学の根本的解釈問題。観測者の
+    役割、デコヒーレンスを巡る議論が現在も続く。
+  related: [copenhagen_interpretation, many_worlds_interpretation, schrodingers_cat]
+  difficulty: 3
+
+- id: epr_paradox
+  name_ja: EPRパラドックス
+  name_en: EPR Paradox
+  domain: 量子力学
+  thinkers: [アインシュタイン, ポドルスキー, ローゼン]
+  seed: |
+    アインシュタイン・ポドルスキー・ローゼンが 1935 年論文で
+    提示、量子力学の不完全性を示そうとした思考実験。後の
+    ベル不等式実験で量子非局所性が確認され、逆に量子論を擁護。
+  related: [quantum_entanglement, uncertainty_principle, copenhagen_interpretation]
+  difficulty: 3
