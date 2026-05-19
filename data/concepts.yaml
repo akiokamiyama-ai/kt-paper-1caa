@@ -1665,3 +1665,209 @@
     生態と文化を貫く比較学的視座を開いた。
   related: [yanagita_kunio, ethnography, wild_knowledge]
   difficulty: 2
+
+# ============================================================
+# Sprint 8 Group D: 人名ひもづき概念・定理 16 件追加（2026-05-19）
+# Group C で登録した思想家・科学者の代表概念を、ペアエントリとして配置。
+# 17 件提案のうち既存 entropy と重複した 1 件を除外。
+# ============================================================
+
+# --- 哲学・認識論 ---
+
+- id: copernican_revolution
+  name_ja: コペルニクス的転回
+  name_en: Copernican Revolution
+  domain: 認識論
+  thinkers: [カント]
+  seed: |
+    カントが『純粋理性批判』で行った認識論の転換。
+    対象が認識を規定するのではなく、認識が対象を構成すると
+    いう発想の逆転を、コペルニクスの天文学革命になぞらえた。
+  related: [kant, ding_an_sich, phenomenology]
+  difficulty: 2
+
+- id: occams_razor
+  name_ja: オッカムのカミソリ
+  name_en: Occam's Razor
+  domain: 論理学・科学方法論
+  thinkers: [ウィリアム・オッカム]
+  seed: |
+    現象を説明する仮説のうち、必要以上に存在を増やさない
+    最も単純なものを選ぶべし、という方法論的指針。
+    科学・哲学・統計学で広く使われる節約原理。
+  related: [falsifiability, abduction, paradigm_shift]
+  difficulty: 1
+
+- id: incompleteness_theorem
+  name_ja: 不完全性定理
+  name_en: Incompleteness Theorem
+  domain: 数学・論理学
+  thinkers: [クルト・ゲーデル]
+  seed: |
+    いかなる十分強い形式体系も、自身の無矛盾性を内部で証明
+    できず、真であって証明不可能な命題を含むことを示した
+    ゲーデルの定理。数学の限界と知の自己言及を露わにした。
+  related: [falsifiability, paradigm_shift, ontology]
+  difficulty: 3
+
+- id: idea
+  name_ja: イデア
+  name_en: Idea / Form
+  domain: 古代哲学
+  thinkers: [プラトン]
+  seed: |
+    『国家』『パイドン』でプラトンが立てた、感覚的現象の
+    彼方にあって真の実在をなす形相の領域。中世神学・近代理性
+    主義の遠源、いまも哲学的議論の核に残る。
+  related: [plato, apophatic_theology, ontology]
+  difficulty: 2
+
+- id: cogito
+  name_ja: コギト
+  name_en: Cogito
+  domain: 近代哲学
+  thinkers: [デカルト]
+  seed: |
+    『我思うゆえに我あり』。デカルトが方法的懐疑の極限で
+    見出した、疑い得ぬ自己の存在の確実性。
+    近代主観哲学の出発点であり、心身二元論の源泉でもある。
+  related: [descartes, kant, phenomenology]
+  difficulty: 1
+
+- id: monad
+  name_ja: モナド
+  name_en: Monad
+  domain: 近代哲学
+  thinkers: [ライプニッツ]
+  seed: |
+    ライプニッツが『モナドロジー』で提示した、宇宙を構成する
+    独立な実体の単位。窓のないモナドどうしが予定調和で全体を
+    成すという、独創的な多元論的形而上学。
+  related: [spinoza, descartes, ontology]
+  difficulty: 3
+
+- id: ding_an_sich
+  name_ja: 物自体
+  name_en: Ding an sich
+  domain: 認識論
+  thinkers: [カント]
+  seed: |
+    カントが認識主観の彼方に措定した『物自体』。
+    現象として現れるものの背後にあって、原理的に認識不可能な
+    実在。後の観念論・現象学・実在論論争の起点となる。
+  related: [kant, copernican_revolution, qualia]
+  difficulty: 3
+
+- id: ubermensch
+  name_ja: 超人
+  name_en: Übermensch
+  domain: 現代思想
+  thinkers: [ニーチェ]
+  seed: |
+    『ツァラトゥストラ』でニーチェが提示した、現存在を肯定し
+    新たな価値を創造する人間の理想像。神の死後の人類が
+    向かうべき自己超克の地平として、20 世紀思想に挑戦を投げた。
+  related: [nietzsche, eternal_recurrence, foucault]
+  difficulty: 2
+
+- id: eternal_recurrence
+  name_ja: 永劫回帰
+  name_en: Eternal Recurrence
+  domain: 現代思想
+  thinkers: [ニーチェ]
+  seed: |
+    もし全く同じ生をもう一度生きねばならないとしたら—
+    ニーチェが提示した実存的思考実験。すべての瞬間を肯定できる
+    強さこそ超人の証、として時間と生の意味を問う。
+  related: [nietzsche, ubermensch, deleuze]
+  difficulty: 3
+
+# --- 物理学・量子力学 ---
+
+- id: schrodingers_cat
+  name_ja: シュレーディンガーの猫
+  name_en: Schrödinger's Cat
+  domain: 量子力学
+  thinkers: [エルヴィン・シュレーディンガー]
+  seed: |
+    シュレーディンガーが量子重ね合わせの不条理を示すために
+    提案した思考実験。箱を開けるまで猫は生死の重ね合わせにある—
+    観測問題と量子の存在論を象徴する逸話。
+  related: [uncertainty_principle, quantum_entanglement, ontology]
+  difficulty: 2
+
+- id: quantum_entanglement
+  name_ja: 量子もつれ
+  name_en: Quantum Entanglement
+  domain: 量子力学
+  thinkers: [アインシュタイン, シュレーディンガー]
+  seed: |
+    離れた二粒子が一方の測定で他方の状態が瞬時に決まるという
+    量子力学の非局所相関。アインシュタインが『不気味な遠隔作用』
+    と呼んだ現象、量子情報技術の基盤となる。
+  related: [uncertainty_principle, schrodingers_cat]
+  difficulty: 3
+
+- id: uncertainty_principle
+  name_ja: 不確定性原理
+  name_en: Uncertainty Principle
+  domain: 量子力学
+  thinkers: [ヴェルナー・ハイゼンベルク]
+  seed: |
+    位置と運動量を同時に厳密に測定することは原理的に不可能、
+    というハイゼンベルクの量子力学の基礎原理。
+    古典物理学の決定論的世界観に終止符を打った発見。
+  related: [schrodingers_cat, quantum_entanglement, falsifiability]
+  difficulty: 2
+
+# --- 計算論・情報理論 ---
+
+- id: turing_test
+  name_ja: チューリング・テスト
+  name_en: Turing Test
+  domain: 計算論・AI
+  thinkers: [アラン・チューリング]
+  seed: |
+    アラン・チューリングが提案した、機械の知能を判定する
+    操作的基準。人間との会話で機械と気づかれなければ知性を
+    持つとする、AI と意識を巡る論争の起点。
+  related: [theory_of_mind, qualia, language_game]
+  difficulty: 1
+
+- id: chaitin_constant
+  name_ja: チャイティンの定数
+  name_en: Chaitin's Constant
+  domain: 情報理論・アルゴリズム的情報論
+  thinkers: [グレゴリー・チャイティン]
+  seed: |
+    ランダムに生成されたプログラムが停止する確率 Ω を表す、
+    計算不可能だが定義可能な実数。数学の中の計算不能性と
+    アルゴリズム的情報の限界を示す。
+  related: [incompleteness_theorem, falsifiability, abduction]
+  difficulty: 3
+
+# --- 社会科学・ゲーム理論 ---
+
+- id: tragedy_of_commons
+  name_ja: 共有地の悲劇
+  name_en: Tragedy of the Commons
+  domain: 社会科学・環境論
+  thinkers: [ギャレット・ハーディン]
+  seed: |
+    共有資源を各人が個別合理性で利用すると、全体として
+    資源が枯渇する逆説。ハーディンが 1968 年に論文化、
+    環境問題・公共財・組織のフリーライダー問題の理論的核。
+  related: [prisoners_dilemma, behavioral_economics, systems_thinking]
+  difficulty: 1
+
+- id: prisoners_dilemma
+  name_ja: 囚人のジレンマ
+  name_en: Prisoner's Dilemma
+  domain: ゲーム理論
+  thinkers: [アルバート・W・タッカー]
+  seed: |
+    協力すれば双方得をするが、裏切れば自分だけ得する状況で、
+    合理的選択が双方の損失に終わるゲーム理論の古典。
+    経済・政治・進化を貫く構造を露わにした。
+  related: [tragedy_of_commons, behavioral_economics, heuristics]
+  difficulty: 1
