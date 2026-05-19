@@ -201,18 +201,18 @@ def test_summary_short_passthrough():
     art = {"description": "短い description サンプル文"}
     s = format_summary(art)
     _check(
-        "d1 100 字以内はそのまま返す",
+        "d1 200 字以内はそのまま返す（Sprint 7 微調整 100→200）",
         s == "短い description サンプル文",
         f"got {s!r}",
     )
 
 
 def test_summary_long_truncate():
-    art = {"description": "あ" * 200}
+    art = {"description": "あ" * 400}
     s = format_summary(art)
     _check(
-        "d2 100 字超は末尾「…」付き truncate",
-        len(s) == 100 and s.endswith("…"),
+        "d2 200 字超は末尾「…」付き truncate（Sprint 7 微調整）",
+        len(s) == 200 and s.endswith("…"),
         f"got len={len(s)}, ends={s[-3:]!r}",
     )
 
@@ -235,8 +235,8 @@ def test_summary_empty_description():
 
 def test_summary_default_max_chars():
     _check(
-        "d6 DEFAULT_SUMMARY_MAX_CHARS == 100",
-        DEFAULT_SUMMARY_MAX_CHARS == 100,
+        "d6 DEFAULT_SUMMARY_MAX_CHARS == 200 (Sprint 7 微調整、5/19 神山さん観察)",
+        DEFAULT_SUMMARY_MAX_CHARS == 200,
     )
 
 

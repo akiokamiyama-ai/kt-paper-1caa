@@ -31,7 +31,9 @@ HEADLINES_ALLOWED_SOURCES: tuple[str, ...] = (
 )
 
 DEFAULT_HEADLINES_TOP_N: int = 3
-DEFAULT_SUMMARY_MAX_CHARS: int = 100
+# Sprint 7 Phase 2 微調整 (2026-05-20): 5/19 朝刊観察で 100 字では内容が
+# ほぼ分からないと神山さん指摘、200 字に拡張。3 記事構成の紙面スペースで許容範囲。
+DEFAULT_SUMMARY_MAX_CHARS: int = 200
 
 
 def _extract_article_from_selection(sel: object) -> dict | None:
