@@ -147,11 +147,13 @@ def test_utterance_contains_article_meta():
     ok = (
         "サティ生誕160年" in utt
         and "春秋社" in utt
-        and "600 字前後" in utt
+        and "800 字前後" in utt
         and "JSON" in utt
+        and "空・雨・傘" in utt  # Sprint 7 微調整: フレーム禁止指示の存在検証
     )
-    _check("a5 utterance includes title + source + 600字 + JSON instruction "
-           "(Sprint 7 Phase 1 Step 3: 500→600 拡張)", ok,
+    _check("a5 utterance includes title + source + 800字 + JSON instruction "
+           "+ 空・雨・傘 禁止 (Sprint 7 微調整 2026-05-20: 600→800 + フレーム禁止)",
+           ok,
            f"utt[:80]={utt[:80]!r}")
 
 
