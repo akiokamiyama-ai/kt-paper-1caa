@@ -2250,3 +2250,129 @@
     露わにし、科学万能主義への対抗軸となった。
   related: [paradigm_shift, falsifiability, kuhn]
   difficulty: 3
+
+# ============================================================
+# Sprint 8 Group F: 生命科学拡張 10 件追加（2026-05-19）
+# Q2 拡張として進化生物学・進化計算・エナクティブ認知を深掘り。
+# 全 10 件新規、既存重複なし。
+# ============================================================
+
+- id: adaptive_radiation
+  name_ja: 適応放散
+  name_en: Adaptive Radiation
+  domain: 進化生物学
+  thinkers: [チャールズ・ダーウィン]
+  seed: |
+    単一の祖先種が、新たな生態的地位を求めて多様な形質を
+    獲得しながら短期間に種分化する現象。ダーウィンフィンチ、
+    ハワイのミツスイなどが典型例として知られる。
+  related: [selfish_gene, fitness_landscape, coevolution]
+  difficulty: 1
+
+- id: coevolution
+  name_ja: 共進化
+  name_en: Coevolution
+  domain: 進化生物学
+  thinkers: [生態学者群]
+  seed: |
+    相互作用する複数の種が、互いの進化的変化に応じて適応し
+    合う進化過程。捕食者と被食者、花とポリネーターのような
+    共進化関係が生態系の複雑性を生む。
+  related: [symbiogenesis, red_queen_hypothesis, ess]
+  difficulty: 2
+
+- id: genetic_drift
+  name_ja: 遺伝的浮動
+  name_en: Genetic Drift
+  domain: 進化生物学・集団遺伝学
+  thinkers: [木村資生]
+  seed: |
+    自然選択ではなく偶然のサンプリング誤差で対立遺伝子頻度が
+    世代間で変動する現象。木村資生の中立進化説では分子進化の
+    主要因として位置づけられ、適応至上主義に修正を迫った。
+  related: [selfish_gene, fitness_landscape, emergent_evolution]
+  difficulty: 2
+
+- id: red_queen_hypothesis
+  name_ja: 赤の女王仮説
+  name_en: Red Queen Hypothesis
+  domain: 進化生物学
+  thinkers: [リー・ヴァン・ヴェイレン]
+  seed: |
+    『同じ場所に留まるには走り続けねばならない』—
+    ヴァン・ヴェイレンが提唱した、種は他種と共進化し続ける
+    ことでようやく絶滅を免れるという進化仮説。
+  related: [coevolution, selfish_gene, ess]
+  difficulty: 2
+
+- id: emergent_evolution
+  name_ja: 創発進化
+  name_en: Emergent Evolution
+  domain: 進化哲学
+  thinkers: [コンウィ・ロイド・モーガン]
+  seed: |
+    進化は単純な要素の積み重ねではなく、新たな性質の出現を
+    伴うとするモーガンの進化哲学。物質→生命→心の階層的出現を
+    擁護、創発概念を進化論に導入した。
+  related: [emergence, genetic_drift, autopoiesis]
+  difficulty: 3
+
+- id: genetic_algorithm
+  name_ja: 遺伝的アルゴリズム
+  name_en: Genetic Algorithm
+  domain: 進化計算
+  thinkers: [ジョン・ホランド]
+  seed: |
+    自然選択を計算に応用した最適化手法。ホランドが 1970 年代に
+    開発、変異・交叉・選択を反復し解空間を探索する進化計算の
+    代表的アルゴリズム。
+  related: [reinforcement_learning_evolution, fitness_landscape, computability]
+  difficulty: 2
+
+- id: reinforcement_learning_evolution
+  name_ja: 強化学習と進化
+  name_en: RL and Evolution
+  domain: 機械学習・進化
+  thinkers: [リチャード・サットン]
+  seed: |
+    報酬による試行錯誤の学習と、変異・選択による進化を統一的に
+    捉える視座。深層強化学習と進化計算が交差、AI と生物学の
+    境界を再定義する。
+  related: [genetic_algorithm, free_energy_principle, predictive_processing]
+  difficulty: 2
+
+- id: fitness_landscape
+  name_ja: 適応度地形
+  name_en: Fitness Landscape
+  domain: 進化生物学
+  thinkers: [シューアル・ライト]
+  seed: |
+    シューアル・ライトが導入した、遺伝子型空間の各点に
+    適応度を割り当てた多次元地形。山頂・谷・橋を持ち、
+    進化を最適化の山登り問題として可視化する強力なメタファー。
+  related: [adaptive_radiation, genetic_drift, genetic_algorithm]
+  difficulty: 2
+
+- id: enactive_cognition
+  name_ja: エナクティブ認知
+  name_en: Enactive Cognition
+  domain: 認知科学
+  thinkers: [フランシスコ・ヴァレラ, エヴァン・トンプソン]
+  seed: |
+    ヴァレラとトンプソンが提唱した認知科学の第三世代パラダイム。
+    認知は脳内の表象処理ではなく、行為する身体が環境と共に
+    意味世界を生み出す行為そのものだとする視座。
+  related: [maturana_varela, autopoiesis, embodied_cognition]
+  difficulty: 3
+
+- id: extended_phenotype
+  name_ja: 拡張表現型
+  name_en: Extended Phenotype
+  domain: 進化生物学
+  thinkers: [リチャード・ドーキンス]
+  seed: |
+    ドーキンスが提唱した、遺伝子の表現型は個体の身体に閉じず、
+    ビーバーのダムや蜘蛛の巣など外的構造にも及ぶという視座。
+    遺伝子―環境の関係を再定義した。
+  related: [selfish_gene, extended_mind, autopoiesis]
+  difficulty: 2
