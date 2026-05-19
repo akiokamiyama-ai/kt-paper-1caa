@@ -1,0 +1,33 @@
+{
+  "date": "2026-05-20",
+  "page1_urls": [
+    "https://www.economist.com/finance-and-economics/2026/05/11/china-wants-more-robots-but-not-fewer-workers",
+    "https://www.economist.com/finance-and-economics/2026/05/18/how-much-is-donald-trump-costing-americas-economy",
+    "https://www.bbc.com/news/articles/c0q2gkj97eko?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/cq6p0vzyvrmo?at_medium=RSS&at_campaign=rss"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://atmarkit.itmedia.co.jp/ait/articles/2605/19/news044.html",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2605/19/news003.html",
+    "web_repo": "https://www.bc01.net/seminar-report/fc_sesshon_202606_1/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/inaccurate-maps-undermined-africa-economic-prospects-by-carlos-lopes-and-selma-malika-haddadi-2026-05",
+    "http://www3.nhk.or.jp/news/html/20260519/k10015124931000.html",
+    "https://www.bloomberg.com/news/articles/2026-05-19/us-stock-futures-drop-as-semiconductor-stocks-slip-yields-climb",
+    "https://www.mckinsey.com/featured-insights/mckinsey-on-lives-and-legacies/2026-volume-3",
+    "https://wordswithoutborders.org/read/article/2026-05/a-fist-loaded-with-the-future-three-microessays-texon-howard/",
+    "https://www.shunjusha.co.jp/news/n126016.html"
+  ],
+  "page4_urls": [
+    "https://shinsho-plus.shueisha.co.jp/column/hajimetenokoukyousosyou/34903",
+    "https://shinsho-plus.shueisha.co.jp/column/hajimetenokoukyousosyou/34908",
+    "https://shinsho-plus.shueisha.co.jp/column/hajimetenokoukyousosyou/34901"
+  ],
+  "page5_url": "https://thetrek.co/pacific-crest-trail/roundup-is-being-sprayed-in-national-forests-heres-what-pct-hikers-should-know/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/05/19/the-ignorant-art-historian-sackcloth-1953/",
+    "music": "https://natalie.mu/music/news/672657",
+    "outdoor": "https://thetrek.co/pacific-crest-trail/roundup-is-being-sprayed-in-national-forests-heres-what-pct-hikers-should-know/"
+  }
+}

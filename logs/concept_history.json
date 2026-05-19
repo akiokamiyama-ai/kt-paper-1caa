@@ -109,6 +109,11 @@
       "concept_id": "prospect_theory",
       "name_ja": "プロスペクト理論",
       "displayed_on": "2026-05-19"
+    },
+    {
+      "concept_id": "seci_model",
+      "name_ja": "SECIモデル",
+      "displayed_on": "2026-05-20"
     }
   ]
 }
