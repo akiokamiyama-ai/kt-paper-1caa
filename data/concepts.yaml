@@ -1871,3 +1871,382 @@
     経済・政治・進化を貫く構造を露わにした。
   related: [tragedy_of_commons, behavioral_economics, heuristics]
   difficulty: 1
+
+# ============================================================
+# Sprint 8 Group E: バランス補強 30 件追加（2026-05-19）
+# 日本思想・美学・メディア論・生命科学・数学・科学哲学を横断的に補強。
+# 35 件提案のうち既存重複 5 件（mono_no_aware, ma, dissipative_structure,
+# paradigm_shift, falsifiability）を除外し 30 件追加。
+# ============================================================
+
+# --- E-1: 日本思想・東洋哲学 ---
+
+- id: motoori_norinaga
+  name_ja: 本居宣長
+  name_en: Motoori Norinaga
+  domain: 日本思想・国学
+  thinkers: [本居宣長]
+  seed: |
+    『古事記伝』『源氏物語玉の小櫛』で国学を大成した江戸期の
+    文献学者。漢意を排し、もののあはれという日本固有の感性を
+    学問の中心に据えた、近世国学最大の業績。
+  related: [mono_no_aware, yanagita_kunio, kukai]
+  difficulty: 2
+
+- id: yanagi_soetsu
+  name_ja: 柳宗悦
+  name_en: Yanagi Sōetsu
+  domain: 民藝・美学
+  thinkers: [柳宗悦]
+  seed: |
+    『民藝とは何か』で無名の職人の手仕事に美を発見した思想家。
+    用の美・健全な美を理念に、近代主義的個人主義芸術への
+    対抗軸として民藝運動を組織した。
+  related: [okakura_tenshin, mono_no_aware, wabi_sabi]
+  difficulty: 2
+
+- id: okakura_tenshin
+  name_ja: 岡倉天心
+  name_en: Okakura Tenshin
+  domain: 東洋美学
+  thinkers: [岡倉天心]
+  seed: |
+    『茶の本』『東洋の理想』で東洋美学を英語圏に紹介した
+    美術行政家。アジア一元論と日本美術復興を企図、近代日本に
+    おける東洋美学の旗手として東西文化の橋渡しを担った。
+  related: [yanagi_soetsu, wabi_sabi, mono_no_aware]
+  difficulty: 2
+
+- id: kuki_shuzo
+  name_ja: 九鬼周造
+  name_en: Kuki Shūzō
+  domain: 日本思想
+  thinkers: [九鬼周造]
+  seed: |
+    『「いき」の構造』で江戸町人文化の美的範疇を哲学的に
+    解析した京都学派の哲学者。ハイデガー・ベルクソンに学び
+    つつ、日本固有の美意識を西洋哲学の手法で記述した。
+  related: [nishida_kitaro, mono_no_aware, wabi_sabi]
+  difficulty: 3
+
+- id: watsuji_tetsuro
+  name_ja: 和辻哲郎
+  name_en: Watsuji Tetsurō
+  domain: 日本思想・倫理学
+  thinkers: [和辻哲郎]
+  seed: |
+    『風土』『倫理学』で日本独自の倫理学を構築した京都学派の
+    哲学者。風土と人間存在の相互規定、間柄としての人間という
+    視座で、西洋的個人主義の倫理を再編した。
+  related: [nishida_kitaro, intersubjectivity, ma]
+  difficulty: 3
+
+- id: wabi_sabi
+  name_ja: わび・さび
+  name_en: Wabi-sabi
+  domain: 日本美学
+  thinkers: [千利休, 松尾芭蕉]
+  seed: |
+    不完全さ・侘しさ・古さの中に美を見出す日本的感性。
+    千利休が茶の湯で結晶化、松尾芭蕉が俳諧で深化させた。
+    完璧・新しさを尊ぶ西洋美学への対抗軸として世界に知られる。
+  related: [mono_no_aware, ma, yanagi_soetsu]
+  difficulty: 2
+
+- id: hongaku_thought
+  name_ja: 本覚思想
+  name_en: Original Enlightenment
+  domain: 仏教哲学
+  thinkers: [天台系僧侶]
+  seed: |
+    すべての衆生は本来既に悟っているとする、平安期天台で
+    発展した日本仏教の独自思想。修行で悟りを得るのではなく、
+    現実そのものが悟りの場であるという、日本的霊性の源流。
+  related: [dogen, anatman, sunyata]
+  difficulty: 3
+
+- id: muga
+  name_ja: 無我（日本的展開）
+  name_en: Muga
+  domain: 仏教哲学・日本思想
+  thinkers: [日本仏教各派]
+  seed: |
+    禅・武道・茶道に通底する日本的『無我』。自我の主張を脱した
+    境地で、行為と動作が自ずから流れ出る状態。フロー体験や
+    没我との接点も指摘される、東洋的主体観の核心。
+  related: [anatman, dogen, flow_experience]
+  difficulty: 2
+
+# --- E-2: 美学・芸術論 ---
+
+- id: sublime
+  name_ja: 崇高
+  name_en: Sublime
+  domain: 美学
+  thinkers: [エドマンド・バーク, カント]
+  seed: |
+    美と区別される、圧倒的なものに直面した畏怖と歓喜の
+    混じった感情。バークが感性論で分析、カントが理性の優越を
+    示す経験として哲学化、現代美学の主題として継承される。
+  related: [kant, mono_no_aware, qualia]
+  difficulty: 2
+
+- id: aura
+  name_ja: アウラ
+  name_en: Aura
+  domain: 芸術論・メディア論
+  thinkers: [ヴァルター・ベンヤミン]
+  seed: |
+    『複製技術時代の芸術作品』でベンヤミンが提示した、
+    原作品の一回性と現前性に宿る不可侵の輝き。複製技術は
+    このアウラを解体する—メディア論と美学の交差点。
+  related: [simulacra, medium_is_the_message, mcluhan]
+  difficulty: 3
+
+- id: differance
+  name_ja: 差延
+  name_en: Différance
+  domain: 現代思想
+  thinkers: [ジャック・デリダ]
+  seed: |
+    デリダが脱構築の鍵概念として提示した『差延』。差異と
+    遅延を一語に重ね、意味は完結せず常に他へとずれ続けると
+    示した。声・現前の哲学への根本的批判。
+  related: [derrida, language_game, deleuze]
+  difficulty: 3
+
+- id: homo_ludens
+  name_ja: ホモ・ルーデンス
+  name_en: Homo Ludens
+  domain: 文化論
+  thinkers: [ヨハン・ホイジンガ]
+  seed: |
+    ホイジンガが『ホモ・ルーデンス』で提示した『遊ぶ人』
+    としての人間観。遊戯は文化に先立つ根源的な活動であり、
+    法律・戦争・芸術もまた遊戯の構造を持つと示した。
+  related: [language_game, metacommunication, flow_experience]
+  difficulty: 2
+
+- id: poetics_mimesis
+  name_ja: 詩学・模倣
+  name_en: Poetics / Mimesis
+  domain: 古典美学
+  thinkers: [アリストテレス]
+  seed: |
+    アリストテレス『詩学』が打ち立てた、芸術＝自然の模倣
+    （mimesis）論。模倣は単なる写しではなく、可能性の世界を
+    提示する人間固有の認識活動として再評価された。
+  related: [aristotle, plato, idea]
+  difficulty: 2
+
+# --- E-3: メディア論・情報論 ---
+
+- id: mcluhan
+  name_ja: マクルーハン
+  name_en: McLuhan
+  domain: メディア論
+  thinkers: [マーシャル・マクルーハン]
+  seed: |
+    『メディア論』『グーテンベルクの銀河系』でメディアを
+    文化の決定要因として論じたカナダ出身の理論家。
+    電子メディアによる地球村の到来を 60 年代に予言した。
+  related: [medium_is_the_message, simulacra, multimodal_communication]
+  difficulty: 2
+
+- id: medium_is_the_message
+  name_ja: メディアはメッセージ
+  name_en: The Medium is the Message
+  domain: メディア論
+  thinkers: [マーシャル・マクルーハン]
+  seed: |
+    マクルーハンの最も有名な命題。重要なのは伝達されるコンテンツ
+    ではなく、メディアそのものが感覚比率・思考様式を変えると
+    いう主張。デジタル時代のメディア論の出発点。
+  related: [mcluhan, multimodal_communication, ontology]
+  difficulty: 2
+
+- id: simulacra
+  name_ja: シミュラークル
+  name_en: Simulacra
+  domain: 現代思想
+  thinkers: [ジャン・ボードリヤール]
+  seed: |
+    『シミュラークルとシミュレーション』でボードリヤールが
+    提示した、原本なき複製のリアリティ。記号が現実から離れ
+    自律的に増殖する後期資本主義の超現実を診断した。
+  related: [aura, derrida, mcluhan]
+  difficulty: 3
+
+- id: shannon_information
+  name_ja: 情報量（シャノン情報）
+  name_en: Shannon Information
+  domain: 情報理論
+  thinkers: [クロード・シャノン]
+  seed: |
+    クロード・シャノンが 1948 年論文で確立した、メッセージの
+    不確実性を bit で測る情報量の数学的定義。通信工学・暗号・
+    機械学習・神経科学の基礎となる情報の単位。
+  related: [entropy, chaitin_constant, computability]
+  difficulty: 2
+
+- id: echo_chamber
+  name_ja: エコーチェンバー
+  name_en: Echo Chamber
+  domain: メディア論・社会心理学
+  thinkers: [Cass Sunstein, メディア研究者]
+  seed: |
+    同質の意見が反響し合い、異なる視点が遮断される情報環境。
+    SNS のフィルターバブルと連動し、現代の社会分断・確証
+    バイアスの増幅装置として注目される。
+  related: [heuristics, behavioral_economics, mcluhan]
+  difficulty: 1
+
+# --- E-4: 生命科学・進化論 ---
+
+- id: gaia_hypothesis
+  name_ja: ガイア仮説
+  name_en: Gaia Hypothesis
+  domain: 地球生命科学
+  thinkers: [ジェームズ・ラブロック]
+  seed: |
+    ジェームズ・ラブロックが提唱した、地球全体を一つの自己
+    調節する生命系として捉える仮説。生命と地球環境が相互に
+    作用し恒常性を維持する—生命圏哲学の原点。
+  related: [emergence, systems_thinking, autopoiesis]
+  difficulty: 2
+
+- id: selfish_gene
+  name_ja: 利己的遺伝子
+  name_en: Selfish Gene
+  domain: 進化生物学
+  thinkers: [リチャード・ドーキンス]
+  seed: |
+    ドーキンスが『利己的な遺伝子』で打ち立てた、個体・種では
+    なく遺伝子を進化の単位と見る視座。利他行動も遺伝子の
+    運搬戦略として説明される。
+  related: [ess, emergence, falsifiability]
+  difficulty: 1
+
+- id: symbiogenesis
+  name_ja: 共生進化
+  name_en: Symbiogenesis
+  domain: 進化生物学
+  thinkers: [リン・マーギュリス]
+  seed: |
+    マーギュリスが提唱した、真核細胞・ミトコンドリア・葉緑体の
+    起源を異種共生に求める進化論。競争中心のダーウィン主義に
+    対し、協働を進化の原動力に据える視座。
+  related: [autopoiesis, emergence, selfish_gene]
+  difficulty: 2
+
+- id: ess
+  name_ja: 進化的安定戦略
+  name_en: Evolutionarily Stable Strategy
+  domain: 進化生物学・ゲーム理論
+  thinkers: [ジョン・メイナード＝スミス]
+  seed: |
+    メイナード＝スミスがゲーム理論を進化に応用、安定的に
+    維持される戦略を定義。一度集団に広まれば、別の戦略の
+    侵入を許さない頑健性—行動の進化的合理性の基本枠組み。
+  related: [prisoners_dilemma, selfish_gene, behavioral_economics]
+  difficulty: 2
+
+- id: autopoiesis
+  name_ja: オートポイエーシス
+  name_en: Autopoiesis
+  domain: 認知科学・生物学
+  thinkers: [ウンベルト・マトゥラーナ, フランシスコ・ヴァレラ]
+  seed: |
+    マトゥラーナとヴァレラが提示した、生命とは自分自身を生成し
+    維持し続ける自律的システムであるという定義。情報入力に
+    反応する装置ではなく、閉じた自己生産系として生命を捉える。
+  related: [maturana_varela, emergence, free_energy_principle]
+  difficulty: 3
+
+# --- E-5: 数学・論理学 ---
+
+- id: godel
+  name_ja: ゲーデル
+  name_en: Gödel
+  domain: 数学・論理学
+  thinkers: [クルト・ゲーデル]
+  seed: |
+    不完全性定理で 20 世紀数学の前提を覆したオーストリア系
+    論理学者。形式体系の限界と自己言及の構造を露わにし、
+    ヒルベルト・プログラムを根底から揺るがした。
+  related: [incompleteness_theorem, computability, turing]
+  difficulty: 3
+
+- id: turing
+  name_ja: チューリング
+  name_en: Turing
+  domain: 数学・計算機科学
+  thinkers: [アラン・チューリング]
+  seed: |
+    計算可能性の定義となるチューリング機械を考案し、
+    第二次大戦中のエニグマ解読でも貢献したイギリスの数学者。
+    AI 研究の祖、生物形態形成理論にも先駆的業績。
+  related: [turing_test, computability, godel]
+  difficulty: 2
+
+- id: mandelbrot
+  name_ja: マンデルブロ
+  name_en: Mandelbrot
+  domain: 数学
+  thinkers: [ブノワ・マンデルブロ]
+  seed: |
+    フラクタル幾何学を開いたポーランド系フランス・米国の数学者。
+    自然界の不規則な形（海岸線・雲・株価変動）に自己相似性を
+    発見、伝統的幾何学を超える視座を開いた。
+  related: [fractal, emergence, dissipative_structure]
+  difficulty: 2
+
+- id: fractal
+  name_ja: フラクタル
+  name_en: Fractal
+  domain: 数学・複雑系
+  thinkers: [ブノワ・マンデルブロ]
+  seed: |
+    マンデルブロが発見した、どの尺度で見ても自己相似な
+    幾何構造。海岸線・血管・気象・市場変動など自然と社会の
+    多くの現象に共通する複雑性の数理的記述。
+  related: [mandelbrot, emergence, dissipative_structure]
+  difficulty: 1
+
+- id: computability
+  name_ja: 計算可能性
+  name_en: Computability
+  domain: 計算機科学
+  thinkers: [アラン・チューリング, アロンゾ・チャーチ]
+  seed: |
+    チューリングとチャーチが独立に定式化した、アルゴリズムで
+    原理的に解ける問題の集合。コンピューターサイエンスの
+    理論基盤、停止問題等の根本的限界を含む。
+  related: [turing, turing_test, incompleteness_theorem]
+  difficulty: 2
+
+# --- E-6: 科学哲学 ---
+
+- id: kuhn
+  name_ja: クーン
+  name_en: Kuhn
+  domain: 科学哲学
+  thinkers: [トマス・クーン]
+  seed: |
+    『科学革命の構造』で科学の進歩を累積ではなく断絶として
+    描いた科学哲学者。通常科学と科学革命の交替、不可通約性
+    概念で 20 世紀後半の科学観を一変させた。
+  related: [paradigm_shift, falsifiability, foucault]
+  difficulty: 2
+
+- id: feyerabend
+  name_ja: ファイアアーベント
+  name_en: Feyerabend
+  domain: 科学哲学
+  thinkers: [パウル・ファイアアーベント]
+  seed: |
+    『方法への挑戦』で『なんでもあり』を掲げた科学哲学の
+    挑発者。科学的方法の単一性を批判、知の多様性と政治性を
+    露わにし、科学万能主義への対抗軸となった。
+  related: [paradigm_shift, falsifiability, kuhn]
+  difficulty: 3
