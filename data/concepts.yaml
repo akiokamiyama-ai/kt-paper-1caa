@@ -1190,3 +1190,478 @@
     傾聴と理解の哲学的基盤。
   related: [intersubjectivity, lifeworld, active_listening]
   difficulty: 3
+
+# ============================================================
+# Sprint 8 Group C: 人名 concept 38 件追加（2026-05-19）
+# 古代〜現代を横断する思想家を 38 人、独立 concept として登録。
+# 人名と概念を別エントリにすることで、related ネットワークを
+# 「思想家 ↔ 代表概念」の両方向で構築可能にする。
+# ============================================================
+
+# --- 古代・中世 ---
+
+- id: socrates
+  name_ja: ソクラテス
+  name_en: Socrates
+  domain: 古代哲学
+  thinkers: [ソクラテス]
+  seed: |
+    書物を残さなかったが、無知の知と問答法（エレンコス）で
+    西洋哲学の出発点となったアテネの哲学者。
+    弟子プラトンを通じて、対話と倫理的探求の典型を遺した。
+  related: [plato, hermeneutic_dialogue, dialogical_self]
+  difficulty: 1
+
+- id: plato
+  name_ja: プラトン
+  name_en: Plato
+  domain: 古代哲学
+  thinkers: [プラトン]
+  seed: |
+    ソクラテスの弟子、対話篇『国家』『饗宴』『ティマイオス』を
+    遺したアカデメイアの開祖。イデア論、想起説、哲人王思想で
+    西洋哲学全体に影を落とした。
+  related: [socrates, aristotle, apophatic_theology]
+  difficulty: 2
+
+- id: aristotle
+  name_ja: アリストテレス
+  name_en: Aristotle
+  domain: 古代哲学
+  thinkers: [アリストテレス]
+  seed: |
+    論理学・形而上学・倫理学・政治学・詩学・自然学を体系化した
+    古代哲学の巨人。プラトンの弟子だが現実重視に転換、
+    中世以降の西欧学問の基本枠組みを与え続けた。
+  related: [plato, socrates, ontology]
+  difficulty: 2
+
+- id: augustine
+  name_ja: アウグスティヌス
+  name_en: Augustine
+  domain: 神学・哲学
+  thinkers: [アウグスティヌス]
+  seed: |
+    『告白』『神の国』を著した教父神学の最大の存在。
+    意志・時間・記憶・恩寵という主題で、後の西欧思想史の
+    核を構成、近代主体観の遠源ともなる。
+  related: [aquinas, apophatic_theology, plato]
+  difficulty: 2
+
+- id: aquinas
+  name_ja: トマス・アクィナス
+  name_en: Aquinas
+  domain: 神学・哲学
+  thinkers: [トマス・アクィナス]
+  seed: |
+    『神学大全』で信仰と理性の総合を試みた中世スコラ哲学の巨頭。
+    アリストテレス哲学をキリスト教神学に組み込み、
+    西欧の知的伝統の屋根組みを作った。
+  related: [aristotle, augustine, apophatic_theology]
+  difficulty: 3
+
+# --- 近代哲学 ---
+
+- id: descartes
+  name_ja: デカルト
+  name_en: Descartes
+  domain: 近代哲学
+  thinkers: [デカルト]
+  seed: |
+    『方法序説』『省察』で近代哲学を開始したフランスの数学者・
+    哲学者。方法的懐疑から『我思うゆえに我あり』を導き、
+    心身二元論で近代の主体観の枠組みを与えた。
+  related: [phenomenology, kant, spinoza]
+  difficulty: 2
+
+- id: spinoza
+  name_ja: スピノザ
+  name_en: Spinoza
+  domain: 近代哲学
+  thinkers: [スピノザ]
+  seed: |
+    『エチカ』を幾何学的方法で書いたオランダのユダヤ系哲学者。
+    神＝自然の汎神論的一元論、感情の地理学で人間の自由を再定義、
+    現代の情動論・複雑系まで響き続ける。
+  related: [conatus, deleuze, descartes]
+  difficulty: 3
+
+- id: kant
+  name_ja: カント
+  name_en: Kant
+  domain: 認識論・倫理学
+  thinkers: [カント]
+  seed: |
+    『純粋理性批判』で認識論を一変させた近代哲学の頂点。
+    コペルニクス的転回により、対象が認識に従うのではなく
+    認識が対象を構成すると示した。物自体・道徳法則を遺す。
+  related: [phenomenology, falsifiability, nietzsche]
+  difficulty: 3
+
+- id: hegel
+  name_ja: ヘーゲル
+  name_en: Hegel
+  domain: ドイツ観念論
+  thinkers: [ヘーゲル]
+  seed: |
+    『精神現象学』『大論理学』でドイツ観念論を頂点に導いた哲学者。
+    弁証法・絶対精神・主奴の弁証法など、その後 200 年の哲学と
+    社会理論を覆う巨大な体系を構築した。
+  related: [marx, kant, nietzsche]
+  difficulty: 3
+
+- id: marx
+  name_ja: マルクス
+  name_en: Marx
+  domain: 社会哲学・経済学
+  thinkers: [マルクス]
+  seed: |
+    『資本論』『経済学・哲学草稿』で資本主義を解剖し、
+    20 世紀政治史を動かした哲学者・経済学者。疎外論・物象化・
+    上部下部構造で、社会の物質的基礎を分析する方法を遺した。
+  related: [hegel, foucault, bourdieu]
+  difficulty: 2
+
+# --- 現代思想（西洋） ---
+
+- id: nietzsche
+  name_ja: ニーチェ
+  name_en: Nietzsche
+  domain: 現代思想
+  thinkers: [ニーチェ]
+  seed: |
+    『ツァラトゥストラ』『道徳の系譜』で西洋形而上学の根本前提を
+    破壊した思想家。神の死・超人・永劫回帰・力への意志という
+    劇薬的概念で、現代思想の地下水脈となった。
+  related: [foucault, derrida, deleuze]
+  difficulty: 3
+
+- id: husserl
+  name_ja: フッサール
+  name_en: Husserl
+  domain: 現象学
+  thinkers: [フッサール]
+  seed: |
+    現象学の創始者。『論理学研究』『イデーン』で意識の志向性を
+    分析、判断中止により事象そのものへ立ち戻る哲学的方法を
+    確立。後継の現象学運動を生み出した。
+  related: [phenomenology, intentionality, lifeworld]
+  difficulty: 3
+
+- id: heidegger
+  name_ja: ハイデガー
+  name_en: Heidegger
+  domain: 現象学・実存哲学
+  thinkers: [ハイデガー]
+  seed: |
+    『存在と時間』で存在論を根底から問い直した 20 世紀最大級の
+    哲学者。現存在・世界内存在・気遣いといった核心概念で、
+    人間と世界の根源的関係を描き直した。
+  related: [being_in_the_world, sorge, phenomenology, husserl]
+  difficulty: 3
+
+- id: merleau_ponty
+  name_ja: メルロ＝ポンティ
+  name_en: Merleau-Ponty
+  domain: 現象学
+  thinkers: [メルロ＝ポンティ]
+  seed: |
+    『知覚の現象学』で身体を哲学の中心に据えたフランス現象学者。
+    意識ではなく身体こそが世界と関わる根源、と示し、
+    認知科学のエンボディメント論を半世紀先取りした。
+  related: [embodiment, embodied_cognition, husserl, phenomenology]
+  difficulty: 3
+
+- id: wittgenstein
+  name_ja: ウィトゲンシュタイン
+  name_en: Wittgenstein
+  domain: 言語哲学
+  thinkers: [ウィトゲンシュタイン]
+  seed: |
+    前期『論理哲学論考』で語りえぬものを示し、後期『哲学探究』
+    で言語ゲーム論に転じた。20 世紀分析哲学の方向を二度
+    規定した稀有な哲学者。
+  related: [language_game, linguistic_relativity, quine]
+  difficulty: 3
+
+- id: quine
+  name_ja: クワイン
+  name_en: Quine
+  domain: 分析哲学
+  thinkers: [クワイン]
+  seed: |
+    『経験主義の二つのドグマ』『ことばと対象』で分析哲学の
+    前提を揺るがしたアメリカの論理学者。経験的全体論・
+    翻訳の不確定性で、意味と真理の伝統的観念を解体した。
+  related: [wittgenstein, language_game, ontology]
+  difficulty: 3
+
+- id: levinas
+  name_ja: レヴィナス
+  name_en: Levinas
+  domain: 倫理学・現象学
+  thinkers: [エマニュエル・レヴィナス]
+  seed: |
+    ホロコースト体験を経て、存在論を超える倫理を第一哲学として
+    打ち立てたリトアニア出身のユダヤ系哲学者。『全体性と無限』
+    で他者の顔の倫理的呼びかけを思考した。
+  related: [responsibility_for_other, i_thou, intersubjectivity]
+  difficulty: 3
+
+- id: gadamer
+  name_ja: ガダマー
+  name_en: Gadamer
+  domain: 解釈学
+  thinkers: [ハンス＝ゲオルク・ガダマー]
+  seed: |
+    ハイデガーの弟子として『真理と方法』で哲学的解釈学を体系化。
+    理解は地平の融合として起こる、伝統・偏見は否定的ではなく
+    理解の前提条件であると示した。
+  related: [hermeneutic_dialogue, heidegger, lifeworld]
+  difficulty: 3
+
+- id: arendt
+  name_ja: アーレント
+  name_en: Arendt
+  domain: 政治哲学
+  thinkers: [ハンナ・アーレント]
+  seed: |
+    『人間の条件』『全体主義の起源』で 20 世紀の政治哲学を
+    再定義したユダヤ系思想家。労働・仕事・活動の区別、
+    悪の凡庸さといった概念で、公共と私的領域の意味を問い直した。
+  related: [responsibility_for_other, foucault, panopticon]
+  difficulty: 2
+
+- id: foucault
+  name_ja: フーコー
+  name_en: Foucault
+  domain: 現代思想
+  thinkers: [ミシェル・フーコー]
+  seed: |
+    『言葉と物』『監獄の誕生』『性の歴史』で知と権力の絡み合いを
+    系譜学的に解剖した現代思想家。狂気・規律・統治性の歴史を
+    通じて、近代主体の構築過程を露わにした。
+  related: [panopticon, nietzsche, latour]
+  difficulty: 3
+
+- id: derrida
+  name_ja: デリダ
+  name_en: Derrida
+  domain: 現代思想
+  thinkers: [ジャック・デリダ]
+  seed: |
+    『グラマトロジーについて』『散種』で脱構築を打ち立てた
+    フランス系アルジェリア出身の哲学者。差延・痕跡・代補の
+    概念で西洋形而上学の二項対立を内側から崩した。
+  related: [nietzsche, foucault, deleuze]
+  difficulty: 3
+
+- id: deleuze
+  name_ja: ドゥルーズ
+  name_en: Deleuze
+  domain: 現代思想
+  thinkers: [ジル・ドゥルーズ]
+  seed: |
+    『差異と反復』『アンチ・オイディプス』（ガタリと共著）で
+    20 世紀後半哲学を一変させたフランス哲学者。差異・生成・
+    リゾームで、同一性と表象の哲学を超える思考を展開。
+  related: [rhizome, spinoza, derrida]
+  difficulty: 3
+
+- id: rawls
+  name_ja: ロールズ
+  name_en: Rawls
+  domain: 政治哲学
+  thinkers: [ジョン・ロールズ]
+  seed: |
+    『正義論』で現代政治哲学を再生させたハーバードの哲学者。
+    無知のヴェールの背後で選ばれる正義の原理という思考実験で、
+    自由と平等の両立を理論化した。
+  related: [arendt, marx, human_capital]
+  difficulty: 2
+
+# --- 認知・人類学・社会 ---
+
+- id: levi_strauss
+  name_ja: レヴィ＝ストロース
+  name_en: Lévi-Strauss
+  domain: 構造主義人類学
+  thinkers: [クロード・レヴィ＝ストロース]
+  seed: |
+    『悲しき熱帯』『神話論理』で構造主義人類学を打ち立てた巨匠。
+    神話・親族・分類の背後にある無意識の構造を抽出、
+    20 世紀後半の人文諸学を変えた。
+  related: [wild_knowledge, ethnography, prototype_theory]
+  difficulty: 3
+
+- id: bateson
+  name_ja: ベイトソン
+  name_en: Bateson
+  domain: 認知科学・人類学
+  thinkers: [グレゴリー・ベイトソン]
+  seed: |
+    人類学・サイバネティクス・精神医学を横断した万能の知性。
+    『精神の生態学』で論理階型理論を用い、コミュニケーション・
+    統合失調症・進化を貫く視座を提示した。
+  related: [metacommunication, systems_thinking, maturana_varela]
+  difficulty: 3
+
+- id: maturana_varela
+  name_ja: マトゥラーナ／ヴァレラ
+  name_en: Maturana & Varela
+  domain: 認知科学・神経生物学
+  thinkers: [ウンベルト・マトゥラーナ, フランシスコ・ヴァレラ]
+  seed: |
+    『知恵の樹』『オートポイエーシス』で生命と認知の連続性を
+    打ち立てたチリの神経生物学者。生命とは自己生成する系であり、
+    認知は単なる情報処理ではないと示した。
+  related: [embodied_cognition, predictive_processing, bateson]
+  difficulty: 3
+
+- id: latour
+  name_ja: ラトゥール
+  name_en: Latour
+  domain: 科学技術社会論
+  thinkers: [ブルーノ・ラトゥール]
+  seed: |
+    『科学が作られているとき』『社会的なものを組み直す』で科学
+    技術社会論を一新したフランス人類学者・哲学者。アクター
+    ネットワーク理論で、人と物を等価に扱う社会理論を構築した。
+  related: [actor_network_theory, foucault, ethnography]
+  difficulty: 3
+
+- id: bourdieu
+  name_ja: ブルデュー
+  name_en: Bourdieu
+  domain: 社会学
+  thinkers: [ピエール・ブルデュー]
+  seed: |
+    『ディスタンクシオン』『実践感覚』でフランス社会学を主導した
+    思想家。ハビトゥス・場・文化資本の三つ組で、構造と主体・
+    経済と文化を統合する社会理論を構築した。
+  related: [habitus, marx, foucault]
+  difficulty: 3
+
+- id: piaget
+  name_ja: ピアジェ
+  name_en: Piaget
+  domain: 発達心理学
+  thinkers: [ジャン・ピアジェ]
+  seed: |
+    子どもの認知発達を 4 段階で記述したスイスの発達心理学者。
+    同化・調節・均衡化のメカニズムで、知性は能動的な
+    構成過程であると示した構成主義の祖。
+  related: [vygotsky, metacognition, theory_of_mind]
+  difficulty: 2
+
+- id: vygotsky
+  name_ja: ヴィゴツキー
+  name_en: Vygotsky
+  domain: 発達心理学
+  thinkers: [レフ・ヴィゴツキー]
+  seed: |
+    『思考と言語』『高次精神機能の発達史』で社会文化的発達
+    理論を打ち立てたロシアの心理学者。発達の最近接領域・
+    足場かけ概念で教育心理学の基盤を作った。
+  related: [piaget, communicative_competence, knowledge_transfer]
+  difficulty: 2
+
+# --- 経営学 ---
+
+- id: drucker
+  name_ja: ドラッカー
+  name_en: Drucker
+  domain: 経営学
+  thinkers: [ピーター・ドラッカー]
+  seed: |
+    『マネジメント』『プロフェッショナルの条件』など 30 余の
+    著作で経営学を学問として確立したオーストリア出身の
+    社会生態学者。組織・知識労働者・社会的責任を中核に据えた。
+  related: [knowledge_management, organizational_learning, human_capital]
+  difficulty: 1
+
+- id: schein
+  name_ja: シャイン
+  name_en: Schein
+  domain: 組織心理学
+  thinkers: [エドガー・シャイン]
+  seed: |
+    組織心理学の父、MIT スローン校で『組織文化とリーダー
+    シップ』『プロセス・コンサルテーション』を著した。
+    文化の三層モデル、キャリア・アンカーで組織と個人を掘り下げた。
+  related: [career_anchor, organizational_learning, psychological_safety]
+  difficulty: 1
+
+# --- 日本思想 ---
+
+- id: kukai
+  name_ja: 空海
+  name_en: Kūkai
+  domain: 日本思想・仏教
+  thinkers: [空海]
+  seed: |
+    真言密教を中国から日本に伝え、独自の思想体系『十住心論』
+    『声字実相義』を残した平安初期の僧。詩・書・教育・土木にも
+    卓越、万能の天才として日本思想史に屹立する。
+  related: [dependent_origination, sunyata, mono_no_aware]
+  difficulty: 2
+
+- id: dogen
+  name_ja: 道元
+  name_en: Dōgen
+  domain: 日本思想・仏教
+  thinkers: [道元]
+  seed: |
+    曹洞宗の開祖、『正法眼蔵』を遺した日本思想史最高峰の
+    禅僧の一人。只管打坐・修証一等を説き、修行と悟りの不二を
+    独創的な日本語の散文で展開した。
+  related: [anatman, sunyata, nishida_kitaro]
+  difficulty: 3
+
+- id: nishida_kitaro
+  name_ja: 西田幾多郎
+  name_en: Nishida Kitarō
+  domain: 日本思想
+  thinkers: [西田幾多郎]
+  seed: |
+    日本初の独創的哲学体系を構築した京都学派の祖。
+    『善の研究』で純粋経験を出発点に、後に絶対無の場所論へと
+    展開、東洋思想と西洋哲学を統合する稀有な試み。
+  related: [phenomenology, suzuki_daisetsu, sunyata]
+  difficulty: 3
+
+- id: suzuki_daisetsu
+  name_ja: 鈴木大拙
+  name_en: D.T. Suzuki
+  domain: 日本思想・仏教学
+  thinkers: [鈴木大拙]
+  seed: |
+    禅と日本仏教を英語圏に紹介し、20 世紀世界の精神文化に
+    深い影響を与えた仏教学者。『日本的霊性』で日本人の宗教的
+    感性を抽出、ユング・フロムと交流した。
+  related: [sunyata, anatman, nishida_kitaro]
+  difficulty: 2
+
+- id: yanagita_kunio
+  name_ja: 柳田國男
+  name_en: Yanagita Kunio
+  domain: 民俗学
+  thinkers: [柳田國男]
+  seed: |
+    日本民俗学の創始者。『遠野物語』『山の人生』で常民・
+    口承文芸を発掘、近代化で失われゆく無名の文化を学問の
+    対象に変えた。日本人の精神史を底辺から照らした。
+  related: [ethnography, mono_no_aware, minakata_kumagusu]
+  difficulty: 2
+
+- id: minakata_kumagusu
+  name_ja: 南方熊楠
+  name_en: Minakata Kumagusu
+  domain: 博物学・民俗学
+  thinkers: [南方熊楠]
+  seed: |
+    博物学・民俗学・粘菌研究を横断した在野の知の巨人。
+    『燕石考』『十二支考』で世界中の文献を縦横に引用、
+    生態と文化を貫く比較学的視座を開いた。
+  related: [yanagita_kunio, ethnography, wild_knowledge]
+  difficulty: 2
