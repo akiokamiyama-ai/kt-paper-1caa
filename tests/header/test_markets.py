@@ -261,17 +261,33 @@ def test_format_index_no_diff():
            out == "S&P 500 5,200 (-)", f"got {out!r}")
 
 
-def test_format_forex():
+def test_format_forex_no_diff():
+    """Sprint 7 (2026-05-19): 履歴なし時は (-) を付ける（C6）."""
     meta = {"label": "USD", "kind": "forex"}
     out = markets.format_market_value(meta, {"close": 152.10}, None)
-    _check("e4 forex → 'USD 152.10'",
-           out == "USD 152.10", f"got {out!r}")
+    _check("e4 forex no diff → 'USD 152.10 (-)'",
+           out == "USD 152.10 (-)", f"got {out!r}")
+
+
+def test_format_forex_with_positive_diff():
+    """Sprint 7 (2026-05-19): C6 — USD/EUR の前日比表示を有効化."""
+    meta = {"label": "USD", "kind": "forex"}
+    out = markets.format_market_value(meta, {"close": 158.86}, 0.3)
+    _check("e5 forex +0.3% → 'USD 158.86 (+0.3%)'",
+           out == "USD 158.86 (+0.3%)", f"got {out!r}")
+
+
+def test_format_forex_with_negative_diff():
+    meta = {"label": "EUR", "kind": "forex"}
+    out = markets.format_market_value(meta, {"close": 185.11}, -0.7)
+    _check("e6 forex -0.7% → 'EUR 185.11 (-0.7%)'",
+           out == "EUR 185.11 (-0.7%)", f"got {out!r}")
 
 
 def test_format_no_data():
     meta = {"label": "日経", "kind": "index"}
     out = markets.format_market_value(meta, None, None)
-    _check("e5 no fetched → '日経 -'", out == "日経 -", f"got {out!r}")
+    _check("e7 no fetched → '日経 -'", out == "日経 -", f"got {out!r}")
 
 
 def main() -> int:
@@ -303,7 +319,9 @@ def main() -> int:
     test_format_index_with_diff()
     test_format_index_negative_diff()
     test_format_index_no_diff()
-    test_format_forex()
+    test_format_forex_no_diff()
+    test_format_forex_with_positive_diff()
+    test_format_forex_with_negative_diff()
     test_format_no_data()
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")

@@ -184,8 +184,10 @@ def format_market_value(meta: dict, fetched: dict | None, diff_pct: float | None
     --------
     >>> format_market_value({"label":"日経","kind":"index"}, {"close":38420}, 0.5)
     '日経 38,420 (+0.5%)'
+    >>> format_market_value({"label":"USD","kind":"forex"}, {"close":152.10}, 0.3)
+    'USD 152.10 (+0.3%)'
     >>> format_market_value({"label":"USD","kind":"forex"}, {"close":152.10}, None)
-    'USD 152.10'
+    'USD 152.10 (-)'
     >>> format_market_value({"label":"日経","kind":"index"}, None, None)
     '日経 -'
     """
@@ -196,8 +198,12 @@ def format_market_value(meta: dict, fetched: dict | None, diff_pct: float | None
     if close is None:
         return f"{label} -"
     if meta.get("kind") == "forex":
-        # 為替は前日比省略、絶対値（小数2桁）のみ
-        return f"{label} {close:,.2f}"
+        # 為替も株価と同フォーマットで前日比表示
+        # （Sprint 5 初期は履歴なしで省略、Sprint 7 で履歴 10 日分蓄積後に有効化）
+        if diff_pct is None:
+            return f"{label} {close:,.2f} (-)"
+        sign = "+" if diff_pct >= 0 else ""
+        return f"{label} {close:,.2f} ({sign}{diff_pct:.1f}%)"
     # Index: カンマ区切り整数 + diff
     close_str = f"{close:,.0f}"
     if diff_pct is None:
