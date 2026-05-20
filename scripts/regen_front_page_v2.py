@@ -973,22 +973,42 @@ PAGE_TWO_CSS = f"""
   text-align: center;
 }}
 .todays-headlines .headlines-list {{
+  /* 5/20 神山さん観察 (C13): 新聞らしい 3 段組み。
+     5/19 の縦 1 列は Code の誤解釈、横並びの段組みが本来の意図。 */
   list-style: none;
   padding: 0;
   margin: 0;
-  display: block;  /* 縦割り明示、横並び化を避ける */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
 }}
 .todays-headlines .headline-item {{
-  display: block;
-  width: 100%;     /* 縦割りで全幅 */
-  margin-bottom: 20px;
-  padding-bottom: 14px;
-  border-bottom: 1px dotted #ddd;
-}}
-.todays-headlines .headline-item:last-child {{
-  border-bottom: none;
   margin-bottom: 0;
   padding-bottom: 0;
+  border-bottom: none;
+  border-right: 1px solid #ccc;
+  padding-right: 24px;
+}}
+.todays-headlines .headline-item:last-child {{
+  border-right: none;
+  padding-right: 0;
+}}
+@media (max-width: 768px) {{
+  /* 媒体特性: スマホでは段組みを解いて縦並び。 */
+  .todays-headlines .headlines-list {{
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }}
+  .todays-headlines .headline-item {{
+    border-right: none;
+    padding-right: 0;
+    padding-bottom: 16px;
+    border-bottom: 1px dotted #ddd;
+  }}
+  .todays-headlines .headline-item:last-child {{
+    border-bottom: none;
+    padding-bottom: 0;
+  }}
 }}
 .todays-headlines .headline-title {{
   display: block;
