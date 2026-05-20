@@ -16,7 +16,9 @@ Economist）から ``final_score`` 上位 N 件を選定する。
 
 from __future__ import annotations
 
-from collections.abc import Mapping
+import sys
+import urllib.parse
+from collections.abc import Callable, Mapping
 from datetime import date
 
 # sources/business.md の H3 名と完全一致させる。括弧書きの注記が含まれる場合
@@ -121,3 +123,142 @@ def format_summary(
         return desc
     # 末尾「…」で 1 文字分の余裕を取る
     return desc[: max_chars - 1].rstrip() + "…"
+
+
+# ===========================================================================
+# C14 対処 (Sprint 8, 2026-05-20): LLM 要約生成
+# ---------------------------------------------------------------------------
+# 5/20 朝刊観察で神山さん指摘：RSS description ~100 字では「読めてる感じが
+# しない」、200 字程度の実用情報量が欲しい。Step 4 調査で真因判明 —
+# BBC/NHK/Economist の RSS は description しか持たず、content:encoded 等の
+# 長文フィールドが存在しないため truncate では絶対に 200 字に届かない。
+#
+# Step A-1 検証結果（4 ソースで本文 fetch を試行）：
+#   * BBC      : 記事ページから本文 4,800〜6,700 字をクリーンに抽出可（有効）
+#   * NHK      : 記事ページの情報量が RSS description とほぼ同じ ~105 字（無効）
+#   * Economist: ペイウォール、HTML に本文が含まれない（無効）
+# よって LLM 要約は BBC 記事のみ有効。BBC 以外 / 取得失敗 / LLM 失敗時は
+# 必ず format_summary に fallback し、紙面破綻を防ぐ。
+# ===========================================================================
+
+LLM_SUMMARY_MODEL: str = "claude-haiku-4-5"
+LLM_SUMMARY_TAG: str = "headlines.summary"
+# 本文がこの長さ未満なら LLM 要約しても情報が増えないので fallback。
+BODY_MIN_CHARS: int = 400
+# LLM 出力の暴走防止上限（通常 ~200 字、200 字前後を指示）。
+LLM_SUMMARY_MAX_CHARS: int = 300
+
+_SUMMARY_SYSTEM_PROMPT = """あなたは朝刊の編集者です。与えられたニュース記事を、読者が「何の記事か」を即座に理解できるよう、200 字前後の日本語で要約してください。
+
+【要約の指針】
+- 事実を簡潔に。「誰が・何を・なぜ」を必ず含める
+- 解釈・評価・意見は加えない
+- 200 字前後（180〜220 字を目安）
+- 要約文のみを出力。前置き・後置き・括弧書き・コードフェンスは不要"""
+
+_SUMMARY_USER_TEMPLATE = """記事タイトル: {title}
+ソース: {source}
+
+本文:
+{body}"""
+
+
+def _fetch_bbc_body(url: str, *, max_paragraphs: int = 8) -> str:
+    """BBC News 記事ページから本文段落を取得して連結。
+
+    BBC 以外のホスト、または取得失敗時は空文字列を返す（caller が fallback）。
+    ``BbcArticleScraper.paragraphs`` は内部でネットワーク例外を握り潰し、
+    失敗時は空リストを返す。
+    """
+    host = urllib.parse.urlparse(url).netloc.lower()
+    if not (host == "bbc.com" or host.endswith(".bbc.com")
+            or host == "bbc.co.uk" or host.endswith(".bbc.co.uk")):
+        return ""
+    from ..lib.drivers.html import BbcArticleScraper
+
+    paragraphs = BbcArticleScraper().paragraphs(url, max_paragraphs)
+    return " ".join(paragraphs).strip()
+
+
+def _call_haiku_summary(title: str, source: str, body: str) -> str:
+    """記事本文を Haiku で ~200 字要約。tag='headlines.summary' でコスト計上."""
+    from ..lib.llm import call_claude_with_retry
+
+    user = _SUMMARY_USER_TEMPLATE.format(
+        title=title, source=source, body=body[:2000],
+    )
+    resp = call_claude_with_retry(
+        system=_SUMMARY_SYSTEM_PROMPT,
+        user=user,
+        model=LLM_SUMMARY_MODEL,
+        max_tokens=512,
+        tag=LLM_SUMMARY_TAG,
+    )
+    return resp.text
+
+
+def generate_summary_with_llm(
+    article: dict,
+    *,
+    body_fetcher: Callable[[str], str] | None = None,
+    llm_caller: Callable[[str, str, str], str] | None = None,
+) -> str:
+    """記事本文を fetch し Haiku で ~200 字要約。失敗時は format_summary に fallback.
+
+    BBC 記事のみ本文取得が有効（Step A-1 検証）。BBC 以外・取得失敗・本文が
+    短すぎる・LLM 失敗のいずれでも ``format_summary(article)`` に落ちるため、
+    紙面が破綻することはない。
+
+    Parameters
+    ----------
+    article :
+        ``url`` ``title`` ``source_name`` ``description`` を持つ記事 dict。
+    body_fetcher :
+        ``url -> body`` の本文取得関数。テスト用に差し替え可能。
+        None なら :func:`_fetch_bbc_body`。
+    llm_caller :
+        ``(title, source, body) -> summary`` の要約関数。テスト用に差し替え可能。
+        None なら :func:`_call_haiku_summary`。
+    """
+    fallback = format_summary(article)
+    url = (article.get("url") or "").strip()
+    if not url:
+        return fallback
+
+    fetch = body_fetcher or _fetch_bbc_body
+    call = llm_caller or _call_haiku_summary
+
+    try:
+        body = fetch(url)
+    except Exception as e:  # noqa: BLE001 — どんな失敗でも fallback
+        print(
+            f"[headlines] body fetch failed ({type(e).__name__}), "
+            f"using RSS description: {url[:60]}",
+            file=sys.stderr,
+        )
+        return fallback
+    if not body or len(body) < BODY_MIN_CHARS:
+        # 本文が取れない（BBC 以外）/ 短すぎる → RSS description のまま。
+        return fallback
+
+    try:
+        summary = call(
+            article.get("title") or "",
+            article.get("source_name") or "",
+            body,
+        )
+    except Exception as e:  # noqa: BLE001 — LLM 失敗（cap 超過含む）も fallback
+        print(
+            f"[headlines] LLM summary failed ({type(e).__name__}), "
+            f"using RSS description: {url[:60]}",
+            file=sys.stderr,
+        )
+        return fallback
+
+    summary = (summary or "").strip()
+    if not summary:
+        return fallback
+    # LLM 出力の暴走防止（通常は 200 字前後で収まる）。
+    if len(summary) > LLM_SUMMARY_MAX_CHARS:
+        summary = summary[: LLM_SUMMARY_MAX_CHARS - 1].rstrip() + "…"
+    return summary

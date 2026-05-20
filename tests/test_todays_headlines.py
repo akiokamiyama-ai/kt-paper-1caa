@@ -22,10 +22,13 @@ from dataclasses import dataclass
 from datetime import date
 
 from scripts.selector.todays_headlines import (
+    BODY_MIN_CHARS,
     DEFAULT_HEADLINES_TOP_N,
     DEFAULT_SUMMARY_MAX_CHARS,
     HEADLINES_ALLOWED_SOURCES,
+    LLM_SUMMARY_MAX_CHARS,
     format_summary,
+    generate_summary_with_llm,
     select_todays_headlines,
 )
 
@@ -332,6 +335,102 @@ def test_allowed_sources_match_registry():
     )
 
 
+# ---------------------------------------------------------------------------
+# (h) generate_summary_with_llm（C14 対処, Sprint 8, 2026-05-20）
+#     body_fetcher / llm_caller を mock し、ネットワーク・LLM 無しで検証。
+# ---------------------------------------------------------------------------
+
+_LONG_BODY = "あ" * (BODY_MIN_CHARS + 100)  # 本文取得成功の十分な長さ
+
+
+def test_llm_summary_success():
+    art = {"url": "https://www.bbc.com/news/x", "title": "T", "source_name": "BBC Business",
+           "description": "短い RSS description"}
+    out = generate_summary_with_llm(
+        art,
+        body_fetcher=lambda url: _LONG_BODY,
+        llm_caller=lambda t, s, b: "Haiku が生成した 200 字相当の要約テキスト。",
+    )
+    _check(
+        "h1 本文取得 + LLM 成功 → LLM 要約を返す",
+        out == "Haiku が生成した 200 字相当の要約テキスト。",
+        f"got {out!r}",
+    )
+
+
+def test_llm_summary_fallback_empty_body():
+    """BBC 以外 / 本文取得不可 → body_fetcher が空 → format_summary fallback."""
+    art = {"url": "https://nhk.example/x", "title": "T", "source_name": "NHK ニュース 経済",
+           "description": "NHK の RSS description"}
+    out = generate_summary_with_llm(
+        art, body_fetcher=lambda url: "", llm_caller=lambda t, s, b: "使われないはず",
+    )
+    _check(
+        "h2 本文空（BBC 以外）→ format_summary fallback",
+        out == "NHK の RSS description", f"got {out!r}",
+    )
+
+
+def test_llm_summary_fallback_short_body():
+    """本文が BODY_MIN_CHARS 未満 → LLM 呼ばず fallback."""
+    art = {"url": "https://www.bbc.com/news/x", "source_name": "BBC Business",
+           "description": "RSS desc"}
+    out = generate_summary_with_llm(
+        art, body_fetcher=lambda url: "短い", llm_caller=lambda t, s, b: "使われないはず",
+    )
+    _check("h3 本文短すぎ → fallback", out == "RSS desc", f"got {out!r}")
+
+
+def test_llm_summary_fallback_llm_raises():
+    """LLM 呼び出しが例外（cap 超過・API 失敗等）→ fallback."""
+    def _boom(t, s, b):
+        raise RuntimeError("API down")
+    art = {"url": "https://www.bbc.com/news/x", "description": "RSS desc fallback"}
+    out = generate_summary_with_llm(art, body_fetcher=lambda url: _LONG_BODY, llm_caller=_boom)
+    _check("h4 LLM 例外 → fallback", out == "RSS desc fallback", f"got {out!r}")
+
+
+def test_llm_summary_fallback_fetch_raises():
+    """本文取得が例外 → fallback."""
+    def _boom(url):
+        raise ConnectionError("network down")
+    art = {"url": "https://www.bbc.com/news/x", "description": "RSS desc fallback"}
+    out = generate_summary_with_llm(art, body_fetcher=_boom, llm_caller=lambda t, s, b: "x")
+    _check("h5 本文取得例外 → fallback", out == "RSS desc fallback", f"got {out!r}")
+
+
+def test_llm_summary_runaway_truncated():
+    """LLM が暴走して長文を返した → LLM_SUMMARY_MAX_CHARS で truncate."""
+    art = {"url": "https://www.bbc.com/news/x", "description": "RSS desc"}
+    out = generate_summary_with_llm(
+        art, body_fetcher=lambda url: _LONG_BODY,
+        llm_caller=lambda t, s, b: "暴" * 500,
+    )
+    _check(
+        "h6 LLM 暴走長文 → LLM_SUMMARY_MAX_CHARS で truncate（末尾…）",
+        len(out) == LLM_SUMMARY_MAX_CHARS and out.endswith("…"),
+        f"got len={len(out)}",
+    )
+
+
+def test_llm_summary_no_url():
+    """url 無し → fallback."""
+    art = {"description": "RSS desc no url"}
+    out = generate_summary_with_llm(
+        art, body_fetcher=lambda url: _LONG_BODY, llm_caller=lambda t, s, b: "x",
+    )
+    _check("h7 url 無し → fallback", out == "RSS desc no url", f"got {out!r}")
+
+
+def test_llm_summary_empty_llm_output():
+    """LLM が空文字列を返した → fallback."""
+    art = {"url": "https://www.bbc.com/news/x", "description": "RSS desc"}
+    out = generate_summary_with_llm(
+        art, body_fetcher=lambda url: _LONG_BODY, llm_caller=lambda t, s, b: "   ",
+    )
+    _check("h8 LLM 空出力 → fallback", out == "RSS desc", f"got {out!r}")
+
+
 def main() -> int:
     print("Today's Headlines selector tests (Sprint 7 Phase 2 Step 1, 2026-05-19)")
     print()
@@ -365,6 +464,16 @@ def main() -> int:
     print("(g) HEADLINES_ALLOWED_SOURCES 検証:")
     test_allowed_sources_contents()
     test_allowed_sources_match_registry()
+    print()
+    print("(h) generate_summary_with_llm（C14 対処）:")
+    test_llm_summary_success()
+    test_llm_summary_fallback_empty_body()
+    test_llm_summary_fallback_short_body()
+    test_llm_summary_fallback_llm_raises()
+    test_llm_summary_fallback_fetch_raises()
+    test_llm_summary_runaway_truncated()
+    test_llm_summary_no_url()
+    test_llm_summary_empty_llm_output()
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")
     return 0 if FAIL == 0 else 1

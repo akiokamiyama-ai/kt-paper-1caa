@@ -1164,7 +1164,11 @@ def _render_todays_headlines(headlines: list[dict] | None) -> str:
         title = art.get("title") or ""
         url = art.get("url") or ""
         source = art.get("source_name") or ""
-        summary = todays_headlines.format_summary(art)
+        # C14 (Sprint 8): main() で LLM 要約を art["summary"] に事前計算済みなら
+        # それを使う。未計算（テスト等）なら format_summary に fallback。
+        summary = art.get("summary")
+        if summary is None:
+            summary = todays_headlines.format_summary(art)
 
         if url:
             title_html = (
@@ -2947,6 +2951,16 @@ def main(argv: list[str] | None = None) -> int:
         print(
             f"  Page II Today's Headlines: {len(headlines)} 件 "
             f"({', '.join((h.get('source_name') or '')[:10] for h in headlines) or '(none)'})",
+            file=sys.stderr,
+        )
+        # C14 (Sprint 8, 5/20 神山さん観察): RSS description ~100 字では短い。
+        # BBC 記事は本文を fetch して Haiku で ~200 字要約に差し替える。
+        # BBC 以外 / fetch 失敗 / LLM 失敗時は format_summary に fallback。
+        for art in headlines:
+            art["summary"] = todays_headlines.generate_summary_with_llm(art)
+        print(
+            "  Today's Headlines summary 文字数: "
+            f"{[len(h.get('summary') or '') for h in headlines]}",
             file=sys.stderr,
         )
         page_two_html = build_page_two_v2(
