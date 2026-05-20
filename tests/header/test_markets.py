@@ -270,18 +270,23 @@ def test_format_forex_no_diff():
 
 
 def test_format_forex_with_positive_diff():
-    """Sprint 7 (2026-05-19): C6 — USD/EUR の前日比表示を有効化."""
+    """Sprint 8 (2026-05-20): C15 — 為替前日比は ％ ではなく円表示。
+
+    diff_pct=0.3 から前日 close を逆算し差分を円で表示：
+    prior = 158.86 / 1.003 ≒ 158.3809、diff_yen ≒ +0.48 円。
+    """
     meta = {"label": "USD", "kind": "forex"}
     out = markets.format_market_value(meta, {"close": 158.86}, 0.3)
-    _check("e5 forex +0.3% → 'USD 158.86 (+0.3%)'",
-           out == "USD 158.86 (+0.3%)", f"got {out!r}")
+    _check("e5 forex +0.3% → 'USD 158.86 (+0.48円)'（円表示）",
+           out == "USD 158.86 (+0.48円)", f"got {out!r}")
 
 
 def test_format_forex_with_negative_diff():
+    """diff_pct=-0.7 → prior = 185.11 / 0.993 ≒ 186.4149、diff_yen ≒ -1.30 円。"""
     meta = {"label": "EUR", "kind": "forex"}
     out = markets.format_market_value(meta, {"close": 185.11}, -0.7)
-    _check("e6 forex -0.7% → 'EUR 185.11 (-0.7%)'",
-           out == "EUR 185.11 (-0.7%)", f"got {out!r}")
+    _check("e6 forex -0.7% → 'EUR 185.11 (-1.30円)'（円表示）",
+           out == "EUR 185.11 (-1.30円)", f"got {out!r}")
 
 
 def test_format_no_data():

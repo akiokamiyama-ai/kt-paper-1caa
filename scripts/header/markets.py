@@ -185,7 +185,7 @@ def format_market_value(meta: dict, fetched: dict | None, diff_pct: float | None
     >>> format_market_value({"label":"日経","kind":"index"}, {"close":38420}, 0.5)
     '日経 38,420 (+0.5%)'
     >>> format_market_value({"label":"USD","kind":"forex"}, {"close":152.10}, 0.3)
-    'USD 152.10 (+0.3%)'
+    'USD 152.10 (+0.45円)'
     >>> format_market_value({"label":"USD","kind":"forex"}, {"close":152.10}, None)
     'USD 152.10 (-)'
     >>> format_market_value({"label":"日経","kind":"index"}, None, None)
@@ -198,12 +198,16 @@ def format_market_value(meta: dict, fetched: dict | None, diff_pct: float | None
     if close is None:
         return f"{label} -"
     if meta.get("kind") == "forex":
-        # 為替も株価と同フォーマットで前日比表示
-        # （Sprint 5 初期は履歴なしで省略、Sprint 7 で履歴 10 日分蓄積後に有効化）
+        # 為替は円換算で前日比表示（％より体感に近い、5/20 神山さん観察 C15）。
+        # diff_pct から前日 close を逆算し、差分を円で表示する。
+        #   diff_pct = (close - prior) / prior * 100
+        #   → prior = close / (1 + diff_pct/100), diff_yen = close - prior
         if diff_pct is None:
             return f"{label} {close:,.2f} (-)"
-        sign = "+" if diff_pct >= 0 else ""
-        return f"{label} {close:,.2f} ({sign}{diff_pct:.1f}%)"
+        prior = close / (1 + diff_pct / 100)
+        diff_yen = close - prior
+        sign = "+" if diff_yen >= 0 else ""
+        return f"{label} {close:,.2f} ({sign}{diff_yen:.2f}円)"
     # Index: カンマ区切り整数 + diff
     close_str = f"{close:,.0f}"
     if diff_pct is None:
