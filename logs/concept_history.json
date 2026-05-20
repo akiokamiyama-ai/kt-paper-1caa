@@ -114,6 +114,11 @@
       "concept_id": "seci_model",
       "name_ja": "SECIモデル",
       "displayed_on": "2026-05-20"
+    },
+    {
+      "concept_id": "tragedy_of_commons",
+      "name_ja": "共有地の悲劇",
+      "displayed_on": "2026-05-21"
     }
   ]
 }

@@ -1,0 +1,33 @@
+{
+  "date": "2026-05-21",
+  "page1_urls": [
+    "https://www.economist.com/finance-and-economics/2026/05/20/economics-lessons-from-home-depot",
+    "https://www.economist.com/finance-and-economics/2026/05/19/investors-fear-another-surge-in-inflation",
+    "https://www.fsight.jp/articles/-/52074",
+    "https://www.bbc.com/news/articles/c1w29zw0q44o?at_medium=RSS&at_campaign=rss"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2605/20/2000000009/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2605/20/news009.html",
+    "web_repo": "https://www.foodrink.co.jp/news/2026/05/2061554.html"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/05/20/eurovision-controversy-israel-boycott-liberal-international-order/",
+    "http://www3.nhk.or.jp/news/html/20260521/k10015127371000.html",
+    "https://toyokeizai.net/articles/-/945162?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://www.mckinsey.com/featured-insights/mckinsey-on-books/author-talks-testing-ais-limits-in-a-one-year-experiment",
+    "https://www.webdoku.jp/mettakuta/omori_nozomi/20260520080000.html",
+    "https://nautil.us/commencement-boos-for-ai-platitudes-1280992/"
+  ],
+  "page4_urls": [
+    "https://shinsho-plus.shueisha.co.jp/column/hajimetenokoukyousosyou/34903",
+    "https://shinsho-plus.shueisha.co.jp/column/hajimetenokoukyousosyou/34908",
+    "https://shinsho-plus.shueisha.co.jp/column/hajimetenokoukyousosyou/34901"
+  ],
+  "page5_url": "https://www.themarginalian.org/2026/05/18/teotihuacan-magnetite/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/05/20/unfinished-on-theresa-hak-kyung-cha/",
+    "music": "https://rockinon.com/news/detail/215173",
+    "outdoor": "https://thetrek.co/trail-correspondents-s5-episode-3-the-trail-begins/"
+  }
+}

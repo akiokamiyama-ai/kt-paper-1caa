@@ -366,6 +366,23 @@
       "ai_kamiyama_url": "https://www.bbc.com/news/articles/cvgzrle9441o?at_medium=RSS&at_campaign=rss",
       "ai_kamiyama_title": "Faisal Islam: Why a full HS2 line could still be built despite the latest fiasco",
       "ai_kamiyama_source_name": "BBC Business"
+    },
+    {
+      "displayed_on": "2026-05-21",
+      "article_url": "https://www.themarginalian.org/2026/05/18/teotihuacan-magnetite/",
+      "article_title": "Obsidian and the Birds: An Odyssey of Wonder from the Aztecs to the Quantum World",
+      "article_category": "books",
+      "tie_candidates": [
+        "books"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.bbc.com/news/articles/c4g0e0p4p2go?at_medium=RSS&at_campaign=rss",
+      "ai_kamiyama_title": "Inflation falls to 2.8% but is expected to rise from here",
+      "ai_kamiyama_source_name": "BBC Business"
     }
   ]
 }
