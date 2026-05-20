@@ -1618,6 +1618,17 @@ PAGE_FIVE_CSS = f"""
 .ai-kamiyama-column .ai-source-ref a:hover {{
   border-bottom-style: solid;
 }}
+/* Sprint 8 (2026-05-20, C16): 対象記事の概要。独立選定で他面に
+   乗らないため、引用風 box-out で「何への論評か」を視覚的に提示。 */
+.ai-kamiyama-column .ai-article-summary {{
+  font-size: 13px;
+  color: #555;
+  line-height: 1.7;
+  margin: 8px 0 16px;
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.02);
+  border-left: 2px solid #ccc;
+}}
 .ai-kamiyama-column .column-title {{
   font-family: 'Noto Serif JP', 'Old Standard TT', serif;
   font-size: 22px;
@@ -1835,6 +1846,17 @@ def _render_page_five(
                 f'<p class="ai-source-ref">対象記事：{ai_title_html}{source_suffix}</p>'
             )
 
+    # AIかみやま 対象記事のサマリ（Sprint 8, 5/20 神山さん観察 C16）。
+    # 対象記事は独立選定で他面に乗らないため、概要が無いと読者に
+    # 「何への論評か」が伝わらない。description を 200 字で表示。
+    ai_article_summary_html = ""
+    if ai_article:
+        ai_desc = _truncate_to_chars(ai_article.get("description") or "", 200)
+        if ai_desc:
+            ai_article_summary_html = (
+                f'<p class="ai-article-summary">{_esc(ai_desc)}</p>'
+            )
+
     return f"""<section class="page page-five">
     <div class="page-banner"><span class="pg-num">— Page V —</span> Columns &amp; Serendipity · A Room with a Different Window</div>
 
@@ -1849,6 +1871,7 @@ def _render_page_five(
       <article class="ai-kamiyama-column">
         <div class="kicker">AIかみやまの一筆</div>
         {ai_source_ref_html}
+        {ai_article_summary_html}
         <h3 class="column-title">{_esc(column_title)}</h3>
         <div class="column-body">
           <p>{_esc(column_body)}</p>

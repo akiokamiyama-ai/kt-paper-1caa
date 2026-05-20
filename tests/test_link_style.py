@@ -188,6 +188,7 @@ def test_page_five_serendipity_title_linked():
         "title": "Strategy Note",
         "source_name": "Economist",
         "url": "https://example.test/ai-art",
+        "description": "対象記事の概要テキスト。AIかみやま が論評する元記事の要旨。",
     }
     column = {
         "column_title": "Sauna Column Title",
@@ -205,9 +206,15 @@ def test_page_five_serendipity_title_linked():
         'class="ai-source-ref"' in html
         and 'https://example.test/ai-art' in html
     )
+    # Sprint 8 (2026-05-20, C16): 対象記事のサマリ表示。
+    ai_article_summary = (
+        'class="ai-article-summary"' in html
+        and "対象記事の概要テキスト" in html
+    )
     _check("e1 serendipity article-title wrapped in <a>", title_linked)
     _check("e2 AIかみやま column-title is plain (no <a>)", column_title_plain)
     _check("e3 AIかみやま ai-source-ref includes ai_article URL", ai_source_ref)
+    _check("e4 AIかみやま ai-article-summary に対象記事 description", ai_article_summary)
 
 
 # ---------------------------------------------------------------------------
