@@ -102,6 +102,26 @@ def _parse_date(text: str) -> datetime | None:
         return None
 
 
+# RSS <content:encoded> の生 HTML を保持する上限（C19, 2026-05-21）。
+# The Paris Review 等は 1 記事 36,000 字に達するため、表示用 300 字に対し
+# 十分な余裕を残しつつメモリ・後段 prompt 混入を抑える長さで丸める。
+_CONTENT_ENCODED_CAP = 4000
+
+
+def _content_encoded_of(item: ET.Element) -> str:
+    """RSS の ``<content:encoded>``（local name ``encoded``）の生 HTML を返す.
+
+    namespace-blind 走査のため local name ``encoded`` で拾う。長文 feed 対策で
+    先頭 ``_CONTENT_ENCODED_CAP`` 字に丸める。要素が無ければ空文字列。
+    description より長い本文が入っていることがあり、Serendipity 表示
+    （C19）で description の代替テキストとして使う。
+    """
+    el = _find_local(item, ("encoded",))
+    if el is None or el.text is None:
+        return ""
+    return el.text.strip()[:_CONTENT_ENCODED_CAP]
+
+
 def _extract_link(item: ET.Element) -> str:
     """Pull a link URL from an item, handling RSS text vs Atom href."""
     link_el = _find_local(item, ("link",))
@@ -163,4 +183,5 @@ class RssDriver(SourceDriver):
                 description=desc,
                 pub_date=_parse_date(date_text),
                 source_language=source.language,
+                content_encoded=_content_encoded_of(elem),
             )

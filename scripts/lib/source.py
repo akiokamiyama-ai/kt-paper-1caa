@@ -128,6 +128,11 @@ class Article:
     # Sprint 5 (2026-05-03) で導入。翻訳判定の primary signal、
     # _is_japanese_source の name-heuristic は fallback として残置。
     source_language: str = "ja"
+    # content_encoded: RSS の <content:encoded> 生 HTML（長文本文フィールド）。
+    # description が短くても本文が入っていることがある（AXIS / The Paris Review /
+    # The Marginalian 等）。Sprint 8 C19 (2026-05-21) で Serendipity 表示の
+    # 文字数確保のために導入。RssDriver が抽出時に長さを丸めて格納する。
+    content_encoded: str = ""
     raw: dict = field(default_factory=dict)
 
     @property

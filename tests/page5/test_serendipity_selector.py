@@ -624,6 +624,63 @@ def test_update_history_atomic_json_intact():
 # Test runner
 # ---------------------------------------------------------------------------
 
+# ---------------------------------------------------------------------------
+# (i) C19 (2026-05-21): _get_serendipity_description_text
+#     content:encoded 優先 / description fallback / HTML タグ除去
+# ---------------------------------------------------------------------------
+
+def test_desc_text_uses_content_encoded():
+    """content:encoded があればそちらを使う（description より優先）."""
+    art = {
+        "content_encoded": "<p>content:encoded 由来の長い本文テキスト</p>",
+        "description": "短い RSS description",
+    }
+    out = serendipity_selector._get_serendipity_description_text(art)
+    _check(
+        "i1 content:encoded あり → content:encoded を使用",
+        out == "content:encoded 由来の長い本文テキスト",
+        f"got {out!r}",
+    )
+
+
+def test_desc_text_fallback_to_description():
+    """content:encoded が無ければ description に fallback."""
+    art = {"description": "<p>RSS description のみ</p>"}
+    out = serendipity_selector._get_serendipity_description_text(art)
+    _check(
+        "i2 content:encoded 無し → description fallback",
+        out == "RSS description のみ", f"got {out!r}",
+    )
+
+
+def test_desc_text_both_missing_empty():
+    """content:encoded も description も無ければ空文字列."""
+    _check(
+        "i3 両方無し → 空文字列",
+        serendipity_selector._get_serendipity_description_text({}) == "",
+    )
+
+
+def test_desc_text_content_encoded_strips_to_empty():
+    """content:encoded がタグのみで実質空 → description に fallback."""
+    art = {"content_encoded": "<br>  <hr/>", "description": "desc fallback"}
+    out = serendipity_selector._get_serendipity_description_text(art)
+    _check(
+        "i4 content:encoded がタグのみ → description fallback",
+        out == "desc fallback", f"got {out!r}",
+    )
+
+
+def test_desc_text_strips_html_and_entities():
+    """HTML タグ除去 + 名前付き/数値文字参照のデコード."""
+    art = {"content_encoded": "<p>H&#038;P &amp; Co&hellip; <b>太字</b></p>"}
+    out = serendipity_selector._get_serendipity_description_text(art)
+    _check(
+        "i5 HTML タグ除去 + &#038;/&hellip; デコード",
+        out == "H&P & Co… 太字", f"got {out!r}",
+    )
+
+
 def main() -> int:
     print("Page 6 — serendipity_selector tests")
     print()
@@ -667,6 +724,13 @@ def main() -> int:
     test_update_history_normal_success_pattern()
     test_update_history_api_failure_pattern()
     test_update_history_atomic_json_intact()
+    print()
+    print("(i) C19: _get_serendipity_description_text:")
+    test_desc_text_uses_content_encoded()
+    test_desc_text_fallback_to_description()
+    test_desc_text_both_missing_empty()
+    test_desc_text_content_encoded_strips_to_empty()
+    test_desc_text_strips_html_and_entities()
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")
     return 0 if FAIL == 0 else 1

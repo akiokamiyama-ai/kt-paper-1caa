@@ -1817,7 +1817,12 @@ def _render_page_five(
     title = (article.get("title") or "").strip()
     source_name = (article.get("source_name") or "").strip()
     url = (article.get("url") or "").strip()
-    description = _truncate_to_chars(article.get("description") or "", 120)
+    # C19 (5/21 神山さん観察): Serendipity の文章が短い。120 字 hardcode
+    # truncate を 300 字に拡張し、RSS の content:encoded があれば description
+    # の代わりにそちらを使う（_get_serendipity_description_text が吸収）。
+    description = _truncate_to_chars(
+        page5_serendipity._get_serendipity_description_text(article), 300,
+    )
     date_label = _format_publish_date_ja(article.get("pub_date"))
     if date_label:
         article_byline = f"出典：{source_name} · {date_label}"
