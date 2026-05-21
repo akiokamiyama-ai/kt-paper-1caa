@@ -383,6 +383,23 @@
       "ai_kamiyama_url": "https://www.bbc.com/news/articles/c4g0e0p4p2go?at_medium=RSS&at_campaign=rss",
       "ai_kamiyama_title": "Inflation falls to 2.8% but is expected to rise from here",
       "ai_kamiyama_source_name": "BBC Business"
+    },
+    {
+      "displayed_on": "2026-05-22",
+      "article_url": "https://plato.stanford.edu/entries/langer/",
+      "article_title": "Susanne Langer",
+      "article_category": "academic",
+      "tie_candidates": [
+        "academic"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.economist.com/finance-and-economics/2026/05/21/the-insurers-on-the-hook-for-war-in-iran",
+      "ai_kamiyama_title": "The insurers on the hook for war in Iran",
+      "ai_kamiyama_source_name": "The Economist"
     }
   ]
 }

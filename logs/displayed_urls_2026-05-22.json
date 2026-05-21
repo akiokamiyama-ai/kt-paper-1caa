@@ -1,0 +1,33 @@
+{
+  "date": "2026-05-22",
+  "page1_urls": [
+    "https://www.economist.com/finance-and-economics/2026/05/21/how-should-economists-treat-morality",
+    "https://www.economist.com/finance-and-economics/2026/05/21/the-other-china-shock",
+    "https://www.bbc.com/news/articles/c62jp09p0l4o?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/c4g85dryv24o?at_medium=RSS&at_campaign=rss"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/news/articles/2605/21/news126.html",
+    "human_energy": "https://jinjibu.jp/news/detl/26345/",
+    "web_repo": "https://www.bc01.net/article/picmii/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/the-operational-case-against-israels-gaza-campaign/",
+    "https://www.asahi.com/articles/ASV5P216YV5PULFA013M.html?ref=rss",
+    "https://warontherocks.com/cogs-of-war/chinas-ai-governance-offensive-threatens-u-s-tech-leadership/",
+    "https://www.mckinsey.com/industries/life-sciences/our-insights/the-next-era-of-healthcare-is-personal",
+    "https://www.webdoku.jp/mettakuta/izumi_umehara/20260521080000.html",
+    "https://www.quantamagazine.org/how-ecotypes-harbor-the-genetic-memory-of-a-species-past-20260521/"
+  ],
+  "page4_urls": [
+    "https://shinsho-plus.shueisha.co.jp/news/34921",
+    "https://shinsho-plus.shueisha.co.jp/column/bunkaisan_kodure/34940",
+    "https://shinsho-plus.shueisha.co.jp/column/rikusentai_akatukibutai/34998"
+  ],
+  "page5_url": "https://plato.stanford.edu/entries/langer/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/05/21/building-a-data-center-in-pine-island-minnesota/",
+    "music": "https://natalie.mu/music/news/672955",
+    "outdoor": "https://thetrek.co/5-viral-backpacking-tips-that-suck-and-5-that-dont/"
+  }
+}
