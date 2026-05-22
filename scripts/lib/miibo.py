@@ -40,7 +40,11 @@ MIIBO_AGENT_ID_ENV = "MIIBO_AGENT_ID"
 
 API_ENDPOINT = "https://api-mebo.dev/api"
 
-DEFAULT_TIMEOUT_SECONDS = 30
+# Sprint 8 C24 (2026-05-23): 30 → 90 に延長。5/23 朝刊で miibo の応答が
+# 約 4 分 11 秒かかり、30 秒 timeout の 3 attempts では間に合わず 3 秒差で
+# fallback 発火 → AIかみやま休載に。miibo は社契約定額枠なので
+# 待機時間延長のコスト影響なし。最大経過 90s × 3 attempts + 1+2s ≈ 4.5 分。
+DEFAULT_TIMEOUT_SECONDS = 90
 DEFAULT_MAX_RETRIES = 2
 DEFAULT_UID = "tribune_daily_v1"
 
