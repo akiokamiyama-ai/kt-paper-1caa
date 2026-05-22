@@ -400,6 +400,23 @@
       "ai_kamiyama_url": "https://www.economist.com/finance-and-economics/2026/05/21/the-insurers-on-the-hook-for-war-in-iran",
       "ai_kamiyama_title": "The insurers on the hook for war in Iran",
       "ai_kamiyama_source_name": "The Economist"
+    },
+    {
+      "displayed_on": "2026-05-23",
+      "article_url": "https://rockinon.com/news/detail/215188",
+      "article_title": "ニュース - ROCK IN JAPAN出演を目指すオーディションプロジェクト「RO JACK」第2弾音源通過アーティスト全34組を発表！",
+      "article_category": "music",
+      "tie_candidates": [
+        "music"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": true,
+      "fallback_used": true,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.economist.com/finance-and-economics/2026/05/21/the-insurers-on-the-hook-for-war-in-iran",
+      "ai_kamiyama_title": "The insurers on the hook for war in Iran",
+      "ai_kamiyama_source_name": "The Economist"
     }
   ]
 }

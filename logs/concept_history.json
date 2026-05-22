@@ -124,6 +124,11 @@
       "concept_id": "wild_knowledge",
       "name_ja": "ワイルドナレッジ",
       "displayed_on": "2026-05-22"
+    },
+    {
+      "concept_id": "schein",
+      "name_ja": "シャイン",
+      "displayed_on": "2026-05-23"
     }
   ]
 }

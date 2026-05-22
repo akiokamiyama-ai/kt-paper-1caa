@@ -1,0 +1,33 @@
+{
+  "date": "2026-05-23",
+  "page1_urls": [
+    "https://www.bbc.com/news/articles/c93xv27kpwxo?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/cnvpme6811do?at_medium=RSS&at_campaign=rss",
+    "https://www.fsight.jp/articles/-/52075",
+    "https://www.bbc.com/news/videos/cd6pzg7z319o?at_medium=RSS&at_campaign=rss"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/news/articles/2605/22/news125.html",
+    "human_energy": "https://jinjibu.jp/news/detl/26367/",
+    "web_repo": null
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/05/22/the-boys-tv-series-review-trump-homelander-superhero/",
+    "https://toyokeizai.net/articles/-/945464?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    null,
+    "https://www.mckinsey.com/industries/financial-services/our-insights/beyond-stablecoins-the-emerging-architecture-of-on-chain-money",
+    "https://www.project-syndicate.org/commentary/why-economic-gender-inequality-persists-by-eleni-yitbarek-et-al-2026-05",
+    "https://www.mckinsey.com/featured-insights/insights-on-europe/videos-and-podcasts/europe-on-the-move-a-conversation-with-hitachi-energys-ceo"
+  ],
+  "page4_urls": [
+    "https://shinsho-plus.shueisha.co.jp/news/34921",
+    "https://shinsho-plus.shueisha.co.jp/column/bunkaisan_kodure/34940",
+    "https://shinsho-plus.shueisha.co.jp/column/rikusentai_akatukibutai/34998"
+  ],
+  "page5_url": "https://rockinon.com/news/detail/215188",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-05/global-reads-summer-childrens-and-ya-releases-spanning-four-continents/",
+    "music": "https://natalie.mu/music/news/673060",
+    "outdoor": "https://thetrek.co/hhh-chapter-16-two-saints-and-a-pointless-pillar/"
+  }
+}
