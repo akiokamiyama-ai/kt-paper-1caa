@@ -15,6 +15,7 @@ import re
 import sys
 from dataclasses import dataclass
 from datetime import date
+from pathlib import Path
 from typing import Any, Callable
 
 from .monthly_pivotal import ANNOTATION_LABEL_BY_ANGLE, WeekContext
@@ -27,6 +28,12 @@ from .prompts import (
 ESSAY_MODEL = "claude-sonnet-4-6"
 ESSAY_TAG = "page1_v3.essay"
 ESSAY_MAX_TOKENS = 4096
+
+# Sprint 8 C24 (2026-05-24, 5/24 朝刊 fallback 受け): JSON parse 失敗時の
+# 1 回 retry + 失敗時 raw response 保存先。
+DEFAULT_FALLBACK_RAW_DIR = (
+    Path(__file__).resolve().parent.parent.parent / "logs"
+)
 
 _FENCE_RE = re.compile(
     r"^\s*```(?:json)?\s*\n?|\n?```\s*$", re.IGNORECASE | re.MULTILINE
@@ -158,9 +165,46 @@ def _angle_label_text(week: WeekContext) -> str:
     return f"{day_full} - {week.angle_label_jp}"
 
 
-def _make_fallback(week: WeekContext, reason: str) -> EssayResult:
-    """LLM 失敗時の placeholder。紙面は「論考休載」体裁で出す."""
+def _save_fallback_raw(target_date: date, raw: str, out_dir: Path) -> Path | None:
+    """fallback 時の raw response を artifact 用ファイルに保存.
+
+    GHA workflow が ``logs/page1_v3_fallback_raw_*.txt`` を audit-logs artifact
+    に同梱できるようファイル名規約を統一する（C24, 2026-05-24）。
+    """
+    try:
+        out_dir.mkdir(parents=True, exist_ok=True)
+        path = out_dir / f"page1_v3_fallback_raw_{target_date.isoformat()}.txt"
+        path.write_text(raw or "(empty)", encoding="utf-8")
+        return path
+    except OSError as e:
+        print(f"[page1_v3] failed to save fallback raw: {e}", file=sys.stderr)
+        return None
+
+
+def _make_fallback(
+    week: WeekContext,
+    target_date: date,
+    reason: str,
+    *,
+    raw: str = "",
+    out_dir: Path | None = None,
+) -> EssayResult:
+    """LLM 失敗時の placeholder。紙面は「論考休載」体裁で出す.
+
+    ``raw`` が非空なら snippet を stderr + 全文を logs/ にダンプ（C24 観測強化）。
+    """
     print(f"[page1_v3] essay LLM failed ({reason}), using fallback", file=sys.stderr)
+    if raw:
+        snippet = raw[:1000].replace("\n", " ").replace("\r", " ")
+        print(
+            f"[page1_v3] raw response snippet (first 1000 chars, newlines→space): "
+            f"{snippet}",
+            file=sys.stderr,
+        )
+        dump_dir = out_dir or DEFAULT_FALLBACK_RAW_DIR
+        saved = _save_fallback_raw(target_date, raw, dump_dir)
+        if saved:
+            print(f"[page1_v3] full raw saved to {saved}", file=sys.stderr)
     return EssayResult(
         angle_label=_angle_label_text(week),
         daily_question="本日の論考は休載となります",
@@ -175,6 +219,23 @@ def _make_fallback(week: WeekContext, reason: str) -> EssayResult:
         quote_excerpt=(week.article.get("key_quote_ja") or week.article.get("key_quote") or ""),
         cost_usd=0.0,
         is_fallback=True,
+    )
+
+
+def _build_essay_result(
+    week: WeekContext, parsed: dict, cost: float,
+) -> EssayResult:
+    """parse 成功時の EssayResult 構築（generate_essay の 2 経路で共有）."""
+    return EssayResult(
+        angle_label=_angle_label_text(week),
+        daily_question=parsed["daily_question"],
+        essay_title=parsed["essay_title"],
+        body=parsed["body"],
+        annotation_label=parsed["annotation_label"],
+        annotation_body=parsed["annotation_body"],
+        quote_excerpt=parsed["quote_excerpt"],
+        cost_usd=cost,
+        is_fallback=False,
     )
 
 
@@ -206,8 +267,13 @@ def generate_essay(
     *,
     past_essays: list[dict] | None = None,
     llm_caller: Callable | None = None,
+    fallback_raw_dir: Path | None = None,
 ) -> EssayResult:
     """日-金論考を 1 本生成する.
+
+    JSON parse 失敗時は **1 回だけ retry** する（C24 強化, 2026-05-24）。
+    Sonnet 応答は非決定的なため、2 回目で成功する確率が実用的に高い。
+    両 attempt とも失敗した場合のみ fallback。
 
     Parameters
     ----------
@@ -220,27 +286,60 @@ def generate_essay(
     llm_caller : Callable | None
         テスト用注入。``(system: str, user: str) -> Response`` のシグネチャ。
         Response は ``.text`` ``.cost_usd`` を持つことを期待する。
+    fallback_raw_dir : Path | None
+        fallback 時の raw response ダンプ先（テスト用）。default は
+        ``logs/`` ディレクトリ。GHA artifact に同梱される。
     """
     caller = llm_caller or _default_llm_caller
     system = ESSAY_SYSTEM_PROMPT
     user = _build_user_message(week, target_date, past_essays)
+    out_dir = fallback_raw_dir or DEFAULT_FALLBACK_RAW_DIR
+
+    # ----- Attempt 1 -----
     try:
         resp = caller(system=system, user=user)
-    except Exception as e:  # noqa: BLE001 — LLM 失敗は紙面破綻させない
-        return _make_fallback(week, f"call exception {type(e).__name__}")
+    except Exception as e:  # noqa: BLE001
+        return _make_fallback(
+            week, target_date, f"call exception {type(e).__name__}",
+            out_dir=out_dir,
+        )
     raw = getattr(resp, "text", "") or ""
     cost = float(getattr(resp, "cost_usd", 0.0) or 0.0)
     parsed = _parse_essay_json(raw)
-    if parsed is None:
-        return _make_fallback(week, "JSON parse failed")
-    return EssayResult(
-        angle_label=_angle_label_text(week),
-        daily_question=parsed["daily_question"],
-        essay_title=parsed["essay_title"],
-        body=parsed["body"],
-        annotation_label=parsed["annotation_label"],
-        annotation_body=parsed["annotation_body"],
-        quote_excerpt=parsed["quote_excerpt"],
-        cost_usd=cost,
-        is_fallback=False,
+    if parsed is not None:
+        return _build_essay_result(week, parsed, cost)
+
+    # ----- Attempt 2: JSON parse 失敗時の 1 回 retry -----
+    print(
+        f"[page1_v3] essay JSON parse failed on attempt 1 "
+        f"(raw {len(raw)} chars), retrying once",
+        file=sys.stderr,
+    )
+    try:
+        resp2 = caller(system=system, user=user)
+    except Exception as e:  # noqa: BLE001
+        return _make_fallback(
+            week, target_date,
+            f"retry call exception {type(e).__name__}",
+            raw=raw, out_dir=out_dir,
+        )
+    raw2 = getattr(resp2, "text", "") or ""
+    cost2 = float(getattr(resp2, "cost_usd", 0.0) or 0.0)
+    parsed2 = _parse_essay_json(raw2)
+    if parsed2 is not None:
+        print(
+            f"[page1_v3] essay JSON parse succeeded on attempt 2 "
+            f"(retry cost ${cost2:.4f}, total ${cost + cost2:.4f})",
+            file=sys.stderr,
+        )
+        return _build_essay_result(week, parsed2, cost + cost2)
+
+    # ----- 両方失敗: fallback + 両 attempt の raw を連結保存 -----
+    combined = (
+        f"=== attempt 1 ({len(raw)} chars) ===\n{raw}\n\n"
+        f"=== attempt 2 ({len(raw2)} chars) ===\n{raw2}"
+    )
+    return _make_fallback(
+        week, target_date, "JSON parse failed (both attempts)",
+        raw=combined, out_dir=out_dir,
     )
