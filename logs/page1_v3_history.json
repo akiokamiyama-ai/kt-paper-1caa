@@ -14,14 +14,14 @@
         "angle_label_jp": "全体像",
         "essay": {
           "angle_label": "日曜 - 全体像",
-          "daily_question": "本日の論考は休載となります",
-          "essay_title": "論考休載",
-          "body": "本日の論考は通信または生成の失敗により休載となります。\n\n主軸記事『The Death of Tacit Knowledge in the Age of Explicit Algorithms』は引き続き今週のテーマとして掲載しております。明日以降の論考にご期待ください。",
+          "daily_question": "AIが暗黙知を「殺す」とき、組織は何を失っているのか？",
+          "essay_title": "語りえぬ知の死――AIが壊す継承の足場",
+          "body": "マイク・ターナーが問いかけているのは、効率と生産性の話ではない。もっと根深い、知というものの存在様式に関わる問いだ。\n\n熟練看護師が「何かがおかしい」と気づく瞬間を想起してほしい。モニターが沈黙し、数値が正常範囲に収まっていても、彼女は一時間早く異変を知る。それを問われれば答えに窮する。この「答えに窮する」という事実こそが、哲学者マイケル・ポランニーのいう暗黙知の核心だ。暗黙知とは、語れないがゆえに記録できず、記録できないがゆえに移転が難しい。だからこそ、身体と時間をかけた「傍らにいること」によってのみ伝わる。\n\nところがAIは、知識集約産業のエントリーレベル業務を驚くべき速度と精度で引き受け始めた。法律事務所の新人が行う判例調査、設計事務所の若手が担う構造計算の下準備、金融機関の若手アナリストが作るデータ整理——これらは「足場」だった。新人が先輩の傍で仕事しながら、言語化されない判断の型を体に刻む場だ。AIがその足場を取り除いたとき、何が起きるか。効率は上がる。だが中堅が育たない。十年後、その組織に「語りうる以上を知っている人」が何人残るか、という問いが生まれる。\n\nターナーが日本の製造業の暗黙知伝承を「ノスタルジーではなくリスクマネジメント」と評したくだりは鋭い。熟練工の技術を映像やマニュアルで記録しようとした試みが、なぜ不完全なのか。答えは明白で、言語化・映像化の過程で「語れない部分」は必然的に落ちる。匠の技を継承しているのは、弟子が傍らで過ごした時間と失敗の蓄積であって、マニュアルではない。この構造を「非効率」として切り捨てた製造現場が後に何を失ったかは、日本の産業史が証言している。\n\n経営者として考えるべき問いは、AIをどう使うかではなく、AIを導入したあとに「足場」をどう再設計するかだ。AIに任せることで空いた時間を、若手が先輩の思考プロセスに触れる時間に変換できるか。その設計ができている組織とできていない組織とでは、十年後の「知の厚み」に取り返しのつかない差が生まれる。\n\n今週の論考は、この問いを五つの角度から掘り下げていく。月曜は個人の認知と暗黙知の関係、火曜は組織的継承の設計論、水曜は医療・法・金融それぞれの産業固有の問題、木曜はAI時代の教育と師弟関係の再定義、金曜は経営判断としての具体的対策へと深めていく。今日は地図を持って立つ日だ。\n\nポランニーの言葉は1966年に書かれた。だが「我々は語りうる以上を知っている」という命題が最も鋭く刺さる時代は、逆説的に、すべてを語れると錯覚させるアルゴリズムが台頭した今かもしれない。",
           "annotation_label": "主要キーワード",
-          "annotation_body": "本日は用語解説も休載となります。",
-          "quote_excerpt": "熟練看護師には、ほぼ誰も説明できない一つの「テスト」がある。患者の悪化の初期兆候を見るとき、熟練の看護師は時に、ただ「分かる」のだ。姿勢、顔色、呼吸の質、簡単な問いへの反応の仕方——これらのどのデータも単独では閾値を超えず、電子カルテのアラートを発動させない。それでも熟練看護師は、モニターが気づく1時間も前に「何かがおかしい」と知っている。何を見たのかと尋ねれば、彼女は答えに窮するだろう。彼女は、語りうる以上を知っているのだ。",
-          "cost_usd": 0.0,
-          "is_fallback": true
+          "annotation_body": "【暗黙知】ポランニーが提唱。経験を通じて体得されるが言語化できない知識。【知識継承パイプライン】新人が先輩との協働を通じて暗黙知を習得する組織的仕組み。【エントリーレベル業務】若手が担う初歩的業務。暗黙知習得の「足場」として機能する。【足場（スキャフォールディング）】学習理論の概念。熟達者が初学者の成長を支える構造的な支援環境。",
+          "quote_excerpt": "There is a test every experienced nurse learns to perform and almost none can explain. When assessing a patient for early signs of clinical deterioration, a seasoned nurse will sometimes simply know. The posture, the color, the quality of breathing, the particular way a patient responds to a simple question: none of these data points alone trips a numerical threshold, none triggers an alert in the electronic health record, and yet the experienced nurse knows something is wrong an hour before the monitors do. Ask her what specifically she noticed and she will struggle to tell you. She knows more than she can tell.",
+          "cost_usd": 0.027525,
+          "is_fallback": false
         }
       }
     ]
