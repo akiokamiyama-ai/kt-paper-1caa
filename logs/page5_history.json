@@ -417,6 +417,23 @@
       "ai_kamiyama_url": "https://www.economist.com/finance-and-economics/2026/05/21/the-insurers-on-the-hook-for-war-in-iran",
       "ai_kamiyama_title": "The insurers on the hook for war in Iran",
       "ai_kamiyama_source_name": "The Economist"
+    },
+    {
+      "displayed_on": "2026-05-24",
+      "article_url": "https://www.houyhnhnm.jp/news/1127829/",
+      "article_title": "B-BOY彫刻家・小畑多丘による個展「TWO SPACES」。隙間とSculpture Center Tokyoの2会場で同時開催です。",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.fsight.jp/articles/-/52073",
+      "ai_kamiyama_title": "韓国統一部が北朝鮮の新憲法を公開、サプライズはないが大幅改正（2026年5月3日～5月9日）",
+      "ai_kamiyama_source_name": "Foresight（新潮社）"
     }
   ]
 }

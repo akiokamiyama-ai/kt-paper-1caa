@@ -129,6 +129,11 @@
       "concept_id": "schein",
       "name_ja": "シャイン",
       "displayed_on": "2026-05-23"
+    },
+    {
+      "concept_id": "emergent_evolution",
+      "name_ja": "創発進化",
+      "displayed_on": "2026-05-24"
     }
   ]
 }
