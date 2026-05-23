@@ -1,0 +1,118 @@
+{
+  "current_month": "2026-05",
+  "weeks": {
+    "W1": {
+      "theme": "AIと暗黙知",
+      "period": ["2026-05-24", "2026-05-30"],
+      "article": {
+        "title": "The Death of Tacit Knowledge in the Age of Explicit Algorithms",
+        "source": "The Past Tense of Tomorrow (Substack)",
+        "author": "Mike Turner",
+        "url": "https://pasttensetomorrow.substack.com/p/the-death-of-tacit-knowledge-in-the",
+        "published": "2026-04-13",
+        "summary": "AI による人間専門性のアルゴリズム化は単なる効率の話ではない。医療・法・工学・金融横断で具現化された経験的知（暗黙知）を侵食している。冒頭、患者の悪化兆候を察知する熟練看護師の事例が白眉。ポランニーの「我々は語りうる以上を知っている」が、現代の最も警戒すべき形で立ち上がる。AI が知識集約産業のエントリーレベル業務を引き受けることで、新人が先輩の傍で暗黙知を習得する伝統的パイプラインが、中堅に育つ前に断絶している。日本の製造業の暗黙知伝承を「ノスタルジーではなくリスクマネジメント」として肯定的に言及。",
+        "key_quote": "There is a test every experienced nurse learns to perform and almost none can explain. When assessing a patient for early signs of clinical deterioration, a seasoned nurse will sometimes simply know. The posture, the color, the quality of breathing, the particular way a patient responds to a simple question: none of these data points alone trips a numerical threshold, none triggers an alert in the electronic health record, and yet the experienced nurse knows something is wrong an hour before the monitors do. Ask her what specifically she noticed and she will struggle to tell you. She knows more than she can tell.",
+        "key_quote_ja": "熟練看護師には、ほぼ誰も説明できない一つの「テスト」がある。患者の悪化の初期兆候を見るとき、熟練の看護師は時に、ただ「分かる」のだ。姿勢、顔色、呼吸の質、簡単な問いへの反応の仕方——これらのどのデータも単独では閾値を超えず、電子カルテのアラートを発動させない。それでも熟練看護師は、モニターが気づく1時間も前に「何かがおかしい」と知っている。何を見たのかと尋ねれば、彼女は答えに窮するだろう。彼女は、語りうる以上を知っているのだ。",
+        "points": [
+          "AI による効率化が、知識継承の足場を破壊している逆説",
+          "「言語化できない知」を組織的にどう守るか",
+          "日本の製造業の暗黙知伝承は「ノスタルジーではなくリスクマネジメント」"
+        ],
+        "angles_hints": {
+          "sun": "「分かる」を失う代償、ナース事例から始める全体像",
+          "mon": "本当に暗黙知伝達は不可能か、新しい伝達経路の可能性",
+          "tue": "日本製造業の暗黙知伝承、神山さん経営現場への接続",
+          "wed": "ポランニー、野中郁次郎、Crawford『Shop Class as Soulcraft』",
+          "thu": "Jacquard loom（1804）、Taylor 科学的管理、Ford、米国脱工業化",
+          "fri": "神山さんへの問い：あなたの会社の暗黙知は何ですか"
+        }
+      }
+    },
+    "W2": {
+      "theme": "インド台頭",
+      "period": ["2026-05-31", "2026-06-06"],
+      "article": {
+        "title": "India is No Longer A Future Superpower. It Is Already Reshaping The Global Economy",
+        "source": "Weekly Voice",
+        "author": "Weekly Voice editorial staff",
+        "url": "https://weeklyvoice.com/india-is-no-longer-a-future-superpower-it-is-already-reshaping-the-global-economy/",
+        "published": "2026-05-22",
+        "summary": "インドを「将来の大国」と語ることはもはや時代錯誤になった。非同盟の伝統が「戦略的自律性」と「マルチアライメント」に進化し、米欧日豪と関係を深めながらエネルギー・防衛・通商で独自の利益を守る。Apple の 2025年 iPhone 製造はインドで55百万台、世界生産の約4分の1へ。China Plus One 戦略の最大の受益者。IMF 2026年4月推計でGDP約4.15兆ドル、英日に次ぐが、為替変動を考慮した実態経済の勢いは衰えていない。インドが他国の追随ではなく自前の論理で動く世界が始まっている。",
+        "key_quote": "The most important point is that India is no longer waiting for its moment. It is already changing where the world builds products, how companies reduce China risk, how energy flows are negotiated and how diplomatic power is balanced. The next phase will not be about whether India can become a major power. It will be about how quickly India can manage the pressures that come with already being one.",
+        "key_quote_ja": "最も重要なのは、インドはもはや自分の時を待っていないということだ。世界が製品を作る場所、企業が中国リスクを減らす方法、エネルギーの流れが交渉される仕方、外交力が均衡する形——インドはすでにそれらを変えつつある。次の段階は、インドが大国になれるかどうかではない。それは、すでに大国であることが伴う諸圧力を、インドがどれだけ素早く処理できるか、という問いになる。",
+        "points": [
+          "大国 vs 新興国の二分法の終わり",
+          "「マルチアライメント」という外交哲学",
+          "日本のインド観の構造的アップデート要請"
+        ],
+        "angles_hints": {
+          "sun": "インドの「戦略的自律性」とは",
+          "mon": "マルチアライメントの綻び、内部矛盾",
+          "tue": "日本企業のインド戦略、こころみグループ視点",
+          "wed": "アマルティア・セン、ガンディー思想の現代的読み",
+          "thu": "1991年経済自由化、非同盟運動の系譜",
+          "fri": "神山さんへの問い：インドという他者をどう聞くか"
+        }
+      }
+    },
+    "W3": {
+      "theme": "縮小社会リーダーシップ",
+      "period": ["2026-06-07", "2026-06-13"],
+      "article": {
+        "title": "Demographic Decline and Resurgence in the Aging Century - Grid-level Population Tendency Grasped by Artificial Intelligence",
+        "source": "Nature - Humanities and Social Sciences Communications",
+        "author": "Chao Li, Alexander Ryota Keeley, Shunsuke Managi (Kyushu University)",
+        "url": "https://www.nature.com/articles/s41599-026-06605-5",
+        "published": "2026-03-17",
+        "summary": "日本の人口動態を 2100年まで 500m グリッド単位で予測した AI 解析研究（深層学習モデル、300万パラメータ、精度99%以上）。日本の人口は 2055年に 1億人を下回り、2070年に 9,050万人まで減少、世紀末には緩やかな回復で安定。空間的には、2100年までに日本の半分以上のグリッドが無人化、東京一極集中が継続。世帯規模は2020年の2.26人から2100年には1.39人まで縮小、社会的孤立リスクが高まる。外国人住民は2100年には人口の6%以上に達し、3000以上のグリッドが移民マジョリティ地区となる。",
+        "key_quote": "The forecasts reveal that Japan's population will fall below 100 million by around 2055, decline to 90.5 million by 2070, and stabilize at the end of the century with a modest rebound. At the spatial level, more than half of Japan's grids will become uninhabited by 2100, while Tokyo remains the dominant growth pole, attracting migrants from other cities. Household sizes decrease nationally from 2.26 in 2020 to 1.39 by 2100, signaling rising risks of social isolation. Meanwhile, the proportion of foreign residents rises above 6% of the national population by 2100, with over 3000 grids becoming immigrant-majority communities.",
+        "key_quote_ja": "予測によれば、日本の人口は2055年頃に1億人を下回り、2070年には9050万人まで減少し、今世紀末にはわずかな回復をともなって安定する。空間的には、2100年までに日本の半分以上のグリッドが無人化する一方、東京は他都市から移住者を惹きつけ続ける支配的成長極であり続ける。世帯規模は全国で2020年の2.26人から2100年には1.39人へと縮小し、社会的孤立リスクの高まりを示す。一方、外国人住民の比率は2100年には人口の6%を超え、3000以上のグリッドが移民マジョリティのコミュニティとなる。",
+        "points": [
+          "国土の半分が無人化する未来の経営的含意",
+          "東京一極集中の不可避性 vs 政策介入の可能性",
+          "縮小経済における「集中による効率化」の倫理"
+        ],
+        "angles_hints": {
+          "sun": "縮小と集中の二重構造、AI予測モデルが描く未来",
+          "mon": "AIモデルの前提への懐疑、政策介入余地",
+          "tue": "地方経済の現場、福祉サービスの再配置、こころみ視点",
+          "wed": "「場所」の哲学、和辻哲郎『風土』、磯崎新の都市論",
+          "thu": "戦後の都市化、過疎化の歴史、列島改造論",
+          "fri": "神山さんへの問い：縮小する国土でリーダーとは何か"
+        }
+      }
+    },
+    "W4": {
+      "theme": "注意経済の極限",
+      "period": ["2026-06-14", "2026-06-20"],
+      "article": {
+        "title": "Tech Addiction, Distraction, and Our Love-less Moment",
+        "source": "Common Good Magazine",
+        "author": "Aaron Cline Hanbury",
+        "url": "https://commongoodmag.com/tech-addiction-distraction-and-our-love-less-moment/",
+        "published": "2023-02-16",
+        "modified": "2025-10-27",
+        "summary": "Simone Weil の「注意は最も希少で純粋な寛大さの形」を引きながら、現代テック依存が「愛なき時代」を象徴することを論じる。家族との祝日でさえ携帯の不在が苦しい、という著者自身の告白から始まる。Weil の哲学では「注意 = 愛」であり、他者の存在を認め、その必要を一瞬でも自分のそれより重要と認めることが愛の核心。米国経済が職場の中断・気散じで毎年数十億ドルを失い、2022年に従業員1人あたり720時間が散漫で失われた。Gloria Mark の研究（注意中断後の回復に23分）も引用。",
+        "key_quote": "To give someone attention is to recognize that they exist and to assent that their needs, at least for a moment, are more important than my own. Now, like philosophers are wont to do, Weil packs her own stuff into her terms, and readers in 2023 should remember that Weil's definition of attention only partially aligns with the colloquial and scientific ways we tend to use it. Still, her idea of attention and love seems true. A perhaps trite example: If you've ever shared a table with someone who portaled attention everywhere but to you, then you know that table feels nothing like love.",
+        "key_quote_ja": "誰かに注意を向けるということは、その人が存在していることを認め、少なくとも一瞬は、その人の必要を自分の必要より重要だと認めることである。哲学者の常で、Weilは自分の言葉に独自の意味を込めているから、現代の読者は、Weil の「注意」の定義が私たちが普段使う意味と完全には一致しないことを覚えておくべきだ。それでも、注意と愛をめぐる彼女の考えは真実に響く。月並みな例だが——食卓を共にした相手が、注意を貴方以外のあらゆる場所へ向けていたなら、その食卓は愛のない場所だと、あなたは知っている。",
+        "points": [
+          "注意 = 倫理的・愛の問題、という再フレーム",
+          "「他者に向き合う」能力の構造的衰退",
+          "経済効率の話に還元しない注意の擁護"
+        ],
+        "angles_hints": {
+          "sun": "注意 = 愛、という哲学的フレーム",
+          "mon": "宗教的なフレームの妥当性、世俗的議論との緊張",
+          "tue": "「人と人」ビジネス（こころみ）への含意",
+          "wed": "Simone Weil、Iris Murdoch、Hannah Arendt",
+          "thu": "注意の文化史（読書、瞑想、祈り）",
+          "fri": "神山さんへの問い：ディープリスニングと注意経済の関係"
+        }
+      }
+    }
+  },
+  "next_month_planning": {
+    "weeks_planned": ["未定", "未定", "未定", "未定"],
+    "note": "7月分は2026-06-27（最終土曜）の月次選定セッションで決定"
+  }
+}
