@@ -134,6 +134,11 @@
       "concept_id": "emergent_evolution",
       "name_ja": "創発進化",
       "displayed_on": "2026-05-24"
+    },
+    {
+      "concept_id": "psychological_safety",
+      "name_ja": "心理的安全性",
+      "displayed_on": "2026-05-25"
     }
   ]
 }

@@ -23,6 +23,23 @@
           "cost_usd": 0.027525,
           "is_fallback": false
         }
+      },
+      {
+        "date": "2026-05-25",
+        "day_label": "月",
+        "angle_key": "critical",
+        "angle_label_jp": "批判的",
+        "essay": {
+          "angle_label": "月曜 - 批判的",
+          "daily_question": "「暗黙知消滅」論は、人間の適応力を過小評価していないか？",
+          "essay_title": "悲観論の死角――暗黙知消滅説を疑う三つの論点",
+          "body": "昨日の論考では、ターナーの問いを正面から受け止め、暗黙知の継承パイプラインが断絶する危機を描いた。だが今日は立場を変える。この「AIによる暗黙知消滅」論には、見過ごせない盲点が少なくとも三つある。\n\nまず第一の問い。「暗黙知の継承パイプラインが壊れている」という診断は、本当に新しい現象なのか。\n\n歴史を振り返れば、テクノロジーは常に「知の中間層」を脅かしてきた。印刷革命は写本職人の徒弟制を解体し、CADは製図職人の指先の技術を不要とした。だがその都度、新しい形の専門性が生まれ、知の媒体が変わっただけで継承そのものが消えたわけではない。経済学者デイヴィッド・オートールは「仕事の変化は技能の消滅ではなく再配分である」と繰り返し主張している。ターナーの論考は、この歴史的サイクルを「今回こそ違う」と断言するが、その根拠は事例の説得力に依存しすぎており、比較史的な文脈が薄い。\n\n第二の問い。暗黙知は本当に「語れない」のか、それとも「まだ語られていない」だけなのか。\n\nここにターナー論考の哲学的な弱点がある。ポランニーの「語りうる以上を知っている」という命題を、彼は静的な絶対値として扱っている。しかし認知科学者アンドレアス・シュミットらの研究が示すように、熟練者の暗黙知は適切なインタビュー設計と認知的補助があれば、相当程度まで明示化できる。熟練看護師が「答えに窮する」のは、知識が本質的に言語化不能だからではなく、問いの立て方が日常的な内省を前提としていないからかもしれない。むしろAIとの協働プロセスがフィードバックを可視化し、暗黙知の言語化を加速するという逆説的シナリオも十分ありうる。\n\n第三の問い。エントリーレベル業務の消滅は、「足場の喪失」であると同時に「不必要な苦行からの解放」でもあるのではないか。\n\n徒弟制的な知識継承は、たしかに暗黙知を育む。だが同時に、無意味な反復作業、ハラスメント、非効率な選抜を内包してきた歴史もある。教育研究者ロジャー・シャンクは「学習は経験から生まれるが、すべての経験が等価な学習をもたらすわけではない」と指摘する。エントリーレベルの定型業務がAIに置き換わることで失われる「足場」は、本当に暗黙知の核心だったのか、それとも単なる時間コストだったのか。この区別なしに継承の危機を語ることは、過去の制度を本質化するロマンティシズムに陥る危険がある。\n\n無論、ターナーの問いを完全に退けることはできない。知識継承の速度と質が変容していることは確かであり、その変容を軽視することは経営上の判断ミスになりうる。しかし経営者が「AIが暗黙知を殺す」という物語を無批判に受け入れるとき、それはしばしば変化への恐怖を知的に正当化する防衛機制として機能する。\n\n問うべきは「暗黙知をどう守るか」ではなく「どの暗黙知が守るに値し、どの慣行はむしろ手放すべきか」という選別の問いだ。悲観論は時に、現状維持の最も洗練された弁護士になる。",
+          "annotation_label": "反対論者・批判者",
+          "annotation_body": "①デイヴィッド・オートール（MITエコノミスト）：技能代替論に対し「仕事の再配分」モデルを提唱し技術悲観論を批判。②アンドレアス・シュミット（認知科学）：暗黙知の明示化可能性を実証研究で示す。③ロジャー・シャンク（AI・教育研究者）：徒弟制学習の神話化を批判し、経験の質的差異を強調。",
+          "quote_excerpt": "There is a test every experienced nurse learns to perform and almost none can explain. When assessing a patient for early signs of clinical deterioration, a seasoned nurse will sometimes simply know. The posture, the color, the quality of breathing, the particular way a patient responds to a simple question: none of these data points alone trips a numerical threshold, none triggers an alert in the electronic health record, and yet the experienced nurse knows something is wrong an hour before the monitors do. Ask her what specifically she noticed and she will struggle to tell you. She knows more than she can tell.",
+          "cost_usd": 0.030470999999999998,
+          "is_fallback": false
+        }
       }
     ]
   }

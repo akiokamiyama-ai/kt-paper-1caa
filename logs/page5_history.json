@@ -434,6 +434,23 @@
       "ai_kamiyama_url": "https://www.fsight.jp/articles/-/52073",
       "ai_kamiyama_title": "韓国統一部が北朝鮮の新憲法を公開、サプライズはないが大幅改正（2026年5月3日～5月9日）",
       "ai_kamiyama_source_name": "Foresight（新潮社）"
+    },
+    {
+      "displayed_on": "2026-05-25",
+      "article_url": "https://thetrek.co/uh-oh/",
+      "article_title": "Uh oh…",
+      "article_category": "outdoor",
+      "tie_candidates": [
+        "outdoor"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.bbc.com/news/articles/crrpx4p1z71o?at_medium=RSS&at_campaign=rss",
+      "ai_kamiyama_title": "'Shameful' more spent on benefits than jobs for young people, says Milburn",
+      "ai_kamiyama_source_name": "BBC Business"
     }
   ]
 }
