@@ -17,7 +17,12 @@ jobs:
     # を考慮し 60 分に拡張、確実性を優先。GitHub Actions 無料枠（月 2000 分、
     # private repo）に対し、60 分 × 30 日 = 1800 分は十分余裕内。
     # Sprint 6 で LLM 並列化による短縮を検討、短縮できれば timeout を再調整。
-    timeout-minutes: 60
+    #
+    # Sprint 8 (2026-05-25): 5/25 ラン (26369635553) が 60 分 4 秒で cancel。
+    # Cocolomi 候補枯渇 + RSS 障害複数で Page II の broad fallback ループが
+    # 30 分超に肥大化、Page V miibo 開始直後で timeout。安全側で 60 → 90 分
+    # に拡張。Page II の構造的肥大は副次対策として Sprint 8 で検討。
+    timeout-minutes: 90
     permissions:
       contents: write
 
