@@ -471,6 +471,204 @@ def test_step2_parse_failure_fallback():
 
 
 # ---------------------------------------------------------------------------
+# (f) C29 (2026-05-25): 共有 broad pool + dedup
+# ---------------------------------------------------------------------------
+
+def test_shared_pool_skips_cross_fetch():
+    """cross_industry_articles を渡すと fetcher_fn の cross 呼び出しが skip される.
+
+    fetcher_fn には category=companies:* だけ応答するスタブを使う。cross が
+    呼ばれたら test fail。
+    """
+    cross_calls: list[tuple[str | None, str | None]] = []
+
+    def fetcher(*, name_substring=None, category=None, priority=None, limit=8):
+        if category in ("business", "geopolitics"):
+            cross_calls.append((category, priority))
+            return []
+        return []
+
+    # 共有 pool（Cocolomi keyword "OpenAI" を含む 1 件、score 60）
+    shared_art = _make_scored(
+        "business", final_score=60, mi=6, rs=5, url_suffix="shared1",
+    )
+    shared_art["title"] = "OpenAI announces enterprise AI partnership"
+    shared_pool = [shared_art]
+
+    cocolomi_low = _make_scored("companies:Cocolomi", final_score=5, mi=0, rs=0)
+    he = _make_scored("companies:Human Energy", final_score=80, mi=8, rs=6)
+    wr = _make_scored("companies:Web-Repo", final_score=80, mi=8, rs=6)
+    with _StubLLM():
+        selections, _errors, _cost = page2.select_page2_articles(
+            [cocolomi_low, he, wr],
+            fetcher_fn=fetcher,
+            threshold=40.0,
+            cross_industry_articles=shared_pool,
+        )
+
+    _check("f1 fetcher_fn の cross 呼び出しゼロ", cross_calls == [],
+           f"got {cross_calls}")
+    _check("f2 Cocolomi が共有 pool から stage='cross_industry'",
+           selections["cocolomi"].stage_used == "cross_industry"
+           and "shared1" in (selections["cocolomi"].article or {}).get("url", ""),
+           f"got stage={selections['cocolomi'].stage_used}")
+
+
+def test_backward_compat_none_uses_fetcher():
+    """cross_industry_articles=None で従来通り fetcher の cross 呼び出しが起きる."""
+    cross_calls: list[tuple[str | None, str | None]] = []
+
+    def fetcher(*, name_substring=None, category=None, priority=None, limit=8):
+        if category in ("business", "geopolitics"):
+            cross_calls.append((category, priority))
+            art = _make_scored(category, final_score=60, mi=6, rs=5,
+                                url_suffix=f"{category}_{priority}")
+            art["title"] = "OpenAI breakthrough"
+            return [art]
+        return []
+
+    cocolomi_low = _make_scored("companies:Cocolomi", final_score=5, mi=0, rs=0)
+    he = _make_scored("companies:Human Energy", final_score=80, mi=8, rs=6)
+    wr = _make_scored("companies:Web-Repo", final_score=80, mi=8, rs=6)
+    with _StubLLM():
+        selections, _errors, _cost = page2.select_page2_articles(
+            [cocolomi_low, he, wr], fetcher_fn=fetcher, threshold=40.0,
+            cross_industry_articles=None,  # 明示
+        )
+
+    # Cocolomi だけ Stage 4 へ → business × (high, medium) + geopolitics ×
+    # (high, medium) で計 4 cross 呼び出し
+    _check("f3 backward compat: cross 4 calls (1 社 × 2 cat × 2 pri)",
+           len(cross_calls) == 4, f"got {len(cross_calls)} calls")
+    _check("f4 Cocolomi が cross_industry stage で選定",
+           selections["cocolomi"].stage_used == "cross_industry")
+
+
+def test_dedup_three_companies_dont_pick_same_url():
+    """3 社が同じ broad pool から同一記事を選ばない（exclude_urls 経由）."""
+    # 共有 pool: Cocolomi/Human Energy/Web-Repo 各 keyword を含む 3 件、
+    # スコアは Cocolomi 用が最高（80）、HE 用が中間（70）、WR 用が低め（60）
+    art_for_cocolomi = _make_scored("business", final_score=80, mi=8, rs=6,
+                                     url_suffix="for_coco")
+    art_for_cocolomi["title"] = "OpenAI announces enterprise partnership"
+    art_for_he = _make_scored("business", final_score=70, mi=7, rs=6,
+                               url_suffix="for_he")
+    art_for_he["title"] = "Training program shift drives reskilling"
+    art_for_wr = _make_scored("business", final_score=60, mi=6, rs=5,
+                               url_suffix="for_wr")
+    art_for_wr["title"] = "フランチャイズ業界の最新動向"
+    shared_pool = [art_for_cocolomi, art_for_he, art_for_wr]
+
+    cocolomi_low = _make_scored("companies:Cocolomi", final_score=5, mi=0, rs=0)
+    he_low = _make_scored("companies:Human Energy", final_score=5, mi=0, rs=0)
+    wr_low = _make_scored("companies:Web-Repo", final_score=5, mi=0, rs=0)
+    with _StubLLM():
+        selections, _errors, _cost = page2.select_page2_articles(
+            [cocolomi_low, he_low, wr_low],
+            fetcher_fn=None,
+            threshold=40.0,
+            cross_industry_articles=shared_pool,
+        )
+
+    picked_urls = [
+        (sel.article or {}).get("url", "")
+        for sel in selections.values() if sel.article
+    ]
+    _check("f5 3 社それぞれが異なる URL を選定（同記事被りなし）",
+           len(set(picked_urls)) == len(picked_urls)
+           and len(picked_urls) >= 1,
+           f"got urls={picked_urls}")
+
+
+def test_pick_best_above_threshold_exclude_urls():
+    """_pick_best_above_threshold に exclude_urls 指定で除外動作."""
+    cands = [
+        {"url": "u1", "page2_final_score": 80},
+        {"url": "u2", "page2_final_score": 70},
+        {"url": "u3", "page2_final_score": 60},
+    ]
+    # exclude なし → u1 (最高)
+    p = page2._pick_best_above_threshold(cands, 40.0)
+    _check("f6 exclude なし → 最高 u1", p == cands[0])
+    # u1 を exclude → u2
+    p = page2._pick_best_above_threshold(cands, 40.0, exclude_urls={"u1"})
+    _check("f7 u1 exclude → u2", p == cands[1])
+    # u1, u2 を exclude → u3
+    p = page2._pick_best_above_threshold(cands, 40.0,
+                                          exclude_urls={"u1", "u2"})
+    _check("f8 u1,u2 exclude → u3", p == cands[2])
+    # 全 exclude → None
+    p = page2._pick_best_above_threshold(cands, 40.0,
+                                          exclude_urls={"u1", "u2", "u3"})
+    _check("f9 全 exclude → None", p is None)
+
+
+def test_prepare_shared_cross_industry_pool():
+    """prepare_shared_cross_industry_pool: 4 fetch + URL dedup."""
+    fetch_calls: list[tuple[str | None, str | None]] = []
+    arts_pool = {
+        ("business", "high"): [
+            {"url": "u_b_h_1", "title": "B-H-1"},
+            {"url": "u_dup", "title": "Dup"},  # 重複 URL
+        ],
+        ("business", "medium"): [
+            {"url": "u_b_m_1", "title": "B-M-1"},
+        ],
+        ("geopolitics", "high"): [
+            {"url": "u_g_h_1", "title": "G-H-1"},
+            {"url": "u_dup", "title": "Dup again"},  # 重複 URL（dedup される）
+        ],
+        ("geopolitics", "medium"): [
+            {"url": "u_g_m_1", "title": "G-M-1"},
+            {"url": "", "title": "No URL"},  # URL 空（除外）
+        ],
+    }
+
+    def fetcher(*, name_substring=None, category=None, priority=None, limit=8):
+        fetch_calls.append((category, priority))
+        return arts_pool.get((category, priority), [])
+
+    pool = page2.prepare_shared_cross_industry_pool(fetcher)
+    urls = [a["url"] for a in pool]
+    _check("f10 fetch が 4 回呼ばれる（biz×2 + geo×2）",
+           len(fetch_calls) == 4, f"got {len(fetch_calls)}")
+    _check("f11 URL dedup（u_dup は 1 回だけ）",
+           urls.count("u_dup") == 1, f"got urls={urls}")
+    _check("f12 URL 空は除外",
+           "" not in urls)
+    _check("f13 結果は biz_h_1, dup, biz_m_1, geo_h_1, geo_m_1 の 5 件",
+           set(urls) == {"u_b_h_1", "u_dup", "u_b_m_1", "u_g_h_1", "u_g_m_1"},
+           f"got {sorted(urls)}")
+
+
+def test_prepare_shared_pool_error_handling():
+    """1 fetch が例外でも continue、他の fetch 結果は返る."""
+    fetch_calls: list[tuple[str | None, str | None]] = []
+    errors_captured: list[tuple[str, str, str]] = []
+
+    def fetcher(*, name_substring=None, category=None, priority=None, limit=8):
+        fetch_calls.append((category, priority))
+        if category == "business" and priority == "high":
+            raise RuntimeError("boom")
+        return [{"url": f"u_{category}_{priority}", "title": "T"}]
+
+    def on_error(cat: str, pri: str, msg: str) -> None:
+        errors_captured.append((cat, pri, msg))
+
+    pool = page2.prepare_shared_cross_industry_pool(fetcher, on_error=on_error)
+    urls = [a["url"] for a in pool]
+    _check("f14 例外時 on_error が呼ばれる",
+           len(errors_captured) == 1
+           and errors_captured[0][0] == "business"
+           and errors_captured[0][1] == "high",
+           f"got errors={errors_captured}")
+    _check("f15 例外を除く 3 fetch の結果が含まれる", len(pool) == 3,
+           f"got {len(pool)}")
+    _check("f16 business/high の結果は含まれない（例外で skip）",
+           "u_business_high" not in urls)
+
+
+# ---------------------------------------------------------------------------
 # Test runner
 # ---------------------------------------------------------------------------
 
@@ -507,6 +705,15 @@ def main() -> int:
     print("(e) Step 2 length / fallback:")
     test_step2_within_range()
     test_step2_parse_failure_fallback()
+
+    print()
+    print("(f) C29: shared broad pool + dedup (Page II 肥大化解消):")
+    test_shared_pool_skips_cross_fetch()
+    test_backward_compat_none_uses_fetcher()
+    test_dedup_three_companies_dont_pick_same_url()
+    test_pick_best_above_threshold_exclude_urls()
+    test_prepare_shared_cross_industry_pool()
+    test_prepare_shared_pool_error_handling()
 
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")

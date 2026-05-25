@@ -54,6 +54,7 @@ from .selector.page2 import (
     COMPANY_KEYS as PAGE2_COMPANY_ORDER,
     SHORT_TO_CATEGORY as PAGE2_SHORT_TO_CATEGORY,
     default_fetcher as page2_default_fetcher,
+    prepare_shared_cross_industry_pool,
     run_page2_pipeline,
 )
 from .selector import todays_headlines
@@ -2522,6 +2523,21 @@ def _run_page2_selection(target: date, *, write_log: bool, threshold: float):
                 file=sys.stderr,
             )
 
+    # Sprint 8 C29 (2026-05-25): Stage 4 共有 broad pool を 1 回だけ事前 fetch。
+    # 5/24 GHA cron で観察された Page II 34 分肥大（3 社が独立に
+    # business/geopolitics × high/medium の 4 fetch を呼んでいた重複 12 fetch）
+    # を構造的に解消。各社 Stage 4 は keyword pre-filter + Step 1 評価のみ。
+    print(
+        "Preparing shared cross-industry pool for Page II Stage 4 (C29)…",
+        file=sys.stderr,
+    )
+    shared_cross_pool = prepare_shared_cross_industry_pool(dedup_fetcher)
+    print(
+        f"  shared cross-industry pool: {len(shared_cross_pool)} 件 "
+        "(fetch 12 → 4 回に削減、3 社の Stage 2 重複解消)",
+        file=sys.stderr,
+    )
+
     print(
         "Running Page II pipeline (Step 1 + selection + Step 2)…",
         file=sys.stderr,
@@ -2532,6 +2548,7 @@ def _run_page2_selection(target: date, *, write_log: bool, threshold: float):
         write_log=write_log,
         today=target,
         threshold=threshold,
+        cross_industry_articles=shared_cross_pool,
     )
     page2_result._exhaustion_initial = page2_exhaustion  # type: ignore[attr-defined]
     return page2_result

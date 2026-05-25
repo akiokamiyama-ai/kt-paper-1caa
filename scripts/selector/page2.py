@@ -38,6 +38,7 @@ from collections import Counter
 from dataclasses import dataclass, field
 from datetime import date, datetime, timezone
 from pathlib import Path
+from collections.abc import Iterable
 from typing import Any, Callable
 
 from ..lib import llm, llm_usage
@@ -833,14 +834,25 @@ def _cross_industry_filter(
 
 
 def _pick_best_above_threshold(
-    candidates: list[dict], threshold: float
+    candidates: list[dict],
+    threshold: float,
+    *,
+    exclude_urls: Iterable[str] | None = None,
 ) -> dict | None:
+    """page2_final_score >= threshold のうち最高スコアの記事を返す.
+
+    ``exclude_urls`` を指定すると、その URL を持つ記事を除外（C29: 3 社で
+    同一記事を選ばないための dedup、特に共有 broad pool 利用時の Stage 4 で
+    効く）。指定がなければ従来通り。
+    """
     if not candidates:
         return None
+    excluded = set(exclude_urls or ())
     qualified = [
         a for a in candidates
         if a.get("page2_final_score") is not None
         and a["page2_final_score"] >= threshold
+        and a.get("url") not in excluded
     ]
     if not qualified:
         return None
@@ -848,16 +860,83 @@ def _pick_best_above_threshold(
     return qualified[0]
 
 
+def prepare_shared_cross_industry_pool(
+    fetcher_fn: FetcherFn,
+    *,
+    on_error: Callable[[str, str, str], None] | None = None,
+) -> list[dict]:
+    """Stage 4 で 3 社共有する broad pool を 1 回だけ準備する（C29, 2026-05-25）.
+
+    business / geopolitics × high / medium の 4 fetch を 1 回ずつ実行、
+    URL-based で dedup して返す。各 fetch の内部で Stage 1+2+3 評価済み。
+
+    各社の Stage 4 では :func:`_cross_industry_filter` で keyword pre-filter →
+    :func:`_enrich_with_step1` で社別 Step 1 評価が実行される。fetch + Stage 2 の
+    3 社重複が解消され、Page II 所要時間が大幅短縮（5/24 GHA cron で観察
+    された 34 分の Page II 肥大の構造的解消）。
+
+    Parameters
+    ----------
+    fetcher_fn :
+        ``regen_front_page_v2._make_dedup_aware_page2_fetcher`` から作られた
+        wrapped fetcher。category="business"/"geopolitics" は dedup 適用外
+        （wide net cast 設計、broad は元から共有前提）。
+    on_error :
+        個別 fetch 失敗時の callback ``(cross_cat, cross_pri, error_desc)``。
+        None なら stderr に出力するだけ。
+
+    Returns
+    -------
+    list[dict]
+        URL dedup 済みの broad pool（既評価）。caller は
+        :func:`select_page2_articles` の ``cross_industry_articles`` 引数に渡す。
+    """
+    seen_urls: set[str] = set()
+    pool: list[dict] = []
+    for cross_cat in ("business", "geopolitics"):
+        for cross_pri in CROSS_INDUSTRY_PRIORITIES:
+            try:
+                arts = list(fetcher_fn(category=cross_cat, priority=cross_pri))
+            except Exception as e:
+                msg = f"{type(e).__name__}: {e}"
+                if on_error:
+                    on_error(cross_cat, cross_pri, msg)
+                else:
+                    print(
+                        f"[page2] prepare_shared_cross_industry_pool: "
+                        f"{cross_cat}/{cross_pri} failed: {msg}",
+                        file=sys.stderr,
+                    )
+                continue
+            for art in arts:
+                url = art.get("url")
+                if not url or url in seen_urls:
+                    continue
+                seen_urls.add(url)
+                pool.append(art)
+    return pool
+
+
 def select_page2_articles(
     scored_articles: list[dict],
     *,
     fetcher_fn: FetcherFn | None = None,
     threshold: float = DEFAULT_THRESHOLD,
+    cross_industry_articles: list[dict] | None = None,
 ) -> tuple[dict[str, CompanySelection], list[EvaluationError], float]:
     """Run the 5-stage fallback selection per company.
 
     Returns ``(selections, errors, cost_usd)``. ``selections`` maps each
     company_key to a CompanySelection (article may be None for stage='none').
+
+    Sprint 8 C29 (2026-05-25): ``cross_industry_articles`` を指定すると Stage 4
+    の broad fetch を skip し、共有 pool（orchestration 層で事前 fetch 済）を
+    使う。fetch + Stage 1+2+3 の 3 社重複が解消され Page II 所要時間が
+    大幅短縮される（5/24 GHA cron 34 分肥大の構造的解消）。
+    None なら従来通り各社で独立 fetch（backward compat）。
+
+    各社で同一記事が選定されないよう ``selections`` 累積を見た URL exclude
+    も併用（dedup）。
     """
     registry = _get_registry()
     # Ensure all input articles have category attached.
@@ -869,6 +948,13 @@ def select_page2_articles(
     total_cost = 0.0
 
     for company_key in COMPANY_KEYS:
+        # C29 (2026-05-25): 既に他社で選定済の URL を exclude（3 社で同一記事
+        # を選ばないための dedup、特に Stage 4 共有 pool 時に効く）。
+        already_selected_urls = {
+            sel.article.get("url") for sel in selections.values()
+            if sel.article and sel.article.get("url")
+        }
+
         category = SHORT_TO_CATEGORY[company_key]
 
         # ---------------- Stage 1 (high): use scored_articles in-memory ----
@@ -887,7 +973,9 @@ def select_page2_articles(
 
         # Refresh page2_final_score on entries that may have had only
         # final_score (Stage 3) before but no Step 1.
-        pick = _pick_best_above_threshold(high_pool, threshold)
+        pick = _pick_best_above_threshold(
+            high_pool, threshold, exclude_urls=already_selected_urls,
+        )
         if pick is not None:
             selections[company_key] = CompanySelection(
                 company_key=company_key, article=pick,
@@ -915,7 +1003,9 @@ def select_page2_articles(
             _, errors, cost = _enrich_with_step1(medium_pool, company_key)
             all_errors.extend(errors)
             total_cost += cost
-        pick = _pick_best_above_threshold(medium_pool, threshold)
+        pick = _pick_best_above_threshold(
+            medium_pool, threshold, exclude_urls=already_selected_urls,
+        )
         if pick is not None:
             selections[company_key] = CompanySelection(
                 company_key=company_key, article=pick,
@@ -947,7 +1037,9 @@ def select_page2_articles(
             _, errors, cost = _enrich_with_step1(ref_pool, company_key)
             all_errors.extend(errors)
             total_cost += cost
-        pick = _pick_best_above_threshold(ref_pool, threshold)
+        pick = _pick_best_above_threshold(
+            ref_pool, threshold, exclude_urls=already_selected_urls,
+        )
         if pick is not None:
             selections[company_key] = CompanySelection(
                 company_key=company_key, article=pick,
@@ -966,8 +1058,16 @@ def select_page2_articles(
         # 各社のキーワード pre-filter で絞ってから Step 1 評価する。
         # pre-filter は Step 1 LLM コスト抑制と Web-Repo のような構造的問題を
         # 持つ社の救済を兼ねる。
+        #
+        # C29 (2026-05-25): cross_industry_articles が渡された場合は
+        # orchestration 層で事前 fetch 済の共有 pool を使用、fetch + Stage 2
+        # の 3 社重複を解消（5/24 GHA cron 34 min 肥大の構造的解消）。
         cross_raw: list[dict] = []
-        if fetcher_fn:
+        if cross_industry_articles is not None:
+            # 共有 pool（既に Stage 1+2+3 評価済）
+            cross_raw = list(cross_industry_articles)
+        elif fetcher_fn:
+            # 従来 path（backward compat）— 3 社で独立 fetch loop
             for cross_cat in ("business", "geopolitics"):
                 for cross_pri in CROSS_INDUSTRY_PRIORITIES:
                     try:
@@ -1004,7 +1104,9 @@ def select_page2_articles(
             _, errors, cost = _enrich_with_step1(cross_pool, company_key)
             all_errors.extend(errors)
             total_cost += cost
-        pick = _pick_best_above_threshold(cross_pool, threshold)
+        pick = _pick_best_above_threshold(
+            cross_pool, threshold, exclude_urls=already_selected_urls,
+        )
         if pick is not None:
             keywords_hit_count = sum(
                 1 for k in _cross_industry_keywords(company_key)
@@ -1219,8 +1321,14 @@ def run_page2_pipeline(
     today: date | None = None,
     threshold: float = DEFAULT_THRESHOLD,
     model: str = DEFAULT_MODEL,
+    cross_industry_articles: list[dict] | None = None,
 ) -> Page2Result:
-    """End-to-end Page 2 pipeline: select 3 articles + generate 3 questions."""
+    """End-to-end Page 2 pipeline: select 3 articles + generate 3 questions.
+
+    Sprint 8 C29 (2026-05-25): ``cross_industry_articles`` を渡すと Stage 4 で
+    3 社共有 broad pool を使用（orchestration 側で 1 回だけ事前 fetch）。
+    fetch + Stage 2 の 3 社重複が解消され Page II 所要時間が大幅短縮される。
+    """
     if today is None:
         today = date.today()
     result = Page2Result(threshold=threshold, today=today)
@@ -1243,6 +1351,7 @@ def run_page2_pipeline(
     # Selection (Step 1 内蔵 + 5段階フォールバック).
     selections, sel_errors, sel_cost = select_page2_articles(
         scored_articles, fetcher_fn=fetcher_fn, threshold=threshold,
+        cross_industry_articles=cross_industry_articles,
     )
     result.errors.extend(sel_errors)
     result.cost_usd += sel_cost
