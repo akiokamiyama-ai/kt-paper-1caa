@@ -1,0 +1,32 @@
+{
+  "date": "2026-05-26",
+  "page1_urls": [
+    "https://www.economist.com/finance-and-economics/2026/05/25/crackdowns-on-financial-secrecy-arent-hurting-offshore-finance",
+    "https://www.bbc.com/news/articles/cvgldqk4w95o?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/c70vwr8z7pyo?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/cx21g0828reo?at_medium=RSS&at_campaign=rss"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2605/25/2000000020/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2605/25/news051.html",
+    "web_repo": "https://www.bc01.net/article/cocofump_202606/"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/05/25/harold-bloom-friendship-review-literature-politics/",
+    "https://toyokeizai.net/articles/-/945156?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://toyokeizai.net/articles/-/945710?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://www.mckinsey.com/se/our-insights/enhancing-swedish-security-through-deterrence-and-prosperity",
+    "https://www.project-syndicate.org/commentary/china-growing-confidence-masks-deep-structural-challenges-by-jayati-ghosh-2026-05",
+    "https://www.mckinsey.com/featured-insights/insights-on-europe/podcasts-and-videos/europe-on-the-move-a-conversation-with-hitachi-energys-ceo"
+  ],
+  "page4_urls": [
+    "https://shinsho-plus.shueisha.co.jp/column/hibaku_nisei/35013",
+    "https://shinsho-plus.shueisha.co.jp/column/trail/34784"
+  ],
+  "page5_url": "https://www.axismag.jp/posts/2026/05/711212.html",
+  "page6_urls": {
+    "books": "https://locusmag.com/2026/05/new-notable-may-2026/",
+    "music": "https://rockinon.com/news/detail/215188",
+    "outdoor": "https://thetrek.co/pacific-crest-trail/trauma-torture-and-finding-the-pct/"
+  }
+}

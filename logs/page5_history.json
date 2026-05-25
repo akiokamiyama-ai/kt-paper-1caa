@@ -451,6 +451,23 @@
       "ai_kamiyama_url": "https://www.bbc.com/news/articles/crrpx4p1z71o?at_medium=RSS&at_campaign=rss",
       "ai_kamiyama_title": "'Shameful' more spent on benefits than jobs for young people, says Milburn",
       "ai_kamiyama_source_name": "BBC Business"
+    },
+    {
+      "displayed_on": "2026-05-26",
+      "article_url": "https://www.axismag.jp/posts/2026/05/711212.html",
+      "article_title": "グラフィックに“時間”の概念を。gggで「井口皓太 モーショングラフィックス」開催",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.bbc.com/news/articles/cwy21x20q23o?at_medium=RSS&at_campaign=rss",
+      "ai_kamiyama_title": "Indian billionaires buy foreign companies as growth slows at home",
+      "ai_kamiyama_source_name": "BBC Business"
     }
   ]
 }

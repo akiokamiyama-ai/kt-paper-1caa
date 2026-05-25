@@ -139,6 +139,11 @@
       "concept_id": "psychological_safety",
       "name_ja": "心理的安全性",
       "displayed_on": "2026-05-25"
+    },
+    {
+      "concept_id": "kuki_shuzo",
+      "name_ja": "九鬼周造",
+      "displayed_on": "2026-05-26"
     }
   ]
 }
