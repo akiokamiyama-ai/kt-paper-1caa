@@ -113,14 +113,15 @@
 ### 8. Bloomberg Opinion ⚠️
 - **URL**: https://www.bloomberg.com/opinion
 - **RSS**: **Opinion 単独フィードは公式廃止**（`/opinion.rss`、`/opinion/news.rss`、`/bview/opinion.rss` 全て404）。代替として近接フィード稼働中：
-  - https://feeds.bloomberg.com/markets/news.rss（市場ニュース＋一部Opinion混在、200確認）
+  - https://feeds.bloomberg.com/markets/news.rss（市場ニュース中心、Opinion 動画・ニュースレターも混在）
   - https://feeds.bloomberg.com/wealth/news.rss（200確認）
   - https://feeds.bloomberg.com/politics/news.rss（200確認）
 - **language**: en
 - **形式**: RSS 2.0
 - **mainstream**: false
 - **対象**: マーケット解説、コラム、政治経済論考
-- **位置付け**: 本紙が望むのは **コラム・論考軸**（速報軸は Reuters・BBC でカバー済）。markets フィードから `byline` や記事URLパス `/opinion/` でフィルタする運用を想定。フェーズ1で Opinion 抽出ロジックを検討、効果が薄ければ優先度を Reference に下げる
+- **位置付け**: 本紙が望むのは **コラム・論考軸**（速報軸は Reuters・BBC でカバー済）。
+- **URL path filter (C26, 2026-05-25)**: 5/24 朝刊で `/news/videos/` のハイキング動画が第 3 面に混入したため、`scripts/selector/hard_filter.py:evaluate_bloomberg_non_market` で `/news/videos/` `/news/newsletters/` `/news/audio/` `/opinion/` を URL レベルで除外する。market 記事 (`/news/articles/`) のみ通す方針。byline-based の Opinion 抽出は将来課題のまま。
 
 ### 9. 東洋経済オンライン ✅
 - **URL**: https://toyokeizai.net/

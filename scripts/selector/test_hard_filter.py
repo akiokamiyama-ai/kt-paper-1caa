@@ -328,6 +328,109 @@ def test_desclen_exempt_with_existing_long_desc():
 
 
 # ---------------------------------------------------------------------------
+# C26 (2026-05-25): Bloomberg market-only filter
+# ---------------------------------------------------------------------------
+
+def test_bloomberg_market_article_passes():
+    """正規の market 記事 (/news/articles/) は通過."""
+    excluded, reason = hard_filter.evaluate_bloomberg_non_market(
+        "https://www.bloomberg.com/news/articles/2026-05-24/usd-jpy-volatility",
+    )
+    _check("c1 bloomberg market article → not excluded",
+           excluded is False and reason is None)
+
+
+def test_bloomberg_video_excluded():
+    """/news/videos/ は除外（5/24 ハイキング動画混入の真因）."""
+    excluded, reason = hard_filter.evaluate_bloomberg_non_market(
+        "https://www.bloomberg.com/news/videos/2026-05-23/the-surprising-joys-of-a-crowded-hiking-trail-video",
+    )
+    _check("c2 bloomberg /news/videos/ → excluded",
+           excluded is True and reason and "/news/videos/" in reason,
+           f"got reason={reason!r}")
+
+
+def test_bloomberg_opinion_excluded():
+    """/opinion/ は除外."""
+    excluded, reason = hard_filter.evaluate_bloomberg_non_market(
+        "https://www.bloomberg.com/opinion/articles/2026-05-23/tech-bubble",
+    )
+    _check("c3 bloomberg /opinion/ → excluded",
+           excluded is True and reason and "/opinion/" in reason,
+           f"got reason={reason!r}")
+
+
+def test_bloomberg_newsletter_excluded():
+    """/news/newsletters/ は除外."""
+    excluded, reason = hard_filter.evaluate_bloomberg_non_market(
+        "https://www.bloomberg.com/news/newsletters/2026-05-24/morning-brief",
+    )
+    _check("c4 bloomberg /news/newsletters/ → excluded",
+           excluded is True and "/news/newsletters/" in (reason or ""))
+
+
+def test_bloomberg_audio_excluded():
+    """/news/audio/ は除外."""
+    excluded, reason = hard_filter.evaluate_bloomberg_non_market(
+        "https://www.bloomberg.com/news/audio/2026-05-24/podcast-episode",
+    )
+    _check("c5 bloomberg /news/audio/ → excluded",
+           excluded is True and "/news/audio/" in (reason or ""))
+
+
+def test_non_bloomberg_host_unaffected():
+    """bloomberg.com 以外のホストには影響なし（no-op）."""
+    cases = [
+        "https://www.reuters.com/news/videos/2026-05-24/x",
+        "https://hbr.org/opinion/articles/2026/x",
+        "https://example.com/news/videos/x",
+    ]
+    for url in cases:
+        excluded, reason = hard_filter.evaluate_bloomberg_non_market(url)
+        _check(f"c6 non-bloomberg {url[:50]} → not excluded",
+               excluded is False and reason is None,
+               f"got excluded={excluded}, reason={reason!r}")
+
+
+def test_bloomberg_empty_url():
+    """url None / empty は no-op."""
+    e1, _ = hard_filter.evaluate_bloomberg_non_market(None)
+    e2, _ = hard_filter.evaluate_bloomberg_non_market("")
+    _check("c7 None/empty url → not excluded", e1 is False and e2 is False)
+
+
+def test_stage1_excludes_bloomberg_video():
+    """run_stage1 統合: Bloomberg /news/videos/ が is_excluded=True で返る."""
+    articles = [
+        {
+            "url": "https://www.bloomberg.com/news/videos/2026-05-23/hiking-trail-video",
+            "title": "The Surprising Joys of a Crowded Hiking Trail",
+            "description": "A long enough description so other filters don't short-circuit. " * 2,
+            "body": "",
+            "source_name": "Bloomberg Opinion",
+        },
+        {
+            "url": "https://www.bloomberg.com/news/articles/2026-05-24/markets-recap",
+            "title": "USD/JPY Volatility Spikes on BOJ Comment",
+            "description": "The market reacted sharply to the BOJ governor's remarks." * 2,
+            "body": "",
+            "source_name": "Bloomberg Opinion",
+        },
+    ]
+    out = run_stage1(articles)
+    video = out[0]
+    article = out[1]
+    _check(
+        "c8 stage1: bloomberg /news/videos/ excluded, /news/articles/ passes",
+        video.get("is_excluded") is True
+        and "bloomberg_non_market" in (video.get("exclusion_reason") or "")
+        and article.get("is_excluded") is False,
+        f"video={video.get('is_excluded')}/{video.get('exclusion_reason')!r}, "
+        f"article={article.get('is_excluded')}/{article.get('exclusion_reason')!r}",
+    )
+
+
+# ---------------------------------------------------------------------------
 # Test runner
 # ---------------------------------------------------------------------------
 
@@ -360,6 +463,16 @@ def main() -> int:
     test_desclen_no_url_falls_back_to_normal_check()
     test_desclen_empty_overrides_normal_filter_unchanged()
     test_desclen_exempt_with_existing_long_desc()
+    print()
+    print("(c) C26 (2026-05-25): Bloomberg market-only filter:")
+    test_bloomberg_market_article_passes()
+    test_bloomberg_video_excluded()
+    test_bloomberg_opinion_excluded()
+    test_bloomberg_newsletter_excluded()
+    test_bloomberg_audio_excluded()
+    test_non_bloomberg_host_unaffected()
+    test_bloomberg_empty_url()
+    test_stage1_excludes_bloomberg_video()
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")
     return 0 if FAIL == 0 else 1

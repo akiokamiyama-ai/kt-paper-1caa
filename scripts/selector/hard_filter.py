@@ -174,6 +174,45 @@ def evaluate_description_length(article: dict) -> tuple[bool, str | None]:
     return False, None
 
 
+# ---------------------------------------------------------------------------
+# Bloomberg market-only filter (C26, 2026-05-25)
+# ---------------------------------------------------------------------------
+# Bloomberg は Opinion 公式 RSS が 2024 年に廃止された結果、Tribune では
+# ``feeds.bloomberg.com/markets/news.rss`` 等の混合フィードで「Bloomberg
+# Opinion」ソースを代替している（sources/business.md L113-118 参照）。
+# この feed は市場ニュース + Opinion 動画 + ニュースレターを混在配信する
+# ため、第 3 面「NY・市場」面に不適合な記事（5/24 朝刊で
+# /news/videos/ のハイキング動画が混入）が出ることがある。
+#
+# 対処：bloomberg.com の URL パスで「market 記事 (/news/articles/) 以外」
+# を除外する。bloomberg.com 以外のホストには一切影響なし。
+
+_BLOOMBERG_NON_MARKET_URL_MARKERS: tuple[str, ...] = (
+    "/news/videos/",
+    "/news/newsletters/",
+    "/news/audio/",
+    "/opinion/",
+)
+
+
+def evaluate_bloomberg_non_market(url: str | None) -> tuple[bool, str | None]:
+    """Bloomberg 専用：市場記事 (/news/articles/) 以外の URL パスを除外する.
+
+    bloomberg.com 以外のホストはそのまま通過する（no-op）。
+    Sprint 8 C26 (2026-05-25): 5/24 朝刊で /news/videos/ のハイキング動画が
+    第 3 面に混入した件への構造的対処。
+    """
+    if not url:
+        return False, None
+    url_lower = url.lower()
+    if "bloomberg.com" not in url_lower:
+        return False, None
+    for marker in _BLOOMBERG_NON_MARKET_URL_MARKERS:
+        if marker in url_lower:
+            return True, f"bloomberg_non_market: {marker}"
+    return False, None
+
+
 def evaluate_podcast(
     *,
     url: str | None,
