@@ -11,7 +11,7 @@ Strategy
       Natural-science nonfiction stays out — that's Page III R6's territory.
    d. Pass through Stage 2 + Stage 3 (with optional Stage 2 reuse via
       ``pre_evaluated``)
-   e. Filter out URLs displayed on page4 in past HISTORY_LOOKBACK_DAYS (30) days
+   e. Filter out URLs displayed on page4 in past HISTORY_LOOKBACK_DAYS (21) days
    f. Pick top N=3 by ``final_score``
    g. Persist to logs/page4_rotation.json with ``expires_on = today + 3 days``
 """
@@ -41,7 +41,12 @@ LOG_DIR = PROJECT_ROOT / "logs"
 ROTATION_PATH = LOG_DIR / "page4_rotation.json"
 
 ROTATION_DAYS: int = 3
-HISTORY_LOOKBACK_DAYS: int = 30
+# Sprint 8 C31 (2026-05-25): 30 → 21 に短縮。集英社新書プラスが page4
+# academic 供給の 82%（過去 27 日で 68 件中 56 件）を占める一極構造のため、
+# 30 日 dedup では新規供給が枯渇して 2 件落ち（過去 27 日で 4 回 = 15% 頻度）。
+# 3 週間に短縮で集英社・春秋社の再採用余地拡大、3 件確保率の構造的改善。
+# academic ソース多様化（C36）は別途 Sprint 9+ で対応。
+HISTORY_LOOKBACK_DAYS: int = 21
 N_ARTICLES: int = 3
 PER_FETCH_LIMIT: int = 8
 
