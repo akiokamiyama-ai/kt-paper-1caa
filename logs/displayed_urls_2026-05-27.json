@@ -1,0 +1,32 @@
+{
+  "date": "2026-05-27",
+  "page1_urls": [
+    "https://www.economist.com/finance-and-economics/2026/05/25/offshore-finance-is-thriving-despite-crackdowns",
+    "https://www.bbc.com/news/articles/ce8pmrp0m47o?at_medium=RSS&at_campaign=rss",
+    "https://www.economist.com/finance-and-economics/2026/05/26/giga-ipos-are-a-symptom-of-public-markets-giga-problem",
+    "https://www.bbc.com/news/articles/c2024r6lzyro?at_medium=RSS&at_campaign=rss"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/business/articles/2605/26/news025.html",
+    "human_energy": "https://jinjibu.jp/news/detl/26383/",
+    "web_repo": "https://www.bc01.net/article/flegma_202606/"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/05/25/abd-el-karim-morocco-rif-colonialism-rebellion-monarchy/",
+    "https://www.asahi.com/articles/ASV5V35NGV5VULFA02GM.html?ref=rss",
+    "https://toyokeizai.net/articles/-/945810?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://www.mckinsey.com/industries/healthcare/our-insights/leslie-davis-on-serving-communities-as-both-payer-and-provider",
+    "https://www.fsight.jp/articles/-/52076",
+    "https://warontherocks.com/the-u-s-military-lacks-an-ethics-doctrine-combat-effectiveness-suffers/"
+  ],
+  "page4_urls": [
+    "https://shinsho-plus.shueisha.co.jp/column/hibaku_nisei/35013",
+    "https://shinsho-plus.shueisha.co.jp/column/trail/34784"
+  ],
+  "page5_url": "https://natalie.mu/music/news/673567",
+  "page6_urls": {
+    "books": "https://locusmag.com/2026/05/new-book-releases-may-26-2026/",
+    "music": "https://natalie.mu/music/news/673569",
+    "outdoor": "https://thetrek.co/c2c-day-4-patterdale-to-shap/"
+  }
+}

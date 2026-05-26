@@ -468,6 +468,23 @@
       "ai_kamiyama_url": "https://www.bbc.com/news/articles/cwy21x20q23o?at_medium=RSS&at_campaign=rss",
       "ai_kamiyama_title": "Indian billionaires buy foreign companies as growth slows at home",
       "ai_kamiyama_source_name": "BBC Business"
+    },
+    {
+      "displayed_on": "2026-05-27",
+      "article_url": "https://natalie.mu/music/news/673567",
+      "article_title": "雨宮天が自ら作詞作曲を手がけた作品集第2弾本日発売、表題曲は「かのかり」第5期オープニング曲",
+      "article_category": "music",
+      "tie_candidates": [
+        "music"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.bbc.com/news/articles/c809m7g29r7o?at_medium=RSS&at_campaign=rss",
+      "ai_kamiyama_title": "Oil prices slide on hopes of US-Iran peace deal",
+      "ai_kamiyama_source_name": "BBC Business"
     }
   ]
 }
