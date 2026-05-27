@@ -1,0 +1,33 @@
+{
+  "date": "2026-05-28",
+  "page1_urls": [
+    "https://www.economist.com/finance-and-economics/2026/05/27/japan-south-korea-and-taiwan-are-suffering-industrial-rot",
+    "https://www.bbc.com/news/articles/c3r2zjpryzro?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/c3w220y2l8xo?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/c5ye37jrk3go?at_medium=RSS&at_campaign=rss"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/news/articles/2605/27/news118.html",
+    "human_energy": "https://hbr.org/2026/05/research-as-careers-get-longer-midcareer-work-needs-to-change",
+    "web_repo": "https://www.bc01.net/seminar-report/fc_sesshon_202606_1/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/leading-in-the-dark-how-submarine-commanders-think-under-uncertainty/",
+    "http://www3.nhk.or.jp/news/html/20260527/k10015132801000.html",
+    null,
+    "https://www.mckinsey.com/capabilities/mckinsey-technology/overview/cybersecurity/the-boards-role-in-managing-emerging-ai-risks",
+    "https://wordswithoutborders.org/read/article/2026-05/a-fist-loaded-with-the-future-three-microessays-texon-howard/",
+    "https://www.mckinsey.com/quarterly/the-five-fifty/five-fifty-quantums-breakthrough"
+  ],
+  "page4_urls": [
+    "https://www.shunjusha.co.jp/news/n126016.html",
+    "https://www.shunjusha.co.jp/news/n126097.html",
+    "https://shinsho-plus.shueisha.co.jp/column/inadashinshoplusofficial/35034"
+  ],
+  "page5_url": "https://thetrek.co/via-francigena-bolsena-to-the-vatican-rome/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/05/27/harriet-clark-on-the-hill/",
+    "music": "https://natalie.mu/music/news/673559",
+    "outdoor": "https://sectionhiker.com/hydration-can-you-drink-red-water/"
+  }
+}

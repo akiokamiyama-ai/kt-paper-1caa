@@ -149,6 +149,11 @@
       "concept_id": "mcluhan",
       "name_ja": "マクルーハン",
       "displayed_on": "2026-05-27"
+    },
+    {
+      "concept_id": "language_game",
+      "name_ja": "言語ゲーム",
+      "displayed_on": "2026-05-28"
     }
   ]
 }
