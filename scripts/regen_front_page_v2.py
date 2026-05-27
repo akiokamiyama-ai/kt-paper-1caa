@@ -1413,6 +1413,28 @@ PAGE_FOUR_CSS = f"""
   border-bottom: 1px dotted #ccc;
 }}
 .academic-column .item:last-child {{ border-bottom: none; }}
+/* Sprint 8 C41 (2026-05-28): iPad / iPhone レスポンシブ。
+   横並び (55%:45%) を縦積み (concept 上、academic 下) に切替。 */
+@media (max-width: 810px) {{
+  .page-four-grid {{
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 12px 16px;
+  }}
+  .concept-column {{
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+    padding-right: 0;
+    padding-bottom: 20px;
+  }}
+}}
+@media (max-width: 480px) {{
+  .page-four-grid {{
+    padding: 10px 12px;
+    gap: 16px;
+  }}
+  .concept-title {{ font-size: 24px; }}
+}}
 """
 
 
@@ -1661,6 +1683,65 @@ PAGE_FIVE_CSS = f"""
   padding: 60px 24px;
   color: #888;
   font-style: italic;
+}}
+/* Sprint 8 C41 (2026-05-28): iPad / iPhone レスポンシブ。
+   AIかみやま column の文章が枠からはみ出る問題に対し、
+   (1) overflow-wrap で長語を折り返し、
+   (2) iPad / iPhone では padding / 行間を緩めて余裕を持たせる。 */
+.page-five-content,
+.serendipity-article,
+.ai-kamiyama-column {{
+  min-width: 0;
+  overflow-wrap: break-word;
+  word-break: normal;
+}}
+.ai-kamiyama-column .column-body p,
+.ai-kamiyama-column .column-title,
+.ai-kamiyama-column .ai-source-ref,
+.ai-kamiyama-column .ai-article-summary,
+.serendipity-article .article-title,
+.serendipity-article .description {{
+  overflow-wrap: break-word;
+}}
+@media (max-width: 810px) {{
+  .page-five-content {{
+    grid-template-rows: auto auto;
+    padding: 16px 18px;
+    row-gap: 12px;
+  }}
+  .serendipity-article {{
+    padding-bottom: 18px;
+    margin-bottom: 18px;
+  }}
+  .ai-kamiyama-column .column-title {{ font-size: 20px; }}
+  .ai-kamiyama-column .column-body p {{
+    font-size: 14px;
+    line-height: 1.85;
+  }}
+  .ai-kamiyama-column .ai-article-summary {{
+    padding: 10px 12px;
+    font-size: 13px;
+  }}
+}}
+@media (max-width: 480px) {{
+  .page-five-content {{
+    padding: 12px 14px;
+    row-gap: 10px;
+  }}
+  .ai-kamiyama-column .column-title {{
+    font-size: 18px;
+    line-height: 1.4;
+  }}
+  .ai-kamiyama-column .column-body p {{
+    font-size: 14px;
+    text-indent: 1em;
+  }}
+  .ai-kamiyama-column .ai-article-summary {{
+    padding: 8px 10px;
+    font-size: 12.5px;
+  }}
+  .serendipity-article .article-title {{ font-size: 16px; }}
+  .serendipity-article .description {{ font-size: 13px; }}
 }}
 """
 
@@ -1996,6 +2077,47 @@ PAGE_SIX_CSS = f"""
   padding: 6px 8px;
   background: #f8f5f0;
   border-left: 2px solid #c0a060;
+}}
+/* Sprint 8 C41 (2026-05-28): iPad / iPhone レスポンシブ。
+   4 列 → iPad は 2 列、iPhone 13 mini は 1 列に折り畳む。 */
+@media (max-width: 810px) {{
+  .page-six-grid-v2 {{
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 24px;
+    padding: 12px 16px;
+  }}
+  .leisure-column-v2 {{
+    padding: 0 12px;
+    border-right: 1px solid #ccc;
+  }}
+  .leisure-column-v2:nth-child(odd) {{ padding-left: 0; }}
+  .leisure-column-v2:nth-child(even) {{
+    padding-right: 0;
+    border-right: none;
+  }}
+  .leisure-column-v2:nth-child(n+3) {{
+    padding-top: 20px;
+    border-top: 1px dotted #ccc;
+  }}
+}}
+@media (max-width: 480px) {{
+  .page-six-grid-v2 {{
+    grid-template-columns: 1fr;
+    row-gap: 20px;
+    padding: 10px 14px;
+  }}
+  .leisure-column-v2,
+  .leisure-column-v2:nth-child(odd),
+  .leisure-column-v2:nth-child(even),
+  .leisure-column-v2:nth-child(n+3) {{
+    padding: 16px 0 0;
+    border-right: none;
+    border-top: 1px dotted #ccc;
+  }}
+  .leisure-column-v2:first-child {{
+    padding-top: 0;
+    border-top: none;
+  }}
 }}
 """
 
