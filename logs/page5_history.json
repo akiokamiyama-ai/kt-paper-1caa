@@ -485,6 +485,23 @@
       "ai_kamiyama_url": "https://www.bbc.com/news/articles/c809m7g29r7o?at_medium=RSS&at_campaign=rss",
       "ai_kamiyama_title": "Oil prices slide on hopes of US-Iran peace deal",
       "ai_kamiyama_source_name": "BBC Business"
+    },
+    {
+      "displayed_on": "2026-05-28",
+      "article_url": "https://thetrek.co/via-francigena-bolsena-to-the-vatican-rome/",
+      "article_title": "Via Francigena Bolsena to the Vatican- Rome",
+      "article_category": "outdoor",
+      "tie_candidates": [
+        "outdoor"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.fsight.jp/articles/-/52071",
+      "ai_kamiyama_title": "「スギ花粉症治療」を始めるなら初夏　だが、治療を受けられない人続出の深刻理由",
+      "ai_kamiyama_source_name": "Foresight（新潮社）"
     }
   ]
 }
