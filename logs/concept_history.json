@@ -154,6 +154,11 @@
       "concept_id": "language_game",
       "name_ja": "言語ゲーム",
       "displayed_on": "2026-05-28"
+    },
+    {
+      "concept_id": "blue_ocean_strategy",
+      "name_ja": "ブルーオーシャン戦略",
+      "displayed_on": "2026-05-29"
     }
   ]
 }

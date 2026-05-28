@@ -1,0 +1,33 @@
+{
+  "date": "2026-05-29",
+  "page1_urls": [
+    "https://www.economist.com/finance-and-economics/2026/05/28/without-fanfare-china-is-making-rural-migrants-lives-easier",
+    "https://www.bbc.com/news/articles/cr5pp1m6z06o?at_medium=RSS&at_campaign=rss",
+    "https://www.economist.com/finance-and-economics/2026/05/28/how-to-tax-businesses-in-orbit-and-beyond",
+    "https://www.bbc.com/news/articles/cx21427lvvvo?at_medium=RSS&at_campaign=rss"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2605/28/2000000033/",
+    "human_energy": "https://sloanreview.mit.edu/article/when-employees-are-drowning-in-change/",
+    "web_repo": "https://www.bc01.net/article/picmii/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/what-everyone-is-missing-about-north-koreas-reunification-strategy/",
+    null,
+    "https://foreignpolicy.com/2026/05/28/trump-madman-theory-iran/",
+    "https://www.mckinsey.com/industries/industrials/our-insights/japans-100-billion-opportunity-in-general-purpose-robotics",
+    "https://wordswithoutborders.org/read/article/2026-05/the-watchlist-may-2026-tobias-carroll/",
+    "https://nautil.us/the-supernova-that-sparked-the-original-scientific-revolution-1281459/"
+  ],
+  "page4_urls": [
+    "https://www.shunjusha.co.jp/news/n126016.html",
+    "https://www.shunjusha.co.jp/news/n126097.html",
+    "https://shinsho-plus.shueisha.co.jp/column/inadashinshoplusofficial/35034"
+  ],
+  "page5_url": "https://www.themarginalian.org/2026/05/21/penguin/",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-05/the-watchlist-may-2026-tobias-carroll/",
+    "music": "https://natalie.mu/music/news/673925",
+    "outdoor": "https://thetrek.co/appalachian-trail/why-im-doing-a-40-day-silent-hike-on-the-appalachian-trail/"
+  }
+}
