@@ -3081,6 +3081,7 @@ def main(argv: list[str] | None = None) -> int:
     print("Building Page I HTML...", file=sys.stderr)
     page_one_html = build_page_one_v2(result.selected)
     page_two_html: str | None = None
+    headlines: list[dict] = []
     if page2_result is not None:
         print("Building Page II HTML...", file=sys.stderr)
         # Sprint 7 Phase 2: Page I/III 採用 URL を除外して Today's Headlines top 3 を選定
@@ -3205,6 +3206,14 @@ def main(argv: list[str] | None = None) -> int:
             r = page_six_telemetry.get(area, {})
             art = r.get("article")
             page6_urls_displayed[area] = art.get("url") if art else None
+    # C40 (Sprint 8, 2026-05-28): 第2面 Today's Headlines の URL も dedup 用に記録。
+    # BBC 等で同 URL のタイトルだけ更新されるパターンに対応するため、過去日の
+    # headlines URL を翌朝以降の selector から見えるようにする。
+    headlines_urls_displayed: list[str] = []
+    if page_two_html is not None:
+        headlines_urls_displayed = [
+            (h.get("url") or "") for h in headlines if h.get("url")
+        ]
     log_path = write_displayed_urls_log(
         target,
         page1_urls=page1_urls_displayed,
@@ -3213,6 +3222,7 @@ def main(argv: list[str] | None = None) -> int:
         page4_urls=page4_urls_displayed if page_four_telemetry is not None else None,
         page5_url=page5_url_displayed,
         page6_urls=page6_urls_displayed if page_six_telemetry is not None else None,
+        headlines_urls=headlines_urls_displayed if page_two_html is not None else None,
     )
     print(f"Wrote {log_path}", file=sys.stderr)
 
