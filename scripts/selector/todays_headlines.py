@@ -36,6 +36,11 @@ DEFAULT_HEADLINES_TOP_N: int = 3
 # Sprint 7 Phase 2 微調整 (2026-05-20): 5/19 朝刊観察で 100 字では内容が
 # ほぼ分からないと神山さん指摘、200 字に拡張。3 記事構成の紙面スペースで許容範囲。
 DEFAULT_SUMMARY_MAX_CHARS: int = 200
+# C40 (Sprint 8, 2026-05-28): 過去 displayed_urls から headlines URL を除外する
+# 窓サイズ。5/27-5/28 で BBC が同 URL のままタイトル更新するパターンを観測。
+# PAGE2_DEDUP_DAYS=3 より長め (7) を採用 — 同じ記事を 1 週間以内に 2 回出すのは
+# 紙面の鮮度として不適、2 週間以上前の再評価は許容、というバランス。
+HEADLINES_DEDUP_DAYS: int = 7
 
 
 def _extract_article_from_selection(sel: object) -> dict | None:
@@ -54,6 +59,7 @@ def select_todays_headlines(
     page3_selections: Mapping | None = None,
     eligible_sources: tuple[str, ...] | None = None,
     top_n: int = DEFAULT_HEADLINES_TOP_N,
+    recent_displayed_urls: set[str] | None = None,
 ) -> list[dict]:
     """Today's Headlines 用に記事 top_n 件を選定.
 
@@ -72,6 +78,13 @@ def select_todays_headlines(
         フィルタ対象ソース名タプル。None なら ``HEADLINES_ALLOWED_SOURCES``。
     top_n :
         最大選定件数。default 3。
+    recent_displayed_urls :
+        過去 ``HEADLINES_DEDUP_DAYS`` 日に headlines として表示された URL の集合
+        (C40, Sprint 8, 2026-05-28)。caller が
+        ``load_recently_displayed_urls(HEADLINES_DEDUP_DAYS, page="headlines",
+        until_date=target_date)`` で算出して渡す。``None`` または空集合なら
+        recency dedup を行わない（Sprint 7 までの挙動と等価）。
+        BBC 等の URL 不変・タイトル更新パターンへの対策。
 
     Returns
     -------
@@ -94,6 +107,8 @@ def select_todays_headlines(
                 u = art.get("url")
                 if u:
                     excluded.add(u)
+    if recent_displayed_urls:
+        excluded |= recent_displayed_urls
 
     pool = [
         a for a in candidates_scored

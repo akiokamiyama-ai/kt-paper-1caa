@@ -3085,6 +3085,13 @@ def main(argv: list[str] | None = None) -> int:
     if page2_result is not None:
         print("Building Page II HTML...", file=sys.stderr)
         # Sprint 7 Phase 2: Page I/III 採用 URL を除外して Today's Headlines top 3 を選定
+        # C40 (Sprint 8, 2026-05-28): 過去 HEADLINES_DEDUP_DAYS=7 日の headlines URL も
+        # 除外することで、BBC 等の同 URL タイトル更新による重複表示を防ぐ。
+        recent_headlines_urls = load_recently_displayed_urls(
+            todays_headlines.HEADLINES_DEDUP_DAYS,
+            page="headlines",
+            until_date=target,
+        )
         headlines = todays_headlines.select_todays_headlines(
             target_date=target,
             candidates_scored=result.candidates_scored,
@@ -3092,6 +3099,7 @@ def main(argv: list[str] | None = None) -> int:
             page3_selections=(
                 page3_result.selections if page3_result is not None else None
             ),
+            recent_displayed_urls=recent_headlines_urls,
         )
         print(
             f"  Page II Today's Headlines: {len(headlines)} 件 "

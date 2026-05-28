@@ -26,6 +26,7 @@ from scripts.selector.todays_headlines import (
     DEFAULT_HEADLINES_TOP_N,
     DEFAULT_SUMMARY_MAX_CHARS,
     HEADLINES_ALLOWED_SOURCES,
+    HEADLINES_DEDUP_DAYS,
     LLM_SUMMARY_MAX_CHARS,
     format_summary,
     generate_summary_with_llm,
@@ -431,6 +432,183 @@ def test_llm_summary_empty_llm_output():
     _check("h8 LLM 空出力 → fallback", out == "RSS desc", f"got {out!r}")
 
 
+# ---------------------------------------------------------------------------
+# (i) C40 recency dedup（Sprint 8, 2026-05-28）
+#
+# 5/27-5/28 で BBC が同 URL (cwy22rddy5no) のままタイトルを更新し、headlines に
+# 2 日連続で表示された事例。案 1 で displayed_urls に headlines_urls を記録、
+# 案 2 で select_todays_headlines に過去 7 日分の URL set を渡して除外する。
+# ---------------------------------------------------------------------------
+
+def test_recent_dedup_excludes_seen_url():
+    """過去 N 日分 displayed_urls に含まれる URL は除外される（C40 真因対策）."""
+    candidates = [
+        _make_article("https://bbc.com/x/cwy22rddy5no", score=90, source="BBC Business"),
+        _make_article("https://bbc.com/x/other",      score=80, source="BBC Business"),
+    ]
+    result = select_todays_headlines(
+        target_date=date(2026, 5, 28),
+        candidates_scored=candidates,
+        recent_displayed_urls={"https://bbc.com/x/cwy22rddy5no"},
+    )
+    _check(
+        "i1 過去 displayed_urls にある URL を除外（同 URL タイトル更新 case）",
+        len(result) == 1 and result[0]["url"] == "https://bbc.com/x/other",
+        f"got {[r['url'] for r in result]}",
+    )
+
+
+def test_recent_dedup_passes_unseen_url():
+    """過去履歴に無い URL はそのまま通過."""
+    candidates = [
+        _make_article("https://new/1", score=90, source="BBC Business"),
+        _make_article("https://new/2", score=80, source="BBC Business"),
+    ]
+    result = select_todays_headlines(
+        target_date=date(2026, 5, 28),
+        candidates_scored=candidates,
+        recent_displayed_urls={"https://old/never-seen"},
+    )
+    urls = {r["url"] for r in result}
+    _check(
+        "i2 過去 displayed_urls に無い URL は通過",
+        urls == {"https://new/1", "https://new/2"},
+        f"got {urls}",
+    )
+
+
+def test_recent_dedup_none_is_noop():
+    """recent_displayed_urls=None なら Sprint 7 までの挙動と等価（後方互換）."""
+    candidates = [
+        _make_article("https://a/1", score=90, source="BBC Business"),
+        _make_article("https://a/2", score=80, source="BBC Business"),
+    ]
+    result = select_todays_headlines(
+        target_date=date(2026, 5, 28),
+        candidates_scored=candidates,
+        # recent_displayed_urls 省略 → None
+    )
+    _check(
+        "i3 recent_displayed_urls 省略 → recency dedup 無し（後方互換）",
+        len(result) == 2,
+        f"got {len(result)} items",
+    )
+
+
+def test_recent_dedup_empty_set_is_noop():
+    """空 set でも recency dedup 無し（窓内に何も displayed されていない初日扱い）."""
+    candidates = [_make_article("https://a/1", score=90, source="BBC Business")]
+    result = select_todays_headlines(
+        target_date=date(2026, 5, 28),
+        candidates_scored=candidates,
+        recent_displayed_urls=set(),
+    )
+    _check(
+        "i4 recent_displayed_urls=空 set → 全候補通過",
+        len(result) == 1,
+    )
+
+
+def test_recent_dedup_combines_with_page1_3_exclusion():
+    """recent_displayed_urls は page1_selected / page3_selections と OR 結合."""
+    candidates = [
+        _make_article("https://a/1", score=90, source="BBC Business"),  # page1 除外
+        _make_article("https://a/2", score=80, source="BBC Business"),  # past 除外
+        _make_article("https://a/3", score=70, source="BBC Business"),  # 通過
+    ]
+    result = select_todays_headlines(
+        target_date=date(2026, 5, 28),
+        candidates_scored=candidates,
+        page1_selected=[{"url": "https://a/1"}],
+        recent_displayed_urls={"https://a/2"},
+    )
+    _check(
+        "i5 page1 除外 + recency 除外が両方効く（OR 結合）",
+        len(result) == 1 and result[0]["url"] == "https://a/3",
+        f"got {[r['url'] for r in result]}",
+    )
+
+
+def test_headlines_dedup_days_constant():
+    """HEADLINES_DEDUP_DAYS=7（神山さん指定: PAGE2_DEDUP_DAYS=3 より長め）."""
+    _check(
+        "i6 HEADLINES_DEDUP_DAYS == 7（同 URL の 1 週間以内の再表示を禁止、"
+        "2 週間以上前は再評価許容）",
+        HEADLINES_DEDUP_DAYS == 7,
+        f"got {HEADLINES_DEDUP_DAYS}",
+    )
+
+
+def test_recent_dedup_window_boundary_via_loader():
+    """load_recently_displayed_urls が window=7 で境界日を正しく扱うか（統合テスト）.
+
+    target=5/29 で window=7 → 5/22-5/28 が対象、5/21 と 5/29 は対象外。
+    """
+    import json
+    import tempfile
+    from pathlib import Path
+
+    from scripts.selector import dedup_filter
+
+    orig_log_dir = dedup_filter.LOG_DIR
+    with tempfile.TemporaryDirectory() as tmp:
+        dedup_filter.LOG_DIR = Path(tmp)
+        try:
+            # window 内（5/22, 5/28）に記録
+            for d, url in [("2026-05-22", "https://within/early"),
+                           ("2026-05-28", "https://within/recent")]:
+                (Path(tmp) / f"displayed_urls_{d}.json").write_text(json.dumps({
+                    "date": d, "headlines_urls": [url],
+                }))
+            # window 外（5/21）に記録 — 取らない
+            (Path(tmp) / "displayed_urls_2026-05-21.json").write_text(json.dumps({
+                "date": "2026-05-21", "headlines_urls": ["https://outside/past"],
+            }))
+            # 当日（5/29）に記録 — 取らない（target 自身は除外）
+            (Path(tmp) / "displayed_urls_2026-05-29.json").write_text(json.dumps({
+                "date": "2026-05-29", "headlines_urls": ["https://outside/today"],
+            }))
+
+            urls = dedup_filter.load_recently_displayed_urls(
+                HEADLINES_DEDUP_DAYS, page="headlines", until_date=date(2026, 5, 29),
+            )
+            _check(
+                "i7 window=7 で 5/22-5/28 のみ収集（5/21 と 5/29 は範囲外）",
+                urls == {"https://within/early", "https://within/recent"},
+                f"got {sorted(urls)}",
+            )
+        finally:
+            dedup_filter.LOG_DIR = orig_log_dir
+
+
+def test_old_log_without_headlines_field_safe():
+    """5/28 以前の旧ログ（headlines_urls フィールド不在）でも crash しない."""
+    import json
+    import tempfile
+    from pathlib import Path
+
+    from scripts.selector import dedup_filter
+
+    orig_log_dir = dedup_filter.LOG_DIR
+    with tempfile.TemporaryDirectory() as tmp:
+        dedup_filter.LOG_DIR = Path(tmp)
+        try:
+            # 旧形式：headlines_urls フィールド無し
+            (Path(tmp) / "displayed_urls_2026-05-25.json").write_text(json.dumps({
+                "date": "2026-05-25", "page1_urls": ["https://p1/x"],
+            }))
+            urls = dedup_filter.load_recently_displayed_urls(
+                7, page="headlines", until_date=date(2026, 5, 28),
+            )
+            _check(
+                "i8 旧ログ (headlines_urls 欠落) → 空 set、crash しない",
+                urls == set(),
+                f"got {urls}",
+            )
+        finally:
+            dedup_filter.LOG_DIR = orig_log_dir
+
+
 def main() -> int:
     print("Today's Headlines selector tests (Sprint 7 Phase 2 Step 1, 2026-05-19)")
     print()
@@ -474,6 +652,16 @@ def main() -> int:
     test_llm_summary_runaway_truncated()
     test_llm_summary_no_url()
     test_llm_summary_empty_llm_output()
+    print()
+    print("(i) C40 recency dedup（Sprint 8, 2026-05-28）:")
+    test_recent_dedup_excludes_seen_url()
+    test_recent_dedup_passes_unseen_url()
+    test_recent_dedup_none_is_noop()
+    test_recent_dedup_empty_set_is_noop()
+    test_recent_dedup_combines_with_page1_3_exclusion()
+    test_headlines_dedup_days_constant()
+    test_recent_dedup_window_boundary_via_loader()
+    test_old_log_without_headlines_field_safe()
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")
     return 0 if FAIL == 0 else 1
