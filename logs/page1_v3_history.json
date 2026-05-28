@@ -91,6 +91,23 @@
           "cost_usd": 0.036432,
           "is_fallback": false
         }
+      },
+      {
+        "date": "2026-05-29",
+        "day_label": "金",
+        "angle_key": "integration",
+        "angle_label_jp": "統合＋問い",
+        "essay": {
+          "angle_label": "金曜 - 統合＋問い",
+          "daily_question": "暗黙知の危機を前に、あなたの組織は何を「守る」と決めているか？",
+          "essay_title": "語りえぬ知の行方――一週間の問いが収束する場所",
+          "body": "月曜日、私たちは問いの入口に立った。AIが知識集約産業のエントリーレベルを引き受けるとき、新人が先輩の傍らで暗黙知を吸収する「足場」が静かに崩れていく。熟練看護師がモニターより一時間早く患者の異変を知る、あの「語りえぬ確信」は、いかにして次世代に渡るのか。ターナーの問いは、効率論の外側に立っていた。\n\n火曜日、私たちは一歩引いた。「暗黙知消滅」論はロマンティックな悲観に陥っていないか。印刷革命もCADも、知の媒体を変えただけで継承そのものを消しはしなかった。人間の適応力を過小評価する罠がある、と。この批判的角度は、月曜の危機感を粉砕するためではなく、問いを精錬するためにあった。\n\n水曜日、現場に降りた。暗黙知の断絶は概念の問題である前に、採用票に書けない要件、設計されない余白、測定されない伝承時間という、経営の設計ミスとして読み解けると論じた。「クライアントの言葉の裏の不安を嗅ぎ取る力」は、ジョブディスクリプションに書けない。しかし書けないものを組織的に守る仕掛けは設計できる。\n\n木曜日、哲学の地層を掘った。ポランニーの「語りうる以上を知っている」という命題が、ドレイファスの身体知論へと繋がり、AIが原理的に模倣できないのは「状況への埋め込まれた判断」だと見えてきた。知識とは命題の集積ではなく、世界への身体的な関わり方そのものだ。\n\n金曜日の今日、この四日間が指し示す収束点を問いたい。\n\n浮かび上がるのは、一つの逆説だ。AIが「語りうること」を無限に高速化するほど、「語りえないこと」の価値は非線形に上昇する。明示知の希少性はゼロに近づき、暗黙知の希少性は天井を突き破る。これはノスタルジーではなく、純粋に経済的な予言だ。\n\nしかし希少性が上がっても、伝わらなければ価値は生まれない。ここに経営者が直視すべき非対称がある。AIへの投資は稟議が通りやすい。即効性があり、測定可能で、競合比較できる。一方、暗黙知の伝承への投資——ベテランと新人が同じ現場で時間を共にする余白、言語化できない判断を「見せる」機会の設計、問いが許される組織文化——は、ROIの計算式に載りにくい。だから後回しになる。だから静かに失われる。\n\n歴史は三度の断裂を教えてくれた。グーテンベルク、産業革命、テイラー主義。そのたびに人間は適応した。だが適応には必ず「意図的な保存」が伴っていた。日本の製造業が「ノスタルジーではなくリスクマネジメント」として暗黙知伝承を守ってきたのは、適応を偶然に委ねなかったからだ。\n\n一週間の問いは、ここに収束する。AIに任せる判断と、人間が身体ごと引き受ける判断を、あなたの組織は意識的に仕分けているか。そしてその仕分けを、誰が、いつ、どの権限で決めているか。\n\n神山氏に最後の問いを置きたい。あなたが今、後継者や若い経営者に渡そうとしている「語りえない何か」は、どんな場面で、誰の傍らに立つことで、はじめて伝わるものですか。",
+          "annotation_label": "1週間の論点総括",
+          "annotation_body": "月曜「足場の崩壊」、火曜「悲観論の盲点」、水曜「経営設計の問題」、木曜「身体知の哲学史」、金曜「統合と問い」。五日間の論点は、暗黙知の危機を「技術論→批評→実践→思想→経営決断」の順に掘り下げ、最終的に「意図的な保存」の意志が問われる場所へと収束した。",
+          "quote_excerpt": "There is a test every experienced nurse learns to perform and almost none can explain. When assessing a patient for early signs of clinical deterioration, a seasoned nurse will sometimes simply know. The posture, the color, the quality of breathing, the particular way a patient responds to a simple question: none of these data points alone trips a numerical threshold, none triggers an alert in the electronic health record, and yet the experienced nurse knows something is wrong an hour before the monitors do. Ask her what specifically she noticed and she will struggle to tell you. She knows more than she can tell.",
+          "cost_usd": 0.03534,
+          "is_fallback": false
+        }
       }
     ]
   }

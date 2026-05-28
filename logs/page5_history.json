@@ -502,6 +502,23 @@
       "ai_kamiyama_url": "https://www.fsight.jp/articles/-/52071",
       "ai_kamiyama_title": "「スギ花粉症治療」を始めるなら初夏　だが、治療を受けられない人続出の深刻理由",
       "ai_kamiyama_source_name": "Foresight（新潮社）"
+    },
+    {
+      "displayed_on": "2026-05-29",
+      "article_url": "https://www.themarginalian.org/2026/05/21/penguin/",
+      "article_title": "How Evolution Invented Faith: The Patience of the Penguin and the Art of Withstanding Abandonment",
+      "article_category": "books",
+      "tie_candidates": [
+        "books"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.bbc.com/news/articles/czx2qll4rlyo?at_medium=RSS&at_campaign=rss",
+      "ai_kamiyama_title": "'I've applied for more than 400 roles' - how young people are facing the job shortage",
+      "ai_kamiyama_source_name": "BBC Business"
     }
   ]
 }
