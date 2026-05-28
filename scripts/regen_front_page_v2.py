@@ -1415,7 +1415,7 @@ PAGE_FOUR_CSS = f"""
 .academic-column .item:last-child {{ border-bottom: none; }}
 /* Sprint 8 C41 (2026-05-28): iPad / iPhone レスポンシブ。
    横並び (55%:45%) を縦積み (concept 上、academic 下) に切替。 */
-@media (max-width: 810px) {{
+@media (max-width: 834px) {{
   .page-four-grid {{
     grid-template-columns: 1fr;
     gap: 20px;
@@ -1703,7 +1703,7 @@ PAGE_FIVE_CSS = f"""
 .serendipity-article .description {{
   overflow-wrap: break-word;
 }}
-@media (max-width: 810px) {{
+@media (max-width: 834px) {{
   .page-five-content {{
     grid-template-rows: auto auto;
     padding: 16px 18px;
@@ -2080,7 +2080,7 @@ PAGE_SIX_CSS = f"""
 }}
 /* Sprint 8 C41 (2026-05-28): iPad / iPhone レスポンシブ。
    4 列 → iPad は 2 列、iPhone 13 mini は 1 列に折り畳む。 */
-@media (max-width: 810px) {{
+@media (max-width: 834px) {{
   .page-six-grid-v2 {{
     grid-template-columns: repeat(2, 1fr);
     row-gap: 24px;
