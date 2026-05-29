@@ -74,6 +74,11 @@ from .selector.why_important import (
 from .editorial import context_builder as editorial_context
 from .editorial import editorial_writer
 from .header import header_builder as header_module
+from .page1_v3.monthly_pivotal import (
+    DEFAULT_PIVOTAL_PATH,
+    find_week_for_date,
+    load_monthly_pivotal,
+)
 from .page1 import lead_deck_writer as page1_lead_deck
 from .page4 import article_rotator as page4_rotator
 from .page4 import concept_selector as page4_concept_selector
@@ -2789,6 +2794,34 @@ def _print_page2_report(page2_result) -> None:
             print(f"      fallback: {sel.fallback_reason[:120]}")
 
 
+def _v3_swap_will_apply(target: date, *, pivotal_path: Path | None = None) -> bool:
+    """Return True if regen_front_page_v3 would swap Page I on this date.
+
+    C45 D2 (Sprint 8, 2026-05-29): editorial が紙面に出ない記事を引用する
+    事象の真因対策。本番 cron は regen_front_page_v3 経由で呼ばれ、
+    monthly_pivotal.json に当該日の週が登録されていれば Page I が essay 形式に
+    surgical swap される。swap 後の Page I に v2 の top4 は出てこないため、
+    editorial 生成時に Page I を context から除外する必要がある。
+
+    本関数は monthly_pivotal を覗いて swap 適用可否のみ判定する（v3 が呼ばれた
+    かどうかは見ない）。v2 を単独で叩く dev 経路では Page I が v2 として残る
+    のに editorial から外れる軽い不整合があるが、本番経路 (v3) と整合を優先。
+
+    Pivotal load 失敗時は False（保守側）に倒し、Page I を editorial に含める
+    従来挙動を維持する。
+    """
+    try:
+        monthly = load_monthly_pivotal(pivotal_path or DEFAULT_PIVOTAL_PATH)
+        return find_week_for_date(target, monthly) is not None
+    except Exception as e:  # noqa: BLE001 — どんな失敗でも保守的 fallback
+        print(
+            f"[editorial] monthly_pivotal load failed "
+            f"({type(e).__name__}: {e}), assuming v3 swap NOT applicable",
+            file=sys.stderr,
+        )
+        return False
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(
         prog="regen_front_page_v2",
@@ -3056,8 +3089,21 @@ def main(argv: list[str] | None = None) -> int:
     # 4e) Editorial postscript (Sprint 4 Phase 3) — depends on all pages above.
     editorial_result: dict | None = None
     if not args.skip_editorial:
+        # C45 D2 (Sprint 8, 2026-05-29): v3 swap が適用される日は Page I の
+        # v2 top4 が essay に置換されて最終紙面に出ないため、editorial の
+        # context から Page I を除外する。これにより editorial が「紙面に存在
+        # しない記事」を引用する事象（C45 真因）を防ぐ。v3 swap 不適用日は
+        # 従来通り Page I を含める。
+        v3_will_apply = _v3_swap_will_apply(target)
+        page_one_for_editorial = None if v3_will_apply else result.selected
+        if v3_will_apply:
+            print(
+                "[editorial] C45 D2: v3 swap applicable for this date → "
+                "excluding Page I from editorial context",
+                file=sys.stderr,
+            )
         ctx = editorial_context.build_editorial_context(
-            page_one_selected=result.selected,
+            page_one_selected=page_one_for_editorial,
             page_two_selections=(
                 page2_result.selections if page2_result is not None else None
             ),
