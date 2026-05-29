@@ -432,37 +432,27 @@ PAGE_ONE_V3_CSS = """
   margin-left: 8px;
   font-weight: 400;
 }
-.next-week-preview .np-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 8px;
-}
-@media (max-width: 700px) {
-  .next-week-preview .np-list {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-.next-week-preview .np-row {
-  font-size: 12px;
-  text-align: center;
-  padding: 6px 4px;
-  background: #fff;
-  border: 1px solid #eee;
-}
-.next-week-preview .np-day {
-  display: block;
-  font-weight: 700;
-  font-size: 11px;
-  color: #555;
-  margin-bottom: 2px;
-}
-.next-week-preview .np-angle {
-  display: block;
-  font-size: 11px;
+/* C47 (Sprint 8, 2026-05-30): 旧 .np-list / .np-row / .np-day / .np-angle は
+   6 日間角度説明用だったが「いらない」評価で削除。.np-pivotal で主軸記事の
+   1 行紹介を出す。 */
+.next-week-preview .np-pivotal {
+  font-size: 13px;
+  line-height: 1.8;
   color: #333;
+  margin: 0;
+  padding: 12px 14px;
+  background: #fff;
+  border-left: 3px solid #c0a060;
+  text-align: justify;
+}
+.next-week-preview .np-pivotal-title {
+  font-weight: 700;
+  color: #1a1a1a;
+}
+.next-week-preview .np-pivotal--pending {
+  color: #888;
+  font-style: italic;
+  border-left-color: #ddd;
 }
 .next-week-preview--pending .np-pending {
   font-size: 12px;
