@@ -519,6 +519,23 @@
       "ai_kamiyama_url": "https://www.bbc.com/news/articles/czx2qll4rlyo?at_medium=RSS&at_campaign=rss",
       "ai_kamiyama_title": "'I've applied for more than 400 roles' - how young people are facing the job shortage",
       "ai_kamiyama_source_name": "BBC Business"
+    },
+    {
+      "displayed_on": "2026-05-30",
+      "article_url": "https://plato.stanford.edu/entries/questions/",
+      "article_title": "Questions",
+      "article_category": "academic",
+      "tie_candidates": [
+        "academic"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.bbc.com/news/articles/czx2qll4rlyo?at_medium=RSS&at_campaign=rss",
+      "ai_kamiyama_title": "'I've applied for more than 400 roles' - how young people are facing the job shortage",
+      "ai_kamiyama_source_name": "BBC Business"
     }
   ]
 }

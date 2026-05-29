@@ -1,0 +1,37 @@
+{
+  "date": "2026-05-30",
+  "page1_urls": [
+    "https://www.economist.com/finance-and-economics/2026/05/21/how-should-economists-treat-morality",
+    "https://www.bbc.com/news/articles/c2l22ypl909o?at_medium=RSS&at_campaign=rss",
+    "https://www.economist.com/finance-and-economics/2026/05/21/the-other-china-shock",
+    "https://www.bbc.com/news/articles/cy026x9jpd0o?at_medium=RSS&at_campaign=rss"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2605/29/2000000037/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2605/29/news056.html",
+    "web_repo": "https://www.bc01.net/article/cocofump_202606/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/cogs-of-war/control-without-ownership-how-chinas-party-business-networks-dominate-indonesias-mineral-supply-chains/",
+    "http://www3.nhk.or.jp/news/html/20260529/k10015135371000.html",
+    null,
+    "https://www.mckinsey.com/industries/retail/our-insights/when-ai-meets-desire-innovating-human-centered-luxury-experiences-in-the-agentic-age",
+    "https://www.webdoku.jp/shinbunka/2026/05/29/105009.html",
+    "https://warontherocks.com/a-sea-control-revolution/"
+  ],
+  "page4_urls": [
+    "https://www.shunjusha.co.jp/news/n126097.html",
+    "https://shinsho-plus.shueisha.co.jp/column/inadashinshoplusofficial/35034"
+  ],
+  "page5_url": "https://plato.stanford.edu/entries/questions/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/05/29/love-in-a-fallen-city-shanghais-marriage-market/",
+    "music": "https://rockinon.com/news/detail/215230",
+    "outdoor": "https://www.cleverhiker.com/more-gear/roxon-flex-multitool-review/"
+  },
+  "headlines_urls": [
+    "https://www.bbc.com/news/articles/czx2qll4rlyo?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/cgmpwzzvxr2o?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/clypeyx6nemo?at_medium=RSS&at_campaign=rss"
+  ]
+}
