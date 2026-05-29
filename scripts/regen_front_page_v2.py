@@ -1784,7 +1784,7 @@ def build_page_five_v2(
     target_date: date,
     *,
     pre_evaluated: dict[str, dict] | None = None,
-    page1_result=None,
+    page_two_headlines: list[dict] | None = None,
     page3_result=None,
     page4_telemetry: dict | None = None,
 ) -> tuple[str, dict]:
@@ -1797,9 +1797,13 @@ def build_page_five_v2(
 
     Sprint 7 Phase 1 Step 2 (2026-05-19):
     - AIかみやま column の対象記事を serendipity から独立化
-    - page1_result / page3_result / page4_telemetry を引数に追加
-    - ai_kamiyama_selector で Page I/III/IV + serendipity の URL を除外して選定
-    - 候補ゼロなら ai_article=None で column も fallback
+
+    C40 第二弾 (Sprint 8, 2026-05-30):
+    - AIかみやま 候補プールを「当日確定紙面（Page II Today's Headlines +
+      Page III + Page IV 学術記事）」に限定。
+    - 旧 page1_result の candidates_scored 全体参照は廃止。Page I 除外は
+      候補プールに含めないことで実現（C45 D2 と同じ哲学）。
+    - 連続日重複は他面 dedup が連動して自動回避。
     """
     from .page5 import ai_kamiyama_selector as page5_ai_selector
 
@@ -1819,31 +1823,25 @@ def build_page_five_v2(
 
     serendipity_article = serendipity["article"]
 
-    # 3) AIかみやま 専用の記事選定（Sprint 7 Phase 1 Step 2）
-    # Page I/III/IV + serendipity 採用済み URL を除外
+    # 3) AIかみやま 専用の記事選定（C40 第二弾 神山案、2026-05-30）。
+    # 候補プールは当日確定紙面：Page II Today's Headlines + Page III R1-R6 +
+    # Page IV 学術記事。Page I は意図的に除外（C45 D2）、Page V serendipity も
+    # 背中合わせ枠なので除外。category フィルタは候補プールが既に編集判断を
+    # 通過しているため skip（eligible_categories=None）。
     page3_selections = (
         getattr(page3_result, "selections", None) if page3_result is not None else None
     )
     page4_articles = None
     if page4_telemetry:
         page4_articles = (page4_telemetry.get("articles_result") or {}).get("articles")
-    excluded = page5_ai_selector.collect_used_urls(
-        page1_selected=(page1_result.selected if page1_result is not None else None),
+    ai_article = page5_ai_selector.select_ai_kamiyama_article(
+        target_date=target_date,
+        page_two_headlines=page_two_headlines,
         page3_selections=page3_selections,
         page4_articles=page4_articles,
         serendipity_article=serendipity_article,
-    )
-    candidates = page1_result.candidates_scored if page1_result is not None else []
-    # registry は build_registry の global cache を流用したいが、page5_serendipity
-    # 経由で取れない。安全策として None を渡して category フィルタは article.category
-    # フィールドベースで動作させる（Stage 1 で付与されていない場合は category フィルタ
-    # 自体が機能しないが、URL 除外と top_n random で十分機能する）。
-    ai_article = page5_ai_selector.select_ai_kamiyama_article(
-        target_date=target_date,
-        excluded_urls=excluded,
-        candidates_scored=candidates,
         registry=None,
-        eligible_categories=page5_ai_selector.AI_KAMIYAMA_CATEGORIES,
+        eligible_categories=None,
     )
 
     # 4) AIかみやま column generation via miibo
@@ -3005,6 +3003,32 @@ def main(argv: list[str] | None = None) -> int:
             )
             page_four_html = None
 
+    # 4b.5) C40 第二弾 (Sprint 8, 2026-05-30): Today's Headlines を Page V より前に
+    # 選定する。AIかみやま selector が candidate pool として headlines を参照する
+    # ため、Page V build の前に確定させる必要がある。LLM 要約 (generate_summary_with_llm)
+    # は表示用なので Page II HTML 構築直前まで遅延する（後段 §5 に残置）。
+    headlines: list[dict] = []
+    if page2_result is not None:
+        recent_headlines_urls = load_recently_displayed_urls(
+            todays_headlines.HEADLINES_DEDUP_DAYS,
+            page="headlines",
+            until_date=target,
+        )
+        headlines = todays_headlines.select_todays_headlines(
+            target_date=target,
+            candidates_scored=result.candidates_scored,
+            page1_selected=result.selected,
+            page3_selections=(
+                page3_result.selections if page3_result is not None else None
+            ),
+            recent_displayed_urls=recent_headlines_urls,
+        )
+        print(
+            f"  Today's Headlines preselected: {len(headlines)} 件 "
+            f"({', '.join((h.get('source_name') or '')[:10] for h in headlines) or '(none)'})",
+            file=sys.stderr,
+        )
+
     # 4c) Page V pipeline (Sprint 4: Columns & Serendipity, was Sprint 3 Step D)
     if not args.skip_page5:
         print(
@@ -3018,7 +3042,7 @@ def main(argv: list[str] | None = None) -> int:
             page_five_html, page_five_telemetry = build_page_five_v2(
                 target,
                 pre_evaluated=pre_evaluated_for_page5,
-                page1_result=result,
+                page_two_headlines=headlines,
                 page3_result=page3_result,
                 page4_telemetry=page_four_telemetry,
             )
@@ -3127,34 +3151,12 @@ def main(argv: list[str] | None = None) -> int:
     print("Building Page I HTML...", file=sys.stderr)
     page_one_html = build_page_one_v2(result.selected)
     page_two_html: str | None = None
-    headlines: list[dict] = []
     if page2_result is not None:
         print("Building Page II HTML...", file=sys.stderr)
-        # Sprint 7 Phase 2: Page I/III 採用 URL を除外して Today's Headlines top 3 を選定
-        # C40 (Sprint 8, 2026-05-28): 過去 HEADLINES_DEDUP_DAYS=7 日の headlines URL も
-        # 除外することで、BBC 等の同 URL タイトル更新による重複表示を防ぐ。
-        recent_headlines_urls = load_recently_displayed_urls(
-            todays_headlines.HEADLINES_DEDUP_DAYS,
-            page="headlines",
-            until_date=target,
-        )
-        headlines = todays_headlines.select_todays_headlines(
-            target_date=target,
-            candidates_scored=result.candidates_scored,
-            page1_selected=result.selected,
-            page3_selections=(
-                page3_result.selections if page3_result is not None else None
-            ),
-            recent_displayed_urls=recent_headlines_urls,
-        )
-        print(
-            f"  Page II Today's Headlines: {len(headlines)} 件 "
-            f"({', '.join((h.get('source_name') or '')[:10] for h in headlines) or '(none)'})",
-            file=sys.stderr,
-        )
-        # C14 (Sprint 8, 5/20 神山さん観察): RSS description ~100 字では短い。
-        # BBC 記事は本文を fetch して Haiku で ~200 字要約に差し替える。
-        # BBC 以外 / fetch 失敗 / LLM 失敗時は format_summary に fallback。
+        # C40 第二弾 (Sprint 8, 2026-05-30): headlines の SELECTION は §4b.5 で
+        # 済ませてある（Page V AIかみやま selector が参照するため事前選定が必要）。
+        # ここでは LLM 要約（C14, 5/20 神山さん観察、~200 字に拡張）と Page II
+        # HTML 構築のみ行う。BBC 以外 / fetch 失敗 / LLM 失敗時は format_summary に fallback。
         for art in headlines:
             art["summary"] = todays_headlines.generate_summary_with_llm(art)
         print(
