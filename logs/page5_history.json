@@ -536,6 +536,24 @@
       "ai_kamiyama_url": "https://www.bbc.com/news/articles/czx2qll4rlyo?at_medium=RSS&at_campaign=rss",
       "ai_kamiyama_title": "'I've applied for more than 400 roles' - how young people are facing the job shortage",
       "ai_kamiyama_source_name": "BBC Business"
+    },
+    {
+      "displayed_on": "2026-05-31",
+      "article_url": "https://natalie.mu/music/column/671597",
+      "article_title": "出所したばかりのラッパーREAL-Tが明かす刑務所の中での音楽活動",
+      "article_category": "music",
+      "tie_candidates": [
+        "music"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxOYng5YXNBRGhPZXJtNlA0b3h1ak5ocW03bFNlY3lKYjN0cEVDbWozTG5ybEFydm9hRXVZWjZGbURjc1B1bVBLWDlVWWFCZWU3eXVJZHpUbHgxMVFuUlFpSG1KalV6N1pFTXhzQmxMUGNtS0J0LW1uRHJ1YXlWNEtXUThpM2J6TE9tT0dIUzZ6VEhhaG5GRFQxVWNKMy1IZjFsdWxhN05mZHp6Zw?oc=5",
+      "ai_kamiyama_title": "Spain favorites to win 2026 World Cup, Goldman model shows - Reuters",
+      "ai_kamiyama_category": "geopolitics",
+      "ai_kamiyama_source_name": "Reuters World"
     }
   ]
 }

@@ -164,6 +164,11 @@
       "concept_id": "sorge",
       "name_ja": "配慮（ゾルゲ）",
       "displayed_on": "2026-05-30"
+    },
+    {
+      "concept_id": "differance",
+      "name_ja": "差延",
+      "displayed_on": "2026-05-31"
     }
   ]
 }

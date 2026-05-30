@@ -1,0 +1,38 @@
+{
+  "date": "2026-05-31",
+  "page1_urls": [
+    "https://www.bbc.com/news/articles/czx2qll4rlyo?at_medium=RSS&at_campaign=rss",
+    "https://www.economist.com/finance-and-economics/2026/05/27/kevin-warshs-troublesome-inflation-in-tray",
+    "https://www.fsight.jp/articles/-/52075",
+    "https://www.fsight.jp/articles/-/52071"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://atmarkit.itmedia.co.jp/ait/articles/2605/29/news103.html",
+    "human_energy": "https://jinjibu.jp/news/detl/26383/",
+    "web_repo": "https://www.bc01.net/article/bellworld_202606/"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/05/29/turkey-erdogan-authoritarian-istanbul-life-itself-old-city-review/",
+    "https://www.asahi.com/articles/ASV5Y75J1V5YUHBI004M.html?ref=rss",
+    "https://news.google.com/rss/articles/CBMiqgFBVV95cUxOYng5YXNBRGhPZXJtNlA0b3h1ak5ocW03bFNlY3lKYjN0cEVDbWozTG5ybEFydm9hRXVZWjZGbURjc1B1bVBLWDlVWWFCZWU3eXVJZHpUbHgxMVFuUlFpSG1KalV6N1pFTXhzQmxMUGNtS0J0LW1uRHJ1YXlWNEtXUThpM2J6TE9tT0dIUzZ6VEhhaG5GRFQxVWNKMy1IZjFsdWxhN05mZHp6Zw?oc=5",
+    "https://www.mckinsey.com/industries/financial-services/our-insights/move-first-or-fall-behind-how-ai-is-rewriting-the-rules-of-banking",
+    "https://www.webdoku.jp/kanko/page/9784860116200.html",
+    "https://shinsho-plus.shueisha.co.jp/column/lonely_society_japan/35045"
+  ],
+  "page4_urls": [
+    "https://shinsho-plus.shueisha.co.jp/column/lonely_society_japan/35045",
+    "https://www.shunjusha.co.jp/news/n120551.html",
+    "https://shinsho-plus.shueisha.co.jp/column/hara_giants/35041"
+  ],
+  "page5_url": "https://natalie.mu/music/column/671597",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/05/28/ode-to-the-kitchen-bath/",
+    "music": "https://natalie.mu/music/column/671597",
+    "outdoor": "https://thetrek.co/welcome-to-armenia/"
+  },
+  "headlines_urls": [
+    "https://www.bbc.com/news/articles/c78kg45yx0vo?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/cy02jyxz26po?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/cn8pnd9yj4eo?at_medium=RSS&at_campaign=rss"
+  ]
+}
