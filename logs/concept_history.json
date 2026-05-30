@@ -159,6 +159,11 @@
       "concept_id": "blue_ocean_strategy",
       "name_ja": "ブルーオーシャン戦略",
       "displayed_on": "2026-05-29"
+    },
+    {
+      "concept_id": "sorge",
+      "name_ja": "配慮（ゾルゲ）",
+      "displayed_on": "2026-05-30"
     }
   ]
 }
