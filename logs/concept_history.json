@@ -169,6 +169,11 @@
       "concept_id": "differance",
       "name_ja": "差延",
       "displayed_on": "2026-05-31"
+    },
+    {
+      "concept_id": "human_capital",
+      "name_ja": "人的資本",
+      "displayed_on": "2026-06-01"
     }
   ]
 }

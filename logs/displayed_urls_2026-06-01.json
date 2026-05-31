@@ -1,0 +1,38 @@
+{
+  "date": "2026-06-01",
+  "page1_urls": [
+    "https://www.bbc.com/news/articles/cd6p9yyg64vo?at_medium=RSS&at_campaign=rss",
+    "https://www.fsight.jp/articles/-/52078",
+    "https://www.bbc.com/news/articles/c1l2y7j7454o?at_medium=RSS&at_campaign=rss",
+    "https://www.fsight.jp/articles/-/52074"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/news/articles/2605/29/news144.html",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2605/29/news005.html",
+    "web_repo": "https://www.bc01.net/seminar-report/fc_sesshon_202606_1/"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/05/29/us-dollar-history-money-currency-monetary-policy/",
+    "http://www3.nhk.or.jp/news/html/20260530/k10015136051000.html",
+    null,
+    "https://www.mckinsey.com/cn/our-insights/our-insights/the-next-wow-factor-a-conversation-with-sidney-lu-chairman-and-ceo-foxconn-interconnect-technology",
+    "https://www.nikkei-science.com/202607_082.html",
+    "https://www.shunjusha.co.jp/news/n126097.html"
+  ],
+  "page4_urls": [
+    "https://shinsho-plus.shueisha.co.jp/column/lonely_society_japan/35045",
+    "https://www.shunjusha.co.jp/news/n120551.html",
+    "https://shinsho-plus.shueisha.co.jp/column/hara_giants/35041"
+  ],
+  "page5_url": "https://www.axismag.jp/posts/2026/05/710917.html",
+  "page6_urls": {
+    "books": "https://locusmag.com/2026/05/phillips-wins-2026-climate-fiction-prize/",
+    "music": "https://rockinon.com/news/detail/215216",
+    "outdoor": "https://thetrek.co/appalachian-trail/day-13-the-hardest-call/"
+  },
+  "headlines_urls": [
+    "https://www.bbc.com/news/articles/cn8pn4l03r7o?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/cg5p9y25qj1o?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/c8xw2kjlrlxo?at_medium=RSS&at_campaign=rss"
+  ]
+}

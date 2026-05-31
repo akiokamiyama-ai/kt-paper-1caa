@@ -554,6 +554,24 @@
       "ai_kamiyama_title": "Spain favorites to win 2026 World Cup, Goldman model shows - Reuters",
       "ai_kamiyama_category": "geopolitics",
       "ai_kamiyama_source_name": "Reuters World"
+    },
+    {
+      "displayed_on": "2026-06-01",
+      "article_url": "https://www.axismag.jp/posts/2026/05/710917.html",
+      "article_title": "坂 茂の40年を総覧する。『坂 茂の建築――素材・構造・災害支援』TOTO出版から",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.nikkei-science.com/202607_082.html",
+      "ai_kamiyama_title": "カビる美術館　世界の至宝を脅かす影",
+      "ai_kamiyama_category": "books:自然科学ノンフィクション",
+      "ai_kamiyama_source_name": "日経サイエンス"
     }
   ]
 }
