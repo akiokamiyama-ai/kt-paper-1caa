@@ -83,7 +83,7 @@ def test_record_call_multiple_tags():
         with patch.object(llm_usage, "LOG_DIR", log_dir):
             for tag, model, in_tok, out_tok in [
                 ("page1.lead_deck", "claude-sonnet-4-6", 200, 80),
-                ("stage2", "claude-sonnet-4-6", 1500, 600),
+                ("stage2.batch", "claude-sonnet-4-6", 1500, 600),
                 ("editorial", "claude-sonnet-4-6", 300, 100),
             ]:
                 llm_usage.record_call(
@@ -96,16 +96,22 @@ def test_record_call_multiple_tags():
             tags = [c.get("tag") for c in data["calls"]]
             _check(
                 "a3 3 件の tag が正しい順序で記録される",
-                tags == ["page1.lead_deck", "stage2", "editorial"],
+                tags == ["page1.lead_deck", "stage2.batch", "editorial"],
                 f"got tags={tags}",
             )
 
 
 def test_call_sites_use_known_tags():
-    """全 9 呼び出し箇所が、規定の tag を使っていることを grep で確認."""
+    """全呼び出し箇所が、規定の tag を使っていることを grep で確認.
+
+    Phase A (Sprint 8, 2026-06-01): tag 命名規約整理
+    - "stage2" → "stage2.batch" （batched evaluation を明示）
+    - todays_headlines は LLM_SUMMARY_TAG="page2.headlines_summary" を使用、
+      tag= リテラルとしては検査しない（定数経由のため）。
+    """
     expected_tags = {
         "scripts/selector/page2.py": ["page2.step1", "page2.step2"],
-        "scripts/selector/stage2.py": ["stage2"],
+        "scripts/selector/stage2.py": ["stage2.batch"],
         "scripts/page1/lead_deck_writer.py": ["page1.lead_deck"],
         "scripts/selector/why_important.py": ["page1.why_important"],
         "scripts/editorial/editorial_writer.py": ["editorial"],

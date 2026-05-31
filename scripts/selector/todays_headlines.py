@@ -157,7 +157,9 @@ def format_summary(
 # ===========================================================================
 
 LLM_SUMMARY_MODEL: str = "claude-haiku-4-5"
-LLM_SUMMARY_TAG: str = "headlines.summary"
+# Phase A (Sprint 8, 2026-06-01): tag を page2.* 規約に揃え、Page II Today's
+# Headlines セクションの LLM call であることを明示。
+LLM_SUMMARY_TAG: str = "page2.headlines_summary"
 # 本文がこの長さ未満なら LLM 要約しても情報が増えないので fallback。
 BODY_MIN_CHARS: int = 400
 # LLM 出力の暴走防止上限（Sprint 8 C22, 2026-05-23: 目安 250-350 字に
@@ -197,7 +199,7 @@ def _fetch_bbc_body(url: str, *, max_paragraphs: int = 8) -> str:
 
 
 def _call_haiku_summary(title: str, source: str, body: str) -> str:
-    """記事本文を Haiku で ~200 字要約。tag='headlines.summary' でコスト計上."""
+    """記事本文を Haiku で ~200 字要約。tag='page2.headlines_summary' でコスト計上."""
     from ..lib.llm import call_claude_with_retry
 
     user = _SUMMARY_USER_TEMPLATE.format(
