@@ -13,6 +13,7 @@ inject する。
 
 from __future__ import annotations
 
+import re
 from datetime import date
 
 from .essay_generator import EssayResult
@@ -34,8 +35,16 @@ def _esc(s: str) -> str:
     )
 
 
+_MARKDOWN_BOLD_RE = re.compile(r"\*\*([^*\n]+?)\*\*")
+
+
 def _paragraphs_html(body: str) -> str:
-    """``\\n\\n`` で段落分割して ``<p>`` 列にする。先頭段落に dropcap クラス付与."""
+    """``\\n\\n`` で段落分割して ``<p>`` 列にする。先頭段落に dropcap クラス付与.
+
+    C52 (Sprint 8, 2026-06-01) — LLM がマークダウン ``**bold**`` を本文に混ぜた
+    場合の safety net として ``<strong>`` 変換を入れる。プロンプト側（C52
+    【マークダウン記号の絶対禁止】）で 1 次対策、ここで 2 段目のガード。
+    """
     if not body:
         return ""
     parts = [p.strip() for p in body.split("\n\n") if p.strip()]
@@ -46,6 +55,8 @@ def _paragraphs_html(body: str) -> str:
         cls = ' class="lede"' if i == 0 else ""
         # 段落内の単一改行は <br> に
         para_html = _esc(para).replace("\n", "<br>")
+        # C52 safety net: **bold** → <strong>bold</strong>
+        para_html = _MARKDOWN_BOLD_RE.sub(r"<strong>\1</strong>", para_html)
         out.append(f"<p{cls}>{para_html}</p>")
     return "\n".join(out)
 

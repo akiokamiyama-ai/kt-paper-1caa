@@ -227,6 +227,56 @@ def test_paragraphs_empty():
     _check("h4 空文字 → 空文字", r._paragraphs_html("") == "")
 
 
+# ---------------------------------------------------------------------------
+# (i) C52 safety net — マークダウン **bold** → <strong>
+# ---------------------------------------------------------------------------
+
+def test_markdown_bold_converted_to_strong():
+    out = r._paragraphs_html("**製造業のリスク**\n\n本文段落")
+    _check(
+        "i1 **bold** → <strong>bold</strong>",
+        "<strong>製造業のリスク</strong>" in out
+        and "**製造業" not in out,
+        f"got {out!r}",
+    )
+
+
+def test_markdown_bold_inside_paragraph():
+    out = r._paragraphs_html("文章中に **強調語** がある段落")
+    _check(
+        "i2 段落の途中にある **bold** も変換",
+        "文章中に <strong>強調語</strong> がある段落" in out,
+        f"got {out!r}",
+    )
+
+
+def test_markdown_bold_multiple_occurrences():
+    out = r._paragraphs_html("**前** と **後** がある")
+    _check(
+        "i3 1 段落内に複数の **bold** があっても全て変換",
+        out.count("<strong>") == 2 and "**" not in out,
+        f"got {out!r}",
+    )
+
+
+def test_no_markdown_bold_no_change():
+    out = r._paragraphs_html("普通の段落、強調なし")
+    _check(
+        "i4 マークダウンなしの段落は <strong> が入らない",
+        "<strong>" not in out and "普通の段落" in out,
+    )
+
+
+def test_lone_asterisks_not_misinterpreted():
+    """単独 ** や 3 つ以上の連続 * は変換対象外（誤マッチ防止）."""
+    out = r._paragraphs_html("単独 ** が一つ")
+    _check(
+        "i5 単独の ** は変換対象外",
+        "<strong>" not in out,
+        f"got {out!r}",
+    )
+
+
 def main() -> int:
     print("page1_v3 — renderer tests")
     print()
@@ -252,6 +302,13 @@ def main() -> int:
     test_inject_css_into_existing_style()
     test_inject_css_when_no_style()
     test_inject_css_no_head_no_change()
+    print()
+    print("(i) C52 safety net (markdown **bold** → <strong>):")
+    test_markdown_bold_converted_to_strong()
+    test_markdown_bold_inside_paragraph()
+    test_markdown_bold_multiple_occurrences()
+    test_no_markdown_bold_no_change()
+    test_lone_asterisks_not_misinterpreted()
     print()
     print("(h) paragraph 分割:")
     test_paragraphs_split_by_double_newline()
