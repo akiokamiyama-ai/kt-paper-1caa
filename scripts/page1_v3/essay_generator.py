@@ -50,7 +50,7 @@ class EssayResult:
     angle_label: str        # 階層 1: "日曜 - 全体像"
     daily_question: str     # 階層 2: 日替わりの問い 20-30 字
     essay_title: str        # 階層 3: 論考タイトル 15-25 字
-    body: str               # 論考本文 1200-1500 字
+    body: str               # 論考本文（厳守 2000 字以下、目安 1200-2000 字）
     annotation_label: str   # 用語解説欄ラベル
     annotation_body: str    # 用語解説 100-200 字
     quote_excerpt: str      # 主軸記事引用 300-500 字

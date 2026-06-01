@@ -357,18 +357,21 @@ def test_retry_call_exception_saves_first_raw():
 
 
 # ---------------------------------------------------------------------------
-# (h) C24 プロンプト強化: 1500 字以下厳守 + JSON エスケープ
+# (h) C24/C27 プロンプト強化: 字数上限厳守 + JSON エスケープ
+#
+# C24 (Sprint 8, 5/24): 1500 字以下厳守を導入
+# C27 (Sprint 8, 6/1): 神山さん「字数より質、長尺も歓迎」観察で 2000 字に緩和
 # ---------------------------------------------------------------------------
 
-def test_prompt_includes_1500_char_strict_limit():
-    """ESSAY_SYSTEM_PROMPT に「1500 字以下厳守」が含まれる."""
-    _check("h1 prompt に '1500' を含む",
-           "1500" in ESSAY_SYSTEM_PROMPT)
+def test_prompt_includes_body_char_strict_limit():
+    """ESSAY_SYSTEM_PROMPT に「2000 字以下厳守」が含まれる (C27)."""
+    _check("h1 prompt に '2000' を含む",
+           "2000" in ESSAY_SYSTEM_PROMPT)
     _check("h2 prompt に '厳守' を含む",
            "厳守" in ESSAY_SYSTEM_PROMPT)
     _check("h3 body 字数厳守の文脈で言及",
-           "1500 字以下" in ESSAY_SYSTEM_PROMPT
-           or "1500字以下" in ESSAY_SYSTEM_PROMPT)
+           "2000 字以下" in ESSAY_SYSTEM_PROMPT
+           or "2000字以下" in ESSAY_SYSTEM_PROMPT)
 
 
 def test_prompt_includes_json_escape_instruction():
@@ -418,8 +421,8 @@ def main() -> int:
     test_call_exception_does_not_save_raw()
     test_retry_call_exception_saves_first_raw()
     print()
-    print("(h) C24: プロンプト強化（1500 字以下厳守 + JSON エスケープ）:")
-    test_prompt_includes_1500_char_strict_limit()
+    print("(h) C24/C27: プロンプト強化（字数上限厳守 + JSON エスケープ）:")
+    test_prompt_includes_body_char_strict_limit()
     test_prompt_includes_json_escape_instruction()
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")
