@@ -213,6 +213,78 @@ def evaluate_bloomberg_non_market(url: str | None) -> tuple[bool, str | None]:
     return False, None
 
 
+# ---------------------------------------------------------------------------
+# BBC UK-local filter (C12/C35, Sprint 8 case A, 2026-06-01)
+# ---------------------------------------------------------------------------
+# BBC Business RSS は英国経済 + 国際経済を混合配信する。神山さんの観察
+# (6/1 朝刊) で BBC 3 件すべてが英国ローカル (英国列車 Wi-Fi、英国政府の若年
+# 失業対策、UK 旅行客への空港待ち時間警告) で占められた。
+#
+# Bloomberg と異なり BBC URL は ``/news/articles/<opaque-id>`` 形式で URL path
+# から topic を判定できない。RSS にも ``<category>`` 要素なし。よってここでは
+# title / description のキーワードマッチで「英国を主題とする」記事を除外する。
+#
+# 保守的な高精度マーカーのみ採用：所有格 ("Britain's", "UK's")、UK 政府/
+# 消費者を主体とする表現、英国議会の所在地、英国通貨記号。グローバル経済
+# 関連でこれらの語彙が出ることもあるが、Stage 2 の score が高ければ復活する
+# 可能性は残しつつ、UK-local 過剰を構造的に抑える。
+_BBC_UK_LOCAL_MARKERS: tuple[str, ...] = (
+    # 所有格 — Britain や UK が主語化されている確度が高い
+    "Britain's",
+    "Britain has",
+    "Britain is",
+    "Britain will",
+    "in Britain",
+    "Britons",
+    "UK's",
+    # UK 政府 / 公的セクター
+    "UK government",
+    "British government",
+    "Westminster",
+    # UK 消費者 / 旅行客 — 主題が UK 国内消費
+    "UK shoppers",
+    "UK consumers",
+    "UK households",
+    "UK holidaymakers",
+    "UK travellers",
+    "UK travelers",
+    "UK passengers",
+    "British shoppers",
+    "British consumers",
+    "British households",
+    # UK 通貨記号（金額が主題の経済記事は £ を伴うことが多い）
+    " £",
+)
+
+
+def evaluate_bbc_uk_local(
+    *,
+    url: str | None,
+    title: str | None,
+    description: str | None = None,
+) -> tuple[bool, str | None]:
+    """BBC 専用：英国ローカルニュースを除外する.
+
+    bbc.com / bbc.co.uk 以外のホストには no-op。BBC URL は不透明 ID 形式の
+    ため URL path 判定はできず、title / description の保守的キーワードで
+    「英国を主題とする」記事のみ除外する。グローバル経済関連の UK 言及は
+    残る可能性が高い（マーカーが高精度寄り）。
+
+    Sprint 8 C12/C35 case A (2026-06-01): 6/1 朝刊で BBC 3 件全てが英国
+    ローカルだった観察への構造的対処。
+    """
+    if not url:
+        return False, None
+    url_lower = url.lower()
+    if "bbc.com" not in url_lower and "bbc.co.uk" not in url_lower:
+        return False, None
+    haystack = " ".join((title or "", description or ""))
+    for marker in _BBC_UK_LOCAL_MARKERS:
+        if marker in haystack:
+            return True, f"bbc_uk_local: {marker.strip()!r}"
+    return False, None
+
+
 def evaluate_podcast(
     *,
     url: str | None,

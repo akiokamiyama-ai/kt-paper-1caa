@@ -431,6 +431,175 @@ def test_stage1_excludes_bloomberg_video():
 
 
 # ---------------------------------------------------------------------------
+# C12/C35 case A (2026-06-01): BBC UK-local content filter
+# ---------------------------------------------------------------------------
+
+# 実 6/1 朝刊で表示された UK-local 3 件（filter で除外されるべき）
+_BBC_UK_REAL_CASES = [
+    {
+        "url": "https://www.bbc.com/news/articles/cn8pn4l03r7o",
+        "title": "Why Britain's notoriously bad train wi-fi might soon be a thing of the past",
+        "description": "Trains in the UK have long had patchy wi-fi.",
+    },
+    {
+        "url": "https://www.bbc.com/news/articles/cg5p9y25qj1o",
+        "title": "Ex-M&S chief to help government tackle youth unemployment",
+        "description": "The UK government has appointed the former Marks & Spencer CEO to lead an effort.",
+    },
+    {
+        "url": "https://www.bbc.com/news/articles/c8xw2kjlrlxo",
+        "title": "Arrive three hours before flight home, airline boss tells UK holidaymakers",
+        "description": "Wizz Air boss warns of long queues at European airports.",
+    },
+]
+
+# 実 5/27 朝刊で BBC から採用されたグローバル経済記事（filter で残るべき）
+_BBC_GLOBAL_REAL_CASES = [
+    {
+        "url": "https://www.bbc.com/news/articles/abc123",
+        "title": "Nvidia announces new AI chip for personal computers",
+        "description": "The technology giant's boss Jensen Huang called the move a reinvention.",
+    },
+    {
+        "url": "https://www.bbc.com/news/articles/def456",
+        "title": "Caribbean hot sauce producers warn of shortages and higher prices",
+        "description": "Manufacturers in Jamaica say chilli pepper supply is constrained.",
+    },
+    {
+        "url": "https://www.bbc.com/news/articles/ghi789",
+        "title": "China's coal mine disaster is a reminder of darker days",
+        "description": "China's worst coal mining disaster in 15 years comes amid pivot to green energy.",
+    },
+]
+
+
+def test_bbc_uk_real_cases_excluded():
+    """6/1 朝刊で表示された UK-local 3 件は全て除外される."""
+    for case in _BBC_UK_REAL_CASES:
+        excluded, reason = hard_filter.evaluate_bbc_uk_local(
+            url=case["url"], title=case["title"], description=case["description"],
+        )
+        _check(
+            f"bbc1 UK-local 「{case['title'][:40]}…」 → excluded",
+            excluded is True and reason is not None and "bbc_uk_local" in reason,
+            f"got excluded={excluded}, reason={reason!r}",
+        )
+
+
+def test_bbc_global_real_cases_pass():
+    """グローバル経済記事は通過."""
+    for case in _BBC_GLOBAL_REAL_CASES:
+        excluded, reason = hard_filter.evaluate_bbc_uk_local(
+            url=case["url"], title=case["title"], description=case["description"],
+        )
+        _check(
+            f"bbc2 global 「{case['title'][:40]}…」 → not excluded",
+            excluded is False and reason is None,
+            f"got excluded={excluded}, reason={reason!r}",
+        )
+
+
+def test_bbc_uk_marker_pound_sign():
+    """description に '£' (UK 通貨) があれば除外."""
+    excluded, reason = hard_filter.evaluate_bbc_uk_local(
+        url="https://www.bbc.com/news/articles/x",
+        title="Put a deposit on vapes to stop fires",
+        description="The industry body says a £5 refundable deposit would help.",
+    )
+    _check(
+        "bbc3 description '£' → excluded",
+        excluded is True and reason and "£" in reason,
+        f"got reason={reason!r}",
+    )
+
+
+def test_bbc_uk_marker_westminster():
+    """Westminster は UK 議会、除外."""
+    excluded, reason = hard_filter.evaluate_bbc_uk_local(
+        url="https://www.bbc.com/news/articles/x",
+        title="Tax reform debated at Westminster",
+        description="MPs gathered to discuss the proposal.",
+    )
+    _check(
+        "bbc4 'Westminster' → excluded",
+        excluded is True and reason and "Westminster" in reason,
+    )
+
+
+def test_non_bbc_host_unaffected():
+    """bbc.com / bbc.co.uk 以外には no-op（"Britain's" を含んでも）."""
+    cases = [
+        ("https://www.reuters.com/news/x", "Britain's economy slows"),
+        ("https://www.economist.com/x", "Britons concerned about housing"),
+        ("https://example.com/x", "UK government announces tax cuts"),
+    ]
+    for url, title in cases:
+        excluded, reason = hard_filter.evaluate_bbc_uk_local(
+            url=url, title=title, description="",
+        )
+        _check(
+            f"bbc5 non-bbc {url[:30]}… → not excluded",
+            excluded is False and reason is None,
+            f"got excluded={excluded}, reason={reason!r}",
+        )
+
+
+def test_bbc_uk_empty_inputs():
+    """url/title/description None / empty は no-op."""
+    e1, _ = hard_filter.evaluate_bbc_uk_local(url=None, title="Britain's economy")
+    e2, _ = hard_filter.evaluate_bbc_uk_local(url="", title="Britain's economy")
+    e3, _ = hard_filter.evaluate_bbc_uk_local(
+        url="https://www.bbc.com/news/articles/x", title=None, description=None,
+    )
+    _check("bbc6 None/empty url → not excluded", e1 is False and e2 is False)
+    _check("bbc7 BBC URL + title=None + desc=None → not excluded", e3 is False)
+
+
+def test_bbc_co_uk_host_also_filtered():
+    """bbc.co.uk ホストも対象（feeds.bbci.co.uk 由来の link がここに来ることはないが防御的に）."""
+    excluded, reason = hard_filter.evaluate_bbc_uk_local(
+        url="https://www.bbc.co.uk/news/business/some-article",
+        title="Britain's manufacturing slows",
+        description="",
+    )
+    _check(
+        "bbc8 bbc.co.uk host も filter 対象",
+        excluded is True and reason and "Britain" in reason,
+    )
+
+
+def test_stage1_excludes_bbc_uk_local():
+    """run_stage1 統合: BBC UK-local が is_excluded=True、global は通過."""
+    articles = [
+        {
+            "url": "https://www.bbc.com/news/articles/cn8pn4l03r7o",
+            "title": "Why Britain's notoriously bad train wi-fi might soon be a thing of the past",
+            "description": "Trains in the UK have long had patchy wi-fi. This article looks at why.",
+            "body": "",
+            "source_name": "BBC Business",
+        },
+        {
+            "url": "https://www.bbc.com/news/articles/global1",
+            "title": "Nvidia announces new AI chip for personal computers",
+            "description": "The technology giant's boss Jensen Huang called the move a reinvention. " * 2,
+            "body": "",
+            "source_name": "BBC Business",
+        },
+    ]
+    out = run_stage1(articles)
+    uk = out[0]
+    global_art = out[1]
+    _check(
+        "bbc9 stage1: BBC UK-local excluded, BBC global passes",
+        uk.get("is_excluded") is True
+        and "bbc_uk_local" in (uk.get("exclusion_reason") or "")
+        and global_art.get("is_excluded") is False,
+        f"uk={uk.get('is_excluded')}/{uk.get('exclusion_reason')!r}, "
+        f"global={global_art.get('is_excluded')}/{global_art.get('exclusion_reason')!r}",
+    )
+
+
+# ---------------------------------------------------------------------------
 # Test runner
 # ---------------------------------------------------------------------------
 
@@ -473,6 +642,16 @@ def main() -> int:
     test_non_bloomberg_host_unaffected()
     test_bloomberg_empty_url()
     test_stage1_excludes_bloomberg_video()
+    print()
+    print("(bbc) C12/C35 case A (2026-06-01): BBC UK-local filter:")
+    test_bbc_uk_real_cases_excluded()
+    test_bbc_global_real_cases_pass()
+    test_bbc_uk_marker_pound_sign()
+    test_bbc_uk_marker_westminster()
+    test_non_bbc_host_unaffected()
+    test_bbc_uk_empty_inputs()
+    test_bbc_co_uk_host_also_filtered()
+    test_stage1_excludes_bbc_uk_local()
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")
     return 0 if FAIL == 0 else 1

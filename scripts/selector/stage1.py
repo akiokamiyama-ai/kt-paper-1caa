@@ -121,21 +121,34 @@ def run_stage1(
                     excluded = True
                     reason = bb_reason
                 else:
-                    # Universal description-length filter. Sprint 3 Step A
-                    # (2026-05-01): 日経のように description 空の RSS は紙面に
-                    # 「未完成の記事」を出してしまうため、< 30 字は弾く。
-                    desc_excluded, desc_reason = hard_filter.evaluate_description_length(d)
-                    if desc_excluded:
+                    # C12/C35 case A (Sprint 8, 2026-06-01): BBC は英国経済 +
+                    # 国際経済の混合フィード。6/1 朝刊で 3 件全て英国ローカル
+                    # だった観察への構造的対処として、英国を主題とする記事を
+                    # title/description のキーワードで除外。BBC 以外には no-op。
+                    bbc_excluded, bbc_reason = hard_filter.evaluate_bbc_uk_local(
+                        url=d.get("url"),
+                        title=title,
+                        description=desc,
+                    )
+                    if bbc_excluded:
                         excluded = True
-                        reason = desc_reason
+                        reason = bbc_reason
                     else:
-                        region = src.category if src else None
-                        hf_excluded, hf_reason = hard_filter.evaluate(
-                            title, body or desc, region
-                        )
-                        if hf_excluded:
+                        # Universal description-length filter. Sprint 3 Step A
+                        # (2026-05-01): 日経のように description 空の RSS は紙面に
+                        # 「未完成の記事」を出してしまうため、< 30 字は弾く。
+                        desc_excluded, desc_reason = hard_filter.evaluate_description_length(d)
+                        if desc_excluded:
                             excluded = True
-                            reason = hf_reason
+                            reason = desc_reason
+                        else:
+                            region = src.category if src else None
+                            hf_excluded, hf_reason = hard_filter.evaluate(
+                                title, body or desc, region
+                            )
+                            if hf_excluded:
+                                excluded = True
+                                reason = hf_reason
 
         d["is_excluded"] = excluded
         d["exclusion_reason"] = reason
