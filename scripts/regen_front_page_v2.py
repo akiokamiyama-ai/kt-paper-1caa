@@ -1523,13 +1523,22 @@ def _render_page4_academic_column(articles: list[dict]) -> str:
     </aside>""".rstrip()
 
 
-def build_page_four_v2(target_date: date, *, pre_evaluated: dict[str, dict] | None = None) -> tuple[str, dict]:
+def build_page_four_v2(
+    target_date: date,
+    *,
+    pre_evaluated: dict[str, dict] | None = None,
+    displayed_urls_today: set[str] | None = None,
+) -> tuple[str, dict]:
     """Build the full <section class="page page-four"> block.
 
     Returns ``(html, telemetry)`` where telemetry contains:
       - concept: the chosen concept dict
       - essay_result: {essay, is_fallback, cost_usd}
       - articles_result: {articles, from_cache, cost_usd, rotation}
+
+    C49 案A (Sprint 8, 2026-06-01) — ``displayed_urls_today`` を受け取って
+    Page IV academic rotator に渡す。同日に他面（特に Page III R6）で採用
+    された URL を構造的に除外する。
     """
     # 1) Concept of the week
     concept = page4_concept_selector.select_concept_for_today(today=target_date)
@@ -1537,7 +1546,9 @@ def build_page_four_v2(target_date: date, *, pre_evaluated: dict[str, dict] | No
 
     # 2) Academic 3 articles (rotation)
     articles_result = page4_rotator.get_today_articles(
-        target_date, pre_evaluated=pre_evaluated,
+        target_date,
+        pre_evaluated=pre_evaluated,
+        displayed_urls_today=displayed_urls_today,
     )
 
     # 3) Render
@@ -2982,9 +2993,22 @@ def main(argv: list[str] | None = None) -> int:
         pre_evaluated_for_page4: dict[str, dict] = {
             a["url"]: a for a in result.candidates_scored if a.get("url")
         }
+        # C49 案A (Sprint 8, 2026-06-01): Page III (page3_result.selections) で
+        # 採用済の URL を Page IV に渡して構造的に除外する。5/15-19 / 5/25 / 5/31
+        # で観測された集英社新書プラス記事の 3 面 / 4 面 同時表示（30 日中 7 件=
+        # 23%）への対処。C40 案1+案2 / C40 第二弾 / C45 D2 と同じ「当日確定他面
+        # 情報を後段 context に入れる」哲学の延長。
+        page4_other_pages_urls: set[str] = set()
+        if page3_result is not None:
+            for sel in page3_result.selections.values():
+                art = getattr(sel, "article", None)
+                if art and art.get("url"):
+                    page4_other_pages_urls.add(art["url"])
         try:
             page_four_html, page_four_telemetry = build_page_four_v2(
-                target, pre_evaluated=pre_evaluated_for_page4,
+                target,
+                pre_evaluated=pre_evaluated_for_page4,
+                displayed_urls_today=page4_other_pages_urls or None,
             )
             essay_meta = page_four_telemetry["essay_result"]
             articles_meta = page_four_telemetry["articles_result"]

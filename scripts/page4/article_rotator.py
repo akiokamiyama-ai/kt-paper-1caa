@@ -269,12 +269,19 @@ def _rebuild_from_pool(
     *,
     pre_evaluated: dict[str, dict] | None,
     registry: SourceRegistry | None,
+    displayed_urls_today: set[str] | None = None,
 ) -> dict:
     """Cached path: fetch once, filter to pool URLs, preserve pool order.
 
     Returns the same dict shape as ``get_today_articles``. If the cached
     URLs are no longer fetchable, ``articles`` may be empty — caller can
     detect this and fall through to ``_generate_new_pool``.
+
+    C49 案A (Sprint 8, 2026-06-01) — ``displayed_urls_today`` を受け取り、
+    rotation cache 内の URL が他面（特に Page III R6）で同日採用済なら
+    その URL を除外する。除外後の pool 数が ``N_ARTICLES`` 未満になったら
+    cache を invalidate して空 ``articles`` を返し、caller の fall-through
+    で ``_generate_new_pool`` に渡して regenerate させる。
     """
     articles, cost = _fetch_and_score_humanities(
         pre_evaluated=pre_evaluated, registry=registry,
@@ -283,6 +290,32 @@ def _rebuild_from_pool(
     chosen = [a for a in articles if a.get("url") in url_set]
     order = {url: i for i, url in enumerate(rotation.get("pool", []))}
     chosen.sort(key=lambda a: order.get(a.get("url"), 1_000_000))
+
+    # C49 案A: 同日他面 dedup（cache 内 URL が page3 等で採用済なら除外）。
+    # 除外後の数が N_ARTICLES 未満なら cache を invalidate して fall-through。
+    if displayed_urls_today:
+        before = len(chosen)
+        chosen = [a for a in chosen if a.get("url") not in displayed_urls_today]
+        dropped = before - len(chosen)
+        if dropped > 0:
+            print(
+                f"[page4] cross-page dedup (cache): dropped {dropped}/{before} "
+                f"URL(s) used by other pages today",
+                file=sys.stderr,
+            )
+        if len(chosen) < N_ARTICLES:
+            print(
+                f"[page4] cache invalidated: cross-page dedup left "
+                f"{len(chosen)} < {N_ARTICLES} URLs, regenerating",
+                file=sys.stderr,
+            )
+            return {
+                "articles": [],
+                "from_cache": True,
+                "cost_usd": cost,
+                "rotation": rotation,
+            }
+
     return {
         "articles": chosen,
         "from_cache": True,
@@ -297,8 +330,14 @@ def _generate_new_pool(
     pre_evaluated: dict[str, dict] | None,
     registry: SourceRegistry | None,
     persist: bool,
+    displayed_urls_today: set[str] | None = None,
 ) -> dict:
-    """Regeneration path: fetch once, dedup, sort, top-N, save rotation."""
+    """Regeneration path: fetch once, dedup, sort, top-N, save rotation.
+
+    C49 案A (Sprint 8, 2026-06-01) — ``displayed_urls_today`` を ``past_urls``
+    に union して同日他面採用 URL も除外する。これにより新 rotation pool に
+    page3 と衝突する URL が含まれなくなる。
+    """
     articles, cost = _fetch_and_score_humanities(
         pre_evaluated=pre_evaluated, registry=registry,
     )
@@ -314,6 +353,18 @@ def _generate_new_pool(
             f"already shown in past {HISTORY_LOOKBACK_DAYS} days",
             file=sys.stderr,
         )
+
+    # C49 案A: 同日他面採用 URL も除外（page3 selected 等）。
+    if displayed_urls_today:
+        before = len(articles)
+        articles = filter_recently_displayed(articles, displayed_urls_today)
+        dropped = before - len(articles)
+        if dropped > 0:
+            print(
+                f"[page4] cross-page dedup (regen): removed {dropped}/{before} "
+                f"already shown on other pages today",
+                file=sys.stderr,
+            )
 
     articles.sort(key=lambda a: a.get("final_score", 0.0), reverse=True)
     chosen = articles[:N_ARTICLES]
@@ -341,6 +392,7 @@ def get_today_articles(
     rotation: dict | None = None,
     registry: SourceRegistry | None = None,
     persist: bool = True,
+    displayed_urls_today: set[str] | None = None,
 ) -> dict:
     """Return today's 3 articles + cost telemetry.
 
@@ -348,6 +400,11 @@ def get_today_articles(
     ``_generate_new_pool`` (regenerate, 1 fetch). v1.1 (2026-05-02) で
     ``is_pool_active`` を「expiry AND pool 非空」に強化したことで、
     通常パスでは fetch が一度しか走らないことを保証する。
+
+    C49 案A (Sprint 8, 2026-06-01) — ``displayed_urls_today`` を受け取り、
+    cache 経路 / 再生成経路の両方で「同日に他面（page3 selected 等）で採用
+    された URL」を除外する。cache 経路で除外後の pool が N_ARTICLES 未満
+    になったら自動で再生成パスへ fall through。
 
     Returns::
 
@@ -365,16 +422,18 @@ def get_today_articles(
 
     if is_pool_active(rotation, target_date):
         result = _rebuild_from_pool(
-            rotation, pre_evaluated=pre_evaluated, registry=registry,
+            rotation,
+            pre_evaluated=pre_evaluated, registry=registry,
+            displayed_urls_today=displayed_urls_today,
         )
         if result["articles"]:
             return result
         # Cold cache invalidation: rotation log says active but URLs are
-        # no longer fetchable (sources rotated, deleted, etc.). Falls
-        # through to regenerate — fetch fires a 2nd time only in this
-        # rare path. Logged so it's visible.
+        # no longer fetchable (sources rotated, deleted, etc.) — OR cross-page
+        # dedup (C49 案A) dropped pool below N_ARTICLES. Falls through to
+        # regenerate — fetch fires a 2nd time only in this rare path.
         print(
-            f"[page4] cached pool {rotation.get('pool')} no longer fetchable, "
+            f"[page4] cached pool {rotation.get('pool')} no longer usable, "
             "regenerating",
             file=sys.stderr,
         )
@@ -382,4 +441,5 @@ def get_today_articles(
     return _generate_new_pool(
         target_date,
         pre_evaluated=pre_evaluated, registry=registry, persist=persist,
+        displayed_urls_today=displayed_urls_today,
     )

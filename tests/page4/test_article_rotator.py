@@ -345,6 +345,196 @@ def test_d5_is_pool_active_empty_pool_returns_false():
 
 
 # ---------------------------------------------------------------------------
+# (e) C49 案A 同日他面 dedup (2026-06-01)
+#
+# Page IV academic rotator は page3 selected を見ない設計だった。集英社新書
+# プラスが page3 R6 と page4 academic 両方の候補プールに入り、同日に同 URL
+# が表示される事象が 30 日中 7 件（23%）発生。displayed_urls_today で page3
+# 採用 URL を渡して構造的に除外する。
+# ---------------------------------------------------------------------------
+
+def test_e1_regen_excludes_displayed_urls_today():
+    """_generate_new_pool: displayed_urls_today に含まれる URL は除外される."""
+    today = date(2026, 5, 31)
+    rotation = {"pool": [], "expires_on": None, "generated_on": None}
+    # 5/31 真因シナリオの再現: 35045 は page3 が採用済
+    fetched = _toy_articles(["35045", "35046", "35047", "35048"])
+    displayed_today = {"35045"}
+    with _FetchCounter(return_articles=fetched) as fc:
+        result = article_rotator.get_today_articles(
+            target_date=today, rotation=rotation, persist=False,
+            displayed_urls_today=displayed_today,
+        )
+    chosen_urls = [a["url"] for a in result["articles"]]
+    _check(
+        "e1 regen: page3 採用 URL (35045) は新 pool から除外、残り 3 件",
+        fc.call_count == 1
+        and "35045" not in chosen_urls
+        and len(chosen_urls) == 3,
+        f"fetch_count={fc.call_count}, chosen={chosen_urls}",
+    )
+
+
+def test_e2_cache_drops_conflicting_url_below_n_triggers_regen():
+    """_rebuild_from_pool: cache 内 URL が page3 と衝突して残り < N_ARTICLES
+    なら cache invalidate → _generate_new_pool で fall through する."""
+    today = date(2026, 5, 31)
+    # cache に 3 件あるが 1 件が page3 と衝突
+    rotation = {
+        "pool": ["35045", "35046", "35047"],
+        "expires_on": (today + timedelta(days=1)).isoformat(),
+        "generated_on": (today - timedelta(days=1)).isoformat(),
+    }
+    fetched = _toy_articles(["35045", "35046", "35047", "35048", "35049"])
+    displayed_today = {"35045"}
+    with _FetchCounter(return_articles=fetched) as fc:
+        result = article_rotator.get_today_articles(
+            target_date=today, rotation=rotation, persist=False,
+            displayed_urls_today=displayed_today,
+        )
+    chosen_urls = [a["url"] for a in result["articles"]]
+    _check(
+        "e2 cache 内衝突で < N → invalidate → regen で 35045 排除した別 pool",
+        result["from_cache"] is False
+        and "35045" not in chosen_urls
+        and len(chosen_urls) == 3,
+        f"from_cache={result['from_cache']}, chosen={chosen_urls}, "
+        f"fetch_count={fc.call_count}",
+    )
+
+
+def test_e3_cache_with_no_conflict_keeps_cache():
+    """_rebuild_from_pool: cache 内 URL が page3 と衝突しなければ既存挙動
+    （cache 維持、from_cache=True）."""
+    today = date(2026, 5, 31)
+    rotation = {
+        "pool": ["u1", "u2", "u3"],
+        "expires_on": (today + timedelta(days=1)).isoformat(),
+        "generated_on": (today - timedelta(days=1)).isoformat(),
+    }
+    fetched = _toy_articles(["u1", "u2", "u3", "u4"])
+    displayed_today = {"page3_only_url"}  # cache pool と衝突しない
+    with _FetchCounter(return_articles=fetched) as fc:
+        result = article_rotator.get_today_articles(
+            target_date=today, rotation=rotation, persist=False,
+            displayed_urls_today=displayed_today,
+        )
+    chosen_urls = [a["url"] for a in result["articles"]]
+    _check(
+        "e3 cache 衝突なし → cache 維持、fetch 1 回",
+        fc.call_count == 1
+        and result["from_cache"] is True
+        and chosen_urls == ["u1", "u2", "u3"],
+        f"fetch_count={fc.call_count}, from_cache={result['from_cache']}, "
+        f"chosen={chosen_urls}",
+    )
+
+
+def test_e4_none_backward_compat():
+    """displayed_urls_today=None で既存挙動を完全に維持（後方互換）."""
+    today = date(2026, 5, 31)
+    rotation = {"pool": [], "expires_on": None, "generated_on": None}
+    fetched = _toy_articles(["a", "b", "c"])
+    with _FetchCounter(return_articles=fetched) as fc:
+        result = article_rotator.get_today_articles(
+            target_date=today, rotation=rotation, persist=False,
+            # displayed_urls_today 省略
+        )
+    _check(
+        "e4 displayed_urls_today 省略 → 既存挙動と等価",
+        fc.call_count == 1
+        and [a["url"] for a in result["articles"]] == ["a", "b", "c"],
+    )
+
+
+def test_e5_empty_set_treated_as_none():
+    """displayed_urls_today=空 set でも crash しない（実質 None と同じ）."""
+    today = date(2026, 5, 31)
+    rotation = {"pool": [], "expires_on": None, "generated_on": None}
+    fetched = _toy_articles(["a", "b", "c"])
+    with _FetchCounter(return_articles=fetched) as fc:
+        result = article_rotator.get_today_articles(
+            target_date=today, rotation=rotation, persist=False,
+            displayed_urls_today=set(),
+        )
+    _check(
+        "e5 displayed_urls_today=空 set → 既存挙動",
+        fc.call_count == 1
+        and [a["url"] for a in result["articles"]] == ["a", "b", "c"],
+    )
+
+
+def test_e6_all_cache_urls_conflict_triggers_regen():
+    """cache 全 3 件が page3 と衝突 → 全 invalidate → regen."""
+    today = date(2026, 5, 31)
+    rotation = {
+        "pool": ["c1", "c2", "c3"],
+        "expires_on": (today + timedelta(days=1)).isoformat(),
+        "generated_on": (today - timedelta(days=1)).isoformat(),
+    }
+    fetched = _toy_articles(["c1", "c2", "c3", "n1", "n2", "n3"])
+    displayed_today = {"c1", "c2", "c3"}
+    with _FetchCounter(return_articles=fetched) as fc:
+        result = article_rotator.get_today_articles(
+            target_date=today, rotation=rotation, persist=False,
+            displayed_urls_today=displayed_today,
+        )
+    chosen_urls = [a["url"] for a in result["articles"]]
+    _check(
+        "e6 cache 全衝突 → 完全 regen、新 pool は衝突 URL を含まない",
+        result["from_cache"] is False
+        and not any(u in displayed_today for u in chosen_urls)
+        and len(chosen_urls) == 3,
+        f"chosen={chosen_urls}",
+    )
+
+
+def test_e7_past_dedup_and_today_dedup_both_apply():
+    """過去 21 日 dedup と同日他面 dedup が併用される.
+
+    fetched に「過去 dedup 対象」と「同日 dedup 対象」の両方を混ぜて、
+    両方が抜けることを確認する。
+    """
+    import tempfile, json as _json
+    from pathlib import Path
+
+    today = date(2026, 5, 31)
+    rotation = {"pool": [], "expires_on": None, "generated_on": None}
+    # 過去 21 日内に "past_url" を page4 で表示済の log を一時 dir に置く
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp_p = Path(tmp)
+        # 過去 5 日前 (5/26) の log に "past_url" を入れる
+        past_log = tmp_p / "displayed_urls_2026-05-26.json"
+        past_log.write_text(_json.dumps({
+            "date": "2026-05-26",
+            "page4_urls": ["past_url"],
+        }))
+        # dedup_filter の LOG_DIR を一時的に差し替え
+        from scripts.selector import dedup_filter
+        orig_log_dir = dedup_filter.LOG_DIR
+        dedup_filter.LOG_DIR = tmp_p
+        try:
+            fetched = _toy_articles(["past_url", "today_url", "ok1", "ok2", "ok3"])
+            displayed_today = {"today_url"}
+            with _FetchCounter(return_articles=fetched) as fc:
+                result = article_rotator.get_today_articles(
+                    target_date=today, rotation=rotation, persist=False,
+                    displayed_urls_today=displayed_today,
+                )
+        finally:
+            dedup_filter.LOG_DIR = orig_log_dir
+    chosen_urls = [a["url"] for a in result["articles"]]
+    _check(
+        "e7 過去 21 日 dedup と同日他面 dedup が併用される",
+        fc.call_count == 1
+        and "past_url" not in chosen_urls
+        and "today_url" not in chosen_urls
+        and chosen_urls == ["ok1", "ok2", "ok3"],
+        f"chosen={chosen_urls}",
+    )
+
+
+# ---------------------------------------------------------------------------
 # Test runner
 # ---------------------------------------------------------------------------
 
@@ -383,6 +573,15 @@ def main() -> int:
     test_d3_active_pool_uses_cache_one_fetch()
     test_d4_expired_pool_regenerates_one_fetch()
     test_d5_is_pool_active_empty_pool_returns_false()
+    print()
+    print("(e) C49 案A 同日他面 dedup (2026-06-01):")
+    test_e1_regen_excludes_displayed_urls_today()
+    test_e2_cache_drops_conflicting_url_below_n_triggers_regen()
+    test_e3_cache_with_no_conflict_keeps_cache()
+    test_e4_none_backward_compat()
+    test_e5_empty_set_treated_as_none()
+    test_e6_all_cache_urls_conflict_triggers_regen()
+    test_e7_past_dedup_and_today_dedup_both_apply()
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")
     return 0 if FAIL == 0 else 1
