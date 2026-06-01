@@ -1461,12 +1461,26 @@ def inject_page_four_css(html_text: str) -> str:
     return html_text[:end_style_idx] + PAGE_FOUR_CSS + html_text[end_style_idx:]
 
 
+# C55 (Sprint 8, 2026-06-02): page4 concept essay の **bold** マークダウン
+# safety net 用 regex。page1_v3.renderer._MARKDOWN_BOLD_RE と同パターン。
+# プロンプト側で 1 次対策（concept_writer SYSTEM_PROMPT）、ここで 2 段目のガード。
+_PAGE4_CONCEPT_BOLD_RE = re.compile(r"\*\*([^*\n]+?)\*\*")
+
+
 def _render_page4_concept_column(concept: dict, essay: str) -> str:
-    """Render the left column (concept of the week)."""
+    """Render the left column (concept of the week).
+
+    C55 (Sprint 8, 2026-06-02) — C52 (1 面論考) と同じ二段ガードの 2 段目。
+    LLM が出した ``**bold**`` を ``<strong>bold</strong>`` に変換し、紙面に
+    記号が漏れる事故を防ぐ。C52 の renderer 安全網と同パターン。
+    """
     name_ja = _esc(concept.get("name_ja", ""))
     name_en = _esc(concept.get("name_en", ""))
     domain = _esc(concept.get("domain", ""))
     thinkers = _esc(", ".join(concept.get("thinkers", [])))
+    essay_html = _esc(essay)
+    # C55 safety net: **bold** → <strong>bold</strong>
+    essay_html = _PAGE4_CONCEPT_BOLD_RE.sub(r"<strong>\1</strong>", essay_html)
     return f"""
     <article class="concept-column" lang="ja">
       <div class="kicker">今日の概念</div>
@@ -1479,7 +1493,7 @@ def _render_page4_concept_column(concept: dict, essay: str) -> str:
         <span class="thinkers">代表：{thinkers}</span>
       </div>
       <div class="concept-essay">
-        <p>{_esc(essay)}</p>
+        <p>{essay_html}</p>
       </div>
     </article>""".rstrip()
 

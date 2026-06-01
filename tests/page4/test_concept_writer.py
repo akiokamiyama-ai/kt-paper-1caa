@@ -165,6 +165,34 @@ def test_system_prompt_passed():
 
 
 # ---------------------------------------------------------------------------
+# (d) C55 (2026-06-02): マークダウン禁止指示が prompt に含まれる
+#
+# 6/2 朝刊 4 面 concept で `**サーバントリーダーシップ／Servant Leadership**`
+# のような ** がそのまま紙面表示された事象への対策。C52 (1 面論考) と同じ
+# 二段ガード — 1 段目は prompt、2 段目は renderer safety net。
+# ---------------------------------------------------------------------------
+
+def test_d1_prompt_forbids_markdown_bold():
+    """SYSTEM_PROMPT に 'マークダウン' 関連の禁止指示が含まれる."""
+    sp = concept_writer.SYSTEM_PROMPT
+    ok = "マークダウン" in sp and "**" in sp
+    _check(
+        "d1 prompt に 'マークダウン' と '**' が登場（禁止指示）",
+        ok,
+        f"got SYSTEM_PROMPT 末尾: ...{sp[-200:]!r}",
+    )
+
+
+def test_d2_prompt_forbids_emphasis_marks():
+    """強調記号の禁止が明示されている."""
+    sp = concept_writer.SYSTEM_PROMPT
+    _check(
+        "d2 prompt に '使用しない' or '禁止' (or 同等の絶対指示) が含まれる",
+        "使用しない" in sp or "禁止" in sp,
+    )
+
+
+# ---------------------------------------------------------------------------
 # Test runner
 # ---------------------------------------------------------------------------
 
@@ -182,6 +210,10 @@ def main() -> int:
     print()
     print("(c) System prompt:")
     test_system_prompt_passed()
+    print()
+    print("(d) C55 (2026-06-02): マークダウン禁止 prompt:")
+    test_d1_prompt_forbids_markdown_bold()
+    test_d2_prompt_forbids_emphasis_marks()
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")
     return 0 if FAIL == 0 else 1
