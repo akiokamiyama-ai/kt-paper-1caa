@@ -1,0 +1,38 @@
+{
+  "date": "2026-06-02",
+  "page1_urls": [
+    "https://www.bbc.com/news/articles/cze222z1300o?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/cq8p1jy3vxlo?at_medium=RSS&at_campaign=rss",
+    "https://www.fsight.jp/articles/-/52076",
+    "https://www.fsight.jp/articles/-/52079"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://atmarkit.itmedia.co.jp/ait/articles/2606/01/news037.html",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2606/01/news019.html",
+    "web_repo": "https://www.bc01.net/article/flegma_202606/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/fences-not-f-35s-drone-attacks-and-the-illogic-of-gulf-procurement/",
+    "https://www.asahi.com/articles/ASV613PGTV61UHBI01YM.html?ref=rss",
+    "https://toyokeizai.net/articles/-/946192?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://www.mckinsey.com/industries/travel/our-insights/airline-premium-cabins-profitability-at-the-front-of-the-plane",
+    "https://locusmag.com/2026/06/issue-785-table-of-contents-june-2026/",
+    "https://wordswithoutborders.org/read/article/2026-06/vedavalli-saigon-krishna-beeman/"
+  ],
+  "page4_urls": [
+    "https://shinsho-plus.shueisha.co.jp/column/lonely_society_japan/35045",
+    "https://www.shunjusha.co.jp/news/n120551.html",
+    "https://shinsho-plus.shueisha.co.jp/column/hara_giants/35041"
+  ],
+  "page5_url": "https://thetrek.co/thunderstorms-and-canyons-dont-mix-navigating-utahs-waterpocket-fold-on-the-hayduke-trail/",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-06/vedavalli-saigon-krishna-beeman/",
+    "music": "https://rockinon.com/news/detail/215231",
+    "outdoor": "https://thetrek.co/andrew-skurka-on-mastering-off-trail-navigation/"
+  },
+  "headlines_urls": [
+    "https://www.bbc.com/news/articles/czx2j0v8d2xo?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/c707pknywjno?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/cm2p3j6lvn7o?at_medium=RSS&at_campaign=rss"
+  ]
+}
