@@ -572,6 +572,24 @@
       "ai_kamiyama_title": "カビる美術館　世界の至宝を脅かす影",
       "ai_kamiyama_category": "books:自然科学ノンフィクション",
       "ai_kamiyama_source_name": "日経サイエンス"
+    },
+    {
+      "displayed_on": "2026-06-02",
+      "article_url": "https://thetrek.co/thunderstorms-and-canyons-dont-mix-navigating-utahs-waterpocket-fold-on-the-hayduke-trail/",
+      "article_title": "Thunderstorms and Canyons Don’t Mix: Navigating Utah’s Waterpocket Fold on The Hayduke Trail",
+      "article_category": "outdoor",
+      "tie_candidates": [
+        "outdoor"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.shunjusha.co.jp/news/n120551.html",
+      "ai_kamiyama_title": "朝日新聞朝刊3/25にて『何が私をこうさせたか』が紹介されました",
+      "ai_kamiyama_category": "academic",
+      "ai_kamiyama_source_name": "春秋社"
     }
   ]
 }
