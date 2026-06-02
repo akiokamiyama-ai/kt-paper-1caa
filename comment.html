@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex,nofollow" />
+<title>コメントを書く — Kamiyama Tribune</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/assets/comment.css" />
+</head>
+<body>
+<main class="tc-shell">
+  <header class="tc-masthead">
+    <h1>Kamiyama Tribune — コメント</h1>
+    <div class="tc-sub">編集後記に対する神山氏のコメントを記録する</div>
+  </header>
+
+  <section class="tc-card">
+    <form id="tc-auth-form" class="tc-hidden">
+      <h2>パスワード</h2>
+      <div class="tc-field">
+        <label class="tc-label" for="tc-password">パスワード</label>
+        <input type="password" id="tc-password" autocomplete="current-password" required />
+      </div>
+      <div class="tc-actions">
+        <button type="submit" class="tc-btn">ログイン</button>
+      </div>
+      <div id="tc-auth-status" class="tc-status"></div>
+    </form>
+
+    <form id="tc-edit-form" class="tc-hidden">
+      <h2>本日のコメント <span id="tc-date-label" class="tc-meta"></span></h2>
+      <input type="hidden" id="tc-date" />
+      <input type="hidden" id="tc-sha" />
+      <div class="tc-field">
+        <label class="tc-label" for="tc-textarea">本文（Markdown 可、16 KB 上限）</label>
+        <textarea id="tc-textarea" placeholder="今日の朝刊について、考えたこと…"></textarea>
+      </div>
+      <div class="tc-actions">
+        <button type="submit" class="tc-btn">投稿する</button>
+        <a class="tc-btn tc-btn-secondary" href="/comments/archive" style="display:inline-block;padding:10px 22px;text-decoration:none;text-align:center;">過去のコメント一覧</a>
+      </div>
+      <div id="tc-edit-status" class="tc-status"></div>
+    </form>
+  </section>
+
+  <footer class="tc-footer">
+    <a href="/">← Tribune トップへ</a>
+  </footer>
+</main>
+
+<script src="/assets/comment.js"></script>
+<script>
+  window.TribuneComment.initCommentPage();
+</script>
+</body>
+</html>

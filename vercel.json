@@ -4,6 +4,10 @@
   "outputDirectory": ".",
   "cleanUrls": false,
   "trailingSlash": false,
+  "rewrites": [
+    { "source": "/comment", "destination": "/comment.html" },
+    { "source": "/comments/archive", "destination": "/comments-archive.html" }
+  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -12,6 +16,12 @@
           "key": "X-Robots-Tag",
           "value": "noindex,nofollow"
         }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store" }
       ]
     }
   ]

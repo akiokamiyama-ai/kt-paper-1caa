@@ -636,6 +636,23 @@ EDITORIAL_CSS = f"""
   font-size: 11px;
   margin-top: 12px;
 }}
+/* C37 (Sprint 9, 2026-06-02): 編集後記下「コメントを書く →」CTA。
+   signature の下に控えめに配置、Tribune コメント入力 UI へ誘導。 */
+.editorial-footer .write-comment-cta {{
+  text-align: right;
+  margin-top: 8px;
+  font-size: 12px;
+}}
+.editorial-footer .write-comment-cta a {{
+  color: #555;
+  text-decoration: none;
+  border-bottom: 1px dotted #999;
+  letter-spacing: 0.02em;
+}}
+.editorial-footer .write-comment-cta a:hover {{
+  color: #1a1a1a;
+  border-bottom-style: solid;
+}}
 """
 
 
@@ -2292,24 +2309,39 @@ def build_page_six_v2(
 # Editorial postscript (Sprint 4 Phase 3, 2026-05-03)
 # ---------------------------------------------------------------------------
 
-def _render_editorial_footer(editorial_result: dict) -> str:
+def _render_editorial_footer(
+    editorial_result: dict, target_date: date | None = None,
+) -> str:
     """Build the <footer class="editorial-footer"> HTML block.
 
     Returns "" when the editorial generation fell back, so the caller can skip
     inserting the footer entirely (paper ends at Page VI on fallback days).
+
+    C37 (Sprint 9, 2026-06-02) — signature 直後に「コメントを書く →」CTA を
+    追加。``target_date`` が与えられれば ``/comment?date=YYYY-MM-DD`` 形式の
+    リンクで Tribune 認証フォームへ誘導する。target_date 無し（旧 caller）の
+    場合は CTA を出さない（後方互換）。
     """
     if not editorial_result or editorial_result.get("is_fallback"):
         return ""
     body = editorial_result.get("body") or ""
     if not body.strip():
         return ""
+    cta_html = ""
+    if target_date is not None:
+        date_iso = _esc(target_date.isoformat())
+        cta_html = (
+            f'\n      <div class="write-comment-cta">'
+            f'<a href="/comment?date={date_iso}">コメントを書く →</a>'
+            f'</div>'
+        )
     return f"""<footer class="editorial-footer">
     <div class="editorial-footer-inner">
       <div class="label">編集後記</div>
       <div class="body">
         <p>{_esc(body)}</p>
       </div>
-      <div class="signature">— Tribune 編集部</div>
+      <div class="signature">— Tribune 編集部</div>{cta_html}
     </div>
   </footer>
 
@@ -3257,7 +3289,7 @@ def main(argv: list[str] | None = None) -> int:
     # Sprint 4 Phase 3: 編集後記を <footer class="colophon"> の直前に挿入。
     # is_fallback=True なら footer_html="" で no-op、紙面は Page VI で終わる。
     if editorial_result is not None:
-        editorial_footer_html = _render_editorial_footer(editorial_result)
+        editorial_footer_html = _render_editorial_footer(editorial_result, target_date=target)
         final_html = insert_editorial_footer(final_html, editorial_footer_html)
 
     out_path = _archive_path(target)

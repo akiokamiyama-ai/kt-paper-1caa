@@ -5,8 +5,10 @@ news_profile.md
 roadmap.md
 # docs/ 配下はファイル単位で ignore（ディレクトリ単位だと re-include が効かない）。
 # themes.md だけは Sprint 7 Phase 3 (Page I 再設計) で runtime 参照するため track。
+# c37_setup.md は Sprint 9 C37 コメント UI のデプロイ手順書、track 対象。
 docs/*
 !docs/themes.md
+!docs/c37_setup.md
 
 # Local session notes (prompt templates, scratch)
 archive/_*.txt

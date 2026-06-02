@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex,nofollow" />
+<title>過去のコメント — Kamiyama Tribune</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/assets/comment.css" />
+</head>
+<body>
+<main class="tc-shell">
+  <header class="tc-masthead">
+    <h1>Kamiyama Tribune — 過去のコメント</h1>
+    <div class="tc-sub">編集は本日のみ可能。閲覧は全期間。</div>
+  </header>
+
+  <section class="tc-card">
+    <form id="tc-auth-form" class="tc-hidden">
+      <h2>パスワード</h2>
+      <div class="tc-field">
+        <label class="tc-label" for="tc-password">パスワード</label>
+        <input type="password" id="tc-password" autocomplete="current-password" required />
+      </div>
+      <div class="tc-actions">
+        <button type="submit" class="tc-btn">ログイン</button>
+      </div>
+      <div id="tc-auth-status" class="tc-status"></div>
+    </form>
+
+    <div id="tc-archive" class="tc-hidden">
+      <h2>記録一覧</h2>
+      <div id="tc-list-status" class="tc-status"></div>
+      <ul id="tc-list" class="tc-list"></ul>
+      <div id="tc-preview-meta" class="tc-meta" style="margin-top: 18px;"></div>
+      <div id="tc-preview" class="tc-preview tc-hidden"></div>
+      <div class="tc-actions" style="margin-top:18px;">
+        <a class="tc-btn tc-btn-secondary" href="/comment" style="display:inline-block;padding:10px 22px;text-decoration:none;text-align:center;">本日のコメントを書く</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="tc-footer">
+    <a href="/">← Tribune トップへ</a>
+  </footer>
+</main>
+
+<script src="/assets/comment.js"></script>
+<script>
+  window.TribuneComment.initArchivePage();
+</script>
+</body>
+</html>
