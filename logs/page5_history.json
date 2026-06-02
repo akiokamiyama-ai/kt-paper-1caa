@@ -590,6 +590,24 @@
       "ai_kamiyama_title": "朝日新聞朝刊3/25にて『何が私をこうさせたか』が紹介されました",
       "ai_kamiyama_category": "academic",
       "ai_kamiyama_source_name": "春秋社"
+    },
+    {
+      "displayed_on": "2026-06-03",
+      "article_url": "https://www.axismag.jp/posts/2026/05/712038.html",
+      "article_title": "東京の“ありふれた建物”を遠隔から再構築する。クリストファー・ロビン・ノルドストローム、「Iteration（反復）」展",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxNRkFmcEZfNGxmenUzVzZIQUszZVVCUGxndnBHZGxmTC1RSzRLNVFKOEs3eEs3aVI4WlVTWnNmNlNsbWpuR1diYVpwSFBoaEpha2ZHVUFyV1BLQzNmR00wNWVRMkt2anNJRm9lSWx3VDlnNTVtc3M2LVd4Sk5wV3o1VWlGVDhESW5FWUtSUXhfUTM5OUxvcmdzMWYtazRFZ2dVVHlQMmtYYzdIcFFBQmpnTXlHWDVXLTc2TThnSlR3?oc=5",
+      "ai_kamiyama_title": "Microsoft reveals new quantum chip made with AI, says it will have systems by 2029 - Reuters",
+      "ai_kamiyama_category": "business",
+      "ai_kamiyama_source_name": "Reuters Business"
     }
   ]
 }

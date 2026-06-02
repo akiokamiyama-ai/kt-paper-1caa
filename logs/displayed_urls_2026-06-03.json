@@ -1,0 +1,37 @@
+{
+  "date": "2026-06-03",
+  "page1_urls": [
+    "https://www.economist.com/finance-and-economics/2026/06/02/want-to-know-the-future-dont-trust-the-stockmarket",
+    "https://www.economist.com/finance-and-economics/2026/05/25/crackdowns-on-financial-secrecy-arent-hurting-offshore-finance",
+    "https://www.bbc.com/news/articles/c74d1ydv01eo?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/c2e29gk73rjo?at_medium=RSS&at_campaign=rss"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://atmarkit.itmedia.co.jp/ait/articles/2606/02/news047.html",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2606/02/news016.html",
+    "web_repo": "https://www.bc01.net/article/fc-media_202606/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/awareness-campaigns-enlarge-pool-of-organ-donors-developing-countries-by-christina-sarah-hauser-and-maleke-fourati-2026-06",
+    "https://www.asahi.com/articles/ASV623TF5V62ULFA01DM.html?ref=rss",
+    "https://warontherocks.com/between-beijing-and-the-budget-the-domestic-realities-of-taiwans-defense-spending-drama/",
+    "https://www.mckinsey.com/featured-insights/future-of-asia/leading-asia/from-family-business-to-diversified-powerhouse-a-conversation-with-daniel-tsai-chairman-fubon-group",
+    "https://www.webdoku.jp/newshz/maki/2026/06/02/110000.html",
+    "https://news.google.com/rss/articles/CBMivgFBVV95cUxNRkFmcEZfNGxmenUzVzZIQUszZVVCUGxndnBHZGxmTC1RSzRLNVFKOEs3eEs3aVI4WlVTWnNmNlNsbWpuR1diYVpwSFBoaEpha2ZHVUFyV1BLQzNmR00wNWVRMkt2anNJRm9lSWx3VDlnNTVtc3M2LVd4Sk5wV3o1VWlGVDhESW5FWUtSUXhfUTM5OUxvcmdzMWYtazRFZ2dVVHlQMmtYYzdIcFFBQmpnTXlHWDVXLTc2TThnSlR3?oc=5"
+  ],
+  "page4_urls": [
+    "https://shinsho-plus.shueisha.co.jp/column/sekai_no_toshi/35075",
+    "https://shinsho-plus.shueisha.co.jp/column/vibes-anthropology/35144"
+  ],
+  "page5_url": "https://www.axismag.jp/posts/2026/05/712038.html",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/06/01/june-bookmarks/",
+    "music": "https://rockinon.com/news/detail/215215",
+    "outdoor": "https://thetrek.co/hiker-airlifted-from-white-mountains-following-injury/"
+  },
+  "headlines_urls": [
+    "https://www.bbc.com/news/articles/czr2dlerv0zo?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/videos/cx2186r2vj8o?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/cj4p7gyvp52o?at_medium=RSS&at_campaign=rss"
+  ]
+}

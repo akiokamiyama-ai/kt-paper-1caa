@@ -179,6 +179,11 @@
       "concept_id": "servant_leadership",
       "name_ja": "サーバントリーダーシップ",
       "displayed_on": "2026-06-02"
+    },
+    {
+      "concept_id": "dogen",
+      "name_ja": "道元",
+      "displayed_on": "2026-06-03"
     }
   ]
 }
