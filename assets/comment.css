@@ -199,6 +199,71 @@ button.tc-btn-secondary:hover { background: #f0eadb; color: var(--c-ink); }
 
 .tc-hidden { display: none !important; }
 
+/* === AI chat panel (C57, Sprint 9, 2026-06-03) ======================= */
+
+.tc-ai-panel {
+  background: #fbf7ea;
+  border: 1px solid #d8cf9f;
+}
+.tc-ai-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+.tc-ai-header h2 { margin: 0; }
+.tc-ai-close {
+  background: transparent;
+  border: none;
+  color: var(--c-muted);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+.tc-ai-close:hover { color: var(--c-ink); }
+.tc-ai-meta { margin-bottom: 12px; }
+
+.tc-ai-messages {
+  max-height: 480px;
+  overflow-y: auto;
+  border: 1px solid var(--c-line);
+  background: var(--c-paper);
+  padding: 12px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.tc-ai-msg {
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px dotted #e0d6a8;
+}
+.tc-ai-msg:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+.tc-ai-msg-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--c-accent);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+.tc-ai-msg-user .tc-ai-msg-label { color: #5a4520; }
+.tc-ai-msg-body {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.tc-ai-input {
+  min-height: 80px !important;
+}
+
+button.tc-btn[disabled],
+button.tc-btn-secondary[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* === Responsive ====================================================== */
 
 @media (max-width: 834px) {
@@ -206,6 +271,8 @@ button.tc-btn-secondary:hover { background: #f0eadb; color: var(--c-ink); }
   .tc-masthead h1 { font-size: 24px; }
   .tc-card { padding: 18px; }
   textarea { min-height: 280px; font-size: 16px; }
+  .tc-ai-messages { max-height: 380px; }
+  .tc-ai-input { min-height: 70px !important; }
 }
 
 @media (max-width: 480px) {
@@ -217,4 +284,8 @@ button.tc-btn-secondary:hover { background: #f0eadb; color: var(--c-ink); }
   .tc-list li { flex-wrap: wrap; }
   .tc-list .tc-view-link, .tc-list .tc-edit-link { margin-left: 0; margin-top: 4px; }
   button.tc-btn { padding: 12px 18px; font-size: 15px; }
+  .tc-ai-messages { max-height: 320px; font-size: 13px; padding: 10px; }
+  .tc-ai-input { min-height: 60px !important; font-size: 15px; }
+  .tc-ai-header h2 { font-size: 16px; }
+  .tc-ai-header h2 .tc-meta { display: none; }
 }

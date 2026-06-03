@@ -40,10 +40,30 @@
       </div>
       <div class="tc-actions">
         <button type="submit" class="tc-btn">投稿する</button>
+        <button type="button" id="tc-ai-toggle" class="tc-btn tc-btn-secondary">AI と相談する</button>
         <a class="tc-btn tc-btn-secondary" href="/comments/archive" style="display:inline-block;padding:10px 22px;text-decoration:none;text-align:center;">過去のコメント一覧</a>
       </div>
       <div id="tc-edit-status" class="tc-status"></div>
     </form>
+  </section>
+
+  <section id="tc-ai-panel" class="tc-card tc-ai-panel tc-hidden">
+    <div class="tc-ai-header">
+      <h2>AI と相談する <span class="tc-meta">— 思考の壁打ち相手として</span></h2>
+      <button type="button" id="tc-ai-close" class="tc-ai-close" aria-label="閉じる">×</button>
+    </div>
+    <div id="tc-ai-meta" class="tc-meta tc-ai-meta">対話履歴は端末メモリのみに保持されます（リロードで消えます）</div>
+    <div id="tc-ai-messages" class="tc-ai-messages" aria-live="polite"></div>
+    <div id="tc-ai-status" class="tc-status"></div>
+    <div class="tc-field">
+      <label class="tc-label" for="tc-ai-input">メッセージ（送信で対話継続、8 KB 上限）</label>
+      <textarea id="tc-ai-input" class="tc-ai-input" placeholder="ここをもっと哲学的に深めて／別の角度で／結論を弱めて…"></textarea>
+    </div>
+    <div class="tc-actions">
+      <button type="button" id="tc-ai-send" class="tc-btn">送信</button>
+      <button type="button" id="tc-ai-adopt" class="tc-btn tc-btn-secondary" disabled>採用</button>
+      <button type="button" id="tc-ai-reset" class="tc-btn tc-btn-secondary">リセット</button>
+    </div>
   </section>
 
   <footer class="tc-footer">

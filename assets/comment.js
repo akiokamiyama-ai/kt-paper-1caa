@@ -297,8 +297,210 @@
     }
   }
 
+  // ---------- AI draft panel (C57, Sprint 9, 2026-06-03) ----------
+
+  // 対話履歴はクライアント保持（サーバーステートレス）。リロードで消える。
+  const aiState = {
+    history: [],      // [{role, content}]
+    lastAi: null,     // 最新の AI メッセージ（採用ボタン用）
+    inFlight: false,
+    initialized: false,
+    date: null,
+  };
+
+  function _appendMessage(container, role, content) {
+    const wrap = document.createElement('div');
+    wrap.className = 'tc-ai-msg tc-ai-msg-' + role;
+    const label = document.createElement('div');
+    label.className = 'tc-ai-msg-label';
+    label.textContent = role === 'assistant' ? 'AI' : '神山さん';
+    const body = document.createElement('div');
+    body.className = 'tc-ai-msg-body';
+    body.textContent = content;
+    wrap.appendChild(label);
+    wrap.appendChild(body);
+    container.appendChild(wrap);
+    container.scrollTop = container.scrollHeight;
+  }
+
+  function _renderHistory(container) {
+    container.replaceChildren();
+    for (const m of aiState.history) {
+      // 履歴の user メッセージは <<user_text>> 区切りを取り除いて見栄え整える
+      let content = m.content;
+      if (m.role === 'user') {
+        content = content.replace(/<<\/?user_text>>/g, '').trim();
+      }
+      _appendMessage(container, m.role, content);
+    }
+  }
+
+  function _setAdoptEnabled(enabled) {
+    const btn = document.getElementById('tc-ai-adopt');
+    if (btn) btn.disabled = !enabled;
+  }
+
+  function _setInFlight(flag, statusEl) {
+    aiState.inFlight = flag;
+    const send = document.getElementById('tc-ai-send');
+    if (send) send.disabled = flag;
+    if (flag) setStatus(statusEl, '生成中… 3-8 秒お待ちください');
+    else setStatus(statusEl, '');
+  }
+
+  async function _initAiDraft(date, statusEl, container) {
+    if (aiState.inFlight) return;
+    _setInFlight(true, statusEl);
+    const textarea = $('#tc-textarea');
+    const userDraft = textarea ? textarea.value : '';
+    const { ok, status, data } = await postJson('/api/ai-draft', {
+      action: 'init', date, user_draft: userDraft,
+    });
+    if (!ok) {
+      _setInFlight(false, statusEl);
+      if (status === 401) {
+        setStatus(statusEl, '認証切れです。リロードしてください。', 'error');
+        return;
+      }
+      if (status === 429) {
+        setStatus(statusEl, '少し待ってから再試行してください。', 'error');
+        return;
+      }
+      setStatus(statusEl, '初稿生成に失敗しました（' + (data && data.error || status) + '）', 'error');
+      return;
+    }
+    // 履歴に seed_user_message と ai_message を積む
+    aiState.history = [
+      { role: 'user', content: data.seed_user_message || '【当日論考】（初期化）' },
+      { role: 'assistant', content: data.ai_message },
+    ];
+    aiState.lastAi = data.ai_message;
+    aiState.initialized = true;
+    _renderHistory(container);
+    _setAdoptEnabled(true);
+    _setInFlight(false, statusEl);
+    setStatus(statusEl, '初稿提示。修正したい場合はメッセージを入力 → 送信。');
+  }
+
+  async function _continueAiDraft(date, message, statusEl, container) {
+    if (aiState.inFlight) return;
+    if (!message.trim()) {
+      setStatus(statusEl, 'メッセージを入力してください。', 'error');
+      return;
+    }
+    _setInFlight(true, statusEl);
+    const { ok, status, data } = await postJson('/api/ai-draft', {
+      action: 'continue', date, history: aiState.history, message,
+    });
+    if (!ok) {
+      _setInFlight(false, statusEl);
+      if (status === 401) {
+        setStatus(statusEl, '認証切れです。リロードしてください。', 'error');
+        return;
+      }
+      if (status === 429) {
+        setStatus(statusEl, '少し待ってから再試行してください。', 'error');
+        return;
+      }
+      setStatus(statusEl, '応答生成に失敗しました（' + (data && data.error || status) + '）', 'error');
+      return;
+    }
+    aiState.history.push({ role: 'user', content: message });
+    aiState.history.push({ role: 'assistant', content: data.ai_message });
+    aiState.lastAi = data.ai_message;
+    _renderHistory(container);
+    _setAdoptEnabled(true);
+    _setInFlight(false, statusEl);
+    if (data.truncated) {
+      setStatus(statusEl, '対話が長くなったため古い往復を一部省略しました。');
+    }
+  }
+
+  function _resetAi(container, statusEl) {
+    aiState.history = [];
+    aiState.lastAi = null;
+    aiState.initialized = false;
+    container.replaceChildren();
+    _setAdoptEnabled(false);
+    setStatus(statusEl, '履歴をリセットしました。');
+  }
+
+  function _adoptToTextarea(statusEl) {
+    const textarea = $('#tc-textarea');
+    if (!textarea) return;
+    if (!aiState.lastAi) return;
+    const existing = textarea.value.trim();
+    if (existing && existing !== aiState.lastAi.trim()) {
+      const ok = window.confirm(
+        '既存のコメント内容を AI 提案で上書きします。よろしいですか？\n\n（既存内容は失われます）'
+      );
+      if (!ok) return;
+    }
+    textarea.value = aiState.lastAi;
+    textarea.focus();
+    setStatus(statusEl, 'textarea に反映しました。必要に応じて編集してください。', 'success');
+  }
+
+  function initAiPanel(date) {
+    const panel = document.getElementById('tc-ai-panel');
+    const toggle = document.getElementById('tc-ai-toggle');
+    const closeBtn = document.getElementById('tc-ai-close');
+    const sendBtn = document.getElementById('tc-ai-send');
+    const adoptBtn = document.getElementById('tc-ai-adopt');
+    const resetBtn = document.getElementById('tc-ai-reset');
+    const inputEl = document.getElementById('tc-ai-input');
+    const messagesEl = document.getElementById('tc-ai-messages');
+    const statusEl = document.getElementById('tc-ai-status');
+    if (!panel || !toggle) return;
+
+    aiState.date = date;
+
+    toggle.addEventListener('click', async () => {
+      panel.classList.remove('tc-hidden');
+      panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (!aiState.initialized) {
+        await _initAiDraft(date, statusEl, messagesEl);
+      }
+    });
+
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        panel.classList.add('tc-hidden');
+      });
+    }
+
+    if (sendBtn) {
+      sendBtn.addEventListener('click', async () => {
+        const msg = inputEl.value;
+        if (!msg.trim()) return;
+        await _continueAiDraft(date, msg, statusEl, messagesEl);
+        inputEl.value = '';
+      });
+    }
+
+    if (adoptBtn) {
+      adoptBtn.addEventListener('click', () => _adoptToTextarea(statusEl));
+    }
+
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        if (aiState.history.length > 0
+            && !window.confirm('対話履歴をすべて消去します。よろしいですか？')) return;
+        _resetAi(messagesEl, statusEl);
+      });
+    }
+  }
+
+  // Hook into initCommentPage
+  const _origInitCommentPage = initCommentPage;
+  async function initCommentPageWithAi() {
+    await _origInitCommentPage();
+    const date = parseQueryDate('date') || todayISO();
+    initAiPanel(date);
+  }
+
   window.TribuneComment = {
-    initCommentPage,
+    initCommentPage: initCommentPageWithAi,
     initArchivePage,
   };
 })();
