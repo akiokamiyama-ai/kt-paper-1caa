@@ -1,0 +1,37 @@
+{
+  "date": "2026-06-04",
+  "page1_urls": [
+    "https://www.bbc.com/news/articles/c775pp26yz5o?at_medium=RSS&at_campaign=rss",
+    "https://www.economist.com/finance-and-economics/2026/05/26/giga-ipos-are-a-symptom-of-public-markets-giga-problem",
+    "https://www.bbc.com/news/articles/cvgzrpe6mzjo?at_medium=RSS&at_campaign=rss",
+    "https://www.fsight.jp/articles/-/52077"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/enterprise/articles/2606/03/news043.html",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2606/03/news027.html",
+    "web_repo": "https://www.bc01.net/article/picmii/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/the-toll-booth-at-the-throat-of-world-trade/",
+    "https://toyokeizai.net/articles/-/946399?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://locusmag.com/2026/06/2026-prix-imaginales-winners/",
+    "https://www.mckinsey.com/featured-insights/future-of-asia/leading-asia/the-next-wow-factor-a-conversation-with-sidney-lu-chairman-and-ceo-foxconn-interconnect-technology",
+    "https://www.fsight.jp/articles/-/52076",
+    "https://shinsho-plus.shueisha.co.jp/column/hibaku_nisei/35013"
+  ],
+  "page4_urls": [
+    "https://shinsho-plus.shueisha.co.jp/column/vibes-anthropology/35151",
+    "https://shinsho-plus.shueisha.co.jp/column/jimin_mori/35063"
+  ],
+  "page5_url": "https://natalie.mu/music/news/674702",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/06/03/hildegard-tarkovsky-citrus-trees/",
+    "music": "https://rockinon.com/news/detail/215217",
+    "outdoor": "https://thetrek.co/appalachian-trail/accepting-what-comes-foxs-at-thru-hike-day-72/"
+  },
+  "headlines_urls": [
+    "https://www.bbc.com/news/articles/cwy25x97wrxo?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/cq6pe7nvldmo?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/c9d37gdxp7xo?at_medium=RSS&at_campaign=rss"
+  ]
+}

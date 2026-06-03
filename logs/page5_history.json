@@ -608,6 +608,24 @@
       "ai_kamiyama_title": "Microsoft reveals new quantum chip made with AI, says it will have systems by 2029 - Reuters",
       "ai_kamiyama_category": "business",
       "ai_kamiyama_source_name": "Reuters Business"
+    },
+    {
+      "displayed_on": "2026-06-04",
+      "article_url": "https://natalie.mu/music/news/674702",
+      "article_title": "TOMOOが「映画クレヨンしんちゃん」主題歌書き下ろし、しんちゃんとツーショット公開",
+      "article_category": "music",
+      "tie_candidates": [
+        "music"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://shinsho-plus.shueisha.co.jp/column/vibes-anthropology/35151",
+      "ai_kamiyama_title": "地獄の家族旅行",
+      "ai_kamiyama_category": "academic",
+      "ai_kamiyama_source_name": "集英社新書プラス"
     }
   ]
 }
