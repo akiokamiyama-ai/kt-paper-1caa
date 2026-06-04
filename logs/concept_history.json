@@ -189,6 +189,11 @@
       "concept_id": "symbiogenesis",
       "name_ja": "共生進化",
       "displayed_on": "2026-06-04"
+    },
+    {
+      "concept_id": "fractal",
+      "name_ja": "フラクタル",
+      "displayed_on": "2026-06-05"
     }
   ]
 }

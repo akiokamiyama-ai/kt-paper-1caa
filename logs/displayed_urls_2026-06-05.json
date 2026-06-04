@@ -1,0 +1,38 @@
+{
+  "date": "2026-06-05",
+  "page1_urls": [
+    "https://www.economist.com/finance-and-economics/2026/06/04/indians-can-now-bet-on-the-monsoon",
+    "https://www.economist.com/finance-and-economics/2026/06/04/gen-z-socialism-from-zohran-to-zack-and-beyond",
+    "https://www.bbc.com/news/articles/czx2jqvwp7go?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/c15215lz3k0o?at_medium=RSS&at_campaign=rss"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/business/articles/2606/04/news023.html",
+    "human_energy": "https://jinjibu.jp/news/detl/26418/",
+    "web_repo": "https://www.bc01.net/seminar-report/fc_sesshon_202606_1/"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/06/04/iran-war-decarbonizing-global-south/",
+    "http://www3.nhk.or.jp/news/html/20260604/k10015140841000.html",
+    null,
+    "https://www.mckinsey.com/institute-for-economic-mobility/our-insights/latino-economic-mobility-insights-from-five-years-of-research",
+    "https://wordswithoutborders.org/read/article/2026-05/a-fist-loaded-with-the-future-three-microessays-texon-howard/",
+    "https://nautil.us/bumblebees-have-chimp-like-problem-solving-abilities-despite-tiny-brains-1281708/"
+  ],
+  "page4_urls": [
+    "https://shinsho-plus.shueisha.co.jp/interview/hayamizu_fukuo/35185",
+    "https://shinsho-plus.shueisha.co.jp/column/idonotlikework/35214",
+    "https://shinsho-plus.shueisha.co.jp/information/35204"
+  ],
+  "page5_url": "https://thetrek.co/pacific-crest-trail/slowing-down-for-the-sierras/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/06/04/idiots-on-munch-and-von-trier/",
+    "music": "https://natalie.mu/music/news/674880",
+    "outdoor": "https://thetrek.co/get-paid-to-turn-your-thru-hike-into-conservation-impact-this-summer/"
+  },
+  "headlines_urls": [
+    "https://www.economist.com/finance-and-economics/2026/06/04/some-billionaires-pay-too-little-tax",
+    "https://www.economist.com/finance-and-economics/2026/06/04/european-electricity-markets-have-too-much-power",
+    "https://www.bbc.com/news/articles/cy826zjxdgvo?at_medium=RSS&at_campaign=rss"
+  ]
+}
