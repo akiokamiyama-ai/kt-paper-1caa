@@ -16,15 +16,24 @@
 
 ## High Priority（毎日チェック）
 
-### 1. Foresight（新潮社） ✅
+### 1. Foresight（新潮社） ⚠️
 - **URL**: https://www.fsight.jp/
 - **RSS**: https://www.fsight.jp/list/feed/rss
 - **形式**: RSS 2.0（検証時 2026-04-26 配信「『危険すぎるAI』の『持てる者と持たざる者』」を取得確認、カテゴリ「経済・ビジネス」「テック」付与）
 - **mainstream**: true
 - **対象**: 国際情勢、地政学、経済安全保障、技術覇権、エネルギー、米中関係（日本語の構造分析）
-- **位置付け**: **日本語の国際情勢分析の最重要ソース**。news_profile.md §4.3 の論者である **鈴木一人** が頻繁に寄稿する場の一つ。**会員制（有料）** だが、RSSには無料公開記事＋有料記事のリード文が混在配信される。本紙では「日本人筆者による日本語論考」を優先する方針（§5 編集ポリシー）と最も親和性が高い
+- **位置付け**: **日本語の国際情勢分析の最重要ソース**だったが、**2026-05-18 に新潮QUE へ統合**され、旧 URL での新規配信が止まっている（旧 RSS は生存も最新 pubDate 2026-05-17 で停滞、在庫枯渇予測）。後継は下記「1b. Shincho QUE」を参照。在庫枯渇まで残置、Sprint 9 C42 で監視中
 
-### 2. Foreign Affairs（CFR） ✅
+### 2. Shincho QUE（新潮QUE） ✅
+- **URL**: https://que.dailyshincho.jp/
+- **RSS**: 公式 RSS は空テンプレ（`<item>` 0 件、2026-06-04 時点）。代替として **sitemap.xml + 個別記事 JSON-LD scrape** で運用。`scripts/lib/drivers/que_shincho.py` 参照
+- **language**: ja
+- **形式**: HTML scrape（sitemap.xml → /node/{id}/ → JSON-LD NewsArticle）。Drupal 11 サイト
+- **mainstream**: true
+- **対象**: 国際情勢、地政学、経済安全保障、政治、社会、ビジネス、カルチャー（旧 Foresight の論考軸を継承）。配下の `/int-foresight/` セクションが旧 Foresight 後継、`/category/business/` も併採用
+- **位置付け**: **旧 Foresight の後継として geopolitics High Priority に格上げ**（Sprint 9 C42 で導入）。神山さんは QUE 有料会員のため、紙面では「タイトル + 概要 + リンク」誘導モデル。`datePublished` ベースで公開日 7 日以内のみ採用し「既存記事の編集」を除外。description は 80 字以上の品質フィルタ。Drupal フロント変更で壊れる brittleness リスクあり（roadmap.md §4.2、フィクスチャテスト常備）
+
+### 3. Foreign Affairs（CFR） ✅
 - **URL**: https://www.foreignaffairs.com/
 - **RSS**: https://www.foreignaffairs.com/rss.xml
 - **language**: en
@@ -33,7 +42,7 @@
 - **対象**: 国際関係論、地政学、外交政策、軍事戦略、グローバル経済秩序（英語原文）
 - **位置付け**: **英語圏の国際情勢論考の本丸**。Council on Foreign Relations（CFR）の機関誌で、ジョセフ・ナイ・ヘンリー・キッシンジャー級の論者が執筆。news_profile.md §4.3 の「**構造的・長期視点（10-20年スパン）**」「**分析・論考軸**」に最も合致。**英語原文のまま採用**（§5 編集ポリシー）
 
-### 3. Project Syndicate ✅
+### 4. Project Syndicate ✅
 - **URL**: https://www.project-syndicate.org/
 - **RSS**: https://www.project-syndicate.org/rss
 - **language**: en
@@ -42,7 +51,7 @@
 - **対象**: 国際関係、経済、政治、社会のオピニオンコラム配信（150カ国以上のメディアにシンジケーション）
 - **位置付け**: **ジョセフ・ナイの定期コラム配信元**。news_profile.md §4.3 で名指しされている論者にダイレクトにアクセスできる唯一のソース。同じくジョセフ・スティグリッツ・ヌリエル・ルビーニ・ケネス・ロゴフ等の経済学者・国際関係学者のコラムが日次で配信される。**論者名でフィルタ運用**（フェーズ2の選定ロジック実装時）
 
-### 4. Reuters World ⚠️
+### 5. Reuters World ⚠️
 - **URL**: https://www.reuters.com/world/
 - **RSS**: **公式RSS廃止**（business.md と同じ事情）。代替として **Google News RSS プロキシ** `https://news.google.com/rss/search?q=site:reuters.com+world&hl=en-US&gl=US&ceid=US:en` で間接取得可（200確認）
 - **language**: en
@@ -55,7 +64,7 @@
 
 ## Medium Priority（候補が薄い日に拾う）
 
-### 5. Foreign Policy ✅
+### 6. Foreign Policy ✅
 - **URL**: https://foreignpolicy.com/
 - **RSS**: https://foreignpolicy.com/feed/
 - **language**: en
@@ -64,7 +73,7 @@
 - **対象**: 外交政策、地政学、グローバル経済、テクノロジー外交（Foreign Affairs より速報＋論考の中間層）
 - **位置付け**: **Foreign Affairs と相補的**。Foreign Affairs が「学術寄りの長文論考」なら Foreign Policy は「実務家向けの中尺解説」。news_profile.md §4.3 の **「複数視点比較」**（読み方好みの4位）の素材として、同じ事象に対する Foreign Affairs と Foreign Policy の論調差を見せる運用が可能
 
-### 6. Brookings Institution ✅
+### 7. Brookings Institution ✅
 - **URL**: https://www.brookings.edu/
 - **RSS**: 複数エンドポイント稼働
   - 研究全般: https://www.brookings.edu/research/feed
@@ -76,7 +85,7 @@
 - **対象**: 米シンクタンク Brookings の研究レポート・コラム（外交、経済、ガバナンス、技術政策）
 - **位置付け**: **シンクタンク3点セット**（Brookings／CSIS／RAND）の中で **政策提言の具体性が最も高い**。トピック別RSSが提供されているため、外交政策に絞った購読が可能。フェーズ2では `/topic/asia/feed` `/topic/economics/feed` 等への拡張を検討
 
-### 7. CSIS（戦略国際問題研究所） ✅
+### 8. CSIS（戦略国際問題研究所） ✅
 - **URL**: https://www.csis.org/
 - **RSS**: https://www.csis.org/rss.xml（`/analysis/feed` は 404、サイトルートのみ稼働）
 - **language**: en
@@ -85,7 +94,7 @@
 - **対象**: 安全保障、防衛、サイバー、宇宙、技術と安全保障の交差領域
 - **位置付け**: **軍事・経済・テクノロジーの交差領域**（news_profile.md §4.3 の「好む論者の共通項」）に最も近い米シンクタンク。中国・台湾・北朝鮮・ロシア関連レポートの質が高い。**全体RSSのみで分野別がないため、タイトル/著者でフィルタ必要**
 
-### 8. War on the Rocks ✅
+### 9. War on the Rocks ✅
 - **URL**: https://warontherocks.com/
 - **RSS**: https://warontherocks.com/feed/
 - **language**: en
@@ -98,7 +107,7 @@
 
 ## Reference（月1の俯瞰用）
 
-### 9. RAND Corporation ✅
+### 10. RAND Corporation ✅
 - **URL**: https://www.rand.org/
 - **RSS**: https://www.rand.org/pubs/commentary.xml（旧 `/blog.xml`、`/news/rss.xml` は 301、現行は `/pubs/commentary.xml` で配信、17.8KB）
 - **language**: en
@@ -107,7 +116,7 @@
 - **対象**: 国家安全保障、テクノロジーと社会、健康、教育、労働政策の研究レポート＋コメンタリー
 - **位置付け**: **政策研究の老舗**（1948年設立、米空軍系起源）。月数本ペースだが、**長期構造分析**（news_profile.md §4.3 の「10-20年スパン」）の代表格。中国軍事力評価、AI と国家安全保障、宇宙ガバナンス等のテーマで定期的に重要レポートを出す
 
-### 10. NBR（National Bureau of Asian Research） ❌
+### 11. NBR（National Bureau of Asian Research） ❌
 - **URL**: https://www.nbr.org/
 - **RSS**: **未検証完了**（`/feed/`、`/publication-feed/` ともに 403、複数UAでも遮断、WebFetch も 403）。Imperva 系のbot対策で完全に閉じている可能性大
 - **language**: en
@@ -116,7 +125,7 @@
 - **対象**: アジア太平洋地域の戦略・経済・安全保障研究（米中、インド太平洋、東南アジア）
 - **位置付け**: **アジア軸の専門シンクタンク** として価値は高いが、配信インフラが閉じている。フェーズ1では断念。代替として CSIS のアジア関連研究、Brookings の `/topic/asia/feed`（フェーズ2拡張時）でアジア軸をカバーする方針。重要レポートは Twitter/LinkedIn 経由で察知して手動 URL 取得
 
-### 11. 東京大学 公共政策大学院（GraSPP） ✅
+### 12. 東京大学 公共政策大学院（GraSPP） ✅
 - **URL**: https://www.pp.u-tokyo.ac.jp/
 - **RSS**: https://www.pp.u-tokyo.ac.jp/feed/
 - **形式**: RSS 2.0（WordPress 標準、検証時に最新10件取得確認、TECUSE/INPEX 寄付講座「エネルギー危機と現実的な脱炭素の道筋」、SSU Forum「中東欧の民主化の波」等の本物）

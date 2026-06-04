@@ -168,18 +168,28 @@ TRANSLATE_DELAY = 0.3
 FORESIGHT_PENALTY: float = -10.0
 FORESIGHT_PATTERNS: tuple[str, ...] = ("Foresight",)
 
+# C42 案A (Sprint 9, 2026-06-04): 旧 Foresight 後継として導入された新潮QUE。
+# 神山さんは QUE 有料会員。Foresight と同種の購読中媒体だが、後継 source の
+# 初動を観察するため Foresight より弱い -5.0 で開始（必要なら後で -10 に強化）。
+SHINCHO_QUE_PENALTY: float = -5.0
+SHINCHO_QUE_PATTERNS: tuple[str, ...] = ("Shincho QUE", "新潮QUE")
+
 
 def _apply_page1_source_penalty(article: dict) -> float:
     """Return the Page-I-only soft penalty for an article based on source name.
 
-    Returns 0.0 when no penalty applies. Currently only Foresight is penalised
-    (神山さんの確認済の購読中媒体). Other paid-subscription sources (HBR /
+    Returns 0.0 when no penalty applies. 神山さん購読中の媒体（Foresight /
+    新潮QUE）に対して、Page I 過剰露出を抑制する soft penalty。順序：
+    Foresight → Shincho QUE → no-op。Other paid-subscription sources (HBR /
     WSJ / FT / 日経 等) は据え置き。
     """
     source_name = article.get("source_name", "") or ""
     for pattern in FORESIGHT_PATTERNS:
         if pattern in source_name:
             return FORESIGHT_PENALTY
+    for pattern in SHINCHO_QUE_PATTERNS:
+        if pattern in source_name:
+            return SHINCHO_QUE_PENALTY
     return 0.0
 
 # Source-name prefix → kicker ja text.

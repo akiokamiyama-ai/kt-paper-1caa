@@ -35,6 +35,7 @@ from pathlib import Path
 from .lib.config_loader import load_site_config
 from .lib.dedupe import append_today, dedupe
 from .lib.drivers.html import HtmlScrapeDriver
+from .lib.drivers.que_shincho import HOST as QUE_HOST, QueShinchoDriver
 from .lib.drivers.rss import RssDriver
 from .lib.source import Article, FetchMethod, Priority, Source, load_all_sources
 
@@ -80,6 +81,11 @@ def run(
     site_cfg = load_site_config()
     rss = RssDriver(site_config=site_cfg)
     html = HtmlScrapeDriver(site_config=site_cfg)
+    # C42 案A (Sprint 9, 2026-06-04): 新潮QUE (FORESIGHT 後継) は RSS 不在の
+    # ため sitemap → /node/{id}/ HTML 経路で個別 scrape。fetch_method=HTML の
+    # source に対して host が que.dailyshincho.jp なら QueShinchoDriver を
+    # 優先する（dispatch ループ内で分岐）。
+    que_shincho = QueShinchoDriver(site_config=site_cfg)
 
     all_sources = load_all_sources(sources_dir)
     selected = select_sources(
@@ -100,7 +106,12 @@ def run(
     by_source: Counter = Counter()
     failures: list[tuple[str, str]] = []
     for src in selected:
-        driver = rss if src.fetch_method == FetchMethod.RSS else html
+        if src.fetch_method == FetchMethod.RSS:
+            driver = rss
+        elif QUE_HOST in (src.url or ""):
+            driver = que_shincho
+        else:
+            driver = html
         try:
             arts = list(driver.fetch(src))
         except Exception as e:  # surface unexpected failures, keep going
