@@ -169,9 +169,16 @@ FORESIGHT_PENALTY: float = -10.0
 FORESIGHT_PATTERNS: tuple[str, ...] = ("Foresight",)
 
 # C42 案A (Sprint 9, 2026-06-04): 旧 Foresight 後継として導入された新潮QUE。
-# 神山さんは QUE 有料会員。Foresight と同種の購読中媒体だが、後継 source の
-# 初動を観察するため Foresight より弱い -5.0 で開始（必要なら後で -10 に強化）。
-SHINCHO_QUE_PENALTY: float = -5.0
+# 神山さんは QUE 有料会員。Foresight と同種の購読中媒体。
+#
+# 履歴：
+# - 6/4 初期値 -5.0（Foresight -10 より弱め、初動観察用）
+# - 6/5 W2 Day 6 朝刊で QUE 採用 0 件 → -5.0 が効きすぎと判定、神山さん指示で
+#   いったん 0.0 に外して様子見（C42 ペナルティ調整、6/5 → 6/6 cron 反映）。
+#   1 週間運用観察後に再調整判断する
+# - 将来：QUE が紙面占有過剰なら -3 / -5 / -10 に再強化、Foresight 在庫枯渇後の
+#   バランス次第
+SHINCHO_QUE_PENALTY: float = 0.0
 SHINCHO_QUE_PATTERNS: tuple[str, ...] = ("Shincho QUE", "新潮QUE")
 
 

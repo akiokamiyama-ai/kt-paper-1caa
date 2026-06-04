@@ -487,15 +487,20 @@ def test_geopolitics_md_registers_shincho_que():
 
 
 def test_penalty_pattern_applies_to_shincho_que():
-    """SHINCHO_QUE_PATTERNS で source_name 'Shincho QUE...' に penalty -5.0 が出る."""
+    """SHINCHO_QUE_PATTERNS で source_name 'Shincho QUE...' に penalty 値が出る.
+
+    6/5 調整: -5.0 → 0.0 にいったん外し（W2 Day 6 で QUE 採用 0 件、効きすぎ
+    判定）、1 週間運用観察後に再調整。テストは現行値 SHINCHO_QUE_PENALTY を
+    定数参照で固定して、将来再強化時にもテスト書き換え不要にする。
+    """
     from scripts.regen_front_page_v2 import (
-        SHINCHO_QUE_PATTERNS, _apply_page1_source_penalty,
+        SHINCHO_QUE_PATTERNS, SHINCHO_QUE_PENALTY, _apply_page1_source_penalty,
     )
     art = {"source_name": "Shincho QUE（新潮QUE）"}
     penalty = _apply_page1_source_penalty(art)
     _check(
-        "g5 Shincho QUE source → penalty -5.0",
-        penalty == -5.0, f"got {penalty}",
+        f"g5 Shincho QUE source → penalty SHINCHO_QUE_PENALTY ({SHINCHO_QUE_PENALTY})",
+        penalty == SHINCHO_QUE_PENALTY, f"got {penalty}",
     )
 
 
