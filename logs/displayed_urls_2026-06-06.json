@@ -1,0 +1,38 @@
+{
+  "date": "2026-06-06",
+  "page1_urls": [
+    "https://www.bbc.com/news/articles/c78kmj2kyklo?at_medium=RSS&at_campaign=rss",
+    "https://www.economist.com/finance-and-economics/2026/05/28/without-fanfare-china-is-making-rural-migrants-lives-easier",
+    "https://www.bbc.com/news/articles/c052397y6ygo?at_medium=RSS&at_campaign=rss",
+    "https://www.economist.com/finance-and-economics/2026/05/28/how-to-tax-businesses-in-orbit-and-beyond"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://atmarkit.itmedia.co.jp/ait/articles/2606/05/news018.html",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2606/05/news027.html",
+    "web_repo": "https://www.bc01.net/serialize/kanda_018/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/the-rain-in-spain-falls-harder-on-ukraine-rethinking-the-spanish-civil-war-analogy/",
+    "http://www3.nhk.or.jp/news/html/20260605/k10015142521000.html",
+    "https://toyokeizai.net/articles/-/946822?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://www.mckinsey.com/featured-insights/mckinsey-on-books/author-talks-how-to-succeed-when-systems-fail",
+    "https://wordswithoutborders.org/read/article/2026-05/the-watchlist-may-2026-tobias-carroll/",
+    "https://shinsho-plus.shueisha.co.jp/interview/hayamizu_fukuo/35185"
+  ],
+  "page4_urls": [
+    "https://www.themarginalian.org/2026/06/01/nathaniel-hawthorne-classification/",
+    "https://www.themarginalian.org/2026/06/03/harpy-eagle-gps/",
+    "https://www.themarginalian.org/2026/06/02/havel-failure/"
+  ],
+  "page5_url": "https://www.themarginalian.org/2026/06/04/storyteller-poet-qualities/",
+  "page6_urls": {
+    "books": "https://www.nybooks.com/articles/2026/06/25/we-did-our-best-ai-meghan-ogieblyn/",
+    "music": "https://natalie.mu/music/news/675038",
+    "outdoor": "https://thetrek.co/pacific-crest-trail/there-are-no-pointless-climbs/"
+  },
+  "headlines_urls": [
+    "https://www.bbc.com/news/videos/c1m2mr7gr27o?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/cx2124z7g45o?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/czx299wpp56o?at_medium=RSS&at_campaign=rss"
+  ]
+}

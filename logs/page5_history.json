@@ -644,6 +644,24 @@
       "ai_kamiyama_title": "The Threat of Unrest Is Decarbonizing the Global South",
       "ai_kamiyama_category": "geopolitics",
       "ai_kamiyama_source_name": "Foreign Policy"
+    },
+    {
+      "displayed_on": "2026-06-06",
+      "article_url": "https://www.themarginalian.org/2026/06/04/storyteller-poet-qualities/",
+      "article_title": "Very Necessary Qualifications of a Great Storyteller",
+      "article_category": "books",
+      "tie_candidates": [
+        "books"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.themarginalian.org/2026/06/02/havel-failure/",
+      "ai_kamiyama_title": "Václav Havel, Writing from Prison, on How to Hold Your Failure",
+      "ai_kamiyama_category": "books:自然科学ノンフィクション",
+      "ai_kamiyama_source_name": "The Marginalian（旧 Brain Pickings）"
     }
   ]
 }
