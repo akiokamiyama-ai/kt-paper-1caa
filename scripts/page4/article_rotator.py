@@ -53,6 +53,10 @@ PER_FETCH_LIMIT: int = 8
 # books.md は基本「自然科学ノンフ → page3 R6」「人文系 → page4」で分業。
 # books.md にはサブカテゴリのメタデータがないため、source_name の
 # 部分一致で人文系インプリントを判定する（in 演算子）。
+#
+# C36 Step 2a (Sprint 9, 2026-06-05): 英語人文系オンラインメディアの個別 key
+# を追加（C36 Step 1 真因 #3）。出版社 imprint ではなく媒体名そのものを
+# substring match キーに使う運用。同種の英語論考誌は本 list に追加していく。
 HUMANITIES_IMPRINTS: tuple[str, ...] = (
     # 学術系出版社・人文系
     "岩波",           # 岩波書店 / 岩波新書 / 岩波現代文庫 / 岩波文庫 すべてカバー
@@ -74,6 +78,10 @@ HUMANITIES_IMPRINTS: tuple[str, ...] = (
     "角川ソフィア文庫",
     "中公新書",
     "中公叢書",
+    # C36 Step 2a: 英語人文系オンラインメディア（books category 経由で
+    # 入ってくる Source.name に対する substring match キー）
+    "Marginalian",   # The Marginalian (旧 Brain Pickings)
+    "Aeon",          # Aeon Magazine
 )
 
 # 意図的な除外：
@@ -178,8 +186,14 @@ def _fetch_and_score_humanities(
         registry = build_registry(SOURCES_DIR)
 
     raw: list[Any] = []
+    # C36 Step 2a (Sprint 9, 2026-06-05): priority に "reference" を追加。
+    # 旧仕様 (high, medium) では Stanford SEP / The Marginalian /
+    # Philosophy Now / Aeon といった reference 登録の英語ソースが
+    # **永遠に page4 fetch されない** 構造的バグだった（C36 Step 1 真因 #1）。
+    # 過去 30 日で集英社新書プラス 82.9% / 春秋社 17.1% / 英語 0% という
+    # 一極化の主因。reference を加えることで pool に英語ソースが流入する。
     for cat in ("academic", "books"):
-        for pri in ("high", "medium"):
+        for pri in ("high", "medium", "reference"):
             try:
                 summary = fetch_run(
                     category=cat, priority=pri, limit=PER_FETCH_LIMIT,
@@ -217,15 +231,21 @@ def _fetch_and_score_humanities(
         return [], 0.0
 
     # Restrict to humanities scope.
+    # C36 Step 2a (Sprint 9, 2026-06-05): cat == "academic" 完全一致は
+    # ``academic:国際`` （Stanford SEP, Philosophy Now の category）を弾く
+    # 構造バグだった（C36 Step 1 真因 #2）。``startswith("academic")`` に
+    # 緩和して academic / academic:国際 双方を許容する。
+    # 同様に ``cat == "books"`` も startswith に揃え、将来 books:X サブカテ
+    # ゴリが導入された場合も継続的にカバーする。
     humanities: list[dict] = []
     for art in surviving:
         name = art.get("source_name") or ""
         src = registry.sources_by_name.get(name)
         cat = src.category if src else None
         art["category"] = cat
-        if cat == "academic":
+        if cat and cat.startswith("academic"):
             humanities.append(art)
-        elif cat == "books":
+        elif cat and cat.startswith("books"):
             if is_humanities(name):
                 humanities.append(art)
         # else: out of scope (shouldn't happen given our fetch)

@@ -69,11 +69,13 @@
 
 ## 国際（哲学・人文学）
 
-### 6. Aeon 🔗（既出：companies.md Reference #10）
+### 6. Aeon ✅
 - **URL**: https://aeon.co/
 - **RSS**: https://aeon.co/feed.rss
 - **language**: en
-- **学術観点での位置付け**: news_profile.md §4.4 関心領域(i) 現象学・(ii) 認知科学を **英語圏の一般読者向けエッセイで深める** 用途。Aeon Psychology / Philosophy カテゴリは入門〜中級者向けに学問領域を架橋する記事を提供（例：「Yorùbá の世界観は意識をどう捉えるか」「ユクスキュルの環世界と現代の精神医学」）。**詳細は `companies.md` を参照、本ファイルでは学術フィルタの追加適用が論点**
+- **形式**: RSS 2.0（サイト全体）
+- **対象**: 心理学・認知科学・哲学・神経科学・人間性・文学を架橋する英語エッセイ
+- **位置付け**: news_profile.md §4.4 関心領域 (i) 現象学・(ii) 認知科学を **英語圏の一般読者向けエッセイで深める** 用途。Aeon Psychology / Philosophy カテゴリは入門〜中級者向けに学問領域を架橋する記事を提供（例：「Yorùbá の世界観は意識をどう捉えるか」「ユクスキュルの環世界と現代の精神医学」）。C36 Step 2a (2026-06-05) で academic.md primary 化、page4 fetch 経路へ到達可能にした（旧 cross-ref 構成では見出しに含まれる "Reference #N" が parser に Priority.REFERENCE 切替と誤認識されて entry 自体が dropped されていた）
 
 ### 7. Philosophy Now ✅
 - **URL**: https://philosophynow.org/

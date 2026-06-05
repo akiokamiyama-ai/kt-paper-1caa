@@ -109,6 +109,70 @@ def test_humanities_misuzu_shobo():
 
 
 # ---------------------------------------------------------------------------
+# (a-c36) C36 Step 2a — 英語人文系オンラインメディア (2026-06-05)
+# 集英社新書プラス 82.9% / 春秋社 17.1% / 英語 0% の一極化解消に向け、
+# Marginalian / Aeon を HUMANITIES_IMPRINTS に追加。
+# ---------------------------------------------------------------------------
+
+def test_humanities_marginalian_matches():
+    _check("a-c36-1 'The Marginalian（旧 Brain Pickings）' matches (C36)",
+           article_rotator.is_humanities(
+               "The Marginalian（旧 Brain Pickings）") is True)
+
+
+def test_humanities_aeon_matches():
+    _check("a-c36-2 'Aeon' matches (C36)",
+           article_rotator.is_humanities("Aeon") is True)
+    _check("a-c36-3 'Aeon（Psychology / Philosophy）' matches (C36)",
+           article_rotator.is_humanities("Aeon（Psychology / Philosophy）") is True)
+
+
+def test_humanities_imprints_includes_c36_keys():
+    """HUMANITIES_IMPRINTS に C36 で追加した英語ソースキーが含まれる."""
+    _check(
+        "a-c36-4 HUMANITIES_IMPRINTS に 'Marginalian' 含まれる",
+        "Marginalian" in article_rotator.HUMANITIES_IMPRINTS,
+    )
+    _check(
+        "a-c36-5 HUMANITIES_IMPRINTS に 'Aeon' 含まれる",
+        "Aeon" in article_rotator.HUMANITIES_IMPRINTS,
+    )
+
+
+def test_academic_sub_category_parses_as_source():
+    """academic.md ## 国際 配下の Aeon が parse されて category=academic:国際
+    で取得できる（C36 真因 #4 修復）.
+
+    Aeon の旧 cross-ref 見出し `### 6. Aeon 🔗（既出：companies.md
+    Reference #10）` は `_heading_to_priority` が "Reference #10" を
+    Priority.REFERENCE と誤判定して entry を dropping していた。primary 化
+    で `academic:国際` Source として登録されるべき。
+    """
+    from pathlib import Path
+    from scripts.lib.source import parse_sources_md
+    srcs = parse_sources_md(
+        Path(__file__).resolve().parent.parent.parent
+        / "sources" / "academic.md"
+    )
+    aeon = [s for s in srcs if "Aeon" in s.name]
+    _check(
+        "a-c36-6 academic.md に Aeon entry 1 件 parse される",
+        len(aeon) == 1, f"got {len(aeon)}",
+    )
+    if aeon:
+        s = aeon[0]
+        _check(
+            "a-c36-7 Aeon が academic:国際 / reference / rss / lang=en",
+            s.category == "academic:国際"
+            and s.priority.value == "reference"
+            and s.fetch_method.value == "rss"
+            and s.language == "en",
+            f"cat={s.category}, pri={s.priority.value}, "
+            f"fm={s.fetch_method.value}, lang={s.language}",
+        )
+
+
+# ---------------------------------------------------------------------------
 # (b) Rotation expiry logic
 # ---------------------------------------------------------------------------
 
@@ -554,6 +618,10 @@ def main() -> int:
     test_humanities_kodansha_gakujutsu_matches()
     test_humanities_none_returns_false()
     test_humanities_misuzu_shobo()
+    test_humanities_marginalian_matches()
+    test_humanities_aeon_matches()
+    test_humanities_imprints_includes_c36_keys()
+    test_academic_sub_category_parses_as_source()
     print()
     print("(b) Rotation expiry logic:")
     test_pool_active_future_expiry()
