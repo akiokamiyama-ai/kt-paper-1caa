@@ -50,12 +50,13 @@
 
 #### 4. New York Review of Books（NYRB） ✅
 - **URL**: https://www.nybooks.com/
-- **RSS**: https://www.nybooks.com/feed/
+- **RSS**: https://www.nybooks.com/feed/?post_type=article
 - **language**: en
-- **形式**: RSS 2.0（nginx 配信）
+- **形式**: RSS 2.0（WordPress 6.8.5 + nginx 配信）
 - **mainstream**: true
 - **対象**: 海外文学・哲学・歴史・社会論考の長文書評（英語原文）
 - **位置付け**: **海外純文学批評の本丸**。news_profile.md §4.5.2 の好む作家（マルケス・クンデラ・イシグロ・ウエルベック・チュツオーラ）の **作品論・著者論** を最も深く扱う英語誌。マルケスのマジックリアリズム論、ウエルベック新作論などが定期的に出る。**英語原文のまま採用**（§5 編集ポリシー）
+- **C63 注記 (2026-06-05)**: 標準 `/feed/` は WordPress の `post_type=post` を返すが、NYRB は実本文を `post_type=article` カスタムタイプで運用しているため標準 feed は item 0 件で配信されていた（C36 Step 1 副次発見、Paris Review / Words Without Borders で実質代替されていた状態）。`?post_type=article` クエリ付加で本来の長文書評 10 items が取得可能、毎日更新（最新確認 2026-06-04: "Think for Yourself" AI 論考等）。WordPress カスタム post type を使うサイトの一般パターン
 
 #### 5. The Paris Review ✅
 - **URL**: https://www.theparisreview.org/
