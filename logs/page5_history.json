@@ -626,6 +626,24 @@
       "ai_kamiyama_title": "地獄の家族旅行",
       "ai_kamiyama_category": "academic",
       "ai_kamiyama_source_name": "集英社新書プラス"
+    },
+    {
+      "displayed_on": "2026-06-05",
+      "article_url": "https://thetrek.co/pacific-crest-trail/slowing-down-for-the-sierras/",
+      "article_title": "Slowing Down for the Sierras",
+      "article_category": "outdoor",
+      "tie_candidates": [
+        "outdoor"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://foreignpolicy.com/2026/06/04/iran-war-decarbonizing-global-south/",
+      "ai_kamiyama_title": "The Threat of Unrest Is Decarbonizing the Global South",
+      "ai_kamiyama_category": "geopolitics",
+      "ai_kamiyama_source_name": "Foreign Policy"
     }
   ]
 }
