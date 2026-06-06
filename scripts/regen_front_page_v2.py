@@ -2347,9 +2347,12 @@ def _render_editorial_footer(
     cta_html = ""
     if target_date is not None:
         date_iso = _esc(target_date.isoformat())
+        # C64 Fix 2 (Sprint 9, 2026-06-06): target="_blank" + rel="noopener"
+        # で新タブで開く。神山さんが紙面タブを保持したまま Web UI で作業可能。
         cta_html = (
             f'\n      <div class="write-comment-cta">'
-            f'<a href="/comment?date={date_iso}">コメントを書く →</a>'
+            f'<a href="/comment?date={date_iso}" '
+            f'target="_blank" rel="noopener">コメントを書く →</a>'
             f'</div>'
         )
     return f"""<footer class="editorial-footer">

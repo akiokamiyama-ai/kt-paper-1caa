@@ -258,6 +258,43 @@ button.tc-btn-secondary:hover { background: #f0eadb; color: var(--c-ink); }
   min-height: 80px !important;
 }
 
+/* C64 Fix 1B (2026-06-06): essay 取得失敗時のユーザー向けヒント。 */
+.tc-ai-essay-hint {
+  padding: 8px 12px;
+  margin: -6px 0 12px;
+  background: #f5ecd0;
+  border-left: 3px solid #c0a060;
+  color: #5a4520;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* C64 Fix 3 (2026-06-06): 最新 AI 提案を編集可能な textarea で表示。
+   背景・枠は AI message と差別化、編集中であることを視覚的に示す。 */
+.tc-ai-msg-editable .tc-ai-msg-label {
+  color: var(--c-accent);
+  font-weight: 700;
+}
+.tc-ai-edit-area {
+  width: 100%;
+  min-height: 200px;
+  padding: 10px 12px;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.8;
+  background: #fffdf3;
+  color: var(--c-ink);
+  border: 1px dashed var(--c-accent);
+  border-radius: 2px;
+  resize: vertical;
+}
+.tc-ai-edit-area:focus {
+  outline: none;
+  border-style: solid;
+  border-color: var(--c-accent);
+  box-shadow: 0 0 0 2px rgba(107, 79, 31, 0.15);
+}
+
 button.tc-btn[disabled],
 button.tc-btn-secondary[disabled] {
   opacity: 0.5;
@@ -273,6 +310,7 @@ button.tc-btn-secondary[disabled] {
   textarea { min-height: 280px; font-size: 16px; }
   .tc-ai-messages { max-height: 380px; }
   .tc-ai-input { min-height: 70px !important; }
+  .tc-ai-edit-area { min-height: 180px; font-size: 15px; }
 }
 
 @media (max-width: 480px) {
@@ -288,4 +326,5 @@ button.tc-btn-secondary[disabled] {
   .tc-ai-input { min-height: 60px !important; font-size: 15px; }
   .tc-ai-header h2 { font-size: 16px; }
   .tc-ai-header h2 .tc-meta { display: none; }
+  .tc-ai-edit-area { min-height: 160px; font-size: 14px; }
 }

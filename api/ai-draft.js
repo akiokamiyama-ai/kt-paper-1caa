@@ -214,8 +214,14 @@ async function _handleInit(req, res, body) {
     cost_usd: result.cost_usd,
     tokens: { in: result.input_tokens, out: result.output_tokens },
     truncated: false,
-    // フロント側がそのまま history に詰めるための seed
+    // フロント側がそのまま history に詰めるための seed（UI には表示せず
+    // 次回の Anthropic 呼び出し時に history[0] として送り返すだけ）。
     seed_user_message: userMessage,
+    // C64 Fix 1B: 当日論考の取得状態をフロントに伝える。フロント側で
+    // 「論考取得失敗のためコメント骨子を直接入力してください」のような
+    // ユーザー向けヒントを出す材料。
+    essay_unavailable: essay.source === 'none',
+    user_draft_displayed: cleanDraft || null,
   });
 }
 

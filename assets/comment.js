@@ -297,16 +297,24 @@
     }
   }
 
-  // ---------- AI draft panel (C57, Sprint 9, 2026-06-03) ----------
+  // ---------- AI draft panel (C57, Sprint 9, 2026-06-03 / C64 改善 2026-06-06) ----------
 
   // 対話履歴はクライアント保持（サーバーステートレス）。リロードで消える。
   const aiState = {
-    history: [],      // [{role, content}]
-    lastAi: null,     // 最新の AI メッセージ（採用ボタン用）
+    history: [],          // [{role, content}] — Anthropic 呼び出しに使う配列
+    lastAi: null,         // 最新の AI メッセージ（採用ボタン用 fallback）
+    displaySeed: null,    // C64 Fix 1: 初回 user_draft の表示用 string（無ければ null）
+    essayUnavailable: false,  // C64 Fix 1B: 当日論考取得失敗フラグ
     inFlight: false,
     initialized: false,
     date: null,
   };
+
+  // C64 Fix 1: <<user_text>>, <<essay>>, <<past_comments>> など、prompt 内部
+  // 構造を UI 露出させない目的で、user メッセージのクリーンアップは regex で。
+  // この regex は 表示上の整形のためだけに使い、内部の history[].content には
+  // 区切り付き原文をそのまま保持して Anthropic に送り続ける（injection 防御維持）。
+  const _USER_TEXT_RE = /<<\/?user_text>>/g;
 
   function _appendMessage(container, role, content) {
     const wrap = document.createElement('div');
@@ -323,15 +331,57 @@
     container.scrollTop = container.scrollHeight;
   }
 
+  // C64 Fix 3: 最新の AI 提案を編集可能な textarea として描画する。
+  // 神山さんが採用前に直接微修正できるので、修正フローが 1 ステップ短縮。
+  // ID 'tc-ai-edit-area' を持ち、_adoptToTextarea が値を読みに行く。
+  function _appendEditableAi(container, content) {
+    const wrap = document.createElement('div');
+    wrap.className = 'tc-ai-msg tc-ai-msg-assistant tc-ai-msg-editable';
+    const label = document.createElement('div');
+    label.className = 'tc-ai-msg-label';
+    label.textContent = 'AI（編集可：採用前に直接修正できます）';
+    const ta = document.createElement('textarea');
+    ta.className = 'tc-ai-edit-area';
+    ta.id = 'tc-ai-edit-area';
+    ta.value = content;
+    ta.spellcheck = false;
+    wrap.appendChild(label);
+    wrap.appendChild(ta);
+    container.appendChild(wrap);
+    container.scrollTop = container.scrollHeight;
+  }
+
   function _renderHistory(container) {
     container.replaceChildren();
-    for (const m of aiState.history) {
-      // 履歴の user メッセージは <<user_text>> 区切りを取り除いて見栄え整える
+    // C64 Fix 1A: 初回 user メッセージ（seed_user_message）は context
+    // 注入用なので UI に出さない。代わりに displaySeed（神山さん本人が
+    // textarea に入れた骨子）があればそれを「神山さん」発話として表示。
+    if (aiState.displaySeed) {
+      _appendMessage(container, 'user', aiState.displaySeed);
+    }
+    // C64 Fix 1B: essay 取得失敗時のユーザー向けヒント
+    if (aiState.essayUnavailable) {
+      const hint = document.createElement('div');
+      hint.className = 'tc-ai-essay-hint';
+      hint.textContent = '当日の論考を取得できませんでした。コメントの骨子を直接入力すると、AI が膨らませる方向で支援します。';
+      container.appendChild(hint);
+    }
+    const total = aiState.history.length;
+    for (let i = 0; i < total; i++) {
+      const m = aiState.history[i];
+      // 先頭の user (seed_user_message) は表示しない（context 注入用）。
+      if (i === 0 && m.role === 'user') continue;
+      const isLast = (i === total - 1);
       let content = m.content;
       if (m.role === 'user') {
-        content = content.replace(/<<\/?user_text>>/g, '').trim();
+        content = content.replace(_USER_TEXT_RE, '').trim();
       }
-      _appendMessage(container, m.role, content);
+      // C64 Fix 3: 最新の assistant メッセージは編集可 textarea で表示。
+      if (isLast && m.role === 'assistant') {
+        _appendEditableAi(container, content);
+      } else {
+        _appendMessage(container, m.role, content);
+      }
     }
   }
 
@@ -369,17 +419,24 @@
       setStatus(statusEl, '初稿生成に失敗しました（' + (data && data.error || status) + '）', 'error');
       return;
     }
-    // 履歴に seed_user_message と ai_message を積む
+    // 履歴に seed_user_message と ai_message を積む。seed は内部用、UI には
+    // displaySeed（神山さん本人が入れた骨子）だけを user 発話として出す。
     aiState.history = [
       { role: 'user', content: data.seed_user_message || '【当日論考】（初期化）' },
       { role: 'assistant', content: data.ai_message },
     ];
     aiState.lastAi = data.ai_message;
+    aiState.displaySeed = data.user_draft_displayed || null;
+    aiState.essayUnavailable = !!data.essay_unavailable;
     aiState.initialized = true;
     _renderHistory(container);
     _setAdoptEnabled(true);
     _setInFlight(false, statusEl);
-    setStatus(statusEl, '初稿提示。修正したい場合はメッセージを入力 → 送信。');
+    if (aiState.essayUnavailable) {
+      setStatus(statusEl, '当日論考の取得に失敗しましたが、初稿を提示しました。');
+    } else {
+      setStatus(statusEl, '初稿提示。修正したい場合はメッセージを入力 → 送信。');
+    }
   }
 
   async function _continueAiDraft(date, message, statusEl, container) {
@@ -419,6 +476,8 @@
   function _resetAi(container, statusEl) {
     aiState.history = [];
     aiState.lastAi = null;
+    aiState.displaySeed = null;
+    aiState.essayUnavailable = false;
     aiState.initialized = false;
     container.replaceChildren();
     _setAdoptEnabled(false);
@@ -428,15 +487,20 @@
   function _adoptToTextarea(statusEl) {
     const textarea = $('#tc-textarea');
     if (!textarea) return;
-    if (!aiState.lastAi) return;
+    // C64 Fix 3: 編集可能 textarea (tc-ai-edit-area) の現在値を優先して読む。
+    // 神山さんが採用前にした微修正もそのまま採用される。textarea が DOM 上に
+    // 無いとき (初期化前 / 描画後に置換) は aiState.lastAi にフォールバック。
+    const editArea = document.getElementById('tc-ai-edit-area');
+    const aiContent = (editArea ? editArea.value : aiState.lastAi) || '';
+    if (!aiContent.trim()) return;
     const existing = textarea.value.trim();
-    if (existing && existing !== aiState.lastAi.trim()) {
+    if (existing && existing !== aiContent.trim()) {
       const ok = window.confirm(
         '既存のコメント内容を AI 提案で上書きします。よろしいですか？\n\n（既存内容は失われます）'
       );
       if (!ok) return;
     }
-    textarea.value = aiState.lastAi;
+    textarea.value = aiContent;
     textarea.focus();
     setStatus(statusEl, 'textarea に反映しました。必要に応じて編集してください。', 'success');
   }
