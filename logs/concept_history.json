@@ -199,6 +199,11 @@
       "concept_id": "habitus",
       "name_ja": "ハビトゥス",
       "displayed_on": "2026-06-06"
+    },
+    {
+      "concept_id": "metacommunication",
+      "name_ja": "メタコミュニケーション",
+      "displayed_on": "2026-06-07"
     }
   ]
 }

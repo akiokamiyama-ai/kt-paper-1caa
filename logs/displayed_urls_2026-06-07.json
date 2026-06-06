@@ -1,0 +1,38 @@
+{
+  "date": "2026-06-07",
+  "page1_urls": [
+    "https://www.economist.com/finance-and-economics/2026/06/05/how-hot-is-americas-labour-market",
+    "https://www.economist.com/finance-and-economics/2026/06/04/some-billionaires-pay-too-little-tax",
+    "https://www.bbc.com/news/videos/c1m2mr7gr27o?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/cx2124z7g45o?at_medium=RSS&at_campaign=rss"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2606/05/2000000064/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2606/05/news046.html",
+    "web_repo": "https://www.bc01.net/article/fc-media_202606/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/pope-ai-encyclical-human-choice-dignity-over-profit-by-antara-haldar-2026-06",
+    "https://www.asahi.com/articles/ASV653C20V65UHBI02HM.html?ref=rss",
+    "http://www3.nhk.or.jp/news/html/20260606/k10015142711000.html",
+    "https://www.mckinsey.com/mgi/our-research/how-ceos-can-navigate-the-new-era-of-trade",
+    "https://www.webdoku.jp/honshi/2026/7-260602182100.html",
+    "https://shinsho-plus.shueisha.co.jp/column/nazekyokuu_france/35257"
+  ],
+  "page4_urls": [
+    "https://www.themarginalian.org/2026/06/04/storyteller-poet-qualities/",
+    "https://www.themarginalian.org/2026/06/05/alan-lightman-probability/",
+    "https://www.themarginalian.org/2026/06/03/leonard-cohen-anger-resistance/"
+  ],
+  "page5_url": "https://aeon.co/essays/why-mozarts-operas-are-tests-of-moral-character",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-05/our-landscape-gutierrez-emblen-jarrett/",
+    "music": "https://natalie.mu/music/news/675113",
+    "outdoor": "https://thetrek.co/vegan-trail-food/"
+  },
+  "headlines_urls": [
+    "https://www.bbc.com/news/articles/cdxpx4gel1yo?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/cwy2yq0dj58o?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/cvgzg48d9q0o?at_medium=RSS&at_campaign=rss"
+  ]
+}
