@@ -42,17 +42,21 @@ YAML_PATH = PROJECT_ROOT / "data" / "concepts.yaml"
 # (a) concepts.yaml schema validation
 # ---------------------------------------------------------------------------
 
-def test_yaml_loads_as_list_of_217():
+def test_yaml_loads_as_list_of_219():
     """Sprint 8 (2026-05-19): 神山さん要望で 151 件追加、66 → 217.
 
     7 グループに分けて投入（A: 神山さん提案 19, B: 傾聴学術基盤 9,
     C: 人名 38, D: 人名ひもづき概念 16, E: バランス補強 30,
     F: 生命科学拡張 10, G: 神経/AI/システム/量子 29）。
     目標 365 件に対し 217 件（59%）到達、残 148 件は Sprint 9+ で補充予定。
+
+    Sprint 9 C65 (2026-06-06): 神山さんが「掘りたい」と発言した概念を
+    都度追加するパターン第一弾、217 → 219（不二一元論、マルチアライメント）。
+    アクターネットワークは既に id=actor_network_theory で登録済のため dedup。
     """
     concepts = concept_selector.load_concepts()
-    _check("a1 yaml loads as list of 217 (Sprint 8 +151)",
-           isinstance(concepts, list) and len(concepts) == 217,
+    _check("a1 yaml loads as list of 219 (Sprint 9 C65 +2)",
+           isinstance(concepts, list) and len(concepts) == 219,
            f"got len={len(concepts) if isinstance(concepts, list) else type(concepts).__name__}")
 
 
@@ -61,6 +65,42 @@ def test_yaml_ids_are_unique():
     ids = [c["id"] for c in concepts]
     _check("a2 all ids unique", len(set(ids)) == len(ids),
            f"unique={len(set(ids))}, total={len(ids)}")
+
+
+def test_c65_concepts_registered():
+    """Sprint 9 C65: 不二一元論 / マルチアライメントが登録されており、
+    related ID が全て実在 ID を指していること。アクターネットワークは既登録の
+    actor_network_theory で代替（重複登録なし）.
+    """
+    concepts = concept_selector.load_concepts()
+    by_id = {c["id"]: c for c in concepts}
+    _check(
+        "a3 advaita_vedanta 登録 (domain=インド哲学)",
+        "advaita_vedanta" in by_id
+        and by_id["advaita_vedanta"]["domain"] == "インド哲学"
+        and by_id["advaita_vedanta"]["name_ja"] == "不二一元論",
+        f"got {by_id.get('advaita_vedanta', '(missing)')}",
+    )
+    _check(
+        "a4 multi_alignment 登録 (domain=国際関係論)",
+        "multi_alignment" in by_id
+        and by_id["multi_alignment"]["domain"] == "国際関係論"
+        and by_id["multi_alignment"]["name_ja"] == "マルチアライメント",
+        f"got {by_id.get('multi_alignment', '(missing)')}",
+    )
+    _check(
+        "a5 actor_network_theory は既存登録のまま（重複登録なし）",
+        "actor_network_theory" in by_id
+        and sum(1 for c in concepts if c["id"] == "actor_network_theory") == 1,
+    )
+    # related ID 整合性
+    for cid in ("advaita_vedanta", "multi_alignment"):
+        for rid in by_id[cid].get("related", []):
+            _check(
+                f"a6 {cid}.related -> {rid} 実在",
+                rid in by_id,
+                f"missing id {rid!r}",
+            )
 
 
 def test_yaml_required_fields():
@@ -211,7 +251,8 @@ def main() -> int:
     print("Page 4 — concept_selector + yaml schema tests")
     print()
     print("(a) concepts.yaml schema:")
-    test_yaml_loads_as_list_of_217()
+    test_yaml_loads_as_list_of_219()
+    test_c65_concepts_registered()
     test_yaml_ids_are_unique()
     test_yaml_required_fields()
     test_yaml_related_references_valid()
