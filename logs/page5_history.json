@@ -662,6 +662,24 @@
       "ai_kamiyama_title": "Václav Havel, Writing from Prison, on How to Hold Your Failure",
       "ai_kamiyama_category": "books:自然科学ノンフィクション",
       "ai_kamiyama_source_name": "The Marginalian（旧 Brain Pickings）"
+    },
+    {
+      "displayed_on": "2026-06-07",
+      "article_url": "https://aeon.co/essays/why-mozarts-operas-are-tests-of-moral-character",
+      "article_title": "Artist of sympathy and cruelty",
+      "article_category": "academic",
+      "tie_candidates": [
+        "academic"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.themarginalian.org/2026/06/05/alan-lightman-probability/",
+      "ai_kamiyama_title": "How Nature Imagined the Figment of You",
+      "ai_kamiyama_category": "books:自然科学ノンフィクション",
+      "ai_kamiyama_source_name": "The Marginalian（旧 Brain Pickings）"
     }
   ]
 }
