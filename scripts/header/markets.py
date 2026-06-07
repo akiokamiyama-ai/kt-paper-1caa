@@ -1,9 +1,20 @@
-"""Stooq market client + local close-price cache for the masthead-data row 2.
+"""Yahoo Finance v8 chart client + local close-price cache for masthead-data row 2.
 
-Sprint 5 task #2 (2026-05-04). Stooq の無料 1行 CSV (``/q/l/?...&e=csv``) で
-直近の終値を取得する。Stooq の history endpoint は API key 必須化された
-ため、前日比 (Δ%) の計算は **ローカルキャッシュ方式** で行う：
+Sprint 5 task #2 (2026-05-04) で Stooq の無料 CSV (``/q/l/?...&e=csv``) を採用、
+直近の終値を取得して ``logs/market_history.json`` に蓄積していた。
 
+C66 (Sprint 9, 2026-06-08) — Stooq が JavaScript PoW (SHA-256) チャレンジを
+全 endpoint に展開し、Mozilla/5.0 UA で叩いても HTML を返す挙動に変わった。
+6/6 朝刊で日経以外が「―」、6/7 朝刊で全 fail → row 2 完全消失という症状の
+真因。Stooq 復活待ちでは紙面の重要要素が無期限欠落するため、Yahoo Finance
+v8 chart API (``query1.finance.yahoo.com/v8/finance/chart/<symbol>``) に
+切替。Yahoo は無料・無認証で公開、GHA cron からは rate limit に当たりにくい。
+
+history キャッシュは Stooq 時代の内部 ``symbol`` キー（``^nkx`` 等）をその
+まま使い、後方互換を維持（過去 30 日分の close は再利用、Yahoo シンボルへの
+マッピングは fetch 時のみに使う）。
+
+前日比 (Δ%) はローカルキャッシュ方式：
 1. 各ランで取得した ``{date, close}`` を ``logs/market_history.json`` に
    append（同 date は重複防止で skip、直近 30 日分だけ保持）。
 2. 翌ランで「current_date より古い最新エントリ」の close との差分を計算。
@@ -17,76 +28,137 @@ from __future__ import annotations
 import json
 import sys
 import urllib.error
+import urllib.parse
 import urllib.request
 from datetime import date as _date_type
+from datetime import datetime, timezone
 from pathlib import Path
 
-STOOQ_BASE = "https://stooq.com/q/l/"
-TIMEOUT_SEC = 3
+YAHOO_BASE = "https://query1.finance.yahoo.com/v8/finance/chart"
+YAHOO_DEFAULT_RANGE = "5d"   # 直近 5 営業日を取り、最後の non-null close を採用
+YAHOO_DEFAULT_INTERVAL = "1d"
+TIMEOUT_SEC = 5
 HISTORY_KEEP_DAYS = 30
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 LOG_DIR = PROJECT_ROOT / "logs"
 HISTORY_PATH = LOG_DIR / "market_history.json"
 
-# 取得対象。stooq symbol → 表示用メタ（label, kind, format）
+# 取得対象。内部 ``symbol`` キーは Stooq 時代から後方互換のため不変。
+# Yahoo Finance 呼び出し時のみ ``yahoo_symbol`` を使う。
+#   日経平均: ^N225 / NY ダウ: ^DJI / S&P 500: ^GSPC
+#   USD/JPY: JPY=X (Yahoo は逆向き表記) / EUR/JPY: EURJPY=X
 SYMBOLS: tuple[dict, ...] = (
-    {"symbol": "^nkx",   "label": "日経",      "kind": "index",
-     "css_class": "market-nikkei"},
-    {"symbol": "^dji",   "label": "NYダウ",   "kind": "index",
-     "css_class": "market-dji"},
-    {"symbol": "^spx",   "label": "S&P 500",   "kind": "index",
-     "css_class": "market-spx"},
-    {"symbol": "usdjpy", "label": "USD",       "kind": "forex",
-     "css_class": "forex-usd"},
-    {"symbol": "eurjpy", "label": "EUR",       "kind": "forex",
-     "css_class": "forex-eur"},
+    {"symbol": "^nkx",   "yahoo_symbol": "^N225",    "label": "日経",
+     "kind": "index", "css_class": "market-nikkei"},
+    {"symbol": "^dji",   "yahoo_symbol": "^DJI",     "label": "NYダウ",
+     "kind": "index", "css_class": "market-dji"},
+    {"symbol": "^spx",   "yahoo_symbol": "^GSPC",    "label": "S&P 500",
+     "kind": "index", "css_class": "market-spx"},
+    {"symbol": "usdjpy", "yahoo_symbol": "JPY=X",    "label": "USD",
+     "kind": "forex", "css_class": "forex-usd"},
+    {"symbol": "eurjpy", "yahoo_symbol": "EURJPY=X", "label": "EUR",
+     "kind": "forex", "css_class": "forex-eur"},
 )
 
 
+def _yahoo_symbol_for(symbol: str) -> str | None:
+    for s in SYMBOLS:
+        if s["symbol"] == symbol:
+            return s["yahoo_symbol"]
+    return None
+
+
 def fetch_market_close(symbol: str, *, timeout: int = TIMEOUT_SEC) -> dict | None:
-    """Fetch the most recent close for a stooq symbol.
+    """Fetch the most recent close for the configured ``symbol``.
+
+    Internally maps to ``yahoo_symbol`` and calls Yahoo Finance v8 chart API.
+    Returns the Stooq-style shape for history backward compatibility:
 
     Returns
     -------
     dict | None
         ``{"symbol": "^nkx", "date": "2026-05-01", "close": 59513.12}``
-        on success, ``None`` on any failure.
+        on success, ``None`` on any failure (network / parse / no data).
     """
-    url = f"{STOOQ_BASE}?s={symbol}&f=sd2t2ohlcv&h&e=csv"
+    yahoo_sym = _yahoo_symbol_for(symbol)
+    if yahoo_sym is None:
+        print(f"  [markets] unknown symbol {symbol!r}", file=sys.stderr)
+        return None
+    url = (
+        f"{YAHOO_BASE}/{urllib.parse.quote(yahoo_sym, safe='^=')}"
+        f"?range={YAHOO_DEFAULT_RANGE}&interval={YAHOO_DEFAULT_INTERVAL}"
+    )
     try:
-        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        req = urllib.request.Request(
+            url,
+            headers={
+                "User-Agent": (
+                    "Mozilla/5.0 (X11; Linux x86_64) kt-tribune/0.7"
+                ),
+                "Accept": "application/json",
+            },
+        )
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             text = resp.read().decode("utf-8", errors="replace")
     except (urllib.error.URLError, TimeoutError) as e:
         print(f"  [markets] FAIL {symbol}: {type(e).__name__}", file=sys.stderr)
         return None
 
-    return _parse_csv_line(symbol, text)
+    return _parse_yahoo_chart(symbol, text)
 
 
-def _parse_csv_line(symbol: str, text: str) -> dict | None:
-    lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
-    if len(lines) < 2:
-        return None
-    # First line is header, second is the data row
-    fields = lines[1].split(",")
-    if len(fields) < 7:
-        return None
+def _parse_yahoo_chart(symbol: str, text: str) -> dict | None:
+    """Parse Yahoo Finance v8 chart JSON. Returns ``{symbol, date, close}`` or None.
+
+    Yahoo chart レスポンスは ``chart.result[0]`` に ``timestamp`` 配列と
+    ``indicators.quote[0].close`` 配列を持つ（同インデックスで対応）。
+    Yahoo は欠損日に null を返すため、**末尾から遡って最初の non-null close**
+    を採用する（紙面表示用には最新確定値で十分）。
+
+    Date は UTC で日付に変換。日次バーの代表時刻なので tz 揺れは無視。
+    """
     try:
-        symbol_returned = fields[0].strip()
-        date_str = fields[1].strip()
-        close_str = fields[6].strip()
-        if not date_str or not close_str or close_str.upper() == "N/D":
-            return None
-        return {
-            "symbol": symbol_returned,
-            "date": date_str,
-            "close": float(close_str),
-        }
-    except (ValueError, IndexError) as e:
+        data = json.loads(text)
+    except json.JSONDecodeError as e:
         print(f"  [markets] parse error for {symbol}: {e}", file=sys.stderr)
         return None
+    chart = data.get("chart") or {}
+    err = chart.get("error")
+    if err:
+        print(f"  [markets] yahoo error for {symbol}: {err}", file=sys.stderr)
+        return None
+    results = chart.get("result") or []
+    if not results:
+        return None
+    r0 = results[0]
+    timestamps = r0.get("timestamp") or []
+    indicators = r0.get("indicators") or {}
+    quotes = indicators.get("quote") or []
+    if not quotes:
+        return None
+    closes = quotes[0].get("close") or []
+    if len(closes) != len(timestamps):
+        # Defensive: defaults to whatever the shorter list has.
+        n = min(len(closes), len(timestamps))
+        timestamps = timestamps[:n]
+        closes = closes[:n]
+    # 末尾から最初の non-null close を取る
+    for i in range(len(closes) - 1, -1, -1):
+        c = closes[i]
+        if c is None:
+            continue
+        try:
+            ts = int(timestamps[i])
+            d = datetime.fromtimestamp(ts, tz=timezone.utc).date()
+            return {
+                "symbol": symbol,
+                "date": d.isoformat(),
+                "close": float(c),
+            }
+        except (TypeError, ValueError, OSError):
+            continue
+    return None
 
 
 # ---------------------------------------------------------------------------

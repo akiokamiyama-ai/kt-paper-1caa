@@ -35,32 +35,109 @@ def _check(label: str, condition: bool, detail: str = "") -> bool:
 
 
 # ---------------------------------------------------------------------------
-# (a) _parse_csv_line
+# (a) _parse_yahoo_chart — C66 (2026-06-08): Yahoo Finance v8 chart JSON parser
 # ---------------------------------------------------------------------------
 
-def test_parse_csv_line_normal():
-    text = (
-        "Symbol,Date,Time,Open,High,Low,Close,Volume\n"
-        "^NKX,2026-05-01,08:45:03,59379.12,59706.7,59263.5,59513.12,2015819000\n"
+def _yahoo_payload(timestamps: list[int], closes: list[float | None]) -> str:
+    return json.dumps({
+        "chart": {
+            "result": [{
+                "timestamp": timestamps,
+                "indicators": {"quote": [{"close": closes}]},
+            }],
+            "error": None,
+        }
+    })
+
+
+def test_parse_yahoo_chart_normal():
+    # 2026-05-01 09:00 UTC = 18:00 JST ish, doesn't matter for daily granularity
+    payload = _yahoo_payload(
+        timestamps=[1777593600, 1777680000, 1777766400],  # 5/01, 5/02, 5/03 UTC
+        closes=[59500.0, 59513.12, 59600.0],
     )
-    parsed = markets._parse_csv_line("^nkx", text)
-    _check("a1 parse normal CSV",
-           parsed == {"symbol": "^NKX", "date": "2026-05-01", "close": 59513.12})
-
-
-def test_parse_csv_line_no_data_row():
-    text = "Symbol,Date,Time,Open,High,Low,Close,Volume\n"
-    _check("a2 only header → None",
-           markets._parse_csv_line("^nkx", text) is None)
-
-
-def test_parse_csv_line_n_d_close():
-    text = (
-        "Symbol,Date,Time,Open,High,Low,Close,Volume\n"
-        "^NKX,2026-05-01,08:45:03,N/D,N/D,N/D,N/D,N/D\n"
+    parsed = markets._parse_yahoo_chart("^nkx", payload)
+    _check(
+        "a1 parse Yahoo JSON: last close + last timestamp date",
+        parsed is not None
+        and parsed["symbol"] == "^nkx"
+        and parsed["close"] == 59600.0
+        and parsed["date"] == "2026-05-03",
+        f"got {parsed}",
     )
-    _check("a3 N/D close → None",
-           markets._parse_csv_line("^nkx", text) is None)
+
+
+def test_parse_yahoo_chart_trailing_null_skipped():
+    """末尾 null は skip して、その手前の non-null close を採用."""
+    payload = _yahoo_payload(
+        timestamps=[1777593600, 1777680000, 1777766400],
+        closes=[59500.0, 59513.12, None],
+    )
+    parsed = markets._parse_yahoo_chart("^nkx", payload)
+    _check(
+        "a2 trailing null → 1 つ前の non-null close を採用",
+        parsed == {"symbol": "^nkx", "date": "2026-05-02", "close": 59513.12},
+        f"got {parsed}",
+    )
+
+
+def test_parse_yahoo_chart_all_null():
+    payload = _yahoo_payload(
+        timestamps=[1777593600, 1777680000],
+        closes=[None, None],
+    )
+    _check(
+        "a3 全 null close → None",
+        markets._parse_yahoo_chart("^nkx", payload) is None,
+    )
+
+
+def test_parse_yahoo_chart_error_field():
+    """Yahoo が error フィールドを返した場合は None."""
+    payload = json.dumps({
+        "chart": {
+            "result": None,
+            "error": {"code": "Not Found", "description": "No data found"},
+        }
+    })
+    _check(
+        "a4 yahoo error フィールド → None",
+        markets._parse_yahoo_chart("^nkx", payload) is None,
+    )
+
+
+def test_parse_yahoo_chart_empty_result():
+    payload = json.dumps({"chart": {"result": [], "error": None}})
+    _check(
+        "a5 result=[] → None",
+        markets._parse_yahoo_chart("^nkx", payload) is None,
+    )
+
+
+def test_parse_yahoo_chart_malformed_json():
+    _check(
+        "a6 malformed JSON → None",
+        markets._parse_yahoo_chart("^nkx", "{not json") is None,
+    )
+
+
+def test_yahoo_symbol_mapping():
+    """SYMBOLS 全 5 件に yahoo_symbol が設定され、_yahoo_symbol_for で解決."""
+    expected = {
+        "^nkx": "^N225", "^dji": "^DJI", "^spx": "^GSPC",
+        "usdjpy": "JPY=X", "eurjpy": "EURJPY=X",
+    }
+    all_ok = True
+    for k, v in expected.items():
+        got = markets._yahoo_symbol_for(k)
+        if got != v:
+            all_ok = False
+            _check(f"a7 {k} → {v}", False, f"got {got}")
+    _check("a7 全 5 symbol が yahoo_symbol にマップされる", all_ok)
+    _check(
+        "a8 未知 symbol → None",
+        markets._yahoo_symbol_for("xyz") is None,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -97,17 +174,21 @@ def _restore_urlopen(original):
 
 
 def test_fetch_market_close_success():
-    text = (
-        "Symbol,Date,Time,Open,High,Low,Close,Volume\n"
-        "^NKX,2026-05-01,08:45:03,59379.12,59706.7,59263.5,59513.12,2015819000\n"
+    # C66: Yahoo Finance v8 chart JSON 形式
+    payload = _yahoo_payload(
+        timestamps=[1777593600],  # 2026-05-01 (UTC)
+        closes=[59513.12],
     )
-    orig = _install_mock_urlopen(text=text)
+    orig = _install_mock_urlopen(text=payload)
     try:
         r = markets.fetch_market_close("^nkx")
     finally:
         _restore_urlopen(orig)
-    _check("b1 fetch_market_close success",
-           r == {"symbol": "^NKX", "date": "2026-05-01", "close": 59513.12})
+    _check(
+        "b1 fetch_market_close success (Yahoo JSON)",
+        r == {"symbol": "^nkx", "date": "2026-05-01", "close": 59513.12},
+        f"got {r}",
+    )
 
 
 def test_fetch_market_close_network_error():
@@ -117,6 +198,14 @@ def test_fetch_market_close_network_error():
     finally:
         _restore_urlopen(orig)
     _check("b2 URLError → None", r is None)
+
+
+def test_fetch_market_close_unknown_symbol():
+    """設定外 symbol → fetch せず None."""
+    _check(
+        "b3 unknown symbol → None (early return)",
+        markets.fetch_market_close("nonexistent") is None,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -299,13 +388,18 @@ def main() -> int:
     print("Markets (Stooq) tests — Sprint 5 task #2")
     print()
     print("(a) _parse_csv_line:")
-    test_parse_csv_line_normal()
-    test_parse_csv_line_no_data_row()
-    test_parse_csv_line_n_d_close()
+    test_parse_yahoo_chart_normal()
+    test_parse_yahoo_chart_trailing_null_skipped()
+    test_parse_yahoo_chart_all_null()
+    test_parse_yahoo_chart_error_field()
+    test_parse_yahoo_chart_empty_result()
+    test_parse_yahoo_chart_malformed_json()
+    test_yahoo_symbol_mapping()
     print()
     print("(b) fetch_market_close:")
     test_fetch_market_close_success()
     test_fetch_market_close_network_error()
+    test_fetch_market_close_unknown_symbol()
     print()
     print("(c) History I/O:")
     test_history_load_missing_returns_empty()
