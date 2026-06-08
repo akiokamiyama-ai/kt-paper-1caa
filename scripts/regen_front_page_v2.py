@@ -660,22 +660,43 @@ EDITORIAL_CSS = f"""
   font-size: 11px;
   margin-top: 12px;
 }}
-/* C37 (Sprint 9, 2026-06-02): 編集後記下「コメントを書く →」CTA。
-   signature の下に控えめに配置、Tribune コメント入力 UI へ誘導。 */
-.editorial-footer .write-comment-cta {{
-  text-align: right;
-  margin-top: 8px;
-  font-size: 12px;
+/* C69 (Sprint 9, 2026-06-09): 「コメントを書く →」CTA を 1 面右下に移設。
+   旧 .editorial-footer .write-comment-cta スタイルは廃止。新位置のスタイル
+   は .page page-one / page-one-v3 共通の .page-one-cta で吸収する。
+   1 面 section に position:relative を付与、CTA を absolute bottom/right に
+   貼り付ける。狭い画面では position:static にして overlap を避ける。 */
+.page.page-one,
+.page.page-one-v3 {{
+  position: relative;
 }}
-.editorial-footer .write-comment-cta a {{
+.page .page-one-cta {{
+  position: absolute;
+  bottom: 14px;
+  right: 18px;
+  font-size: 12px;
+  z-index: 2;
+}}
+.page .page-one-cta a {{
   color: #555;
   text-decoration: none;
   border-bottom: 1px dotted #999;
   letter-spacing: 0.02em;
 }}
-.editorial-footer .write-comment-cta a:hover {{
+.page .page-one-cta a:hover {{
   color: #1a1a1a;
   border-bottom-style: solid;
+}}
+@media (max-width: 480px) {{
+  /* スマホでは絶対配置を解除して section 末尾に普通に流す。
+     固定配置だと本文と重なって読みにくい。 */
+  .page .page-one-cta {{
+    position: static;
+    text-align: right;
+    margin-top: 16px;
+    padding: 0 12px;
+    bottom: auto;
+    right: auto;
+  }}
 }}
 """
 
@@ -862,7 +883,9 @@ def _render_sidebar_html(top: dict, points: dict) -> str:
       </aside>""".rstrip()
 
 
-def build_page_one_v2(articles: list[dict]) -> str:
+def build_page_one_v2(
+    articles: list[dict], *, target_date: date | None = None,
+) -> str:
     """Assemble the full <section class='page page-one'> block."""
     if len(articles) < N_TOP + N_SECONDARIES:
         raise ValueError(
@@ -946,6 +969,12 @@ def build_page_one_v2(articles: list[dict]) -> str:
         if lead_deck else ""
     )
 
+    # C69 (Sprint 9, 2026-06-09): 1 面右下にコメント CTA。target_date が
+    # 渡された場合のみ出力（旧 caller 後方互換）。
+    cta_html = ""
+    if target_date is not None:
+        cta_html = "\n    " + render_page_one_comment_cta(target_date)
+
     page = f"""<section class="page page-one">
     <div class="page-banner"><span class="pg-num">— Page I —</span> The Front Page · World &amp; Business</div>
 
@@ -962,7 +991,7 @@ def build_page_one_v2(articles: list[dict]) -> str:
     </article>
 
     <div class="secondaries">{"".join(secondaries_html)}
-    </div>
+    </div>{cta_html}
   </section>"""
 
     return page
@@ -2341,38 +2370,44 @@ def _render_editorial_footer(
     Returns "" when the editorial generation fell back, so the caller can skip
     inserting the footer entirely (paper ends at Page VI on fallback days).
 
-    C37 (Sprint 9, 2026-06-02) — signature 直後に「コメントを書く →」CTA を
-    追加。``target_date`` が与えられれば ``/comment?date=YYYY-MM-DD`` 形式の
-    リンクで Tribune 認証フォームへ誘導する。target_date 無し（旧 caller）の
-    場合は CTA を出さない（後方互換）。
+    C69 (Sprint 9, 2026-06-09) — 旧 C37/C64 で footer 直下に置いていた
+    「コメントを書く →」CTA を 1 面右下に移設（_render_page_one_comment_cta /
+    page1_v3 renderer 側でレンダリング）。``target_date`` 引数は呼出側
+    互換のため残置するが本関数では未使用。
     """
     if not editorial_result or editorial_result.get("is_fallback"):
         return ""
     body = editorial_result.get("body") or ""
     if not body.strip():
         return ""
-    cta_html = ""
-    if target_date is not None:
-        date_iso = _esc(target_date.isoformat())
-        # C64 Fix 2 (Sprint 9, 2026-06-06): target="_blank" + rel="noopener"
-        # で新タブで開く。神山さんが紙面タブを保持したまま Web UI で作業可能。
-        cta_html = (
-            f'\n      <div class="write-comment-cta">'
-            f'<a href="/comment?date={date_iso}" '
-            f'target="_blank" rel="noopener">コメントを書く →</a>'
-            f'</div>'
-        )
     return f"""<footer class="editorial-footer">
     <div class="editorial-footer-inner">
       <div class="label">編集後記</div>
       <div class="body">
         <p>{_esc(body)}</p>
       </div>
-      <div class="signature">— Tribune 編集部</div>{cta_html}
+      <div class="signature">— Tribune 編集部</div>
     </div>
   </footer>
 
   """
+
+
+def render_page_one_comment_cta(target_date: date) -> str:
+    """1 面右下の「コメントを書く →」CTA HTML を返す（C69, 2026-06-09）.
+
+    神山さん要望：「1 面を見て感想を書くので、コメント CTA は 1 面右下に
+    あってほしい」「右下が空く問題も解決」。C37 / C64 で editorial-footer
+    直下に置いていた CTA を本ヘルパー経由で 1 面 (page-one / page-one-v3)
+    の section 末尾に挿入し、CSS で position:absolute で右下に貼り付ける。
+    """
+    date_iso = _esc(target_date.isoformat())
+    return (
+        f'<div class="page-one-cta">'
+        f'<a href="/comment?date={date_iso}" '
+        f'target="_blank" rel="noopener">コメントを書く →</a>'
+        f'</div>'
+    )
 
 
 def insert_editorial_footer(html_text: str, footer_html: str) -> str:
@@ -3246,7 +3281,7 @@ def main(argv: list[str] | None = None) -> int:
 
     # 5) Render Page I + Page II + Page III
     print("Building Page I HTML...", file=sys.stderr)
-    page_one_html = build_page_one_v2(result.selected)
+    page_one_html = build_page_one_v2(result.selected, target_date=target)
     page_two_html: str | None = None
     if page2_result is not None:
         print("Building Page II HTML...", file=sys.stderr)

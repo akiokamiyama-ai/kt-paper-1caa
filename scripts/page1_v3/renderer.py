@@ -198,6 +198,14 @@ def render_page_one_v3(
         f"\n  {next_week_preview_html}" if next_week_preview_html else ""
     )
     date_attr = target_date.isoformat()
+    # C69 (Sprint 9, 2026-06-09): 1 面右下にコメント CTA を貼り付け
+    # （旧 C37/C64 で editorial-footer 直下に置いていたのを移設）。
+    cta_html = (
+        f'<div class="page-one-cta">'
+        f'<a href="/comment?date={_esc(target_date.isoformat())}" '
+        f'target="_blank" rel="noopener">コメントを書く →</a>'
+        f'</div>'
+    )
     return f"""<section class="page page-one-v3" data-date="{date_attr}">
   <div class="page-banner"><span class="pg-num">— Page I —</span> Essay &amp; Pivotal · A Week with One Question</div>
   {theme_banner}
@@ -205,6 +213,7 @@ def render_page_one_v3(
     {section_html}
     {pivotal_html}
   </div>{preview_html}
+  {cta_html}
 </section>"""
 
 
