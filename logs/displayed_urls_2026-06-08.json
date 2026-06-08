@@ -1,0 +1,37 @@
+{
+  "date": "2026-06-08",
+  "page1_urls": [
+    "https://www.bbc.com/news/articles/cx212x41evwo?at_medium=RSS&at_campaign=rss",
+    "https://www.economist.com/finance-and-economics/2026/06/04/european-electricity-markets-have-too-much-power",
+    "https://www.fsight.jp/articles/-/52075",
+    "https://www.bbc.com/news/articles/cd7pqwr5lqxo?at_medium=RSS&at_campaign=rss"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/news/articles/2606/07/news022.html",
+    "human_energy": "https://sloanreview.mit.edu/article/a-three-minute-protocol-to-reduce-ai-manipulation-risk/",
+    "web_repo": "https://www.bc01.net/article/move-move_202606/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/far-left-terrorist-groups-resurgence-of-far-right-traced-to-wwii-memory-by-ian-buruma-2026-06",
+    "https://toyokeizai.net/articles/-/946837?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    null,
+    "https://www.mckinsey.com/industries/packaging-and-paper/our-insights/resetting-cost-competitiveness-in-pulp-and-paper-packaging",
+    "https://www.webdoku.jp/kanko/page/9784860116217.html",
+    "https://www.shunjusha.co.jp/news/n126016.html"
+  ],
+  "page4_urls": [
+    "https://www.themarginalian.org/2026/06/04/storyteller-poet-qualities/",
+    "https://www.themarginalian.org/2026/06/05/alan-lightman-probability/",
+    "https://www.themarginalian.org/2026/06/03/leonard-cohen-anger-resistance/"
+  ],
+  "page5_url": "https://natalie.mu/music/news/675193",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-06/aachchi-who-never-aged-kumarasinghe-mendis/",
+    "music": "https://natalie.mu/music/news/675179",
+    "outdoor": "https://sectionhiker.com/waterproof-trail-running-shoes-pros-and-cons/"
+  },
+  "headlines_urls": [
+    "https://www.bbc.com/news/articles/cr7xr3dvxp9o?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/ce8j0mxy28do?at_medium=RSS&at_campaign=rss"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "date": "2026-06-09",
+  "page1_urls": [
+    "https://www.bbc.com/news/articles/cnvpn253re4o?at_medium=RSS&at_campaign=rss",
+    "https://www.economist.com/finance-and-economics/2026/06/08/a-bidding-war-erupts-for-the-worlds-oldest-bank",
+    "https://www.fsight.jp/articles/-/52078",
+    "https://www.fsight.jp/articles/-/52074"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://atmarkit.itmedia.co.jp/ait/articles/2606/08/news062.html",
+    "human_energy": "https://jinjibu.jp/news/detl/26495/",
+    "web_repo": "https://www.bc01.net/article/svzadankai_202606/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/what-beiruts-port-scanners-miss-about-militant-supply-chains/",
+    "https://toyokeizai.net/articles/-/946738?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://news.google.com/rss/articles/CBMirAFBVV95cUxNUjdJLUpCYk15eE1yTUNNQXVocFZUdVNvUm1Zd0pMTzE0TEZBeDJzWDhqcDV3TXFPdnhTbmZvYnRPRXJTVWhEZ2JQYmpSTzNnYWpBVkJaY3JNbHpnbjg3ell3Snpnemx4Mm1zVXk0M1ltVEhqNUp6VmpkU2VGWFAzQzJySEhSZzlfMWdNVlBudzVCb25qOXI3amY5VVdOUmhtZTVUSzhxVHVtQlpr?oc=5",
+    "https://www.mckinsey.com/capabilities/people-and-organizational-performance/how-we-help-clients/blackstones-legal-and-compliance-ai-transformation-started-with-technology",
+    null,
+    "https://www.mckinsey.com/industries/public-sector/our-insights/reimagining-federal-procurement-in-the-digital-and-ai-age"
+  ],
+  "page4_urls": [
+    "https://www.themarginalian.org/2026/06/04/storyteller-poet-qualities/",
+    "https://www.themarginalian.org/2026/06/05/alan-lightman-probability/",
+    "https://www.themarginalian.org/2026/06/03/leonard-cohen-anger-resistance/"
+  ],
+  "page5_url": "https://www.axismag.jp/posts/2026/06/711269.html",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/06/08/the-summer-of-lion-meat/",
+    "music": "https://natalie.mu/music/news/675318",
+    "outdoor": "https://thetrek.co/andrew-skurka-on-the-biggest-food-mistakes-backpackers-make/"
+  },
+  "headlines_urls": [
+    "https://www.bbc.com/news/articles/cly752ydjw6o?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/c1k2kpdzjdzo?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/cn9p0yjd57wo?at_medium=RSS&at_campaign=rss"
+  ]
+}

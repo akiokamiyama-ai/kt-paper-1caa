@@ -204,6 +204,16 @@
       "concept_id": "metacommunication",
       "name_ja": "メタコミュニケーション",
       "displayed_on": "2026-06-07"
+    },
+    {
+      "concept_id": "responsibility_for_other",
+      "name_ja": "他者への応答可能性",
+      "displayed_on": "2026-06-08"
+    },
+    {
+      "concept_id": "augustine",
+      "name_ja": "アウグスティヌス",
+      "displayed_on": "2026-06-09"
     }
   ]
 }

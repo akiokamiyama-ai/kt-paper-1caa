@@ -680,6 +680,42 @@
       "ai_kamiyama_title": "How Nature Imagined the Figment of You",
       "ai_kamiyama_category": "books:自然科学ノンフィクション",
       "ai_kamiyama_source_name": "The Marginalian（旧 Brain Pickings）"
+    },
+    {
+      "displayed_on": "2026-06-08",
+      "article_url": "https://natalie.mu/music/news/675193",
+      "article_title": "乃木坂46一ノ瀬美空が初センター、42ndシングルは「是非に及ばず」",
+      "article_category": "music",
+      "tie_candidates": [
+        "music"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.project-syndicate.org/commentary/far-left-terrorist-groups-resurgence-of-far-right-traced-to-wwii-memory-by-ian-buruma-2026-06",
+      "ai_kamiyama_title": "The Living Ghosts of Violent Radicalism",
+      "ai_kamiyama_category": "geopolitics",
+      "ai_kamiyama_source_name": "Project Syndicate"
+    },
+    {
+      "displayed_on": "2026-06-09",
+      "article_url": "https://www.axismag.jp/posts/2026/06/711269.html",
+      "article_title": "伝統の知恵と環境シミュレーションの融合──SUEP.がSANUの新モデル「ARC」で見せた“おおらかな建築”のかたち",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.mckinsey.com/capabilities/people-and-organizational-performance/how-we-help-clients/blackstones-legal-and-compliance-ai-transformation-started-with-technology",
+      "ai_kamiyama_title": "Blackstone’s Legal & Compliance AI transformation started with technology. It succeeded because it put people first",
+      "ai_kamiyama_category": "business",
+      "ai_kamiyama_source_name": "McKinsey Insights"
     }
   ]
 }
