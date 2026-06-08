@@ -664,6 +664,12 @@ def default_fetcher(
             summary = fetch_run(
                 category=cat, priority=pri, limit=limit,
                 no_dedupe=True, write_log=False,
+                # C42 fix (Sprint 9, 2026-06-08): include_html=True を明示。
+                # 新潮 QUE (fetch_method=HTML, category=geopolitics) を Page III
+                # 候補プールに流入させる。本フラグ無しだと scripts/fetch.py:57 で
+                # HTML source が全部除外され、QUE が 5 日連続 0 件採用の真因に
+                # なっていた (C42 真因究明 2026-06-08)。
+                include_html=True,
             )
             raw_articles.extend(summary.get("articles", []))
         except Exception as e:

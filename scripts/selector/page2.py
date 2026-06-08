@@ -1252,6 +1252,12 @@ def default_fetcher(
         limit=limit,
         no_dedupe=no_dedupe,
         write_log=False,
+        # C42 fix (Sprint 9, 2026-06-08): HTML scraper source (新潮 QUE 等) も
+        # 候補プールに含める。scripts/fetch.py:57 のデフォルト include_html=False
+        # で QUE が全 fetch 経路から弾かれていた構造的バグへの対処。Page II
+        # Stage 4 cross-industry 経路でも同様に有効化、QUE の geopolitics
+        # category が cross-industry 探索の候補に入る。
+        include_html=True,
     )
     raw_articles = summary.get("articles", [])
     if not raw_articles:

@@ -384,6 +384,13 @@ def fetch_candidates(
             limit=per_source_limit,
             no_dedupe=no_dedupe,
             write_log=False,
+            # C42 fix (Sprint 9, 2026-06-08): fetch.py:run のデフォルトは
+            # include_html=False で fetch_method=HTML の source を全部除外する
+            # ため、新潮 QUE のような HTML scraper source が候補プールに
+            # 一切到達できない。Page I は name_substring filter で動くので
+            # 本配列 (SOURCE_NAME_FILTERS) に該当する HTML scraper source の
+            # 場合のみ効果を持つ（現状は無いが将来の整合性のため有効化）。
+            include_html=True,
         )
         articles = summary.get("articles", [])
         per_source[filt] = len(articles)
