@@ -86,7 +86,17 @@
 - **形式**: RSS 2.0（**title-only feed**、description フィールド無し）
 - **mainstream**: true
 - **対象**: 経済・市場・企業の主要トピックスのヘッドライン。共同通信・時事通信配信記事を多数含み、共同通信 RSS 不在の事実上の代替経路として機能
-- **位置付け**: **第2面下段 Today's Headlines の補完ソース**（Sprint 7 Phase 2、2026-05-19 追加）。共同通信 RSS 取得不可（公式・kiji.is・nordot・47news ハブ全て RSS なし、B2B 配信モデル）の代替として採用。title-only のため `config/site_overrides.toml` で `description_exempt = true` を設定し、Stage 1 description フィルタを skip させる必要あり
+- **位置付け**: **第2面下段 Today's Headlines の補完ソース**（Sprint 7 Phase 2、2026-05-19 追加）。共同通信 RSS 不在（公式・kiji.is・nordot・47news ハブ全て RSS なし、B2B 配信モデル）の代替として採用。title-only のため `config/site_overrides.toml` で `description_exempt = true` を設定し、Stage 1 description フィルタを skip させる必要あり
+
+### 8. Financial Times（FT） ✅
+- **URL**: https://www.ft.com/
+- **RSS**: https://www.ft.com/world?format=rss
+- **language**: en
+- **形式**: RSS 2.0（FT は複数セクション別 RSS を公開、`/world` を主軸採用）
+- **mainstream**: true
+- **対象**: グローバル金融・市場・地政学・テクノロジー・企業動向の英語論考（英国視点 + グローバル）
+- **位置付け**: **C12/C35 案B (Sprint 9, 2026-06-09) で投入。BBC 一極化の構造的解消が目的**。BBC が ②面 Today's Headlines を独占する状態（6/3-6/8 で 5/6 日が全件 BBC）を打破する英語ビジネス系の主力ソース。FT は §4.1 経営判断・金融、§4.3 国際情勢の両軸に強く、Economist が「論考」軸、Reuters が「速報」軸とすれば FT は **市場前線の分析** 軸。/world (25 items, 直近活発), /markets, /companies の追加 feed 併用は将来 RSS_extra で対応可
+- **位置付け補足**: 神山さんの news_profile.md §4.3「速報より深さ、現在より構造」方針には部分的整合（FT は速報も論考も両刀）、§4.5 編集ポリシー「英語原文のまま採用」
 
 ---
 
