@@ -698,6 +698,24 @@
       "ai_kamiyama_title": "The Living Ghosts of Violent Radicalism",
       "ai_kamiyama_category": "geopolitics",
       "ai_kamiyama_source_name": "Project Syndicate"
+    },
+    {
+      "displayed_on": "2026-06-09",
+      "article_url": "https://www.axismag.jp/posts/2026/06/711269.html",
+      "article_title": "伝統の知恵と環境シミュレーションの融合──SUEP.がSANUの新モデル「ARC」で見せた“おおらかな建築”のかたち",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.mckinsey.com/capabilities/people-and-organizational-performance/how-we-help-clients/blackstones-legal-and-compliance-ai-transformation-started-with-technology",
+      "ai_kamiyama_title": "Blackstone’s Legal & Compliance AI transformation started with technology. It succeeded because it put people first",
+      "ai_kamiyama_category": "business",
+      "ai_kamiyama_source_name": "McKinsey Insights"
     }
   ]
 }
