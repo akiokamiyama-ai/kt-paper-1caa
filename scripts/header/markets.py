@@ -108,15 +108,32 @@ def fetch_market_close(symbol: str, *, timeout: int = TIMEOUT_SEC) -> dict | Non
     return _parse_yahoo_chart(symbol, text)
 
 
+def _local_date(ts: int, gmt_offset_sec: int) -> str:
+    """Convert a unix ts to ISO date in the exchange's local timezone."""
+    from datetime import timedelta
+    tz = timezone(timedelta(seconds=gmt_offset_sec))
+    return datetime.fromtimestamp(ts, tz=tz).date().isoformat()
+
+
 def _parse_yahoo_chart(symbol: str, text: str) -> dict | None:
     """Parse Yahoo Finance v8 chart JSON. Returns ``{symbol, date, close}`` or None.
 
     Yahoo chart レスポンスは ``chart.result[0]`` に ``timestamp`` 配列と
     ``indicators.quote[0].close`` 配列を持つ（同インデックスで対応）。
     Yahoo は欠損日に null を返すため、**末尾から遡って最初の non-null close**
-    を採用する（紙面表示用には最新確定値で十分）。
+    を採用する。
 
-    Date は UTC で日付に変換。日次バーの代表時刻なので tz 揺れは無視。
+    Date は **exchange のローカル timezone** (``meta.gmtoffset``) で日付に
+    変換する。UTC date 直行だと exchange timezone の境界で off-by-one が
+    起き得る（^DJI 等の bar timestamp は 09:30 NY = 13:30 UTC で偶然合うが、
+    将来の symbol 追加でズレるリスクがある）。
+
+    C68 fix (Sprint 9, 2026-06-09): Nikkei (^N225) の 6/8 月曜 bar.close が
+    Yahoo 側で None 配信される（数時間遅延、引け後でも更新されない）。
+    一方 ``meta.regularMarketPrice`` + ``meta.regularMarketTime`` には引け値
+    (64024.6, 15:45 JST) が即時反映されている。bar 走査の後、regularMarketPrice
+    の date が bar.date より新しければそちらを採用するフォールバックを追加。
+    神山さん要望「日本市場は前日夜のものを見たい」に応える。
     """
     try:
         data = json.loads(text)
@@ -132,33 +149,58 @@ def _parse_yahoo_chart(symbol: str, text: str) -> dict | None:
     if not results:
         return None
     r0 = results[0]
+    meta = r0.get("meta") or {}
+    try:
+        gmt_offset = int(meta.get("gmtoffset") or 0)
+    except (TypeError, ValueError):
+        gmt_offset = 0
     timestamps = r0.get("timestamp") or []
     indicators = r0.get("indicators") or {}
     quotes = indicators.get("quote") or []
     if not quotes:
-        return None
-    closes = quotes[0].get("close") or []
+        closes: list = []
+    else:
+        closes = quotes[0].get("close") or []
     if len(closes) != len(timestamps):
-        # Defensive: defaults to whatever the shorter list has.
         n = min(len(closes), len(timestamps))
         timestamps = timestamps[:n]
         closes = closes[:n]
-    # 末尾から最初の non-null close を取る
+
+    # 1) 末尾から最初の non-null close を取る (bar 値)
+    bar_close: dict | None = None
     for i in range(len(closes) - 1, -1, -1):
         c = closes[i]
         if c is None:
             continue
         try:
             ts = int(timestamps[i])
-            d = datetime.fromtimestamp(ts, tz=timezone.utc).date()
-            return {
+            bar_close = {
                 "symbol": symbol,
-                "date": d.isoformat(),
+                "date": _local_date(ts, gmt_offset),
                 "close": float(c),
             }
+            break
         except (TypeError, ValueError, OSError):
             continue
-    return None
+
+    # 2) C68 fix: regularMarketPrice が bar より新しければそちらを採用
+    rmp_raw = meta.get("regularMarketPrice")
+    rmt_raw = meta.get("regularMarketTime")
+    if rmp_raw is not None and rmt_raw is not None:
+        try:
+            rmp_val = float(rmp_raw)
+            rmt_int = int(rmt_raw)
+            rmp_date = _local_date(rmt_int, gmt_offset)
+            if bar_close is None or rmp_date > bar_close["date"]:
+                return {
+                    "symbol": symbol,
+                    "date": rmp_date,
+                    "close": rmp_val,
+                }
+        except (TypeError, ValueError, OSError):
+            pass
+
+    return bar_close
 
 
 # ---------------------------------------------------------------------------

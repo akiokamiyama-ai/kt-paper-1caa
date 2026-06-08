@@ -38,10 +38,23 @@ def _check(label: str, condition: bool, detail: str = "") -> bool:
 # (a) _parse_yahoo_chart — C66 (2026-06-08): Yahoo Finance v8 chart JSON parser
 # ---------------------------------------------------------------------------
 
-def _yahoo_payload(timestamps: list[int], closes: list[float | None]) -> str:
+def _yahoo_payload(
+    timestamps: list[int],
+    closes: list[float | None],
+    *,
+    gmt_offset: int = 0,
+    regular_market_price: float | None = None,
+    regular_market_time: int | None = None,
+) -> str:
+    meta: dict = {"gmtoffset": gmt_offset}
+    if regular_market_price is not None:
+        meta["regularMarketPrice"] = regular_market_price
+    if regular_market_time is not None:
+        meta["regularMarketTime"] = regular_market_time
     return json.dumps({
         "chart": {
             "result": [{
+                "meta": meta,
                 "timestamp": timestamps,
                 "indicators": {"quote": [{"close": closes}]},
             }],
@@ -137,6 +150,98 @@ def test_yahoo_symbol_mapping():
     _check(
         "a8 未知 symbol → None",
         markets._yahoo_symbol_for("xyz") is None,
+    )
+
+
+# ---------------------------------------------------------------------------
+# (a-c68) C68 (2026-06-09): regularMarketPrice fallback + exchange-local date
+# ---------------------------------------------------------------------------
+
+def test_parse_yahoo_uses_exchange_local_date():
+    """JST 取引所 (gmtoffset=32400) では bar ts のローカル日付を採用."""
+    # ts=1777593600 = 2026-05-01 00:00 UTC = 2026-05-01 09:00 JST
+    # local date = 2026-05-01 (両 tz で同じ偶然)
+    payload = _yahoo_payload(
+        timestamps=[1777593600], closes=[100.0], gmt_offset=32400,
+    )
+    parsed = markets._parse_yahoo_chart("^nkx", payload)
+    _check(
+        "a9 JST exchange の bar date は exchange-local で解釈",
+        parsed["date"] == "2026-05-01",
+        f"got {parsed}",
+    )
+
+
+def test_parse_yahoo_rmp_fallback_when_latest_bar_is_null():
+    """C68 真因対策：最新 bar.close=None でも regularMarketPrice があれば採用.
+
+    Nikkei の 6/8 月曜引け値が daily bar に未反映で None、meta.regularMarketPrice
+    に 64024.6 が入っている、という実 Yahoo 状態を再現。
+    """
+    # JST 取引所 (^N225 と同じ)
+    # ts=1780617600 = 2026-06-05 09:00 JST (=金曜の bar、close 入り)
+    # ts=1780876800 = 2026-06-08 09:00 JST (=月曜の bar、close=None)
+    # rmt=1780901103 = 2026-06-08 15:45 JST (=月曜引け時刻)
+    payload = _yahoo_payload(
+        timestamps=[1780617600, 1780876800],
+        closes=[66588.12, None],
+        gmt_offset=32400,
+        regular_market_price=64024.6,
+        regular_market_time=1780901103,
+    )
+    parsed = markets._parse_yahoo_chart("^nkx", payload)
+    _check(
+        "a10 最新 bar=null + rmp 新しい → rmp を採用",
+        parsed is not None
+        and parsed["close"] == 64024.6
+        and parsed["date"] == "2026-06-08",
+        f"got {parsed}",
+    )
+
+
+def test_parse_yahoo_rmp_ignored_when_older_than_latest_bar():
+    """rmp の date が bar より古い場合は bar を優先（rmp は補助）."""
+    # bar.date=2026-05-03、rmp date=2026-05-02 → bar を採用
+    payload = _yahoo_payload(
+        timestamps=[1777593600, 1777680000, 1777766400],
+        closes=[100.0, 101.0, 102.0],
+        gmt_offset=0,
+        regular_market_price=99.0,
+        regular_market_time=1777680000,  # 2026-05-02
+    )
+    parsed = markets._parse_yahoo_chart("xyz", payload)
+    _check(
+        "a11 rmp が bar より古い → bar を採用",
+        parsed["close"] == 102.0 and parsed["date"] == "2026-05-03",
+        f"got {parsed}",
+    )
+
+
+def test_parse_yahoo_rmp_used_when_bar_all_null():
+    """全 bar が null だが rmp はある → rmp を採用（fallback）."""
+    payload = _yahoo_payload(
+        timestamps=[1777593600, 1777680000],
+        closes=[None, None],
+        gmt_offset=0,
+        regular_market_price=99.0,
+        regular_market_time=1777680000,
+    )
+    parsed = markets._parse_yahoo_chart("xyz", payload)
+    _check(
+        "a12 全 bar=null でも rmp で値が出る",
+        parsed is not None and parsed["close"] == 99.0,
+        f"got {parsed}",
+    )
+
+
+def test_parse_yahoo_no_rmp_no_bar_returns_none():
+    """rmp も bar も無効 → None."""
+    payload = _yahoo_payload(
+        timestamps=[1777593600], closes=[None], gmt_offset=0,
+    )
+    _check(
+        "a13 rmp も bar も無効 → None",
+        markets._parse_yahoo_chart("xyz", payload) is None,
     )
 
 
@@ -395,6 +500,11 @@ def main() -> int:
     test_parse_yahoo_chart_empty_result()
     test_parse_yahoo_chart_malformed_json()
     test_yahoo_symbol_mapping()
+    test_parse_yahoo_uses_exchange_local_date()
+    test_parse_yahoo_rmp_fallback_when_latest_bar_is_null()
+    test_parse_yahoo_rmp_ignored_when_older_than_latest_bar()
+    test_parse_yahoo_rmp_used_when_bar_all_null()
+    test_parse_yahoo_no_rmp_no_bar_returns_none()
     print()
     print("(b) fetch_market_close:")
     test_fetch_market_close_success()
