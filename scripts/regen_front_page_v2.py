@@ -1569,11 +1569,13 @@ def _render_page4_concept_column(concept: dict, essay: str) -> str:
 
 
 def _render_page4_academic_item(article: dict) -> str:
-    """Render one item in the academic column."""
-    is_ja = _page3_is_japanese_source(article.get("source_name"))
-    lang_attr = ' lang="ja"' if is_ja else ""
-    title = article.get("title") or ""
-    description = article.get("description") or ""
+    """Render one item in the academic column.
+
+    C36 Step 2b (2026-06-09): 英語ソース多様化に合わせ、title_ja/desc_ja を採用。
+    desc_ja は Sprint 5 ポリシーにより原文 passthrough（英語ソースは英語のまま）。
+    """
+    title_ja = article.get("title_ja") or article.get("title") or ""
+    desc_ja = article.get("desc_ja") or article.get("description") or ""
     source_name = article.get("source_name") or ""
     url = article.get("url") or ""
     date_label = _format_publish_date_ja(article.get("pub_date"))
@@ -1581,11 +1583,11 @@ def _render_page4_academic_item(article: dict) -> str:
         byline_text = f"出典：{source_name} · {date_label}"
     else:
         byline_text = f"出典：{source_name}"
-    title_html = f'<a href="{_esc(url)}" target="_blank" rel="noopener noreferrer">{_esc(title)}</a>' if url else _esc(title)
+    title_html = f'<a href="{_esc(url)}" target="_blank" rel="noopener noreferrer">{_esc(title_ja)}</a>' if url else _esc(title_ja)
     return f"""
-      <div class="item"{lang_attr}>
+      <div class="item" lang="ja">
         <h5 class="headline-s">{title_html}</h5>
-        <p>{_esc(description)}</p>
+        <p>{_esc(desc_ja)}</p>
         <p class="byline" style="font-size: 11px; color: #666; margin-top: 4px;">{_esc(byline_text)}</p>
       </div>""".rstrip()
 
@@ -1634,6 +1636,10 @@ def build_page_four_v2(
         pre_evaluated=pre_evaluated,
         displayed_urls_today=displayed_urls_today,
     )
+
+    # C36 Step 2b (2026-06-09): 英語ソース多様化に伴い翻訳経路を追加。
+    # title のみ翻訳（Sprint 5 ポリシー）、desc は原文 passthrough。
+    translate_for_render(articles_result["articles"])
 
     # 3) Render
     concept_html = _render_page4_concept_column(concept, essay_result["essay"])

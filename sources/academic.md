@@ -112,6 +112,57 @@
 
 ---
 
+## 国際・人文評論誌（High Priority — C36 Step 2b 多様化, 2026-06-09 追加）
+
+**背景**：C36 Step 1 で 4 日連続 The Marginalian 独占、集英社新書プラス 82% の偏重を確認。Step 2a で構造バグを 4 件修復したが、**ソース母集団が薄い** という構造的限界が残存。Step 2b は英語ソース 5 件を High Priority で投入し、ローテーションプールを実質倍化する。**page4 academic 描画に翻訳経路を追加**（regen_front_page_v2.py の `build_page_four_v2` → `translate_for_render`、Sprint 5 ポリシーに従いタイトルのみ翻訳）。
+
+### 11. 3 Quarks Daily ✅
+- **URL**: https://3quarksdaily.com/
+- **RSS**: https://3quarksdaily.com/feed
+- **language**: en
+- **形式**: RSS 2.0（WordPress 標準）
+- **mainstream**: false
+- **対象**: 科学・哲学・文学・芸術・政治を横断するエッセイ集積サイト。月曜は編集部執筆、火〜日は外部記事のキュレーション
+- **位置付け**: news_profile.md §4.4 設計方針「**学問領域を架橋する論考を高評価**」と最も整合する英語サイトの一つ。Aeon と並走させることで「**領域横断エッセイ**」枠を 2 媒体体制にできる。フェッチ頻度高め（毎日 5-10 本）
+
+### 12. Public Books ✅
+- **URL**: https://www.publicbooks.org/
+- **RSS**: https://www.publicbooks.org/feed/
+- **language**: en
+- **形式**: RSS 2.0（WordPress 標準）
+- **mainstream**: false
+- **対象**: NYU・ハーバード系の学者ネットワークが運営する **学術寄り書評誌**。社会学・歴史学・文学批評の長尺レビュー
+- **位置付け**: §4.4 「学問領域を架橋する論考」の **書評形式版**。NYRB より学術寄り、LRB と並ぶ重量級書評誌。集英社新書プラスの国内書評枠を **海外学術書評で補完**
+
+### 13. The Point Magazine ✅
+- **URL**: https://thepointmag.com/
+- **RSS**: https://thepointmag.com/feed/
+- **language**: en
+- **形式**: RSS 2.0（WordPress 標準）
+- **mainstream**: false
+- **対象**: シカゴ大学院生グループ発の **思想・批評誌**。哲学・政治・文化を扱う長尺エッセイ
+- **位置付け**: §4.4 「現象学」「認知科学」「暗黙知」の周辺領域（実存・倫理・公共哲学）を **若手研究者の視点** で扱う媒体。Philosophy Now が「百科事典寄り」、The Point は「**現代思想の現在進行形**」
+
+### 14. n+1 ✅
+- **URL**: https://www.nplusonemag.com/
+- **RSS**: https://www.nplusonemag.com/feed/（**`www.` なし URL は 301 リダイレクト、canonical は `www.` 付き**）
+- **language**: en
+- **形式**: RSS 2.0（WordPress 標準）
+- **mainstream**: false
+- **対象**: NY 発の文芸・思想誌。文学・批評・政治を扱う長尺エッセイ、書評、フィクション
+- **位置付け**: NYRB / LRB が「権威系書評」とすれば n+1 は「**ポスト LRB 世代の文芸誌**」。§4.4 周辺領域（文学・批評）を補強。配信頻度は中程度（週 3-5 本）
+
+### 15. London Review of Books（LRB） ✅
+- **URL**: https://www.lrb.co.uk/
+- **RSS**: https://www.lrb.co.uk/feeds/rss
+- **language**: en
+- **形式**: RSS 2.0
+- **mainstream**: true
+- **対象**: 隔週刊の英国書評誌。文学・歴史・政治・哲学の長尺書評で世界的に著名
+- **位置付け**: NYRB 並の権威書評誌、配信は隔週刊だが 1 号あたり 20 本前後のレビュー。NYRB が WordPress 標準 `?post_type=article` クエリで運用しているのに対し、LRB は標準 RSS で素直に取得可能。**書評ジャンルの本命枠**
+
+---
+
 ## 一次情報URL（参考メモ）
 
 調査過程で収集した、RSS/メタデータ整備の手がかりとなる一次情報URL：
