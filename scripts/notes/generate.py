@@ -36,6 +36,7 @@ from pathlib import Path
 from . import prompts
 from .extractor import load_day
 from .models import DayEntry, GeneratedNote, NoteContext
+from .style_loader import build_style_block_from_disk, load_style_cache
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 NOTES_DIR = PROJECT_ROOT / "data" / "notes"
@@ -109,15 +110,20 @@ def build_user_message(ctx: NoteContext) -> str:
 
 def call_llm(ctx: NoteContext, *, model: str | None = None,
              max_tokens: int = DEFAULT_MAX_TOKENS,
-             temperature: float = DEFAULT_TEMPERATURE) -> GeneratedNote:
+             temperature: float = DEFAULT_TEMPERATURE,
+             use_style_cache: bool = True) -> GeneratedNote:
     # Lazy import — extractor / models は LLM 不要、テスト容易性のため。
     from ..lib import llm
 
     user_msg = build_user_message(ctx)
     used_model = model or llm.DEFAULT_MODEL
 
+    # C38b 第二弾 (2026-06-09): 神山さん note ブログを参照した文体ガイダンスを注入。
+    style_block = build_style_block_from_disk() if use_style_cache else None
+    system_prompt = prompts.build_system_prompt(style_block=style_block)
+
     response = llm.call_claude(
-        system=prompts.SYSTEM_PROMPT,
+        system=system_prompt,
         user=user_msg,
         model=used_model,
         max_tokens=max_tokens,
@@ -173,6 +179,10 @@ def main(argv: list[str] | None = None) -> int:
         "--print", action="store_true",
         help="Also echo the generated body to stdout after saving",
     )
+    parser.add_argument(
+        "--no-style-cache", action="store_true",
+        help="Skip the kamiyama_style.json injection (use bare system prompt only)",
+    )
     args = parser.parse_args(argv)
 
     if not args.week and not (args.start and args.end):
@@ -194,7 +204,28 @@ def main(argv: list[str] | None = None) -> int:
         print(f"  {d.date}  essay={e:4d}字  comment={c:4d}字  "
               f"concept={d.concept_name[:40]!r}{marker}", file=sys.stderr)
 
+    # Style cache サマリ
+    use_style = not args.no_style_cache
+    if use_style:
+        cache = load_style_cache()
+        if cache:
+            arts = cache.get("articles") or []
+            print(
+                f"[notes] style cache: {len(arts)} articles "
+                f"(fetched {cache.get('fetched_at','?')})",
+                file=sys.stderr,
+            )
+        else:
+            print("[notes] style cache: not found, using bare prompt",
+                  file=sys.stderr)
+    else:
+        print("[notes] style cache: disabled by --no-style-cache",
+              file=sys.stderr)
+
     if args.dry_run:
+        print("\n=== SYSTEM PROMPT (dry-run) ===\n", file=sys.stderr)
+        style_block = build_style_block_from_disk() if use_style else None
+        print(prompts.build_system_prompt(style_block=style_block))
         print("\n=== USER MESSAGE (dry-run) ===\n", file=sys.stderr)
         print(build_user_message(ctx))
         return 0
@@ -204,6 +235,7 @@ def main(argv: list[str] | None = None) -> int:
         model=args.model,
         max_tokens=args.max_tokens,
         temperature=args.temperature,
+        use_style_cache=use_style,
     )
 
     path = save_note(note)
