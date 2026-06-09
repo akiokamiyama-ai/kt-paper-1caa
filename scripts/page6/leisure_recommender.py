@@ -21,6 +21,7 @@ import re
 import sys
 from datetime import date
 from pathlib import Path
+from urllib.parse import urlparse
 
 from ..lib import llm
 from ..selector.dedup_filter import (
@@ -50,6 +51,39 @@ DEFAULT_TEMPERATURE = 0.7
 PER_FETCH_LIMIT: int = 8
 HISTORY_LOOKBACK_DAYS: int = 30
 SUPPORTED_AREAS: tuple[str, ...] = ("books", "music", "outdoor")
+
+# C38a Step 2c (Sprint 9, 2026-06-09): host 単位の保険ペナルティ。
+# Page I の ``FORESIGHT_PENALTY`` と同形式で、page6 の final_score 段で適用。
+# 過去 30 日 outdoor 採用率 90% を記録した thetrek.co を抑制する目的。
+# 並走して outdoor.md の The Trek 自体を Medium → Reference に格下げ済み
+# （fetch 頻度低下）。本ペナルティは「priority 格下げを掻い潜って Stage 2
+# で高スコアが出た場合」の最終保険として機能する。
+LEISURE_HOST_PENALTIES: dict[str, float] = {
+    "thetrek.co": -5.0,
+}
+
+
+def _apply_leisure_host_penalty(article: dict) -> None:
+    """Apply ``LEISURE_HOST_PENALTIES`` to ``article["final_score"]`` in place.
+
+    無一致の host はノーオペ。final_score 欠落時も安全 (0 とみなして減算)。
+    """
+    url = article.get("url") or ""
+    if not url:
+        return
+    try:
+        host = (urlparse(url).hostname or "").lower()
+    except (ValueError, TypeError):
+        return
+    if not host:
+        return
+    for needle, penalty in LEISURE_HOST_PENALTIES.items():
+        if needle in host:
+            current = float(article.get("final_score") or 0.0)
+            article["final_score"] = current + penalty
+            article["leisure_host_penalty"] = penalty
+            article["leisure_host_penalty_reason"] = needle
+            return
 
 _HTML_TAG_RE = re.compile(r"<[^>]+>")
 _WHITESPACE_RE = re.compile(r"\s+")
@@ -366,6 +400,11 @@ def recommend_for_area(
             )
     if not scored:
         return _placeholder_result(area, "all_deduped")
+
+    # 4.5) C38a Step 2c (2026-06-09): host 単位ペナルティを final_score に適用。
+    # 詳細は ``LEISURE_HOST_PENALTIES`` の docstring 参照。
+    for art in scored:
+        _apply_leisure_host_penalty(art)
 
     # 5) Top by final_score
     scored.sort(key=lambda a: a.get("final_score", 0.0), reverse=True)

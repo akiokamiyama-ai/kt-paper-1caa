@@ -75,20 +75,59 @@
 
 ---
 
-## 海外UL系（Medium）
+## 海外場所軸・総合誌（High Priority — C38a Step 2c 多様化, 2026-06-09 追加）
 
-2026-05-02 検証で判明：このセクションの 3 ソースは RSS feed が **default UA で HTTP 200** を返し（403 だったのは HTML top page のみ）、かつ更新頻度が日次レベルのため、第5面 Leisure アウトドアカラムの実供給源として Medium 昇格。
+**背景**：C38a 調査（2026-06-09）で page6/outdoor の **thetrek.co 独占率 90% (27/30 日)** を数値確認。神山さん 5/27 観察「毎日見る必要ない」と完全に整合。RSS 実稼働 outdoor ソースが事実上 3 件のみ（thetrek / sectionhiker / cleverhiker）、かつ thetrek が約 2 時間に 1 本という頻度桁違いが真因。**Step 2c は英語の場所軸 + 総合誌 3 件を High Priority で投入**、神山さん関心領域（§4.7 縦走・ソロキャン）と地続きの「場所」「自然」「文化」を多媒体で供給する。並走して The Trek を Medium → Reference に格下げ（後出）+ `LEISURE_HOST_PENALTIES` で thetrek.co に -5.0 ペナルティ追加。
 
-### 7. The Trek ✅
+### 7. Atlas Obscura ✅
+- **URL**: https://www.atlasobscura.com/
+- **RSS**: https://www.atlasobscura.com/feeds/latest
+- **language**: en
+- **形式**: RSS 2.0
+- **mainstream**: true
+- **対象**: 世界各地の **奇妙な場所・隠れた名所・地域文化** を扱うキュレーション媒体。地理・歴史・民俗・自然科学を横断する短〜中尺記事
+- **位置付け**: **本 Step 2c の本命**。news_profile.md §4.7「**未踏で興味のある領域：縦走・ソロキャンプ**」と地続きの「場所軸」で、神山さんが未踏の自然・文化・歴史を読み物として味わえる。**6面アウトドアの「実用情報」モードから「世界探訪」モードへの彩り効果が最大**。配信頻度は日次 3-5 本
+
+### 8. Outside Magazine ✅
+- **URL**: https://www.outsideonline.com/
+- **RSS**: https://www.outsideonline.com/rss/all/rss.xml（**親 RSS landing は `/rss/` だが実体は `/rss/all/rss.xml`、`/rss/` を直接叩くと HTML ナビが返る**）
+- **language**: en
+- **形式**: RSS 2.0
+- **mainstream**: true
+- **対象**: 米老舗アウトドア総合誌。ハイキング・キャンプ・気候・人物特集・ギアレビューを幅広くカバー
+- **位置付け**: Backpacking Light が「**論考・哲学**」枠で月 1-2 本ペースに対し、Outside は「**業界総合誌**」としての日次配信。Backpacking Light の補完。日本未紹介の海外人物・トレイル特集が豊富
+
+### 9. Backpacker ✅
+- **URL**: https://www.backpacker.com/
+- **RSS**: https://www.backpacker.com/feed/
+- **language**: en
+- **形式**: RSS 2.0
+- **mainstream**: true
+- **対象**: 米老舗ハイキング誌（1973年創刊）。トレイルガイド、技術解説、ギア比較
+- **位置付け**: **入門〜中級者向けの体系的解説** が看板。Section Hiker が「**個人の目利きレビュー**」とすれば Backpacker は「**雑誌品質のリファレンス**」。当初候補だった REI Co-op Journal は HTTP 000（接続不可）のため Backpacker を代替採用。Outside と親会社 Outside Inc. 系列だが配信は別
+
+---
+
+## 海外UL系・縦走特化（Reference — C38a Step 2c 格下げ, 2026-06-09）
+
+**背景**：The Trek は更新頻度突出（約 2 時間に 1 本）で過去 30 日 page6 採用率 90% を独占した。神山さん観察「毎日見る必要ない」と整合し、Medium → Reference に格下げて fetch 頻度低下＋ rotation pool 内シェアを下げる。`LEISURE_HOST_PENALTIES = {"thetrek.co": -5.0}` を `scripts/page6/leisure_recommender.py` に追加し、final_score 段でも保険ペナルティをかける（C12 Foresight と同形式）。
+
+### 10. The Trek ✅
 - **URL**: https://thetrek.co/
 - **RSS**: https://thetrek.co/feed/（Cloudflare 配信、default UA OK）
 - **language**: en
 - **形式**: RSS 2.0
 - **mainstream**: false
 - **対象**: 米長距離縦走（Appalachian Trail / Pacific Crest Trail / Continental Divide Trail）の専門メディア。**ハイカー本人による日記形式の記事** が中心
-- **位置付け**: news_profile.md §4.7 「**未踏で興味のある領域：縦走**」への **入り口の入り口**。「最初の縦走をどう準備するか」「装備リスト」「水場情報」等の **入門記事も豊富**。専門用語は多いがハードコア技術論ではなく、**個人の物語として読める** 点が神山さんの嗜好に合う。**更新頻度突出（2026-05-02 計測：直近5本が同日内、平均間隔 ≈ 2 時間。スルーハイクシーズンに複数ハイカーが並走更新）**
+- **位置付け**: news_profile.md §4.7 「**未踏で興味のある領域：縦走**」への **入り口の入り口**。「最初の縦走をどう準備するか」「装備リスト」「水場情報」等の **入門記事も豊富**。専門用語は多いがハードコア技術論ではなく、**個人の物語として読める** 点が神山さんの嗜好に合う。**更新頻度突出（2026-05-02 計測：直近5本が同日内、平均間隔 ≈ 2 時間。スルーハイクシーズンに複数ハイカーが並走更新）**。C38a Step 2c (2026-06-09): Medium → Reference に格下げ、独占（30 日中 27 日採用）を構造的に緩和
 
-### 8. Section Hiker ✅
+---
+
+## 海外UL系（Medium）
+
+2026-05-02 検証で判明：このセクションの 2 ソースは RSS feed が **default UA で HTTP 200** を返し（403 だったのは HTML top page のみ）、かつ更新頻度が日次レベルのため、第5面 Leisure アウトドアカラムの実供給源として Medium 昇格。**C38a Step 2c (2026-06-09): The Trek は Reference に切り出し、本セクションは Section Hiker / CleverHiker の 2 件構成に**。
+
+### 11. Section Hiker ✅
 - **URL**: https://sectionhiker.com/
 - **RSS**: https://sectionhiker.com/feed/（Cloudflare 配信、default UA OK）
 - **language**: en
@@ -97,7 +136,7 @@
 - **対象**: 米個人ハイカー Philip Werner 運営のブログ。**ガレージブランド製品の徹底レビュー**、ロングトレイル記、UL ノウハウ
 - **位置付け**: news_profile.md §4.7 嗜好の本質「**個人がやっているような小さなブランド**」への **個人ブログ視点でのアクセス**。Backpacking Light が「業界誌」、Section Hiker が「**個人の目利き**」。長年の運営で記事数が膨大、**美意識2（目利き感覚で主流外の本質）** との親和性が極めて高い。**安定したデイリー更新（2026-05-02 計測：1日1本ペース）**
 
-### 9. CleverHiker ✅
+### 12. CleverHiker ✅
 - **URL**: https://www.cleverhiker.com/
 - **RSS**: https://www.cleverhiker.com/feed/
 - **language**: en
@@ -111,7 +150,7 @@
 
 ## ソロキャンプ（Reference）
 
-### 10. ハピキャン ⚠️
+### 13. ハピキャン ⚠️
 - **URL**: https://hapicamper.jp/
 - **RSS**: **未提供**（`/feed`、`/rss`、`/atom`、`/feed.xml`、`/rss.xml`、`/?feed=rss2` すべて応答なし、HTML内 RSS リンクなし）。サイト本体は 200
 - **形式**: HTML スクレイピング
