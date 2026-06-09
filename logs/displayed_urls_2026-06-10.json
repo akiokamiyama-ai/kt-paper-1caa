@@ -1,0 +1,38 @@
+{
+  "date": "2026-06-10",
+  "page1_urls": [
+    "https://www.economist.com/finance-and-economics/2026/06/08/china-is-innovative-its-economy-is-a-mess-which-will-win-out",
+    "https://www.bbc.com/news/articles/cedpxwe26l1o?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/cx2vljzw5ego?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/cy8d9e4lzv1o?at_medium=RSS&at_campaign=rss"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://japan.zdnet.com/article/35248668/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2606/09/news022.html",
+    "web_repo": "https://www.bc01.net/serialize/kanda_018/"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/06/08/syria-sharaa-assad-development-social-media-instagram-satire/",
+    "https://www.asahi.com/articles/ASV6832S6V68ULFA007M.html?ref=rss",
+    "http://www3.nhk.or.jp/news/html/20260609/k10015144761000.html",
+    "https://www.mckinsey.com/featured-insights/mckinsey-explainers/banking-and-ai-when-the-tech-starts-doing-the-work-not-just-assisting-it",
+    "https://www.publicbooks.org/frances-art-museums-remain-silent-on-haiti/",
+    "https://thepointmag.com/criticism/the-way-the-wind-blows/"
+  ],
+  "page4_urls": [
+    "https://www.publicbooks.org/diaspora-indebted-on-industry/",
+    "https://3quarksdaily.com/3quarksdaily/2026/06/idiots-on-munch-and-von-trier.html",
+    "https://www.publicbooks.org/eating-disorders-are-more-than-a-feminist-issue-a-conversation-with-amber-husain/"
+  ],
+  "page5_url": "https://thetrek.co/pacific-crest-trail/calves-and-kittens/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/06/09/the-vanishing-library-timothy-elys-odd-little-book-from-outer-space/",
+    "music": "https://natalie.mu/music/news/675457",
+    "outdoor": "https://www.outsideonline.com/outdoor-adventure/biking/erick-cedenos-cycle-americas-first-black-bikepackers/"
+  },
+  "headlines_urls": [
+    "https://www.bbc.com/news/articles/c75y6e5p9reo?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/ckg701v1dp6o?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/ckgpl9zdw3po?at_medium=RSS&at_campaign=rss"
+  ]
+}

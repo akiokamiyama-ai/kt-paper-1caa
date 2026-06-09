@@ -214,6 +214,11 @@
       "concept_id": "augustine",
       "name_ja": "アウグスティヌス",
       "displayed_on": "2026-06-09"
+    },
+    {
+      "concept_id": "aquinas",
+      "name_ja": "トマス・アクィナス",
+      "displayed_on": "2026-06-10"
     }
   ]
 }
