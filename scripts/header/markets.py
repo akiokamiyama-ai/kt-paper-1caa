@@ -105,7 +105,13 @@ def fetch_market_close(symbol: str, *, timeout: int = TIMEOUT_SEC) -> dict | Non
         print(f"  [markets] FAIL {symbol}: {type(e).__name__}", file=sys.stderr)
         return None
 
-    return _parse_yahoo_chart(symbol, text)
+    parsed = _parse_yahoo_chart(symbol, text)
+    if parsed is None:
+        return None
+    # C68 第二弾 (Sprint 9, 2026-06-10): 全 bar を ``all_bars`` として同梱、
+    # ``fetch_all_markets`` が history に逐次書き込んで欠損日を自動補填する。
+    parsed["all_bars"] = _parse_yahoo_chart_all_bars(symbol, text)
+    return parsed
 
 
 def _local_date(ts: int, gmt_offset_sec: int) -> str:
@@ -113,6 +119,64 @@ def _local_date(ts: int, gmt_offset_sec: int) -> str:
     from datetime import timedelta
     tz = timezone(timedelta(seconds=gmt_offset_sec))
     return datetime.fromtimestamp(ts, tz=tz).date().isoformat()
+
+
+def _parse_yahoo_chart_all_bars(symbol: str, text: str) -> list[dict]:
+    """Return all non-null bar closes as ``[{date, close}, ...]`` (asc by date).
+
+    C68 第二弾 fix (Sprint 9, 2026-06-10): Yahoo は範囲内の日次バーを返すが、
+    ``_parse_yahoo_chart`` は **末尾の 1 点だけ** を返していたため、欠損日の
+    値が後から fill された際に history へ反映されず、``compute_diff_pct`` が
+    「最後に書かれた日」を prior として使ってしまう（6/8 月曜 bar が 6/9 cron
+    時は null、6/10 cron 時に 64024.6 で埋まったが history には ^nkx 6/8 が
+    永久に欠落 → 6/10 朝刊 diff が 6/5 比較で -1.8% と誤表示された C68 残バグ）。
+    本関数は **全 non-null bar** を返す。``fetch_all_markets`` が history に
+    逐次 append することで欠損日が翌日 cron で自動補填される。
+
+    Returns
+    -------
+    list[dict]
+        ``[{"symbol": symbol, "date": "YYYY-MM-DD", "close": float}, ...]``
+        非空 close のみ、date 昇順。エラー時は空リスト。
+    """
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError:
+        return []
+    chart = data.get("chart") or {}
+    if chart.get("error"):
+        return []
+    results = chart.get("result") or []
+    if not results:
+        return []
+    r0 = results[0]
+    meta = r0.get("meta") or {}
+    try:
+        gmt_offset = int(meta.get("gmtoffset") or 0)
+    except (TypeError, ValueError):
+        gmt_offset = 0
+    timestamps = r0.get("timestamp") or []
+    indicators = r0.get("indicators") or {}
+    quotes = indicators.get("quote") or []
+    closes = (quotes[0].get("close") if quotes else None) or []
+    if len(closes) != len(timestamps):
+        n = min(len(closes), len(timestamps))
+        timestamps = timestamps[:n]
+        closes = closes[:n]
+    out: list[dict] = []
+    for ts, c in zip(timestamps, closes):
+        if c is None:
+            continue
+        try:
+            out.append({
+                "symbol": symbol,
+                "date": _local_date(int(ts), gmt_offset),
+                "close": float(c),
+            })
+        except (TypeError, ValueError, OSError):
+            continue
+    out.sort(key=lambda e: e["date"])
+    return out
 
 
 def _parse_yahoo_chart(symbol: str, text: str) -> dict | None:
@@ -343,16 +407,40 @@ def fetch_all_markets(*, history_path: Path | None = None) -> list[dict]:
         fetched = fetch_market_close(symbol)
         diff_pct: float | None = None
         if fetched:
+            # C68 第二弾 (2026-06-10): 全 bar を **diff 計算前に** history へ
+            # 書き込む。これで「過去の欠損日（Yahoo bar が null だった日）」が
+            # 後日 fill された際に翌日 cron で自動補填され、``compute_diff_pct``
+            # が正しい prior（直近の前日 close）を選べる。``append_history_entry``
+            # は同 date を skip するので冪等。
+            current_date = fetched["date"]
+            for bar in fetched.get("all_bars") or ():
+                bar_date = bar.get("date")
+                if bar_date is None or bar_date >= current_date:
+                    # current_date 以降は下の append で書く（または skip）
+                    continue
+                try:
+                    append_history_entry(
+                        symbol,
+                        date=bar_date,
+                        close=bar["close"],
+                        history_path=history_path,
+                    )
+                except Exception as e:
+                    print(
+                        f"  [markets] backfill write failed for {symbol} "
+                        f"{bar_date}: {type(e).__name__}",
+                        file=sys.stderr,
+                    )
             diff_pct = compute_diff_pct(
                 symbol,
-                current_date=fetched["date"],
+                current_date=current_date,
                 current_close=fetched["close"],
                 history_path=history_path,
             )
             try:
                 append_history_entry(
                     symbol,
-                    date=fetched["date"],
+                    date=current_date,
                     close=fetched["close"],
                     history_path=history_path,
                 )

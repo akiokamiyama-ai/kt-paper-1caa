@@ -280,6 +280,7 @@ def _restore_urlopen(original):
 
 def test_fetch_market_close_success():
     # C66: Yahoo Finance v8 chart JSON 形式
+    # C68 第二弾 (2026-06-10): all_bars キーが同梱される
     payload = _yahoo_payload(
         timestamps=[1777593600],  # 2026-05-01 (UTC)
         closes=[59513.12],
@@ -290,9 +291,19 @@ def test_fetch_market_close_success():
     finally:
         _restore_urlopen(orig)
     _check(
-        "b1 fetch_market_close success (Yahoo JSON)",
-        r == {"symbol": "^nkx", "date": "2026-05-01", "close": 59513.12},
+        "b1 fetch_market_close success: symbol/date/close",
+        r is not None
+        and r["symbol"] == "^nkx"
+        and r["date"] == "2026-05-01"
+        and r["close"] == 59513.12,
         f"got {r}",
+    )
+    _check(
+        "b1b fetch_market_close 戻り値に all_bars が含まれる (C68 第二弾)",
+        r is not None and "all_bars" in r and r["all_bars"] == [
+            {"symbol": "^nkx", "date": "2026-05-01", "close": 59513.12},
+        ],
+        f"got all_bars={r.get('all_bars') if r else None!r}",
     )
 
 
@@ -489,6 +500,129 @@ def test_format_no_data():
     _check("e7 no fetched → '日経 -'", out == "日経 -", f"got {out!r}")
 
 
+# ---------------------------------------------------------------------------
+# (f) C68 第二弾 (2026-06-10): _parse_yahoo_chart_all_bars + fetch_all_markets
+#     の history backfill 挙動
+# ---------------------------------------------------------------------------
+
+def test_all_bars_returns_non_null_in_date_order():
+    payload = _yahoo_payload(
+        timestamps=[1780617600, 1780876800, 1780963200],
+        # 6/5, 6/8 (val), 6/9 (null)
+        closes=[66588.12, 64024.6, None],
+        gmt_offset=32400,
+    )
+    bars = markets._parse_yahoo_chart_all_bars("^nkx", payload)
+    _check(
+        "f1 all_bars: non-null のみを asc date で返す",
+        bars == [
+            {"symbol": "^nkx", "date": "2026-06-05", "close": 66588.12},
+            {"symbol": "^nkx", "date": "2026-06-08", "close": 64024.6},
+        ],
+        f"got {bars}",
+    )
+
+
+def test_all_bars_empty_on_all_null():
+    payload = _yahoo_payload(
+        timestamps=[1780617600, 1780876800],
+        closes=[None, None],
+        gmt_offset=32400,
+    )
+    bars = markets._parse_yahoo_chart_all_bars("^nkx", payload)
+    _check("f2 all_bars: 全 null → []", bars == [], f"got {bars}")
+
+
+def test_all_bars_empty_on_parse_error():
+    bars = markets._parse_yahoo_chart_all_bars("xyz", "not json")
+    _check("f3 all_bars: parse error → []", bars == [])
+
+
+def test_fetch_all_markets_backfills_missing_history():
+    """C68 第二弾 真因テスト：rmp fallback で current_date が 6/9 になっても
+    bar の 6/8 を history に backfill するので compute_diff_pct が正しく
+    6/8 を prior に選び、6/5 比較にならない。
+    """
+    # 5/29 (Fri) 既存 history、6/8 (Mon) bar=val、6/9 (Tue) bar=null + rmp 6/9
+    payload = _yahoo_payload(
+        timestamps=[1780876800, 1780963200],  # 6/8, 6/9 JST
+        closes=[64024.6, None],
+        gmt_offset=32400,
+        regular_market_price=65416.63,
+        regular_market_time=1780987503,  # 2026-06-09 15:45 JST
+    )
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        path = Path(tmpdir) / "h.json"
+        # 既存 history: 5/29 のみ（6/8 が抜けてる状況を再現）
+        path.write_text(json.dumps({
+            "^nkx": [{"date": "2026-05-29", "close": 66329.5}],
+        }, ensure_ascii=False))
+
+        # urlopen を 1 symbol だけ mock。^nkx 以外は payload を return しない
+        # ような fake を組まないと SYMBOLS 全 5 件で叩く。簡単のため fetch
+        # 単体（fetch_market_close）+ 手動 backfill ループを再現する。
+        orig = _install_mock_urlopen(text=payload)
+        try:
+            fetched = markets.fetch_market_close("^nkx")
+            # fetch_all_markets と同じロジックでバックフィル
+            for bar in fetched.get("all_bars") or ():
+                if bar["date"] >= fetched["date"]:
+                    continue
+                markets.append_history_entry(
+                    "^nkx", date=bar["date"], close=bar["close"],
+                    history_path=path,
+                )
+            diff = markets.compute_diff_pct(
+                "^nkx", current_date=fetched["date"],
+                current_close=fetched["close"], history_path=path,
+            )
+        finally:
+            _restore_urlopen(orig)
+
+    expected_diff = (65416.63 - 64024.6) / 64024.6 * 100  # +2.174...
+    ok = (
+        fetched is not None
+        and fetched["date"] == "2026-06-09"
+        and abs(fetched["close"] - 65416.63) < 1e-6
+        and diff is not None
+        and abs(diff - expected_diff) < 0.01
+    )
+    _check(
+        "f4 fetch_all_markets: 6/8 が history に無くても all_bars で backfill "
+        "→ diff は 6/8 比較で +2.17%",
+        ok,
+        f"got fetched={fetched} diff={diff}",
+    )
+
+
+def test_fetch_all_markets_writes_all_bars_to_history():
+    """fetch_all_markets 経由で複数 bar が history に書かれることを統合検証."""
+    payload = _yahoo_payload(
+        timestamps=[1780617600, 1780876800, 1780963200],
+        closes=[66588.12, 64024.6, None],
+        gmt_offset=32400,
+        regular_market_price=65416.63,
+        regular_market_time=1780987503,  # 2026-06-09 15:45 JST
+    )
+    with tempfile.TemporaryDirectory() as tmpdir:
+        path = Path(tmpdir) / "h.json"
+        orig = _install_mock_urlopen(text=payload)
+        try:
+            # SYMBOLS 全件で同じ payload を返すが、^nkx だけチェック
+            results = markets.fetch_all_markets(history_path=path)
+        finally:
+            _restore_urlopen(orig)
+        h = markets.load_history(path=path)
+
+    nkx_dates = sorted(e["date"] for e in h.get("^nkx", []))
+    _check(
+        "f5 fetch_all_markets: 6/5 / 6/8 / 6/9 すべて history に書かれる",
+        nkx_dates == ["2026-06-05", "2026-06-08", "2026-06-09"],
+        f"got nkx dates = {nkx_dates}",
+    )
+
+
 def main() -> int:
     print("Markets (Stooq) tests — Sprint 5 task #2")
     print()
@@ -532,6 +666,13 @@ def main() -> int:
     test_format_forex_with_positive_diff()
     test_format_forex_with_negative_diff()
     test_format_no_data()
+    print()
+    print("(f) C68 第二弾 (2026-06-10): all_bars + history backfill:")
+    test_all_bars_returns_non_null_in_date_order()
+    test_all_bars_empty_on_all_null()
+    test_all_bars_empty_on_parse_error()
+    test_fetch_all_markets_backfills_missing_history()
+    test_fetch_all_markets_writes_all_bars_to_history()
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")
     return 0 if FAIL == 0 else 1
