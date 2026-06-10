@@ -290,6 +290,18 @@ def parse_sources_md(path: Path) -> list[Source]:
         prio_here = _heading_to_priority(heading)
         if prio_here:
             priority = prio_here
+            # C75 (Sprint 9, 2026-06-10): H2 priority heading は新セクションの
+            # 開始を表すので、直前の H2 sub_category（companies.md の Cocolomi 等、
+            # あるいは academic.md の "国際" のような領域 H2）を引き継いではならない。
+            # 旧仕様では academic.md の ``## 国際（哲学・人文学）`` 後の
+            # ``## 国際・人文評論誌（High Priority — ...）`` で sub_category="国際"
+            # が消えずに残り、3 Quarks Daily / Public Books / The Point Magazine /
+            # n+1 / LRB の category が ``academic:国際`` になっていた（page3
+            # ``_matches_R6`` の完全一致 ``cat == "academic"`` をすり抜けて 3 面に
+            # こぼれる、3面 academic 流入バグ）。H3 priority heading（companies.md
+            # の ``### High Priority`` 等）は引き続き sub_category を保持する。
+            if level == 2:
+                sub_category = None
             i += 1
             continue
         # H2 that is not a priority heading is a sub-category (companies.md

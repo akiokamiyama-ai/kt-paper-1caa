@@ -24,12 +24,17 @@ from datetime import date
 # sources/business.md の H3 名と完全一致させる。括弧書きの注記が含まれる場合
 # (BBC) はそれも込みで指定する必要がある。Sprint 7 Phase 2 着手時に
 # source_registry.build_registry の出力から検証済み (2026-05-19)。
+#
+# C75 (Sprint 9, 2026-06-10): SOURCE_NAME_FILTERS と整合させ FT を追加。
+# 両者を同じ集合にする方針：page1 candidates に流入させたソースは
+# Today's Headlines でも eligible にする。
 HEADLINES_ALLOWED_SOURCES: tuple[str, ...] = (
     "NHK ニュース 主要",
     "NHK ニュース 経済",
     "Yahoo! ニュース 経済",
     "BBC Business",
     "The Economist",
+    "Financial Times（FT）",  # C75: SOURCE_NAME_FILTERS と整合
 )
 
 DEFAULT_HEADLINES_TOP_N: int = 3

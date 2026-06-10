@@ -343,7 +343,13 @@ def _matches_R6(article: dict) -> bool:
 
     # academic.md は基本 R6（ただし R5 keyword が強くマッチすれば後で R5 が優先される
     # —— DETECTION_ORDER で R6 を先に判定するので、R6 keyword が無ければ次に進む）
-    if cat == "academic":
+    #
+    # C75 (Sprint 9, 2026-06-10): ``cat == "academic"`` 完全一致は ``academic:国際``
+    # （Aeon, Philosophy Now, Public Books, The Point Magazine, n+1, LRB,
+    # 3 Quarks Daily の category）を弾く構造バグだった。``startswith("academic")``
+    # に緩和して academic / academic:国際 / academic:その他 を全部許容する。
+    # C36 Step 2a で page4 側 article_rotator は既に緩和済（line 246）。
+    if cat and cat.startswith("academic"):
         # academic.md の Aeon / The Marginalian は人文寄りなので、R5 キーワードと
         # 競合する場合は R6 で取らずに次に流す（_matches_R5 で拾う）。
         if _source_name_match(article, ("Aeon", "The Marginalian")):
@@ -369,11 +375,13 @@ def _matches_R5(article: dict) -> bool:
     cat = _category_of(article)
 
     # books.md は基本 R5（自然科学ノンフは _matches_R6 で先に拾われる）
-    if cat == "books":
+    # C75 (Sprint 9, 2026-06-10): books も academic と対称に startswith に緩和。
+    if cat and cat.startswith("books"):
         return True
 
     # academic.md の Aeon / The Marginalian で R6 を取れなかったケース
-    if cat == "academic" and _source_name_match(article, ("Aeon", "The Marginalian")):
+    # C75: cat 比較を startswith に緩和（_matches_R6 と整合）。
+    if cat and cat.startswith("academic") and _source_name_match(article, ("Aeon", "The Marginalian")):
         return True
 
     # キーワード一致

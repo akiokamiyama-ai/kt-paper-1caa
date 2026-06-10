@@ -101,10 +101,22 @@ INDEX_HTML = PROJECT_ROOT / "index.html"
 
 # Source name substrings to fetch from. Matched against `Source.name` in
 # scripts.fetch.run() (case-insensitive substring).
+#
+# C75 (Sprint 9, 2026-06-10): C12/C35 案 B 真因対策。Sprint 7 までは「BBC /
+# The Economist / Foresight」の閉じた 3 ソースで page1 candidates を構成して
+# おり、business.md に FT を追加しても candidates_scored に流入しないため
+# Today's Headlines が BBC 一極化していた（C12/C35 観察）。本配列を
+# HEADLINES_ALLOWED_SOURCES と同形式の **明示 allowlist** として拡張する。
+# 「NHK ニュース」substring は「NHK ニュース 主要」「NHK ニュース 経済」
+# 両方を拾うが、「NHKきょうの料理」(cooking.md) は名前空間が分離されていて
+# 拾わない（"NHK ニュース" prefix が完全一致しない）。
 SOURCE_NAME_FILTERS: tuple[str, ...] = (
     "BBC Business",
     "The Economist",
     "Foresight",
+    "Financial Times",  # C75: business.md FT を candidates に流入
+    "NHK ニュース",      # C75: 主要 + 経済 を両方拾う、cooking は除外
+    "Yahoo! ニュース",   # C75: 経済欄を candidates に流入
 )
 
 # Sources whose articles are already in Japanese — translation is skipped.

@@ -306,15 +306,17 @@ def test_all_filtered_out_by_source():
 # ---------------------------------------------------------------------------
 
 def test_allowed_sources_contents():
+    # C75 (Sprint 9, 2026-06-10): SOURCE_NAME_FILTERS と整合し FT を追加。
     expected_keys = {
         "NHK ニュース 主要",
         "NHK ニュース 経済",
         "Yahoo! ニュース 経済",
         "BBC Business",
         "The Economist",
+        "Financial Times（FT）",
     }
     _check(
-        "g1 HEADLINES_ALLOWED_SOURCES 5 件、全 expected 名を含む",
+        "g1 HEADLINES_ALLOWED_SOURCES 6 件、全 expected 名を含む（C75: FT 追加）",
         set(HEADLINES_ALLOWED_SOURCES) == expected_keys,
         f"got {set(HEADLINES_ALLOWED_SOURCES)}",
     )
