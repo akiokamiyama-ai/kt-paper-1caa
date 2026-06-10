@@ -734,6 +734,24 @@
       "ai_kamiyama_title": "Diaspora, Indebted: On “Industry”",
       "ai_kamiyama_category": "academic:国際",
       "ai_kamiyama_source_name": "Public Books"
+    },
+    {
+      "displayed_on": "2026-06-11",
+      "article_url": "https://tabi-labo.com/312636/caveman-casanova-couples-app",
+      "article_title": "関係修復アプリ「Caveman to Casanova」が男性のセラピー離れに挑む",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://nautil.us/how-to-heal-people-with-science-fiction-1281841/",
+      "ai_kamiyama_title": "How to Heal People with Science Fiction",
+      "ai_kamiyama_category": "books:自然科学ノンフィクション",
+      "ai_kamiyama_source_name": "Nautilus"
     }
   ]
 }

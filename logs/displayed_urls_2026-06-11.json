@@ -1,0 +1,38 @@
+{
+  "date": "2026-06-11",
+  "page1_urls": [
+    "https://www.ft.com/content/bbdf1851-1255-4217-9544-e87c8044b5cb",
+    "https://www.economist.com/finance-and-economics/2026/06/09/wall-streets-undignified-spacex-mania",
+    "https://www.bbc.com/news/articles/ce3ez4zzzlvo?at_medium=RSS&at_campaign=rss",
+    "https://www.ft.com/content/4b62b71c-949a-4600-b03c-813636cf9071"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2606/10/2000000073/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2606/10/news021.html",
+    "web_repo": "https://www.bc01.net/article/fc-media_202606/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/how-apocalyptic-thinking-in-russia-and-us-disrupts-politics-and-diplomacy-by-nina-l-khrushcheva-2026-06",
+    "http://www3.nhk.or.jp/news/html/20260611/k10015146331000.html",
+    "http://www3.nhk.or.jp/news/html/20260610/k10015145851000.html",
+    "https://www.mckinsey.com/capabilities/geopolitics/our-insights/the-art-science-and-technology-of-geopolitical-scenario-planning",
+    "https://nautil.us/how-to-heal-people-with-science-fiction-1281841/",
+    "https://www.nplusonemag.com/online-only/online-only/on-alexander-kluge-1932-2026/"
+  ],
+  "page4_urls": [
+    "https://www.publicbooks.org/mary-e-mendoza-on-deadly-divide-how-insects-pathogens-and-people-defied-the-us-mexico-border/",
+    "https://www.publicbooks.org/frances-art-museums-remain-silent-on-haiti/",
+    "https://www.themarginalian.org/2026/06/06/le-guin-life/"
+  ],
+  "page5_url": "https://tabi-labo.com/312636/caveman-casanova-couples-app",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-06/the-city-and-the-writer-in-ibadan-with-adedayo-agarau-nathalie-handal/",
+    "music": "https://greenroom.jp/post-5406/",
+    "outdoor": "https://www.atlasobscura.com/places/tom-ripleys-shed"
+  },
+  "headlines_urls": [
+    "https://news.yahoo.co.jp/pickup/6583684?source=rss",
+    "https://www.ft.com/content/31450147-1b85-4ecf-a60d-0c0e3a298ae7",
+    "https://www.ft.com/content/677bd7ca-eb7c-49be-80af-526508c03ec9"
+  ]
+}

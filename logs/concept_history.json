@@ -219,6 +219,11 @@
       "concept_id": "aquinas",
       "name_ja": "トマス・アクィナス",
       "displayed_on": "2026-06-10"
+    },
+    {
+      "concept_id": "transfer_learning",
+      "name_ja": "転移学習",
+      "displayed_on": "2026-06-11"
     }
   ]
 }
