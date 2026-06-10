@@ -351,6 +351,14 @@ class _FixtureDriver(QueShinchoDriver):
             self._fixtures[
                 "https://que.dailyshincho.jp/sitemap.xml?page=1"
             ] = SITEMAP_PAGE_XML
+        # C76 (2026-06-10): driver が全 sitemap page を走査するようになったので、
+        # SITEMAP_INDEX_XML が示す page=2 にも空 XML を登録（既存テストの挙動
+        # を変えないため）。新規テストで page=2 に意味のある内容を持たせたい
+        # 場合は article_pages 経由で上書きできる。
+        self._fixtures.setdefault(
+            "https://que.dailyshincho.jp/sitemap.xml?page=2",
+            '<?xml version="1.0"?><urlset></urlset>',
+        )
         self._fixtures.update(article_pages or {})
         self.fetched_urls: list[str] = []
 
@@ -402,10 +410,12 @@ def test_fetch_end_to_end_accepts_only_recent():
         and "却下記事：description 短すぎる" not in titles,
         f"got {len(out)} articles, titles={titles}",
     )
-    # sitemap index + 1 page + 3 articles = 5 calls
+    # sitemap index + 2 pages (page1 = real + page2 = empty) + 3 articles
+    # = 6 calls. C76 (2026-06-10) で全 page 走査に変更したため、page=2 の
+    # fetch が 1 件増えた。
     _check(
-        "f2 fetch: sitemap index + page + 3 article ページ計 5 件 fetch",
-        len(drv.fetched_urls) == 5,
+        "f2 fetch: sitemap index + 全 page 走査 + 3 article ページ計 6 件 fetch",
+        len(drv.fetched_urls) == 6,
         f"got {drv.fetched_urls}",
     )
 
@@ -517,6 +527,184 @@ def test_penalty_skips_unmatched_sources():
     _check("g7 マッチしない source → 0.0", other == 0.0, f"got {other}")
 
 
+# ---------------------------------------------------------------------------
+# (h) C76 (2026-06-10): category 動的マッピング + 全 page 走査
+# ---------------------------------------------------------------------------
+
+def test_map_que_category_to_tribune_domestic():
+    from scripts.lib.drivers.que_shincho import map_que_category_to_tribune
+    ok = (
+        map_que_category_to_tribune("経済・ビジネス") == "business"
+        and map_que_category_to_tribune("社会") == "business"
+        and map_que_category_to_tribune("教育") == "business"
+        and map_que_category_to_tribune("医療・ウェルネス") == "business"
+        and map_que_category_to_tribune("政治") == "business"
+    )
+    _check("h1 国内 5 カテゴリ → business", ok)
+
+
+def test_map_que_category_to_tribune_intl_and_books():
+    from scripts.lib.drivers.que_shincho import map_que_category_to_tribune
+    ok = (
+        map_que_category_to_tribune("国際") == "geopolitics"
+        and map_que_category_to_tribune("Foresight") == "geopolitics"
+        and map_que_category_to_tribune("テクノロジー") == "geopolitics"
+        and map_que_category_to_tribune("カルチャー") == "books"
+        and map_que_category_to_tribune("ライフ") == "books"
+    )
+    _check("h2 国際/Foresight/テクノロジー → geopolitics、カルチャー/ライフ → books", ok)
+
+
+def test_map_que_category_to_tribune_unknown_defaults_to_geopolitics():
+    from scripts.lib.drivers.que_shincho import map_que_category_to_tribune
+    _check(
+        "h3 未知カテゴリ / 空 / None → geopolitics（FORESIGHT 後継）",
+        map_que_category_to_tribune("未定義") == "geopolitics"
+        and map_que_category_to_tribune("") == "geopolitics"
+        and map_que_category_to_tribune(None) == "geopolitics",
+    )
+
+
+def test_build_article_writes_tribune_category_to_raw():
+    """build_article_from_html が raw["tribune_category"] にマッピング結果を書く."""
+    from datetime import datetime, timezone
+    from scripts.lib.drivers.que_shincho import build_article_from_html
+    html = _article_html(
+        article_section="経済・ビジネス",
+        date_published="2026-06-09T08:00:00+09:00",
+        description="あ" * 200,
+    )
+    now = datetime(2026, 6, 10, 0, 0, tzinfo=timezone.utc)
+    art = build_article_from_html(
+        html, "https://que.dailyshincho.jp/node/18999/", _src(),
+        pub_window_days=3, now=now,
+    )
+    _check(
+        "h4 raw[tribune_category] = business（経済・ビジネス → business）",
+        art is not None
+        and art.raw.get("category_que") == "経済・ビジネス"
+        and art.raw.get("tribune_category") == "business",
+        f"got raw={getattr(art, 'raw', None)}",
+    )
+
+
+def test_build_article_writes_geopolitics_for_intl():
+    from datetime import datetime, timezone
+    from scripts.lib.drivers.que_shincho import build_article_from_html
+    html = _article_html(
+        article_section="Foresight",
+        date_published="2026-06-09T08:00:00+09:00",
+        description="あ" * 200,
+    )
+    now = datetime(2026, 6, 10, 0, 0, tzinfo=timezone.utc)
+    art = build_article_from_html(
+        html, "https://que.dailyshincho.jp/node/18897/", _src(),
+        pub_window_days=3, now=now,
+    )
+    _check(
+        "h5 Foresight 記事 → raw[tribune_category] = geopolitics",
+        art is not None and art.raw.get("tribune_category") == "geopolitics",
+    )
+
+
+def test_pipeline_dict_propagates_tribune_category():
+    """_article_to_pipeline_dict が raw[tribune_category] を pipeline_dict[category] に伝播."""
+    from datetime import datetime, timezone
+    from scripts.lib.source import Article
+    from scripts.regen_front_page_v2 import _article_to_pipeline_dict
+    art = Article(
+        source_name="Shincho QUE（新潮QUE）",
+        title="サンプル",
+        link="https://que.dailyshincho.jp/node/18999/",
+        description="あ" * 200,
+        pub_date=datetime(2026, 6, 9, 8, 0, tzinfo=timezone.utc),
+        source_language="ja",
+        raw={"tribune_category": "business", "category_que": "経済・ビジネス"},
+    )
+    d = _article_to_pipeline_dict(art)
+    _check(
+        "h6 pipeline_dict: category=business が動的セットされる",
+        d.get("category") == "business",
+        f"got category={d.get('category')!r}",
+    )
+
+
+def test_pipeline_dict_no_category_when_raw_empty():
+    from datetime import datetime, timezone
+    from scripts.lib.source import Article
+    from scripts.regen_front_page_v2 import _article_to_pipeline_dict
+    art = Article(
+        source_name="BBC Business",
+        title="x",
+        link="https://bbc.co.uk/x",
+        pub_date=datetime(2026, 6, 9, tzinfo=timezone.utc),
+        source_language="en",
+    )
+    d = _article_to_pipeline_dict(art)
+    _check(
+        "h7 driver が tribune_category をセットしない → pipeline_dict に category キーなし"
+        "（_attach_category で registry から引き当てる既存パス維持）",
+        "category" not in d,
+        f"got {d}",
+    )
+
+
+def test_fetch_visits_all_sitemap_pages():
+    """SITEMAP_INDEX_XML が 2 page を示すので、driver は両方 fetch する."""
+    drv = _FixtureDriver()  # page 2 fixture は __init__ で空 XML 既定登録
+    list(drv.fetch(_src()))
+    pages_fetched = [
+        u for u in drv.fetched_urls if "sitemap.xml?page=" in u
+    ]
+    _check(
+        "h8 driver が page=1 と page=2 の両方を fetch する",
+        sorted(pages_fetched) == [
+            "https://que.dailyshincho.jp/sitemap.xml?page=1",
+            "https://que.dailyshincho.jp/sitemap.xml?page=2",
+        ],
+        f"got {pages_fetched}",
+    )
+
+
+def test_fetch_merges_candidates_across_pages_by_lastmod():
+    """各 page の候補を合流し、lastmod 降順 sort で top_n 抽出する."""
+    recent_html = _article_html(date_published="2026-06-03T08:00:00+09:00",
+                                description="あ" * 100)
+    # page=2 fixture を上書き：page=1 より新しい lastmod を含む
+    page2_xml = """<?xml version="1.0"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+ <url>
+  <loc>https://que.dailyshincho.jp/node/18900/</loc>
+  <lastmod>2026-06-10T17:00:00+09:00</lastmod>
+ </url>
+ <url>
+  <loc>https://que.dailyshincho.jp/node/18897/</loc>
+  <lastmod>2026-06-10T15:00:00+09:00</lastmod>
+ </url>
+</urlset>"""
+    drv = _FixtureDriver(
+        article_pages={
+            "https://que.dailyshincho.jp/sitemap.xml?page=2": page2_xml,
+            "https://que.dailyshincho.jp/node/18900/": recent_html,
+            "https://que.dailyshincho.jp/node/18897/": recent_html,
+            "https://que.dailyshincho.jp/node/18016/": recent_html,
+            "https://que.dailyshincho.jp/node/18019/": recent_html,
+            "https://que.dailyshincho.jp/node/14398/": recent_html,
+        },
+    )
+    drv.top_n = 2  # 上位 2 件のみ
+    list(drv.fetch(_src()))
+    node_urls = [u for u in drv.fetched_urls if "/node/" in u]
+    _check(
+        "h9 全 page 候補が lastmod 降順で合流 → top_n=2 は page=2 の 18900 / 18897",
+        node_urls == [
+            "https://que.dailyshincho.jp/node/18900/",
+            "https://que.dailyshincho.jp/node/18897/",
+        ],
+        f"got {node_urls}",
+    )
+
+
 def main() -> int:
     print("QueShinchoDriver tests (C42 案A, Sprint 9, 2026-06-04)")
     print()
@@ -552,6 +740,17 @@ def main() -> int:
     test_penalty_pattern_applies_to_shincho_que()
     test_penalty_does_not_double_apply()
     test_penalty_skips_unmatched_sources()
+    print()
+    print("(h) C76 (2026-06-10): category 動的マッピング + 全 page 走査:")
+    test_map_que_category_to_tribune_domestic()
+    test_map_que_category_to_tribune_intl_and_books()
+    test_map_que_category_to_tribune_unknown_defaults_to_geopolitics()
+    test_build_article_writes_tribune_category_to_raw()
+    test_build_article_writes_geopolitics_for_intl()
+    test_pipeline_dict_propagates_tribune_category()
+    test_pipeline_dict_no_category_when_raw_empty()
+    test_fetch_visits_all_sitemap_pages()
+    test_fetch_merges_candidates_across_pages_by_lastmod()
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")
     return 0 if FAIL == 0 else 1

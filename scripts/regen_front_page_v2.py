@@ -360,7 +360,7 @@ def _article_to_pipeline_dict(article: Article) -> dict:
     body_clean = _strip_html(
         "\n".join(article.body_paragraphs) if article.body_paragraphs else ""
     )
-    return {
+    out: dict = {
         "url": article.link,
         "title": article.title,
         "description": desc_clean,
@@ -372,6 +372,15 @@ def _article_to_pipeline_dict(article: Article) -> dict:
         # 翻訳判定 (_translate_article) と HTML 表示分岐 (build_page_one_v2) で使用。
         "source_language": article.source_language,
     }
+    # C76 (Sprint 9, 2026-06-10): driver が記事ごとの動的 category を
+    # ``Article.raw["tribune_category"]`` にセットしている場合は pipeline_dict
+    # に伝播する。selector._category_of / _attach_category は
+    # ``article["category"]`` を優先するため、自動的に動的振り分けされる。
+    # 現状は QueShinchoDriver のみが利用。
+    tribune_category = (article.raw or {}).get("tribune_category")
+    if tribune_category:
+        out["category"] = tribune_category
+    return out
 
 
 # ---------------------------------------------------------------------------

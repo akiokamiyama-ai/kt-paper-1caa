@@ -52,6 +52,39 @@ DEFAULT_TOP_N = 25
 DEFAULT_PUBDATE_WINDOW_DAYS = 7
 DEFAULT_MIN_DESC_CHARS = 80
 
+
+# C76 (Sprint 9, 2026-06-10): QUE 記事の JSON-LD articleSection を Tribune の
+# category 体系にマッピング。QUE は「NHK 的位置づけ + 旧 FORESIGHT 的位置づけ」
+# のハイブリッド媒体で、国内系（経済・社会・教育・医療・政治）と国際系
+# （Foresight・国際）が混在する。category=geopolitics 一律だと page3 R1 で
+# Project Syndicate / War on the Rocks / Foreign Policy に常勝で負け、QUE は
+# 5 日連続採用 0 件だった。本マッピングで国内系を business（page2 Today's
+# Headlines / page3 R2）に、国際系を geopolitics（page3 R1/R3）に、文化系を
+# books（page3 R5）に振り分ける。未知カテゴリは旧 FORESIGHT 後継として
+# geopolitics を既定。
+QUE_TRIBUNE_CATEGORY_MAP: dict[str, str] = {
+    "経済・ビジネス":    "business",
+    "社会":              "business",
+    "教育":              "business",
+    "医療・ウェルネス":  "business",
+    "政治":              "business",
+    "カルチャー":        "books",
+    "ライフ":            "books",
+    "テクノロジー":      "geopolitics",
+    "国際":              "geopolitics",
+    "Foresight":         "geopolitics",
+}
+
+
+def map_que_category_to_tribune(que_category: str | None) -> str:
+    """QUE articleSection を Tribune category にマッピング。
+
+    未知カテゴリ / 空文字 / None は ``geopolitics``（FORESIGHT 後継）を既定。
+    """
+    if not que_category:
+        return "geopolitics"
+    return QUE_TRIBUNE_CATEGORY_MAP.get(que_category.strip(), "geopolitics")
+
 # Regex patterns
 _SITEMAP_INDEX_LOC_RE = re.compile(
     r'<sitemap>\s*<loc>([^<]+)</loc>', re.DOTALL,
@@ -168,6 +201,11 @@ def build_article_from_html(
     if not title:
         return None
 
+    category_que = (article.get("articleSection") or "").strip()
+    # C76 (Sprint 9, 2026-06-10): JSON-LD articleSection から Tribune category
+    # を動的決定。pipeline は raw["tribune_category"] を受けて記事個別の
+    # category を優先する。未知カテゴリは geopolitics 既定（FORESIGHT 後継）。
+    tribune_category = map_que_category_to_tribune(category_que)
     return Article(
         source_name=source.name,
         title=title,
@@ -177,7 +215,8 @@ def build_article_from_html(
         source_language=source.language,
         raw={
             "author": _author_name(article.get("author")),
-            "category_que": (article.get("articleSection") or "").strip(),
+            "category_que": category_que,
+            "tribune_category": tribune_category,
             "datePublished": article.get("datePublished") or "",
             "dateModified": article.get("dateModified") or "",
         },
@@ -287,19 +326,28 @@ class QueShinchoDriver(HtmlScrapeDriver):
         pages = parse_sitemap_index(index_text)
         if not pages:
             return []
-        # 先頭ページに最新エントリが集中している（経験的）。安全のため最初の 1 ページ
-        # のみ fetch して network 負荷を抑える。
-        first_page = pages[0]
-        try:
-            page_text = self._fetch_text(first_page)
-        except Exception as e:  # noqa: BLE001
-            print(
-                f"  [que-scrape] sitemap page FAIL: "
-                f"{type(e).__name__}: {e}",
-                file=sys.stderr,
-            )
-            return []
-        candidates = parse_sitemap_page(page_text)
+        # C76 (Sprint 9, 2026-06-10): 旧仕様「先頭ページに最新エントリが集中」は
+        # 誤った仮定だった。Drupal Simple XML Sitemap は **node ID 昇順** で
+        # 2000 件ずつページ分割するため、最新記事は **最終ページ** に集中する。
+        # 例：2026-06-10 時点で page1 = ID 1-7669（古い）、page3 = 13955-18915
+        # （最新）。/int-foresight/ 記事（ID 18000 番台）が page1 走査では
+        # 永遠に Stage 1 すら到達せず、5 日連続 QUE 採用 0 件の真因となっていた。
+        # 全 page を走査して lastmod 降順に合流させることで、Drupal の page
+        # 分割仕様（ID 順 / lastmod 順 / 件数閾値）が変わっても堅牢に動く。
+        # HTTP request は 1 + N（N = sitemap page 数、現状 3）に増えるが、
+        # 各 page は数百 KB の XML で軽量。
+        all_candidates: list[tuple[str, str]] = []
+        for page_url in pages:
+            try:
+                page_text = self._fetch_text(page_url)
+            except Exception as e:  # noqa: BLE001
+                print(
+                    f"  [que-scrape] sitemap page FAIL ({page_url[:80]}): "
+                    f"{type(e).__name__}: {e}",
+                    file=sys.stderr,
+                )
+                continue
+            all_candidates.extend(parse_sitemap_page(page_text))
         # lastmod 降順、ISO 8601 文字列の lex sort で時系列降順になる
-        candidates.sort(key=lambda x: x[1], reverse=True)
-        return candidates[: self.top_n]
+        all_candidates.sort(key=lambda x: x[1], reverse=True)
+        return all_candidates[: self.top_n]

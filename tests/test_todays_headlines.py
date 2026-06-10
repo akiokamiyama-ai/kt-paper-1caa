@@ -307,6 +307,8 @@ def test_all_filtered_out_by_source():
 
 def test_allowed_sources_contents():
     # C75 (Sprint 9, 2026-06-10): SOURCE_NAME_FILTERS と整合し FT を追加。
+    # C76 (Sprint 9, 2026-06-10): Shincho QUE を追加（category=business のみ通す
+    # per-source restriction 付き、HEADLINES_SOURCE_CATEGORY_RESTRICT 参照）。
     expected_keys = {
         "NHK ニュース 主要",
         "NHK ニュース 経済",
@@ -314,9 +316,10 @@ def test_allowed_sources_contents():
         "BBC Business",
         "The Economist",
         "Financial Times（FT）",
+        "Shincho QUE（新潮QUE）",
     }
     _check(
-        "g1 HEADLINES_ALLOWED_SOURCES 6 件、全 expected 名を含む（C75: FT 追加）",
+        "g1 HEADLINES_ALLOWED_SOURCES 7 件、全 expected 名を含む（C75 FT + C76 QUE）",
         set(HEADLINES_ALLOWED_SOURCES) == expected_keys,
         f"got {set(HEADLINES_ALLOWED_SOURCES)}",
     )
@@ -611,6 +614,76 @@ def test_old_log_without_headlines_field_safe():
             dedup_filter.LOG_DIR = orig_log_dir
 
 
+# ---------------------------------------------------------------------------
+# (j) C76 (2026-06-10): per-source category restriction
+# ---------------------------------------------------------------------------
+
+def test_que_business_passes_headlines():
+    """QUE 記事 (category=business) は Headlines 候補に通る."""
+    cands = [
+        _make_article("https://que.dailyshincho.jp/node/9000/",
+                      source="Shincho QUE（新潮QUE）", score=70),
+    ]
+    cands[0]["category"] = "business"
+    out = select_todays_headlines(
+        target_date=date(2026, 6, 11), candidates_scored=cands,
+    )
+    _check(
+        "j1 QUE category=business → Headlines pool 通過",
+        len(out) == 1 and out[0]["url"] == "https://que.dailyshincho.jp/node/9000/",
+        f"got {[r['url'] for r in out]}",
+    )
+
+
+def test_que_geopolitics_blocked_from_headlines():
+    """QUE 記事 (category=geopolitics) は Headlines 候補に通らない（page3 行き）."""
+    cands = [
+        _make_article("https://que.dailyshincho.jp/node/9000/",
+                      source="Shincho QUE（新潮QUE）", score=70),
+    ]
+    cands[0]["category"] = "geopolitics"
+    out = select_todays_headlines(
+        target_date=date(2026, 6, 11), candidates_scored=cands,
+    )
+    _check(
+        "j2 QUE category=geopolitics → Headlines pool 除外（page3 R1/R3 へ）",
+        len(out) == 0,
+        f"got {[r['url'] for r in out]}",
+    )
+
+
+def test_que_books_blocked_from_headlines():
+    """QUE 記事 (category=books) は Headlines 候補に通らない（page3 R5 行き）."""
+    cands = [
+        _make_article("https://que.dailyshincho.jp/node/9000/",
+                      source="Shincho QUE（新潮QUE）", score=70),
+    ]
+    cands[0]["category"] = "books"
+    out = select_todays_headlines(
+        target_date=date(2026, 6, 11), candidates_scored=cands,
+    )
+    _check(
+        "j3 QUE category=books → Headlines pool 除外（page3 R5 へ）",
+        len(out) == 0,
+        f"got {[r['url'] for r in out]}",
+    )
+
+
+def test_unrestricted_source_unaffected_by_category():
+    """category restriction が無いソース (BBC) は category 値に関わらず通る."""
+    cands = [
+        _make_article("https://bbc.com/x", source="BBC Business", score=80),
+    ]
+    cands[0]["category"] = "anything"
+    out = select_todays_headlines(
+        target_date=date(2026, 6, 11), candidates_scored=cands,
+    )
+    _check(
+        "j4 BBC（restriction 無し）は category 値に依存せず通る",
+        len(out) == 1, f"got {[r['url'] for r in out]}",
+    )
+
+
 def main() -> int:
     print("Today's Headlines selector tests (Sprint 7 Phase 2 Step 1, 2026-05-19)")
     print()
@@ -664,6 +737,12 @@ def main() -> int:
     test_headlines_dedup_days_constant()
     test_recent_dedup_window_boundary_via_loader()
     test_old_log_without_headlines_field_safe()
+    print()
+    print("(j) C76 (2026-06-10): per-source category restriction:")
+    test_que_business_passes_headlines()
+    test_que_geopolitics_blocked_from_headlines()
+    test_que_books_blocked_from_headlines()
+    test_unrestricted_source_unaffected_by_category()
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")
     return 0 if FAIL == 0 else 1
