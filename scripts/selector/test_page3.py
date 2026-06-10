@@ -448,6 +448,124 @@ def test_pre_evaluated_skips_stage2():
 # Test runner
 # ---------------------------------------------------------------------------
 
+# ---------------------------------------------------------------------------
+# (f) C79 (2026-06-11): default_fetcher の tribune_category 伝播
+# ---------------------------------------------------------------------------
+
+def test_default_fetcher_propagates_tribune_category():
+    """driver が ``raw["tribune_category"]`` をセットしている記事は、page3
+    default_fetcher の pipeline_dict に ``category`` として伝播する.
+
+    C78 真因究明 B4 の修正検証：C76 で
+    ``regen_front_page_v2._article_to_pipeline_dict`` には伝播コードを
+    入れたが、page3 default_fetcher 経路では入っていなかったため、本番 cron
+    で QUE が ``Source.category="geopolitics"`` 一律で R1 に振り分けられ、
+    Project Syndicate に完敗していた。
+    """
+    from datetime import datetime, timezone
+    from scripts.lib.source import Article
+
+    # 4 件の fixture：QUE business / QUE geopolitics / QUE books / 通常 RSS
+    arts = [
+        Article(
+            source_name="Shincho QUE（新潮QUE）",
+            title="QUE business article",
+            link="https://que.dailyshincho.jp/node/9001/",
+            description="経済記事",
+            pub_date=datetime(2026, 6, 11, tzinfo=timezone.utc),
+            source_language="ja",
+            raw={"tribune_category": "business", "category_que": "経済・ビジネス"},
+        ),
+        Article(
+            source_name="Shincho QUE（新潮QUE）",
+            title="QUE Foresight article",
+            link="https://que.dailyshincho.jp/node/9002/",
+            description="国際論考",
+            pub_date=datetime(2026, 6, 11, tzinfo=timezone.utc),
+            source_language="ja",
+            raw={"tribune_category": "geopolitics", "category_que": "Foresight"},
+        ),
+        Article(
+            source_name="Shincho QUE（新潮QUE）",
+            title="QUE books article",
+            link="https://que.dailyshincho.jp/node/9003/",
+            description="文化記事",
+            pub_date=datetime(2026, 6, 11, tzinfo=timezone.utc),
+            source_language="ja",
+            raw={"tribune_category": "books", "category_que": "カルチャー"},
+        ),
+        Article(
+            source_name="Project Syndicate",
+            title="通常 RSS article",
+            link="https://project-syndicate.org/x",
+            description="既存ソース",
+            pub_date=datetime(2026, 6, 11, tzinfo=timezone.utc),
+            source_language="en",
+            raw={},
+        ),
+    ]
+
+    # fetch_run は default_fetcher 内で lazy import されるので scripts.fetch.run
+    # を patch すれば効くが、run_stage1 / run_stage2 は page3 モジュール先頭で
+    # 既に import 済 → page3 シンボル自体を上書きする必要がある。
+    import scripts.fetch as fetch_mod
+
+    orig_fetch_run = fetch_mod.run
+    orig_run_stage1 = page3.run_stage1
+    orig_run_stage2 = page3.run_stage2
+
+    seen_pipeline_dicts: list[dict] = []
+
+    def fake_fetch_run(*, category=None, priority=None, limit=8, **kw):
+        # geopolitics high のみ QUE + PS、それ以外は空
+        if category == "geopolitics" and priority == "high":
+            return {"articles": arts}
+        return {"articles": []}
+
+    def fake_run_stage1(dicts):
+        seen_pipeline_dicts.extend(dicts)  # ← ここで pipeline_dict をキャプチャ
+        return [{**d, "is_excluded": True} for d in dicts]  # 後段に進ませない
+
+    def fake_run_stage2(dicts):
+        class _Res:
+            cost_usd = 0.0
+            evaluations_by_url: dict = {}
+        return _Res()
+
+    fetch_mod.run = fake_fetch_run
+    page3.run_stage1 = fake_run_stage1
+    page3.run_stage2 = fake_run_stage2
+
+    try:
+        page3.default_fetcher(limit=8)
+    finally:
+        fetch_mod.run = orig_fetch_run
+        page3.run_stage1 = orig_run_stage1
+        page3.run_stage2 = orig_run_stage2
+
+    by_url = {d["url"]: d for d in seen_pipeline_dicts}
+
+    _check(
+        "f1 QUE business 記事 → pipeline_dict[category] = 'business'",
+        by_url.get("https://que.dailyshincho.jp/node/9001/", {}).get("category") == "business",
+        f"got {by_url.get('https://que.dailyshincho.jp/node/9001/', {})}",
+    )
+    _check(
+        "f2 QUE Foresight 記事 → pipeline_dict[category] = 'geopolitics'",
+        by_url.get("https://que.dailyshincho.jp/node/9002/", {}).get("category") == "geopolitics",
+    )
+    _check(
+        "f3 QUE カルチャー記事 → pipeline_dict[category] = 'books'",
+        by_url.get("https://que.dailyshincho.jp/node/9003/", {}).get("category") == "books",
+    )
+    _check(
+        "f4 通常 RSS 記事（raw に tribune_category なし）→ category キーなし"
+        "（_attach_category で registry から引き当てる既存パス維持）",
+        "category" not in by_url.get("https://project-syndicate.org/x", {"category": "X"}),
+        f"got {by_url.get('https://project-syndicate.org/x', {})}",
+    )
+
+
 def main() -> int:
     print("Page 3 unit tests")
     print()
@@ -493,6 +611,10 @@ def main() -> int:
     test_pipeline_dedup_integration()
     test_pipeline_warning_on_2plus_placeholders()
     test_pre_evaluated_skips_stage2()
+
+    print()
+    print("(f) C79 (2026-06-11): default_fetcher の tribune_category 伝播:")
+    test_default_fetcher_propagates_tribune_category()
 
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")

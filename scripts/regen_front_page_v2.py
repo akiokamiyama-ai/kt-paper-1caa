@@ -110,6 +110,12 @@ INDEX_HTML = PROJECT_ROOT / "index.html"
 # 「NHK ニュース」substring は「NHK ニュース 主要」「NHK ニュース 経済」
 # 両方を拾うが、「NHKきょうの料理」(cooking.md) は名前空間が分離されていて
 # 拾わない（"NHK ニュース" prefix が完全一致しない）。
+# C79 (Sprint 9, 2026-06-11): "Shincho QUE" を追加。C76 で
+# HEADLINES_ALLOWED_SOURCES + HEADLINES_SOURCE_CATEGORY_RESTRICT を整備して
+# Headlines に QUE を流入させようとしたが、上流の SOURCE_NAME_FILTERS が
+# 未拡張で page1 candidates_scored に QUE 0 件 → Headlines pool に到達不可能
+# だった（C78 真因究明 B5）。本追加で QUE 動的 category が business のものは
+# Today's Headlines で BBC / FT / NHK / Yahoo と競合する。
 SOURCE_NAME_FILTERS: tuple[str, ...] = (
     "BBC Business",
     "The Economist",
@@ -117,6 +123,7 @@ SOURCE_NAME_FILTERS: tuple[str, ...] = (
     "Financial Times",  # C75: business.md FT を candidates に流入
     "NHK ニュース",      # C75: 主要 + 経済 を両方拾う、cooking は除外
     "Yahoo! ニュース",   # C75: 経済欄を candidates に流入
+    "Shincho QUE",       # C79: QUE 動的 category マッピングで business のみ Headlines 候補に
 )
 
 # Sources whose articles are already in Japanese — translation is skipped.
