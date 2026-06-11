@@ -752,6 +752,24 @@
       "ai_kamiyama_title": "How to Heal People with Science Fiction",
       "ai_kamiyama_category": "books:自然科学ノンフィクション",
       "ai_kamiyama_source_name": "Nautilus"
+    },
+    {
+      "displayed_on": "2026-06-12",
+      "article_url": "https://natalie.mu/music/news/675788",
+      "article_title": "ゲンジブ小泉光咲×四坂亮翔がW主演！「修仲」手がけた山下すばる脚本の青春ボーイズラブコメディ",
+      "article_category": "music",
+      "tie_candidates": [
+        "music"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://thepointmag.com/criticism/ideas-of-slavery-john-samuel-harpham/",
+      "ai_kamiyama_title": "Ideas of Slavery",
+      "ai_kamiyama_category": "academic",
+      "ai_kamiyama_source_name": "The Point Magazine"
     }
   ]
 }
