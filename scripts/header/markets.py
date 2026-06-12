@@ -107,13 +107,19 @@ def fetch_market_close(symbol: str, *, timeout: int = TIMEOUT_SEC) -> dict | Non
         print(f"  [markets] FAIL {symbol}: {type(e).__name__}", file=sys.stderr)
         return None
 
-    parsed = _parse_yahoo_chart(symbol, text)
-    if parsed is None:
+    # C80d (Fable review M7): 旧仕様は _parse_yahoo_chart と
+    # _parse_yahoo_chart_all_bars でそれぞれ json.loads + 抽出を独立に行い、
+    # 同一 text を 2 回 parse + 同じ切り出しロジック重複していた。
+    # _extract_chart_data に集約して 1 回 parse、current + all_bars を導出。
+    data = _extract_chart_data(symbol, text, verbose=True)
+    if data is None:
         return None
-    # C68 第二弾 (Sprint 9, 2026-06-10): 全 bar を ``all_bars`` として同梱、
-    # ``fetch_all_markets`` が history に逐次書き込んで欠損日を自動補填する。
-    parsed["all_bars"] = _parse_yahoo_chart_all_bars(symbol, text)
-    return parsed
+    current = _pick_current(symbol, data)
+    if current is None:
+        return None
+    # C68 第二弾: 全 bar を ``all_bars`` として同梱、``fetch_all_markets`` が
+    # history に逐次書き込んで欠損日を自動補填する。
+    return {**current, "all_bars": data["bars"]}
 
 
 def _local_date(ts: int, gmt_offset_sec: int) -> str:
@@ -121,6 +127,108 @@ def _local_date(ts: int, gmt_offset_sec: int) -> str:
     from datetime import timedelta
     tz = timezone(timedelta(seconds=gmt_offset_sec))
     return datetime.fromtimestamp(ts, tz=tz).date().isoformat()
+
+
+def _extract_chart_data(symbol: str, text: str, *, verbose: bool = False) -> dict | None:
+    """Yahoo chart JSON を 1 回パスで分解、共通中間表現を返す.
+
+    C80d (Sprint 9, 2026-06-12, Fable review M7): Sprint 9 まで
+    ``_parse_yahoo_chart`` と ``_parse_yahoo_chart_all_bars`` で同じ text を
+    2 回 ``json.loads`` し、gmtoffset / timestamps / closes の切り出しと
+    truncate ロジックも重複していた。本ヘルパーで JSON parse + bar 抽出を
+    1 回に集約。``fetch_market_close`` は本関数を 1 回呼んで current +
+    all_bars を同時に組み立てる。
+
+    防御強化（Fable M7）: ``indicators.quote[0]`` が ``None`` の場合
+    （Yahoo の障害時に観測される）``AttributeError`` を出さず空 ``bars``
+    として扱う。
+
+    Returns
+    -------
+    dict | None
+        ``{"meta": dict, "gmt_offset": int, "bars": list[dict]}`` または
+        パース不能・データなし時に ``None``。``bars`` は non-null close のみ、
+        date 昇順、各要素は ``{"symbol", "date", "close"}``。
+
+    Parameters
+    ----------
+    verbose :
+        True の場合、parse error / Yahoo API error を stderr に出力する
+        （``_parse_yahoo_chart`` 経由のみ true、``_parse_yahoo_chart_all_bars``
+        は静かに失敗する後方互換）。
+    """
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError as e:
+        if verbose:
+            print(f"  [markets] parse error for {symbol}: {e}", file=sys.stderr)
+        return None
+    chart = data.get("chart") or {}
+    err = chart.get("error")
+    if err:
+        if verbose:
+            print(f"  [markets] yahoo error for {symbol}: {err}", file=sys.stderr)
+        return None
+    results = chart.get("result") or []
+    if not results:
+        return None
+    r0 = results[0]
+    meta = r0.get("meta") or {}
+    try:
+        gmt_offset = int(meta.get("gmtoffset") or 0)
+    except (TypeError, ValueError):
+        gmt_offset = 0
+    timestamps = r0.get("timestamp") or []
+    indicators = r0.get("indicators") or {}
+    quotes = indicators.get("quote") or []
+    # M7 防御: quotes[0] が None / 非 dict の場合に AttributeError を出さない
+    if quotes and isinstance(quotes[0], dict):
+        closes = quotes[0].get("close") or []
+    else:
+        closes = []
+    if len(closes) != len(timestamps):
+        n = min(len(closes), len(timestamps))
+        timestamps = timestamps[:n]
+        closes = closes[:n]
+    bars: list[dict] = []
+    for ts, c in zip(timestamps, closes):
+        if c is None:
+            continue
+        try:
+            bars.append({
+                "symbol": symbol,
+                "date": _local_date(int(ts), gmt_offset),
+                "close": float(c),
+            })
+        except (TypeError, ValueError, OSError):
+            continue
+    bars.sort(key=lambda e: e["date"])
+    return {"meta": meta, "gmt_offset": gmt_offset, "bars": bars}
+
+
+def _pick_current(symbol: str, data: dict) -> dict | None:
+    """``_extract_chart_data`` の結果から「current = 末尾 bar + rmp fallback」を導出.
+
+    C80d M7: ``_parse_yahoo_chart`` と ``fetch_market_close`` で同じ rmp
+    fallback ロジックを書き出していたのを集約。
+    """
+    bars: list[dict] = data["bars"]
+    meta: dict = data["meta"]
+    gmt_offset: int = data["gmt_offset"]
+    bar_close = bars[-1] if bars else None
+    # C68 fix: regularMarketPrice が bar より新しければそちらを採用
+    rmp_raw = meta.get("regularMarketPrice")
+    rmt_raw = meta.get("regularMarketTime")
+    if rmp_raw is not None and rmt_raw is not None:
+        try:
+            rmp_val = float(rmp_raw)
+            rmt_int = int(rmt_raw)
+            rmp_date = _local_date(rmt_int, gmt_offset)
+            if bar_close is None or rmp_date > bar_close["date"]:
+                return {"symbol": symbol, "date": rmp_date, "close": rmp_val}
+        except (TypeError, ValueError, OSError):
+            pass
+    return bar_close
 
 
 def _parse_yahoo_chart_all_bars(symbol: str, text: str) -> list[dict]:
@@ -135,50 +243,10 @@ def _parse_yahoo_chart_all_bars(symbol: str, text: str) -> list[dict]:
     本関数は **全 non-null bar** を返す。``fetch_all_markets`` が history に
     逐次 append することで欠損日が翌日 cron で自動補填される。
 
-    Returns
-    -------
-    list[dict]
-        ``[{"symbol": symbol, "date": "YYYY-MM-DD", "close": float}, ...]``
-        非空 close のみ、date 昇順。エラー時は空リスト。
+    C80d (Fable review M7): 内部実装を ``_extract_chart_data`` 経由に統合。
     """
-    try:
-        data = json.loads(text)
-    except json.JSONDecodeError:
-        return []
-    chart = data.get("chart") or {}
-    if chart.get("error"):
-        return []
-    results = chart.get("result") or []
-    if not results:
-        return []
-    r0 = results[0]
-    meta = r0.get("meta") or {}
-    try:
-        gmt_offset = int(meta.get("gmtoffset") or 0)
-    except (TypeError, ValueError):
-        gmt_offset = 0
-    timestamps = r0.get("timestamp") or []
-    indicators = r0.get("indicators") or {}
-    quotes = indicators.get("quote") or []
-    closes = (quotes[0].get("close") if quotes else None) or []
-    if len(closes) != len(timestamps):
-        n = min(len(closes), len(timestamps))
-        timestamps = timestamps[:n]
-        closes = closes[:n]
-    out: list[dict] = []
-    for ts, c in zip(timestamps, closes):
-        if c is None:
-            continue
-        try:
-            out.append({
-                "symbol": symbol,
-                "date": _local_date(int(ts), gmt_offset),
-                "close": float(c),
-            })
-        except (TypeError, ValueError, OSError):
-            continue
-    out.sort(key=lambda e: e["date"])
-    return out
+    data = _extract_chart_data(symbol, text)
+    return data["bars"] if data else []
 
 
 def _parse_yahoo_chart(symbol: str, text: str) -> dict | None:
@@ -200,73 +268,14 @@ def _parse_yahoo_chart(symbol: str, text: str) -> dict | None:
     (64024.6, 15:45 JST) が即時反映されている。bar 走査の後、regularMarketPrice
     の date が bar.date より新しければそちらを採用するフォールバックを追加。
     神山さん要望「日本市場は前日夜のものを見たい」に応える。
+
+    C80d (Fable review M7): 内部実装を ``_extract_chart_data`` + ``_pick_current``
+    経由に統合。
     """
-    try:
-        data = json.loads(text)
-    except json.JSONDecodeError as e:
-        print(f"  [markets] parse error for {symbol}: {e}", file=sys.stderr)
+    data = _extract_chart_data(symbol, text, verbose=True)
+    if data is None:
         return None
-    chart = data.get("chart") or {}
-    err = chart.get("error")
-    if err:
-        print(f"  [markets] yahoo error for {symbol}: {err}", file=sys.stderr)
-        return None
-    results = chart.get("result") or []
-    if not results:
-        return None
-    r0 = results[0]
-    meta = r0.get("meta") or {}
-    try:
-        gmt_offset = int(meta.get("gmtoffset") or 0)
-    except (TypeError, ValueError):
-        gmt_offset = 0
-    timestamps = r0.get("timestamp") or []
-    indicators = r0.get("indicators") or {}
-    quotes = indicators.get("quote") or []
-    if not quotes:
-        closes: list = []
-    else:
-        closes = quotes[0].get("close") or []
-    if len(closes) != len(timestamps):
-        n = min(len(closes), len(timestamps))
-        timestamps = timestamps[:n]
-        closes = closes[:n]
-
-    # 1) 末尾から最初の non-null close を取る (bar 値)
-    bar_close: dict | None = None
-    for i in range(len(closes) - 1, -1, -1):
-        c = closes[i]
-        if c is None:
-            continue
-        try:
-            ts = int(timestamps[i])
-            bar_close = {
-                "symbol": symbol,
-                "date": _local_date(ts, gmt_offset),
-                "close": float(c),
-            }
-            break
-        except (TypeError, ValueError, OSError):
-            continue
-
-    # 2) C68 fix: regularMarketPrice が bar より新しければそちらを採用
-    rmp_raw = meta.get("regularMarketPrice")
-    rmt_raw = meta.get("regularMarketTime")
-    if rmp_raw is not None and rmt_raw is not None:
-        try:
-            rmp_val = float(rmp_raw)
-            rmt_int = int(rmt_raw)
-            rmp_date = _local_date(rmt_int, gmt_offset)
-            if bar_close is None or rmp_date > bar_close["date"]:
-                return {
-                    "symbol": symbol,
-                    "date": rmp_date,
-                    "close": rmp_val,
-                }
-        except (TypeError, ValueError, OSError):
-            pass
-
-    return bar_close
+    return _pick_current(symbol, data)
 
 
 # ---------------------------------------------------------------------------

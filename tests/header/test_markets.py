@@ -756,6 +756,102 @@ def test_fetch_all_markets_one_save_per_run():
     )
 
 
+# ---------------------------------------------------------------------------
+# (h) C80d (Fable review M7): _extract_chart_data 統合 + quote 防御
+# ---------------------------------------------------------------------------
+
+def test_extract_chart_data_unified_parse():
+    """_extract_chart_data が meta / gmt_offset / bars を 1 回で抽出."""
+    payload = _yahoo_payload(
+        timestamps=[1777593600, 1777680000],
+        closes=[100.0, 101.0],
+        gmt_offset=32400,
+        regular_market_price=102.0,
+        regular_market_time=1777680001,
+    )
+    data = markets._extract_chart_data("^nkx", payload)
+    ok = (
+        data is not None
+        and data["gmt_offset"] == 32400
+        and len(data["bars"]) == 2
+        and data["meta"].get("regularMarketPrice") == 102.0
+    )
+    _check("h1 _extract_chart_data: meta / gmt_offset / bars 一括抽出", ok,
+           f"got {data}")
+
+
+def test_extract_chart_data_handles_null_quote():
+    """``indicators.quote[0]`` が None の Yahoo 障害レスポンスでも crash しない."""
+    payload = json.dumps({
+        "chart": {
+            "result": [{
+                "meta": {"gmtoffset": 0},
+                "timestamp": [1777593600],
+                "indicators": {"quote": [None]},  # quote[0] = None
+            }],
+            "error": None,
+        }
+    })
+    data = markets._extract_chart_data("^nkx", payload)
+    _check(
+        "h2 quote[0]=None → AttributeError なく空 bars",
+        data is not None and data["bars"] == [],
+    )
+
+
+def test_extract_chart_data_handles_non_dict_quote():
+    """``quote[0]`` が非 dict（list / string）でも crash しない."""
+    payload = json.dumps({
+        "chart": {
+            "result": [{
+                "meta": {"gmtoffset": 0},
+                "timestamp": [1777593600],
+                "indicators": {"quote": ["unexpected string"]},
+            }],
+            "error": None,
+        }
+    })
+    data = markets._extract_chart_data("^nkx", payload)
+    _check(
+        "h3 quote[0]=string → AttributeError なく空 bars",
+        data is not None and data["bars"] == [],
+    )
+
+
+def test_fetch_market_close_single_parse():
+    """fetch_market_close が _extract_chart_data を 1 回だけ呼ぶことを確認."""
+    payload = _yahoo_payload(
+        timestamps=[1780617600, 1780876800],
+        closes=[66588.12, 64024.6],
+        gmt_offset=32400,
+        regular_market_price=65416.63,
+        regular_market_time=1780987503,
+    )
+    call_count = [0]
+    orig_extract = markets._extract_chart_data
+
+    def spy(symbol, text, *, verbose=False):
+        call_count[0] += 1
+        return orig_extract(symbol, text, verbose=verbose)
+
+    markets._extract_chart_data = spy
+    orig_url = _install_mock_urlopen(text=payload)
+    try:
+        r = markets.fetch_market_close("^nkx")
+    finally:
+        _restore_urlopen(orig_url)
+        markets._extract_chart_data = orig_extract
+
+    _check(
+        "h4 fetch_market_close: _extract_chart_data 1 回呼び出し（M7 統合）",
+        call_count[0] == 1
+        and r is not None
+        and r["date"] == "2026-06-09"
+        and "all_bars" in r,
+        f"calls={call_count[0]} result={r}",
+    )
+
+
 def main() -> int:
     print("Markets (Stooq) tests — Sprint 5 task #2")
     print()
@@ -813,6 +909,12 @@ def main() -> int:
     test_merge_entry_in_memory_idempotent_same_date()
     test_merge_entry_in_memory_keep_days_prune()
     test_fetch_all_markets_one_save_per_run()
+    print()
+    print("(h) C80d (Fable review M7): _extract_chart_data 統合 + 防御:")
+    test_extract_chart_data_unified_parse()
+    test_extract_chart_data_handles_null_quote()
+    test_extract_chart_data_handles_non_dict_quote()
+    test_fetch_market_close_single_parse()
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")
     return 0 if FAIL == 0 else 1
