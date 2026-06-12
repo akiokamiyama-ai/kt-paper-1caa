@@ -161,6 +161,32 @@ SYSTEM_PROMPT = _SYSTEM_PROMPT_CORE
 
 
 # ---------------------------------------------------------------------------
+# Input sanitization (C80b, Fable review H3)
+# ---------------------------------------------------------------------------
+
+# 入力テキストを USER_TEMPLATE の <<<INPUT_BEGIN>>>...<<<INPUT_END>>> fence に
+# 埋め込む前に、literal なセンチネル文字列を除去する。fence の早期クローズで
+# 入力が「指示」として読まれる古典的 injection を構文的に潰す。発生確率は
+# 低い（概念エッセイは自前 LLM 生成、コメントは本人入力）が、防御は 1 行で
+# 済む非対称性がある。
+_INPUT_FENCE_TOKENS: tuple[str, ...] = (
+    "<<<INPUT_BEGIN>>>",
+    "<<<INPUT_END>>>",
+)
+
+
+def sanitize_input_for_fence(text: str | None) -> str:
+    """fence sentinel を除去して返す。None / 空は空文字に正規化。"""
+    if not text:
+        return ""
+    out = text
+    for tok in _INPUT_FENCE_TOKENS:
+        if tok in out:
+            out = out.replace(tok, "")
+    return out
+
+
+# ---------------------------------------------------------------------------
 # User message template
 # ---------------------------------------------------------------------------
 
@@ -197,18 +223,28 @@ def render_day_block(day_index: int, date_iso: str, concept_name: str,
     Parameters
     ----------
     day_index : 1-based の日番号（Day 1, Day 2, …）
+
+    Notes
+    -----
+    C80b (2026-06-12, Fable review H3): concept_name / concept_essay /
+    comment は ``sanitize_input_for_fence`` で fence sentinel を除去してから
+    埋め込む。これで入力本文に literal ``<<<INPUT_END>>>`` が混入しても、
+    USER_TEMPLATE の fence が早期クローズしない（prompt injection 防御）。
     """
+    concept_name_s = sanitize_input_for_fence(concept_name)
+    concept_essay_s = sanitize_input_for_fence(concept_essay)
+    comment_s = sanitize_input_for_fence(comment)
     parts = [f"--- Day {day_index} ({date_iso}) ---"]
-    if concept_name:
-        parts.append(f"今日扱った概念：{concept_name}")
-    if concept_essay:
+    if concept_name_s:
+        parts.append(f"今日扱った概念：{concept_name_s}")
+    if concept_essay_s:
         parts.append("概念エッセイ：")
-        parts.append(concept_essay)
+        parts.append(concept_essay_s)
     else:
         parts.append("（概念エッセイなし）")
-    if comment:
+    if comment_s:
         parts.append("神山さんのコメント（最重要、これが思考の軸）：")
-        parts.append(comment)
+        parts.append(comment_s)
     else:
         parts.append("（コメントなし）")
     return "\n\n".join(parts)

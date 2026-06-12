@@ -29,6 +29,7 @@ Usage
 from __future__ import annotations
 
 import argparse
+import re
 import sys
 from datetime import date, datetime, timedelta
 from pathlib import Path
@@ -43,6 +44,33 @@ NOTES_DIR = PROJECT_ROOT / "data" / "notes"
 
 DEFAULT_MAX_TOKENS = 8192  # 5000字目標、漢字含む 1 token ≈ 1.5字 → 余裕を持って 8K
 DEFAULT_TEMPERATURE = 0.7
+
+# C80b (Sprint 9, 2026-06-12, Fable review H2): ``--label`` を出力ファイル名に
+# 直結する path traversal / 任意 .md 上書き対策。検証を save_note と
+# _build_context の両方で行う多層防御。許可されるのは ASCII alphanumeric +
+# underscore + ハイフンのみ。自動生成 label "W1" / "2026-W23" /
+# "2026-05-24-to-2026-05-30" は全て通過する。
+LABEL_PATTERN = re.compile(r"^[A-Za-z0-9_\-]+$")
+
+
+def _validate_label(label: str) -> None:
+    """``label`` が安全なファイル名構成要素か検査。
+
+    Raises
+    ------
+    ValueError
+        label が空 / 不正な文字を含む場合。``..`` や絶対パス区切り、
+        改行 / NULL 等は全て弾く。
+    """
+    if not label:
+        raise ValueError("label is empty")
+    if not LABEL_PATTERN.fullmatch(label):
+        raise ValueError(
+            f"invalid label: {label!r} "
+            f"(must match {LABEL_PATTERN.pattern}, "
+            f"i.e. ASCII alphanumeric + underscore + hyphen only; "
+            f"prevents path traversal / arbitrary .md overwrite)"
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -76,6 +104,9 @@ def _build_context(args: argparse.Namespace) -> NoteContext:
         if end < start:
             raise ValueError(f"--end {end} is before --start {start}")
         label = args.label or f"{start.isoformat()}-to-{end.isoformat()}"
+
+    # C80b: 早期検証で CLI 入力ミスを起動直後に弾く（save_note でも再検証）。
+    _validate_label(label)
 
     days: list[DayEntry] = []
     cur = start
@@ -149,6 +180,9 @@ def call_llm(ctx: NoteContext, *, model: str | None = None,
 # ---------------------------------------------------------------------------
 
 def save_note(note: GeneratedNote, *, notes_dir: Path = NOTES_DIR) -> Path:
+    # C80b: 多層防御。_build_context で既に検証済だが、ライブラリ経由で
+    # 不正 label が渡る経路を想定して再検証する。
+    _validate_label(note.label)
     notes_dir.mkdir(parents=True, exist_ok=True)
     path = notes_dir / f"{note.label}.md"
     path.write_text(note.body + "\n", encoding="utf-8")
