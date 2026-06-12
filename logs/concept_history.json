@@ -229,6 +229,11 @@
       "concept_id": "dao",
       "name_ja": "道（タオ）",
       "displayed_on": "2026-06-12"
+    },
+    {
+      "concept_id": "thinking_fast_and_slow",
+      "name_ja": "ファスト&スロー",
+      "displayed_on": "2026-06-13"
     }
   ]
 }

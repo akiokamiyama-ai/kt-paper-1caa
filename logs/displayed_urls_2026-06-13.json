@@ -1,0 +1,38 @@
+{
+  "date": "2026-06-13",
+  "page1_urls": [
+    "https://www.bbc.com/news/articles/czxqdznzy7ro?at_medium=RSS&at_campaign=rss",
+    "https://que.dailyshincho.jp/node/18879/",
+    "https://www.bbc.com/news/articles/cpv32417nlwo?at_medium=RSS&at_campaign=rss",
+    "https://que.dailyshincho.jp/node/18768/"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/news/articles/2606/11/news110.html",
+    "human_energy": "https://jinjibu.jp/news/detl/26507/",
+    "web_repo": "https://www.jftc.go.jp/houdou/pressrelease/"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/06/12/russia-putin-censorship-law-drug-propaganda-art-music-literature/",
+    null,
+    null,
+    "https://www.mckinsey.com/capabilities/business-building/our-insights/the-seven-operating-truths-of-ai-native-companies",
+    "https://www.theparisreview.org/blog/2026/06/12/diaries-from-the-psychic-capital-of-the-world/",
+    "https://www.project-syndicate.org/onpoint/what-ai-cannot-replace-by-sami-mahroum-2026-06"
+  ],
+  "page4_urls": [
+    "https://3quarksdaily.com/3quarksdaily/2026/06/as-vultures-vanished-dogs-multiplied-and-rabies-spread.html",
+    "https://www.themarginalian.org/2026/06/11/book-of-birds-macfarlane-morris/",
+    "https://3quarksdaily.com/3quarksdaily/2026/06/the-oral-literature-of-the-american-people.html"
+  ],
+  "page5_url": "https://thetrek.co/appalachian-trail/the-smokies-pt-1-days-18-20/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/06/12/diaries-from-the-psychic-capital-of-the-world/",
+    "music": "https://rockinon.com/news/detail/215226",
+    "outdoor": "https://sectionhiker.com/review-msr-switch-stove-system/"
+  },
+  "headlines_urls": [
+    "https://que.dailyshincho.jp/node/18573/",
+    "https://www.bbc.com/news/articles/cdrpe4vly5mo?at_medium=RSS&at_campaign=rss",
+    "https://www.ft.com/content/c5af5ea9-b40f-4d4d-b428-4693a8eb1906"
+  ]
+}

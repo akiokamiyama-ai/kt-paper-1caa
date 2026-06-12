@@ -770,6 +770,24 @@
       "ai_kamiyama_title": "Ideas of Slavery",
       "ai_kamiyama_category": "academic",
       "ai_kamiyama_source_name": "The Point Magazine"
+    },
+    {
+      "displayed_on": "2026-06-13",
+      "article_url": "https://thetrek.co/appalachian-trail/the-smokies-pt-1-days-18-20/",
+      "article_title": "The Smokies Pt. 1 – Days 18-20",
+      "article_category": "outdoor",
+      "tie_candidates": [
+        "outdoor"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.theparisreview.org/blog/2026/06/12/diaries-from-the-psychic-capital-of-the-world/",
+      "ai_kamiyama_title": "A Diary from the Psychic Capital of the World",
+      "ai_kamiyama_category": "books:海外純文学",
+      "ai_kamiyama_source_name": "The Paris Review"
     }
   ]
 }
