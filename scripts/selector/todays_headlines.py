@@ -21,34 +21,14 @@ import urllib.parse
 from collections.abc import Callable, Mapping
 from datetime import date
 
-# sources/business.md の H3 名と完全一致させる。括弧書きの注記が含まれる場合
-# (BBC) はそれも込みで指定する必要がある。Sprint 7 Phase 2 着手時に
-# source_registry.build_registry の出力から検証済み (2026-05-19)。
-#
-# C75 (Sprint 9, 2026-06-10): SOURCE_NAME_FILTERS と整合させ FT を追加。
-# 両者を同じ集合にする方針：page1 candidates に流入させたソースは
-# Today's Headlines でも eligible にする。
-# C76 (Sprint 9, 2026-06-10): Shincho QUE を追加。QUE は記事ごとに category を
-# 動的判定するため、Headlines では国内系（category=business）のみ通す。
-# 国際/Foresight 系（category=geopolitics）は page3 R1/R3 へ振り分けされる。
-HEADLINES_ALLOWED_SOURCES: tuple[str, ...] = (
-    "NHK ニュース 主要",
-    "NHK ニュース 経済",
-    "Yahoo! ニュース 経済",
-    "BBC Business",
-    "The Economist",
-    "Financial Times（FT）",  # C75: SOURCE_NAME_FILTERS と整合
-    "Shincho QUE（新潮QUE）",  # C76: 国内系のみ Headlines 候補に流入
+# C81 段階 1 (Sprint 9, 2026-06-13, Fable review M6): 旧 HEADLINES_ALLOWED_SOURCES /
+# HEADLINES_SOURCE_CATEGORY_RESTRICT は ``scripts/source_allowlist.py`` に移動。
+# regen_front_page_v2.SOURCE_NAME_FILTERS と単一 module で同期管理することで
+# C78 真因（片側更新漏れ）を構造的に予防。外部 import 互換のため re-export を残す。
+from ..source_allowlist import (  # noqa: F401  re-export
+    HEADLINES_ALLOWED_SOURCES,
+    HEADLINES_SOURCE_CATEGORY_RESTRICT,
 )
-
-# C76 (Sprint 9, 2026-06-10): per-source category 制限。``source_name`` ベース
-# allowlist だけでは「QUE の Foresight 国際記事まで Today's Headlines に混入」
-# してしまうため、ソースごとに「許可する category」を追加で絞る。QUE のみが
-# 動的 category を持つので、現状は QUE 専用エントリ。マッピングは
-# ``scripts/lib/drivers/que_shincho.QUE_TRIBUNE_CATEGORY_MAP`` を参照。
-HEADLINES_SOURCE_CATEGORY_RESTRICT: dict[str, tuple[str, ...]] = {
-    "Shincho QUE（新潮QUE）": ("business",),
-}
 
 DEFAULT_HEADLINES_TOP_N: int = 3
 # Sprint 7 Phase 2 微調整 (2026-05-20): 5/19 朝刊観察で 100 字では内容が
