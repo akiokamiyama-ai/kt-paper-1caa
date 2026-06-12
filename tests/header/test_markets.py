@@ -623,6 +623,139 @@ def test_fetch_all_markets_writes_all_bars_to_history():
     )
 
 
+# ---------------------------------------------------------------------------
+# (g) C80c (2026-06-12, Fable review H4): atomic save_history + 1 ran 1 save
+# ---------------------------------------------------------------------------
+
+def test_save_history_atomic_via_replace():
+    """save_history は tmp ファイル + os.replace で atomic に書き込まれる.
+
+    検証方法: save_history を呼ぶ前に history ファイルを存在させ、
+    save 後にも同 inode で内容だけ置換されることを確認（os.replace の
+    同一 fs 上 atomic 保証）。
+    """
+    import os as _os
+    with tempfile.TemporaryDirectory() as tmpdir:
+        path = Path(tmpdir) / "h.json"
+        # 初期 history を書く
+        markets.save_history({"^nkx": [{"date": "2026-06-05", "close": 66588.12}]},
+                              path=path)
+        size_before = path.stat().st_size
+        # 新しい history で上書き
+        markets.save_history({"^nkx": [
+            {"date": "2026-06-05", "close": 66588.12},
+            {"date": "2026-06-08", "close": 64024.6},
+        ]}, path=path)
+        # 同パスで内容が新しい状態
+        h = markets.load_history(path=path)
+        # tmp ファイルが残っていないこと（前 ran で .tmp 残骸が残らない）
+        leftover = [p.name for p in path.parent.iterdir()
+                    if p.name.startswith("h.json.")]
+    _check(
+        "g1 save_history: atomic replace 後に新内容が見える",
+        len(h.get("^nkx", [])) == 2,
+        f"got {h}",
+    )
+    _check(
+        "g2 save_history: tmp ファイルは残らない（atomic rename で消費される）",
+        leftover == [],
+        f"leftover tmp files: {leftover}",
+    )
+
+
+def test_save_history_raises_propagates_clean():
+    """save_history 中に書き込み失敗 → tmp が cleanup されて伝播する."""
+    import json as _json
+    with tempfile.TemporaryDirectory() as tmpdir:
+        path = Path(tmpdir) / "h.json"
+        # 既存 history
+        markets.save_history({"^nkx": [{"date": "2026-06-05", "close": 66588.12}]},
+                              path=path)
+        # json.dump を強制失敗させる（serializable でない object）
+        bad = {"^nkx": object()}  # not JSON serializable
+        raised = False
+        try:
+            markets.save_history(bad, path=path)
+        except TypeError:
+            raised = True
+        # 元の history は変更されていない
+        h = markets.load_history(path=path)
+        leftover = [p.name for p in path.parent.iterdir()
+                    if p.name.startswith("h.json.")]
+    _check(
+        "g3 save_history: serialization 失敗時に元ファイル無傷",
+        raised and h.get("^nkx", [{}])[0].get("date") == "2026-06-05",
+        f"raised={raised} got_h={h}",
+    )
+    _check(
+        "g4 save_history: serialization 失敗時に tmp も cleanup",
+        leftover == [],
+        f"leftover: {leftover}",
+    )
+
+
+def test_merge_entry_in_memory_idempotent_same_date():
+    """_merge_entry_in_memory: 同日 entry は first-write wins で skip."""
+    h: dict = {}
+    markets._merge_entry_in_memory(h, "^nkx", date="2026-06-08", close=64024.6)
+    markets._merge_entry_in_memory(h, "^nkx", date="2026-06-08", close=99999.99)
+    _check(
+        "g5 _merge_entry_in_memory: 同日 second-write は無視（first-write wins）",
+        h["^nkx"] == [{"date": "2026-06-08", "close": 64024.6}],
+        f"got {h}",
+    )
+
+
+def test_merge_entry_in_memory_keep_days_prune():
+    """keep_days を超えると古いものから削られる."""
+    h = {"^nkx": [{"date": f"2026-06-{i:02d}", "close": float(i)} for i in range(1, 6)]}
+    markets._merge_entry_in_memory(
+        h, "^nkx", date="2026-06-10", close=10.0, keep_days=3,
+    )
+    dates = [e["date"] for e in h["^nkx"]]
+    _check(
+        "g6 _merge_entry_in_memory: keep_days=3 で 4 entries → 末尾 3 件のみ保持",
+        dates == ["2026-06-04", "2026-06-05", "2026-06-10"],
+        f"got {dates}",
+    )
+
+
+def test_fetch_all_markets_one_save_per_run():
+    """C80c (H4 + B): 1 ran 1 save に集約されていることを観測.
+
+    save_history を spy で観測。5 symbol × ~3 bar の merge があっても save は 1 回。
+    """
+    payload = _yahoo_payload(
+        timestamps=[1780617600, 1780876800, 1780963200],
+        closes=[66588.12, 64024.6, None],
+        gmt_offset=32400,
+        regular_market_price=65416.63,
+        regular_market_time=1780987503,
+    )
+    save_call_count = [0]
+    orig_save = markets.save_history
+
+    def spy_save(history, *, path=None):
+        save_call_count[0] += 1
+        return orig_save(history, path=path)
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        path = Path(tmpdir) / "h.json"
+        markets.save_history = spy_save
+        orig_url = _install_mock_urlopen(text=payload)
+        try:
+            markets.fetch_all_markets(history_path=path)
+        finally:
+            _restore_urlopen(orig_url)
+            markets.save_history = orig_save
+
+    _check(
+        "g7 fetch_all_markets: save_history 呼び出し回数 == 1（C80c 集約）",
+        save_call_count[0] == 1,
+        f"got {save_call_count[0]} saves",
+    )
+
+
 def main() -> int:
     print("Markets (Stooq) tests — Sprint 5 task #2")
     print()
@@ -673,6 +806,13 @@ def main() -> int:
     test_all_bars_empty_on_parse_error()
     test_fetch_all_markets_backfills_missing_history()
     test_fetch_all_markets_writes_all_bars_to_history()
+    print()
+    print("(g) C80c (2026-06-12): atomic save_history + 1 ran 1 save:")
+    test_save_history_atomic_via_replace()
+    test_save_history_raises_propagates_clean()
+    test_merge_entry_in_memory_idempotent_same_date()
+    test_merge_entry_in_memory_keep_days_prune()
+    test_fetch_all_markets_one_save_per_run()
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")
     return 0 if FAIL == 0 else 1

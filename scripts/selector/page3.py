@@ -706,27 +706,16 @@ def default_fetcher(
         if not url or url in seen_urls:
             continue
         seen_urls.add(url)
+        # C80c (Sprint 9, 2026-06-12, Fable review M1): page1 / page3 /
+        # stage1 の 3 箇所に分散していた pipeline_dict 構築を
+        # ``Article.to_pipeline_dict()`` に一本化。C79 で copy-paste した
+        # tribune_category 伝播コードもメソッド内に集約。page3 では
+        # ``_strip_html_simple`` を適用する点だけが固有。
         body = "\n".join(a.body_paragraphs) if a.body_paragraphs else ""
-        d = {
-            "url": url,
-            "title": a.title,
-            "description": _strip_html_simple(a.description),
-            "body": _strip_html_simple(body),
-            "source_name": a.source_name,
-            "source_url": None,
-            "pub_date": a.pub_date.isoformat() if a.pub_date else None,
-        }
-        # C79 (Sprint 9, 2026-06-11): driver が記事ごとの動的 category を
-        # ``Article.raw["tribune_category"]`` にセットしている場合は
-        # pipeline_dict に伝播する。selector._category_of / _attach_category は
-        # ``article["category"]`` を優先するため、自動的に動的振り分けされる。
-        # C76 で ``regen_front_page_v2._article_to_pipeline_dict`` には同じ
-        # 伝播コードを入れたが、page3 default_fetcher 経路を見落としていた
-        # 真因（C78 真因究明）の対策。現状は QueShinchoDriver のみが利用。
-        tribune_category = (a.raw or {}).get("tribune_category")
-        if tribune_category:
-            d["category"] = tribune_category
-        pipeline_dicts.append(d)
+        pipeline_dicts.append(a.to_pipeline_dict(
+            description=_strip_html_simple(a.description),
+            body=_strip_html_simple(body),
+        ))
 
     # Stage 1
     s1_out = run_stage1(pipeline_dicts)

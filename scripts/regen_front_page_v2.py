@@ -362,32 +362,18 @@ def _byline_for(source_name: str | None) -> str:
 
 
 def _article_to_pipeline_dict(article: Article) -> dict:
-    """Convert a fetched Article into the dict shape Stage 1+2+rendering expect."""
+    """Convert a fetched Article into the dict shape Stage 1+2+rendering expect.
+
+    C80c (Sprint 9, 2026-06-12, Fable review M1): pipeline_dict 構築は
+    ``Article.to_pipeline_dict()`` に一本化（page1 / page3 / stage1 で同一実装
+    を共有、tribune_category 伝播も一括）。本関数は page1 固有の
+    ``_strip_html`` 適用のみ担当する薄いラッパー。
+    """
     desc_clean = _strip_html(article.description)
     body_clean = _strip_html(
         "\n".join(article.body_paragraphs) if article.body_paragraphs else ""
     )
-    out: dict = {
-        "url": article.link,
-        "title": article.title,
-        "description": desc_clean,
-        "body": body_clean,
-        "source_name": article.source_name,
-        "source_url": None,
-        "pub_date": article.pub_date.isoformat() if article.pub_date else None,
-        # Sprint 5: Source.language を Article.source_language 経由で伝播。
-        # 翻訳判定 (_translate_article) と HTML 表示分岐 (build_page_one_v2) で使用。
-        "source_language": article.source_language,
-    }
-    # C76 (Sprint 9, 2026-06-10): driver が記事ごとの動的 category を
-    # ``Article.raw["tribune_category"]`` にセットしている場合は pipeline_dict
-    # に伝播する。selector._category_of / _attach_category は
-    # ``article["category"]`` を優先するため、自動的に動的振り分けされる。
-    # 現状は QueShinchoDriver のみが利用。
-    tribune_category = (article.raw or {}).get("tribune_category")
-    if tribune_category:
-        out["category"] = tribune_category
-    return out
+    return article.to_pipeline_dict(description=desc_clean, body=body_clean)
 
 
 # ---------------------------------------------------------------------------

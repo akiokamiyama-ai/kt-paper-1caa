@@ -43,19 +43,14 @@ def _to_dict(article: Article | dict[str, Any]) -> dict[str, Any]:
 
     For Article inputs we map ``link`` → ``url`` to match the spec naming.
     For dict inputs we copy as-is so the caller's keys are preserved.
+
+    C80c (Sprint 9, 2026-06-12, Fable review M1): Article 経由は
+    ``Article.to_pipeline_dict()`` を使用、page1/page3 と同一フィールド構成
+    を共有する。dict 経路は caller が組んだ dict をそのまま使う既存挙動を維持。
     """
     if isinstance(article, dict):
         return dict(article)
-    body = "\n".join(article.body_paragraphs) if article.body_paragraphs else ""
-    return {
-        "url": article.link,
-        "title": article.title,
-        "description": article.description,
-        "body": body,
-        "source_name": article.source_name,
-        "source_url": None,
-        "pub_date": article.pub_date.isoformat() if article.pub_date else None,
-    }
+    return article.to_pipeline_dict()
 
 
 def run_stage1(

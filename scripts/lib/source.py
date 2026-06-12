@@ -140,6 +140,58 @@ class Article:
         """The dedupe key. Link is canonical when present, falling back to title."""
         return self.link.strip() or self.title.strip()
 
+    def to_pipeline_dict(
+        self,
+        *,
+        description: str | None = None,
+        body: str | None = None,
+    ) -> dict:
+        """Convert to the dict shape Stage 1+2+rendering expect.
+
+        C80c (Sprint 9, 2026-06-12, Fable review M1): Sprint 8〜9 で
+        ``regen_front_page_v2._article_to_pipeline_dict`` /
+        ``scripts/selector/page3.py::default_fetcher`` /
+        ``scripts/selector/stage1._to_dict`` の 3 箇所に分散していた
+        pipeline_dict 構築ロジックを一本化する。C78 真因「page1 経路にだけ
+        ``tribune_category`` 伝播を入れて page3 経路を見落とした」と同型の
+        事故を構造的に予防する。
+
+        Parameters
+        ----------
+        description : str | None
+            既に HTML strip 済の description。``None`` なら ``self.description``
+            （raw HTML 含む）をそのまま使う。caller が site 固有の strip 関数を
+            適用する場合に渡す。
+        body : str | None
+            同様に strip 済の body 文字列。``None`` なら ``self.body_paragraphs``
+            を改行結合した raw 値。
+
+        Notes
+        -----
+        - ``source_language`` は常に含める（Stage 1+2 が利用しないコンテキスト
+          でも無害な追加フィールド、page1 翻訳判定 / page2 source_language
+          フィールド書き出しで利用される）。
+        - driver が ``raw["tribune_category"]`` をセットしている場合は
+          ``category`` フィールドに自動反映（C76 QUE 動的マッピング / C79 page3
+          経路）。
+        """
+        if body is None:
+            body = "\n".join(self.body_paragraphs) if self.body_paragraphs else ""
+        out: dict = {
+            "url": self.link,
+            "title": self.title,
+            "description": description if description is not None else self.description,
+            "body": body,
+            "source_name": self.source_name,
+            "source_url": None,
+            "pub_date": self.pub_date.isoformat() if self.pub_date else None,
+            "source_language": self.source_language,
+        }
+        tribune_category = (self.raw or {}).get("tribune_category")
+        if tribune_category:
+            out["category"] = tribune_category
+        return out
+
 
 # ---------------------------------------------------------------------------
 # Parsing
