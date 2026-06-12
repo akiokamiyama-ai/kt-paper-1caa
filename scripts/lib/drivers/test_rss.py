@@ -94,6 +94,72 @@ def main() -> int:
         "イスラエルでは今年10月までに総選挙が実施される。[…]",
     )
 
+    # ----------------------------------------------------------------------
+    # C80 (2026-06-12, Fable review L4): _strip_wp_boilerplate
+    # ----------------------------------------------------------------------
+    from . import rss as _rss
+
+    print()
+    print("_strip_wp_boilerplate (C80, WordPress feed boilerplate):")
+
+    # Public Books / The Point Magazine 等の HTML パターン
+    _check(
+        "wp1 Public Books HTML pattern stripped",
+        _rss._strip_wp_boilerplate(
+            '<p>main body paragraph.</p>\n'
+            '<p>The post <a href="https://www.publicbooks.org/x/">Who Owns Argentine Football?</a> '
+            'appeared first on <a href="https://www.publicbooks.org">Public Books</a>.</p>\n'
+        ),
+        '<p>main body paragraph.</p>',
+    )
+    _check(
+        "wp2 The Point Magazine HTML pattern stripped",
+        _rss._strip_wp_boilerplate(
+            'main text<p>The post <a href="...">Title</a> '
+            'appeared first on <a href="...">The Point Magazine</a>.</p>'
+        ),
+        'main text',
+    )
+
+    # Plain text パターン（<p> なし）
+    _check(
+        "wp3 plain text pattern stripped",
+        _rss._strip_wp_boilerplate(
+            'main text. The post Title appeared first on Site.'
+        ),
+        'main text.',
+    )
+
+    # passthrough（boilerplate なし）
+    _check(
+        "wp4 no boilerplate → passthrough unchanged",
+        _rss._strip_wp_boilerplate('just main text without any boilerplate'),
+        'just main text without any boilerplate',
+    )
+
+    # Edge cases
+    _check(
+        "wp5 empty string passthrough",
+        _rss._strip_wp_boilerplate(''),
+        '',
+    )
+    _check(
+        "wp6 None passthrough",
+        _rss._strip_wp_boilerplate(None),
+        None,
+    )
+
+    # 末尾に boilerplate なし（途中に "appeared first" を含む通常本文）
+    _check(
+        "wp7 'appeared first' in middle of text → not stripped",
+        _rss._strip_wp_boilerplate(
+            'The post-war era was when it appeared first on the world stage. '
+            'Then came the next phase.'
+        ),
+        'The post-war era was when it appeared first on the world stage. '
+        'Then came the next phase.',
+    )
+
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")
     return 0 if FAIL == 0 else 1

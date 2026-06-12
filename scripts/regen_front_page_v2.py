@@ -1601,6 +1601,9 @@ def _render_page4_academic_item(article: dict) -> str:
 
     C36 Step 2b (2026-06-09): 英語ソース多様化に合わせ、title_ja/desc_ja を採用。
     desc_ja は Sprint 5 ポリシーにより原文 passthrough（英語ソースは英語のまま）。
+    C80 (2026-06-12, Fable review L3): 英語段落に ``lang="ja"`` が付くと
+    typography / 読み上げが崩れるため、title と desc で lang を分離。title は
+    翻訳済 (ja)、desc は原文ソースの言語に従う。
     """
     title_ja = article.get("title_ja") or article.get("title") or ""
     desc_ja = article.get("desc_ja") or article.get("description") or ""
@@ -1612,10 +1615,15 @@ def _render_page4_academic_item(article: dict) -> str:
     else:
         byline_text = f"出典：{source_name}"
     title_html = f'<a href="{_esc(url)}" target="_blank" rel="noopener noreferrer">{_esc(title_ja)}</a>' if url else _esc(title_ja)
+    # C80: desc の言語属性を Source.language ベースで決定。``_is_japanese_article``
+    # は source_language を最優先、fallback で name-heuristic を見る（Sprint 5
+    # 設計）。これにより英語ソース desc に ``lang="ja"`` が付く問題を解消。
+    desc_is_ja = _is_japanese_article(article)
+    desc_lang_attr = "" if desc_is_ja else ' lang="en"'
     return f"""
       <div class="item" lang="ja">
         <h5 class="headline-s">{title_html}</h5>
-        <p>{_esc(desc_ja)}</p>
+        <p{desc_lang_attr}>{_esc(desc_ja)}</p>
         <p class="byline" style="font-size: 11px; color: #666; margin-top: 4px;">{_esc(byline_text)}</p>
       </div>""".rstrip()
 

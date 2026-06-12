@@ -81,6 +81,30 @@ def test_region_R6_books_natural_science():
            page3._region_for(a) == "R6", f"got {page3._region_for(a)}")
 
 
+def test_region_R6_books_natural_science_with_subcategory():
+    """C80 (2026-06-12, Fable review H1): books.md は parser が H2 を sub_category
+    として処理するため、category は ``books:自然科学ノンフィクション`` の形に
+    なる。旧仕様 ``cat == "books"`` 完全一致では dead code、startswith 化で
+    BOOKS_NATURAL_SCIENCE_SOURCES 判定が初めて機能する。
+    """
+    a = _art(source_name="Quanta Magazine",
+             category="books:自然科学ノンフィクション",
+             title="New results in pure mathematics topology")
+    _check("a2b R6: Quanta cat=books:自然科学ノンフィクション → R6 (C80 fix)",
+           page3._region_for(a) == "R6", f"got {page3._region_for(a)}")
+    a2 = _art(source_name="Nautilus",
+              category="books:自然科学ノンフィクション",
+              title="Essay on neurobiology")
+    _check("a2c R6: Nautilus cat=books:自然科学ノンフィクション → R6 (C80 fix)",
+           page3._region_for(a2) == "R6", f"got {page3._region_for(a2)}")
+    # 非自然科学の books:海外文芸 は引き続き R5
+    a3 = _art(source_name="The Paris Review",
+              category="books:海外文芸",
+              title="A new short story translation")
+    _check("a2d R5: books:海外文芸 (非自然科学) → R5（既存挙動維持）",
+           page3._region_for(a3) == "R5", f"got {page3._region_for(a3)}")
+
+
 def test_region_R5_books_default():
     a = _art(source_name="早川書房", category="books",
              title="新刊：テッド・チャン短編集")
@@ -573,6 +597,7 @@ def main() -> int:
     print("(a) _region_for / _filter_for_region:")
     test_region_R6_academic()
     test_region_R6_books_natural_science()
+    test_region_R6_books_natural_science_with_subcategory()
     test_region_R5_books_default()
     test_region_R5_aeon_no_R6_keyword()
     test_region_R3_AI_regulation()

@@ -357,7 +357,18 @@ def _matches_R6(article: dict) -> bool:
         return True
 
     # books.md の自然科学ノンフィクションセクション
-    if cat == "books" and _source_name_match(article, BOOKS_NATURAL_SCIENCE_SOURCES):
+    # C80 (Sprint 9, 2026-06-12): C75 で _matches_R5 を ``startswith("books")``
+    # に緩和した際、本分岐の対称化を見落としていた。books.md の H2
+    # （「日本の小説」「自然科学ノンフィクション」等）は priority needle を
+    # 含まないため parser は sub_category として処理し、全 13 ソースの
+    # category は ``books:日本の小説`` / ``books:自然科学ノンフィクション`` 等。
+    # 旧仕様の ``cat == "books"`` 完全一致は導入時から一度も True にならず
+    # **dead code** だった（Fable Sprint 9 review H1）。結果、Quanta /
+    # Nautilus / 日経サイエンス / The Marginalian は R6_KEYWORDS にヒット
+    # しない限り必ず R5（文化・書評）に流れていた。startswith 化で R6
+    # 優先（コメント「自然科学ノンフは _matches_R6 で先に拾われる」）を
+    # 復活させる。
+    if cat and cat.startswith("books") and _source_name_match(article, BOOKS_NATURAL_SCIENCE_SOURCES):
         return True
 
     # The Economist Science and Technology

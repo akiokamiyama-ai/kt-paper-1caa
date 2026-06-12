@@ -19,6 +19,7 @@ This avoids depending on a per-feed namespace map.
 from __future__ import annotations
 
 import html
+import re
 import sys
 import urllib.error
 import urllib.request
@@ -108,6 +109,34 @@ def _parse_date(text: str) -> datetime | None:
 _CONTENT_ENCODED_CAP = 4000
 
 
+# C80 (Sprint 9, 2026-06-12, Fable review L4): WordPress 標準フィードの末尾
+# 「The post <Title> appeared first on <SiteName>.」boilerplate を除去。
+# 6/11 紙面で Public Books の desc にこの文言が紙面まで素通しで出ていた
+# （C36 Step 2b で増えた WP 系ソース共通の課題）。Public Books /
+# The Point Magazine 等は <p>...</p> で囲まれた HTML パターン、サイトに
+# よってはプレーンテキストの場合もあるため両形態に対応する。
+_WP_POST_BOILERPLATE_RE = re.compile(
+    r"\s*(?:<p[^>]*>)?\s*The\s+post\s+"
+    r"(?:<a\b[^>]*>)?[^<]*?(?:</a>)?\s+"
+    r"appeared\s+first\s+on\s+"
+    r"(?:<a\b[^>]*>)?[^<]*?(?:</a>)?\s*\.\s*"
+    r"(?:</p>)?\s*$",
+    re.IGNORECASE | re.DOTALL,
+)
+
+
+def _strip_wp_boilerplate(text: str) -> str:
+    """末尾の WordPress feed boilerplate を除去（HTML / プレーン両対応）.
+
+    マッチしなければ ``text`` をそのまま返す。複数行末尾の whitespace は
+    最終的に ``rstrip`` で削る。``description`` / ``content_encoded`` の
+    両方に適用する想定。
+    """
+    if not text:
+        return text
+    return _WP_POST_BOILERPLATE_RE.sub("", text).rstrip()
+
+
 def _content_encoded_of(item: ET.Element) -> str:
     """RSS の ``<content:encoded>``（local name ``encoded``）の生 HTML を返す.
 
@@ -119,7 +148,7 @@ def _content_encoded_of(item: ET.Element) -> str:
     el = _find_local(item, ("encoded",))
     if el is None or el.text is None:
         return ""
-    return el.text.strip()[:_CONTENT_ENCODED_CAP]
+    return _strip_wp_boilerplate(el.text.strip())[:_CONTENT_ENCODED_CAP]
 
 
 def _extract_link(item: ET.Element) -> str:
@@ -172,7 +201,9 @@ class RssDriver(SourceDriver):
                 continue
             title = _text_of(_find_local(elem, ("title",)))
             link = _extract_link(elem)
-            desc = _text_of(_find_local(elem, ("description", "summary", "content")))
+            desc = _strip_wp_boilerplate(
+                _text_of(_find_local(elem, ("description", "summary", "content")))
+            )
             date_text = _text_of(
                 _find_local(elem, ("pubDate", "published", "updated", "date"))
             )
