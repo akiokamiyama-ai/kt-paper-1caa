@@ -312,6 +312,33 @@ def test_user_message_end_to_end_fence_intact():
 # (c) C80d (2026-06-12, Fable review L6): --week と --start の併用排他
 # ---------------------------------------------------------------------------
 
+def test_parse_iso_week_valid():
+    """Mon-Sun range を返す（_parse_iso_week は ISO week 計算）."""
+    from scripts.notes.generate import _parse_iso_week
+    start, end = _parse_iso_week("2026-W23")
+    _check(
+        "c0a _parse_iso_week('2026-W23'): Mon-Sun (6/1 - 6/7)",
+        start == date(2026, 6, 1) and end == date(2026, 6, 7),
+        f"got {start} - {end}",
+    )
+
+
+def test_parse_iso_week_invalid_format():
+    from scripts.notes.generate import _parse_iso_week
+    _check(
+        "c0b _parse_iso_week('2026'): ValueError",
+        _expect_raises(lambda: _parse_iso_week("2026"), ValueError),
+    )
+
+
+def test_parse_iso_week_empty():
+    from scripts.notes.generate import _parse_iso_week
+    _check(
+        "c0c _parse_iso_week(''): ValueError",
+        _expect_raises(lambda: _parse_iso_week(""), ValueError),
+    )
+
+
 def test_argparse_rejects_week_and_start_together():
     """``--week`` と ``--start`` の併用は argparse 段階で SystemExit。"""
     import contextlib
@@ -363,7 +390,10 @@ def main() -> int:
     test_user_message_end_to_end_fence_intact()
 
     print()
-    print("(c) C80d L6: --week / --start の mutually_exclusive_group:")
+    print("(c) _parse_iso_week + L6 mutually_exclusive_group (C80d M5 + L6):")
+    test_parse_iso_week_valid()
+    test_parse_iso_week_invalid_format()
+    test_parse_iso_week_empty()
     test_argparse_rejects_week_and_start_together()
 
     print()
