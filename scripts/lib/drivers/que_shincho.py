@@ -63,6 +63,25 @@ DEFAULT_PUBDATE_WINDOW_DAYS = 7
 DEFAULT_MIN_DESC_CHARS = 80
 
 
+# C80d (Sprint 9, 2026-06-12, Fable review M2): 1 Python プロセス内の
+# URL → text HTTP cache。C79 以降、1 cron で page1 ``fetch_candidates``
+# (SOURCE_NAME_FILTERS "Shincho QUE") と page3 ``default_fetcher``
+# (geopolitics/high) が両方 QueShinchoDriver.fetch を呼ぶため、sitemap index
+# + page + 個別記事 (top_n=25) の fetch が 2 回走っていた（~58 HTTP リクエスト
+# / ran、実行時間 2 倍）。本 cache で同 URL の 2 回目以降を memo 化することで、
+# HTTP リクエスト数を半減させる。Python プロセス終了でメモリごと破棄されるため
+# stale cache のリスクはない（cron は 1 回ごとに新プロセス）。
+# テストは ``clear_fetch_cache()`` で各 case 前にリセット可能。
+_FETCH_CACHE: dict[str, str] = {}
+
+
+def clear_fetch_cache() -> None:
+    """Empty the in-process HTTP cache. Used by tests and (optionally) by
+    long-lived processes that want to force re-fetch on next call.
+    """
+    _FETCH_CACHE.clear()
+
+
 # C76 (Sprint 9, 2026-06-10): QUE 記事の JSON-LD articleSection を Tribune の
 # category 体系にマッピング。QUE は「NHK 的位置づけ + 旧 FORESIGHT 的位置づけ」
 # のハイブリッド媒体で、国内系（経済・社会・教育・医療・政治）と国際系
@@ -276,11 +295,18 @@ class QueShinchoDriver(HtmlScrapeDriver):
     # ------------------------------------------------------------------
 
     def _fetch_text(self, url: str) -> str:
+        # C80d (Fable review M2): in-process URL cache。同一 cron 内で page1
+        # と page3 経路から同じ URL を取りに来た場合、2 回目以降は memo を返す。
+        cached = _FETCH_CACHE.get(url)
+        if cached is not None:
+            return cached
         req = urllib.request.Request(
             url, headers={"User-Agent": self.user_agent},
         )
         with urllib.request.urlopen(req, timeout=self.timeout) as resp:
-            return resp.read().decode("utf-8", errors="replace")
+            text = resp.read().decode("utf-8", errors="replace")
+        _FETCH_CACHE[url] = text
+        return text
 
     # ------------------------------------------------------------------
     # Public driver API

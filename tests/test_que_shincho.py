@@ -705,6 +705,133 @@ def test_fetch_merges_candidates_across_pages_by_lastmod():
     )
 
 
+# ---------------------------------------------------------------------------
+# (i) C80d (2026-06-12, Fable review M2): in-process HTTP cache
+# ---------------------------------------------------------------------------
+
+def test_fetch_text_cache_memo_hit():
+    """同一 URL の 2 回目 fetch は cache hit、urlopen は 1 回しか呼ばれない."""
+    from scripts.lib.drivers import que_shincho as qs
+    qs.clear_fetch_cache()
+
+    call_count = [0]
+    fake_text = "fake response"
+
+    class _FakeResp:
+        def __enter__(self): return self
+        def __exit__(self, *a): pass
+        def read(self): return fake_text.encode("utf-8")
+
+    orig = qs.urllib.request.urlopen
+
+    def fake_urlopen(req, timeout=None):
+        call_count[0] += 1
+        return _FakeResp()
+
+    qs.urllib.request.urlopen = fake_urlopen
+    try:
+        drv = qs.QueShinchoDriver()
+        # 1 回目: 実 fetch
+        out1 = drv._fetch_text("https://que.dailyshincho.jp/x")
+        # 2 回目: cache hit
+        out2 = drv._fetch_text("https://que.dailyshincho.jp/x")
+    finally:
+        qs.urllib.request.urlopen = orig
+        qs.clear_fetch_cache()
+
+    _check(
+        "i1 同 URL 2 回 fetch → urlopen は 1 回のみ呼ばれる（cache hit）",
+        call_count[0] == 1 and out1 == fake_text and out2 == fake_text,
+        f"calls={call_count[0]}",
+    )
+
+
+def test_fetch_text_cache_separate_urls():
+    """異なる URL は別 entry として cache される."""
+    from scripts.lib.drivers import que_shincho as qs
+    qs.clear_fetch_cache()
+
+    call_count = [0]
+
+    class _FakeResp:
+        def __init__(self, t): self.t = t
+        def __enter__(self): return self
+        def __exit__(self, *a): pass
+        def read(self): return self.t.encode("utf-8")
+
+    orig = qs.urllib.request.urlopen
+
+    def fake_urlopen(req, timeout=None):
+        call_count[0] += 1
+        return _FakeResp(f"text for {req.full_url}")
+
+    qs.urllib.request.urlopen = fake_urlopen
+    try:
+        drv = qs.QueShinchoDriver()
+        a = drv._fetch_text("https://que.dailyshincho.jp/a")
+        b = drv._fetch_text("https://que.dailyshincho.jp/b")
+        # 各 URL は 1 回ずつ fetch
+    finally:
+        qs.urllib.request.urlopen = orig
+        qs.clear_fetch_cache()
+
+    _check(
+        "i2 異なる URL は別 entry → urlopen は 2 回呼ばれる",
+        call_count[0] == 2 and "a" in a and "b" in b,
+        f"calls={call_count[0]}",
+    )
+
+
+def test_clear_fetch_cache_empties_cache():
+    """clear_fetch_cache() で cache がリセットされる."""
+    from scripts.lib.drivers import que_shincho as qs
+    qs._FETCH_CACHE["https://x"] = "cached"
+    qs.clear_fetch_cache()
+    _check(
+        "i3 clear_fetch_cache() → cache 空",
+        len(qs._FETCH_CACHE) == 0,
+    )
+
+
+def test_two_drivers_share_cache():
+    """page1 driver と page3 driver（別インスタンス）が同 cache を共有.
+
+    M2 の本質: fetch.run() が呼び出しごとに新しい QueShinchoDriver を作るため、
+    cache が module-level でないと共有されない。
+    """
+    from scripts.lib.drivers import que_shincho as qs
+    qs.clear_fetch_cache()
+
+    call_count = [0]
+
+    class _FakeResp:
+        def __enter__(self): return self
+        def __exit__(self, *a): pass
+        def read(self): return b"shared"
+
+    orig = qs.urllib.request.urlopen
+
+    def fake_urlopen(req, timeout=None):
+        call_count[0] += 1
+        return _FakeResp()
+
+    qs.urllib.request.urlopen = fake_urlopen
+    try:
+        drv1 = qs.QueShinchoDriver()  # page1 経路 simulating
+        drv2 = qs.QueShinchoDriver()  # page3 経路 simulating
+        drv1._fetch_text("https://que.dailyshincho.jp/shared")
+        drv2._fetch_text("https://que.dailyshincho.jp/shared")
+    finally:
+        qs.urllib.request.urlopen = orig
+        qs.clear_fetch_cache()
+
+    _check(
+        "i4 別 driver インスタンスが同 cache を共有 → urlopen は 1 回のみ",
+        call_count[0] == 1,
+        f"calls={call_count[0]}",
+    )
+
+
 def main() -> int:
     print("QueShinchoDriver tests (C42 案A, Sprint 9, 2026-06-04)")
     print()
@@ -751,6 +878,12 @@ def main() -> int:
     test_pipeline_dict_no_category_when_raw_empty()
     test_fetch_visits_all_sitemap_pages()
     test_fetch_merges_candidates_across_pages_by_lastmod()
+    print()
+    print("(i) C80d (Fable review M2): in-process HTTP cache:")
+    test_fetch_text_cache_memo_hit()
+    test_fetch_text_cache_separate_urls()
+    test_clear_fetch_cache_empties_cache()
+    test_two_drivers_share_cache()
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")
     return 0 if FAIL == 0 else 1
