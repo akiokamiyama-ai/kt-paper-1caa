@@ -224,6 +224,11 @@
       "concept_id": "transfer_learning",
       "name_ja": "転移学習",
       "displayed_on": "2026-06-11"
+    },
+    {
+      "concept_id": "dao",
+      "name_ja": "道（タオ）",
+      "displayed_on": "2026-06-12"
     }
   ]
 }

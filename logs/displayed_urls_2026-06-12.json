@@ -1,0 +1,38 @@
+{
+  "date": "2026-06-12",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/18729/",
+    "https://www.economist.com/finance-and-economics/2026/06/11/how-to-share-ai-riches",
+    "https://que.dailyshincho.jp/node/18714/",
+    "https://www.economist.com/finance-and-economics/2026/06/11/stears-wants-to-be-africas-bloomberg-terminal"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2606/11/2000000081/",
+    "human_energy": "https://jinjibu.jp/news/detl/26465/",
+    "web_repo": "https://www.bc01.net/article/move-move_202606/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/brazilian-economy-strong-with-negative-public-sentiments-by-laura-carvalho-and-guilherme-klein-2026-06",
+    "https://que.dailyshincho.jp/node/18822/",
+    "https://warontherocks.com/the-chain-of-peace-do-supply-chain-chokepoints-deter-war/",
+    "https://www.mckinsey.com/industries/retail/our-insights/the-world-is-changing-can-fashion-keep-up",
+    "https://www.theparisreview.org/blog/2026/06/04/idiots-on-munch-and-von-trier/",
+    "https://www.publicbooks.org/diaspora-indebted-on-industry/"
+  ],
+  "page4_urls": [
+    "https://www.publicbooks.org/who-owns-argentine-football/",
+    "https://thepointmag.com/criticism/ideas-of-slavery-john-samuel-harpham/",
+    "https://www.nplusonemag.com/online-only/online-only/on-alexander-kluge-1932-2026/"
+  ],
+  "page5_url": "https://natalie.mu/music/news/675788",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/06/11/what-is-poetry-chelsey-minniss-frying-pan-full-of-diamonds/",
+    "music": "https://natalie.mu/music/news/675800",
+    "outdoor": "https://www.atlasobscura.com/places/the-fountain-of-bacchino"
+  },
+  "headlines_urls": [
+    "https://www.ft.com/content/c929dbd2-4028-42e9-9634-62a8e76cf934",
+    "https://www.bbc.com/news/articles/c30ylzlygngo?at_medium=RSS&at_campaign=rss",
+    "https://www.economist.com/finance-and-economics/2026/06/08/china-is-innovative-its-economy-is-a-mess-which-matters-more"
+  ]
+}
