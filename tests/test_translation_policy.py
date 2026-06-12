@@ -20,6 +20,7 @@ import io
 import sys
 
 from scripts import regen_front_page_v2 as regen
+from scripts import translation_helpers as trans_mod  # C81 段階 4: translate は本 module に移動
 
 PASS = 0
 FAIL = 0
@@ -40,19 +41,26 @@ def _check(label: str, condition: bool, detail: str = "") -> bool:
 
 
 def _install_mock_translate():
-    """Replace regen.translate with a deterministic mock."""
+    """Replace translation_helpers.translate with a deterministic mock.
+
+    C81 段階 4 (2026-06-13): translate ロジックが translation_helpers に移動
+    したため、patch 対象もそちらに変更。regen.translate も追従して同じ
+    mock を指す（re-export 経由の caller 互換のため）。
+    """
     calls: list[str] = []
 
     def mock_translate(text: str) -> str:
         calls.append(text)
         return f"[JA] {text}"
 
-    original = regen.translate
+    original = trans_mod.translate
+    trans_mod.translate = mock_translate
     regen.translate = mock_translate
     return original, calls
 
 
 def _restore_translate(original):
+    trans_mod.translate = original
     regen.translate = original
 
 
