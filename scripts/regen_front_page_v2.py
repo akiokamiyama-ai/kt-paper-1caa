@@ -145,57 +145,16 @@ PER_SOURCE_LIMIT = 8  # cap per source so a chatty feed cannot dominate Stage 2
 # Translation pacing.
 TRANSLATE_DELAY = 0.3
 
-# ---------------------------------------------------------------------------
-# Page I source-based soft penalties (Sprint 6, 2026-05-03)
-# ---------------------------------------------------------------------------
-# 神山さんが既に有料購読しており、いずれ必ず読む媒体は Tribune が再露出する
-# 価値が低い。第1面選定で final_score 計算後に減点する形で頻出を抑制する。
-#
-# 適用範囲：第1面（``run_pipeline``）のみ。Page IV academic / Page V serendipity /
-# Page VI leisure は別の選定経路を通り、本 penalty の影響を受けない。
-#
-# Sprint 5 ポストモーメント (2026-05-04): -5 では Foresight が第1面 TOP に
-# 出ることが 5/4 archive で実証された（"UAE OPEC 離脱" 38.30 で TOP）。
-# 30 日観察を待たず -10 に強化、約 26% 削減効果（スケール 31-38 に対して）。
-#
-# 30 日運用後の観察ポイント（-10 強化済み）：
-#   - 第1面の Foresight 出現頻度（logs/scores_*.json と displayed_urls_*.json から集計）
-#   - 出現頻度が依然として高い場合：penalty を -15 に強化、または B3
-#     （sources/*.md に penalty フィールド追加）への移行検討
-#   - Foresight 以外の媒体も減点したくなった場合も B3 拡張で対応
-FORESIGHT_PENALTY: float = -10.0
-FORESIGHT_PATTERNS: tuple[str, ...] = ("Foresight",)
-
-# C42 案A (Sprint 9, 2026-06-04): 旧 Foresight 後継として導入された新潮QUE。
-# 神山さんは QUE 有料会員。Foresight と同種の購読中媒体。
-#
-# 履歴：
-# - 6/4 初期値 -5.0（Foresight -10 より弱め、初動観察用）
-# - 6/5 W2 Day 6 朝刊で QUE 採用 0 件 → -5.0 が効きすぎと判定、神山さん指示で
-#   いったん 0.0 に外して様子見（C42 ペナルティ調整、6/5 → 6/6 cron 反映）。
-#   1 週間運用観察後に再調整判断する
-# - 将来：QUE が紙面占有過剰なら -3 / -5 / -10 に再強化、Foresight 在庫枯渇後の
-#   バランス次第
-SHINCHO_QUE_PENALTY: float = 0.0
-SHINCHO_QUE_PATTERNS: tuple[str, ...] = ("Shincho QUE", "新潮QUE")
-
-
-def _apply_page1_source_penalty(article: dict) -> float:
-    """Return the Page-I-only soft penalty for an article based on source name.
-
-    Returns 0.0 when no penalty applies. 神山さん購読中の媒体（Foresight /
-    新潮QUE）に対して、Page I 過剰露出を抑制する soft penalty。順序：
-    Foresight → Shincho QUE → no-op。Other paid-subscription sources (HBR /
-    WSJ / FT / 日経 等) は据え置き。
-    """
-    source_name = article.get("source_name", "") or ""
-    for pattern in FORESIGHT_PATTERNS:
-        if pattern in source_name:
-            return FORESIGHT_PENALTY
-    for pattern in SHINCHO_QUE_PATTERNS:
-        if pattern in source_name:
-            return SHINCHO_QUE_PENALTY
-    return 0.0
+# C81 段階 2 (Sprint 9, 2026-06-13, Fable review M6): Page I 限定 penalty 機構は
+# ``scripts/page1_penalty.py`` に移動。旧名で本 module から import している
+# 外部コード（テスト含む）のため re-export を残す。
+from .page1_penalty import (  # noqa: F401  re-export
+    FORESIGHT_PATTERNS,
+    FORESIGHT_PENALTY,
+    SHINCHO_QUE_PATTERNS,
+    SHINCHO_QUE_PENALTY,
+    apply_page1_source_penalty as _apply_page1_source_penalty,
+)
 
 # Source-name prefix → kicker ja text.
 KICKER_PREFIXES: tuple[tuple[str, str], ...] = (
