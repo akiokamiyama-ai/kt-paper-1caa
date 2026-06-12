@@ -308,8 +308,37 @@ def test_user_message_end_to_end_fence_intact():
     )
 
 
+# ---------------------------------------------------------------------------
+# (c) C80d (2026-06-12, Fable review L6): --week と --start の併用排他
+# ---------------------------------------------------------------------------
+
+def test_argparse_rejects_week_and_start_together():
+    """``--week`` と ``--start`` の併用は argparse 段階で SystemExit。"""
+    import contextlib
+    import io
+    from scripts.notes.generate import main as cli_main
+
+    err = io.StringIO()
+    raised_with_2 = False
+    try:
+        with contextlib.redirect_stderr(err):
+            cli_main([
+                "--week", "2026-W23",
+                "--start", "2026-05-24",
+                "--end", "2026-05-30",
+            ])
+    except SystemExit as e:
+        # argparse は SystemExit(2) を投げる
+        raised_with_2 = (e.code == 2)
+    _check(
+        "c1 --week + --start 併用 → SystemExit(2) (argparse mutually_exclusive)",
+        raised_with_2,
+        f"stderr: {err.getvalue()[:150]!r}",
+    )
+
+
 def main() -> int:
-    print("notes/ generate + prompts unit tests (C80b 案 B)")
+    print("notes/ generate + prompts unit tests (C80b 案 B + C80d L6)")
     print()
 
     print("(a) H2: _validate_label / LABEL_PATTERN:")
@@ -332,6 +361,10 @@ def main() -> int:
     test_render_day_block_strips_sentinels_in_essay()
     test_render_day_block_strips_sentinels_in_concept_name()
     test_user_message_end_to_end_fence_intact()
+
+    print()
+    print("(c) C80d L6: --week / --start の mutually_exclusive_group:")
+    test_argparse_rejects_week_and_start_together()
 
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")

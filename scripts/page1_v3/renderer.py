@@ -200,12 +200,10 @@ def render_page_one_v3(
     date_attr = target_date.isoformat()
     # C69 (Sprint 9, 2026-06-09): 1 面右下にコメント CTA を貼り付け
     # （旧 C37/C64 で editorial-footer 直下に置いていたのを移設）。
-    cta_html = (
-        f'<div class="page-one-cta">'
-        f'<a href="/comment?date={_esc(target_date.isoformat())}" '
-        f'target="_blank" rel="noopener">コメントを書く →</a>'
-        f'</div>'
-    )
+    # C80d (Fable review L7): 同じ HTML を組み立てていた duplicate を
+    # ``render_page_one_comment_cta`` ヘルパー経由に統一。
+    from ..regen_front_page_v2 import render_page_one_comment_cta
+    cta_html = render_page_one_comment_cta(target_date)
     return f"""<section class="page page-one-v3" data-date="{date_attr}">
   <div class="page-banner"><span class="pg-num">— Page I —</span> Essay &amp; Pivotal · A Week with One Question</div>
   {theme_banner}

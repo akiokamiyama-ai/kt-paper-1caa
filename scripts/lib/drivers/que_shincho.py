@@ -14,7 +14,12 @@ C42 案A (Sprint 9, 2026-06-04) 実装。新潮社 FORESIGHT が 5/18 に新潮Q
 
 戦略
 ----
-1. ``sitemap.xml`` index → 最新 sitemap page だけ fetch（先頭ページに最新が集中）
+1. ``sitemap.xml`` index → **全 sitemap page を fetch**（C76 で page 1 のみ
+   走査の誤仮定を棄却。Drupal Simple XML Sitemap は **node ID 昇順で 2000
+   件ずつ page 分割**するため、最新は最終 page に集中する。例：2026-06-10
+   時点で page1 = ID 1-7669（古い）、page3 = 13955-18915（最新）。
+   /int-foresight/ 等の最新国際記事を取りこぼさないため全 page を巡回し、
+   lastmod 降順で合流させる）
 2. ``/node/{id}/`` URL を ``lastmod`` 降順で N 件抽出
 3. 各記事ページを fetch、JSON-LD NewsArticle を parse
 4. **公開日 (datePublished) フィルタ**で「既存記事の編集」を排除
@@ -22,6 +27,11 @@ C42 案A (Sprint 9, 2026-06-04) 実装。新潮社 FORESIGHT が 5/18 に新潮Q
    JSON-LD ``datePublished`` を弁別の根拠にする
 5. **description 長さフィルタ**（80 字以上）で「title だけしか取れない」記事を排除
    contentAccess=premium でも og:description は出るため、長さ評価が実用的
+6. **JSON-LD ``articleSection`` → Tribune category 動的マッピング**（C76 / C79）
+   QUE は国内系（経済・社会・教育・医療・政治）→ business、国際系
+   （Foresight / 国際）→ geopolitics、文化系 → books のハイブリッド媒体。
+   ``raw["tribune_category"]`` 経由で page1 / page3 pipeline に伝播し、
+   Article.to_pipeline_dict() で ``category`` フィールドに自動反映される。
 
 Brittleness 注意
 ----------------
@@ -280,7 +290,7 @@ class QueShinchoDriver(HtmlScrapeDriver):
         urls = self._discover_recent_urls()
         if not urls:
             print(
-                f"  [que-scrape] no /node/ URLs discovered from sitemap",
+                "  [que-scrape] no /node/ URLs discovered from sitemap",
                 file=sys.stderr,
             )
             return []
@@ -348,6 +358,10 @@ class QueShinchoDriver(HtmlScrapeDriver):
                 )
                 continue
             all_candidates.extend(parse_sitemap_page(page_text))
-        # lastmod 降順、ISO 8601 文字列の lex sort で時系列降順になる
+        # lastmod 降順、ISO 8601 文字列の lex sort で時系列降順になる。
+        # **前提**: Drupal Simple XML Sitemap が TZ 表記を統一して出す
+        # （現状 ``+09:00`` 一律）。``Z`` と ``+09:00`` が混在すると lex sort
+        # は時系列順と一致しなくなる（``Z`` < ``+`` の ASCII 順位差）。将来
+        # 表記が混在し始めたら ``datetime.fromisoformat`` 比較に切替えること。
         all_candidates.sort(key=lambda x: x[1], reverse=True)
         return all_candidates[: self.top_n]

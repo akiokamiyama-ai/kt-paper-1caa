@@ -67,6 +67,10 @@ def _apply_leisure_host_penalty(article: dict) -> None:
     """Apply ``LEISURE_HOST_PENALTIES`` to ``article["final_score"]`` in place.
 
     無一致の host はノーオペ。final_score 欠落時も安全 (0 とみなして減算)。
+
+    C80d (Sprint 9, 2026-06-12, Fable review L5): 旧仕様の ``needle in host``
+    は ``thetrek.co`` が ``thetrek.com`` に誤マッチする問題があった。host
+    比較は厳密一致 + サブドメインのみを許可する。
     """
     url = article.get("url") or ""
     if not url:
@@ -78,7 +82,9 @@ def _apply_leisure_host_penalty(article: dict) -> None:
     if not host:
         return
     for needle, penalty in LEISURE_HOST_PENALTIES.items():
-        if needle in host:
+        # 厳密一致 or サブドメイン（例：``www.thetrek.co`` は match、
+        # ``thetrek.com`` / ``foothetrek.co`` は no match）
+        if host == needle or host.endswith("." + needle):
             current = float(article.get("final_score") or 0.0)
             article["final_score"] = current + penalty
             article["leisure_host_penalty"] = penalty

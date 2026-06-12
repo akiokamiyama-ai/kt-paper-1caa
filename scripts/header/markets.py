@@ -342,6 +342,23 @@ def _merge_entry_in_memory(
     save しないので、複数 symbol × 複数 bar を一括 merge してから 1 回
     ``save_history`` する用途で使う。Same-date entry は first-write wins
     で skip（intra-day 重複保護）。``keep_days`` 超過は古い方から削る。
+
+    First-write-wins の意味論（C80d, Fable review M3）
+    -----------------------------------------------
+    GHA cron は 02:37 JST に走るが、これは取引所により「同 date でも違う
+    瞬間のスナップショット」を取ることを意味する：
+
+    - ^nkx（東京証券取引所、JST）: 15:00 JST 引け後 → 02:37 JST 翌日 = 真の引け値
+    - ^dji / ^spx（NYSE、ET）: 02:37 JST = **13:37 ET（場中スナップショット）**
+    - JPY=X / EURJPY=X（24h 為替）: 02:37 JST のレート（中間値）
+
+    米国系 (^dji / ^spx) は same-date skip により **当日の場中値が「確定値」
+    として履歴に残り、翌日 all_bars で確定 close を取り直しても上書きされない**
+    （Fable review M3 指摘）。同時刻同士の比較として自己整合的だが、C68 第二弾
+    の「欠損日を補填して正しい prior を選ぶ」意図とは別レイヤー：history は
+    「定刻 02:37 JST 時点のその symbol のスナップショット系列」として
+    解釈する。確定値への収束を求める場合は別 mechanism（例：閉場後に再 fetch
+    する米国系専用 cron、または same-date 上書き許可フラグ）が必要。
     """
     entries: list = list(history.get(symbol, []))
     if any(e.get("date") == date for e in entries):

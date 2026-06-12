@@ -379,7 +379,17 @@ def _build_step2_system(company_key: str) -> str:
 
 
 def _category_for(article: dict, registry: SourceRegistry) -> str | None:
-    """Look up Source.category from the article's source_name."""
+    """Look up category for the article: existing dict value first, then registry.
+
+    C80d (Sprint 9, 2026-06-12, Fable review M4): 既存 ``article["category"]``
+    があればそれを返し、無ければ ``Source.category`` を引き当てる。これは
+    page3 の ``_category_of`` (page3.py:315) と同じ「既存値尊重」セマンティクス。
+    Fable レビューは「無条件上書き」と観察したが、実装は既に既存値優先で動作
+    しており、C76 / C79 の ``raw["tribune_category"]`` → ``article["category"]``
+    動的伝播経路が page2 系コードパスを通っても無言で ``Source.category`` に
+    戻る事故は起きない（現状 QUE は page2/companies 経路に乗らないが、将来
+    に備えた整合性確認）。
+    """
     if "category" in article and article["category"]:
         return article["category"]
     name = article.get("source_name")
@@ -390,6 +400,7 @@ def _category_for(article: dict, registry: SourceRegistry) -> str | None:
 
 
 def _attach_category(article: dict, registry: SourceRegistry) -> dict:
+    """既存値優先で category を埋める（C80d, Fable review M4 で挙動再確認）."""
     cat = _category_for(article, registry)
     if cat is not None:
         article["category"] = cat

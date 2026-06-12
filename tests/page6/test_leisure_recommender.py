@@ -413,6 +413,64 @@ def test_focus_work_css_present_in_page_six_css():
 
 
 # ---------------------------------------------------------------------------
+# (g) C80d (2026-06-12, Fable review L5): leisure host penalty 厳密一致
+# ---------------------------------------------------------------------------
+
+def test_host_penalty_exact_match():
+    """``thetrek.co`` 完全一致でペナルティ適用."""
+    art = {"url": "https://thetrek.co/article", "final_score": 50.0}
+    leisure_recommender._apply_leisure_host_penalty(art)
+    _check(
+        "g1 thetrek.co 完全一致 → -5.0 適用",
+        art["final_score"] == 45.0
+        and art.get("leisure_host_penalty_reason") == "thetrek.co",
+        f"got {art}",
+    )
+
+
+def test_host_penalty_subdomain_match():
+    """``www.thetrek.co`` のサブドメインもペナルティ対象."""
+    art = {"url": "https://www.thetrek.co/article", "final_score": 50.0}
+    leisure_recommender._apply_leisure_host_penalty(art)
+    _check(
+        "g2 www.thetrek.co (サブドメイン) → -5.0 適用",
+        art["final_score"] == 45.0,
+        f"got {art}",
+    )
+
+
+def test_host_penalty_no_false_match_on_thetrek_com():
+    """``thetrek.com``（別ドメイン）は誤マッチ防止で対象外."""
+    art = {"url": "https://thetrek.com/article", "final_score": 50.0}
+    leisure_recommender._apply_leisure_host_penalty(art)
+    _check(
+        "g3 thetrek.com（別 TLD）→ no penalty（旧 substring 一致の誤マッチ防止）",
+        art["final_score"] == 50.0 and "leisure_host_penalty" not in art,
+        f"got {art}",
+    )
+
+
+def test_host_penalty_no_false_match_on_prefix():
+    """``foothetrek.co`` のような prefix 偽装も対象外."""
+    art = {"url": "https://foothetrek.co/article", "final_score": 50.0}
+    leisure_recommender._apply_leisure_host_penalty(art)
+    _check(
+        "g4 foothetrek.co (prefix 偽装) → no penalty",
+        art["final_score"] == 50.0 and "leisure_host_penalty" not in art,
+    )
+
+
+def test_host_penalty_unrelated_host_unchanged():
+    """ペナルティ辞書に無い host は素通し."""
+    art = {"url": "https://www.atlasobscura.com/article", "final_score": 50.0}
+    leisure_recommender._apply_leisure_host_penalty(art)
+    _check(
+        "g5 atlasobscura.com → no penalty (辞書未登録)",
+        art["final_score"] == 50.0 and "leisure_host_penalty" not in art,
+    )
+
+
+# ---------------------------------------------------------------------------
 # Test runner
 # ---------------------------------------------------------------------------
 
@@ -454,6 +512,13 @@ def main() -> int:
     test_render_leisure_column_with_focus_work()
     test_render_leisure_column_without_focus_work()
     test_focus_work_css_present_in_page_six_css()
+    print()
+    print("(g) C80d (2026-06-12, Fable review L5): host penalty 厳密一致:")
+    test_host_penalty_exact_match()
+    test_host_penalty_subdomain_match()
+    test_host_penalty_no_false_match_on_thetrek_com()
+    test_host_penalty_no_false_match_on_prefix()
+    test_host_penalty_unrelated_host_unchanged()
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")
     return 0 if FAIL == 0 else 1

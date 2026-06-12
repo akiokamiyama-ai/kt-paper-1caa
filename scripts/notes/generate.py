@@ -197,10 +197,15 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Generate a weekly note draft (C38b)",
     )
+    # C80d (Sprint 9, 2026-06-12, Fable review L6): 旧仕様は
+    # mutually_exclusive_group のメンバーが --week 1 個のみで排他が機能
+    # していなかった（--week と --start/--end 併用時に --week が黙って勝つ）。
+    # --start を group に加えて argparse 段階で併用を弾く。--end は --start
+    # とセットなので別個に。
     g = parser.add_mutually_exclusive_group()
     g.add_argument("--week", help="ISO week, e.g. 2026-W23")
-    parser.add_argument("--start", help="Range start (YYYY-MM-DD)")
-    parser.add_argument("--end", help="Range end (YYYY-MM-DD)")
+    g.add_argument("--start", help="Range start (YYYY-MM-DD); pair with --end")
+    parser.add_argument("--end", help="Range end (YYYY-MM-DD); requires --start")
     parser.add_argument("--label", help="Output filename label (default auto)")
     parser.add_argument("--model", help="LLM model id (default: scripts.lib.llm.DEFAULT_MODEL)")
     parser.add_argument("--max-tokens", type=int, default=DEFAULT_MAX_TOKENS)
