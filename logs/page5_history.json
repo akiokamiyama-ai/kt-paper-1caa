@@ -788,6 +788,24 @@
       "ai_kamiyama_title": "A Diary from the Psychic Capital of the World",
       "ai_kamiyama_category": "books:海外純文学",
       "ai_kamiyama_source_name": "The Paris Review"
+    },
+    {
+      "displayed_on": "2026-06-14",
+      "article_url": "https://www.themarginalian.org/2026/06/11/emily-dickinson-hope-kate/",
+      "article_title": "Hope Is the Thing with Feathers, and with Fangs: The Alchemy of Unrequited Love and the Story Behind Emily Dickinson’s Most Famous Poem",
+      "article_category": "books",
+      "tie_candidates": [
+        "books"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.themarginalian.org/2026/06/11/book-of-birds-macfarlane-morris/",
+      "ai_kamiyama_title": "How to See a Bird: Robert Macfarlane and Jackie Morris’s Exquisite Illustrated Field Guide to the Wonder of the Winged",
+      "ai_kamiyama_category": "books:自然科学ノンフィクション",
+      "ai_kamiyama_source_name": "The Marginalian（旧 Brain Pickings）"
     }
   ]
 }

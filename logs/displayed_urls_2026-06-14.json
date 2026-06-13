@@ -1,0 +1,38 @@
+{
+  "date": "2026-06-14",
+  "page1_urls": [
+    "https://www.ft.com/content/a7f4246d-9ae2-4f7b-90af-e5a53c52203b",
+    "https://www.economist.com/finance-and-economics/2026/06/08/china-is-innovative-its-economy-is-a-mess-which-matters-more",
+    "https://www.ft.com/content/84a03704-0d96-4176-8d09-e5f58fb4e78d",
+    "https://www.bbc.com/news/articles/cdrpe4vly5mo?at_medium=RSS&at_campaign=rss"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/news/articles/2606/13/news026.html",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2606/13/news006.html",
+    "web_repo": "https://www.bc01.net/article/svzadankai_202606/"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/06/12/disclosure-day-steven-spielberg-review/",
+    "https://news.yahoo.co.jp/pickup/6584109?source=rss",
+    "https://www.ft.com/content/d2afe6bb-9c02-4893-a246-b63d6ae724f6",
+    "https://www.mckinsey.com/capabilities/risk-and-resilience/our-insights/from-risk-to-resilience-new-approaches-to-navigating-disruption-in-asia",
+    "https://www.theparisreview.org/blog/2026/06/08/the-summer-of-lion-meat/",
+    "https://nautil.us/turning-the-psychedelic-experience-into-a-math-problem-1281917/"
+  ],
+  "page4_urls": [
+    "https://3quarksdaily.com/3quarksdaily/2026/06/as-vultures-vanished-dogs-multiplied-and-rabies-spread.html",
+    "https://www.themarginalian.org/2026/06/11/book-of-birds-macfarlane-morris/",
+    "https://3quarksdaily.com/3quarksdaily/2026/06/the-oral-literature-of-the-american-people.html"
+  ],
+  "page5_url": "https://www.themarginalian.org/2026/06/11/emily-dickinson-hope-kate/",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-05/the-city-and-the-writer-in-al-kabri-with-mai-serhan-nathalie-handal/",
+    "music": "https://natalie.mu/music/news/676108",
+    "outdoor": "https://www.backpacker.com/news-and-events/news/hikers-are-fighting-a-proposed-uranium-mine-on-the-continental-divide-trail/"
+  },
+  "headlines_urls": [
+    "https://www.economist.com/finance-and-economics/2026/06/11/how-big-are-chinas-emerging-industries",
+    "https://www.ft.com/content/3aef5865-962c-4010-8915-6b573b2ad705",
+    "https://news.yahoo.co.jp/pickup/6584112?source=rss"
+  ]
+}
