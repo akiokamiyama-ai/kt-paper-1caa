@@ -52,17 +52,17 @@ jobs:
         # 統合型に surgical swap する。月次選定未投入週・v3 例外時は v2 出力を
         # そのまま残す二段 fallback（regen_front_page_v3.py 冒頭の docstring 参照）。
         #
-        # C85 Phase B Step 4 (Sprint 10, 2026-06-17 shadow 開始): TRIBUNE_STAGE2_MODE
-        # で Stage 2 mode を切替。"legacy"=既存挙動、"shadow"=legacy + layered の
-        # 両方実行（採用は legacy、layered は logs/stage2_shadow_*.json に artifact
-        # 化のみ）、"layered"=layered 単独採用。
-        # 6/17 → 6/23 shadow 期間 → 6/24 layered 本番切替の段階移行スケジュール。
-        # 不正値は legacy fallback（scripts/selector/stage2_shadow.py 参照）。
+        # C85 Phase B Step 4 (Sprint 10, 2026-06-17 shadow 開始予定だったが
+        # **6/15 cron で 90 分 timeout 強制 cancel**。shadow は legacy + layered
+        # の両方を順次実行するため、stage2 時間が 2 倍化（元 ~62 分 → ~124 分）。
+        # 緊急 revert: TRIBUNE_STAGE2_MODE を **legacy** に戻して通常運用を復旧。
+        # shadow の再投入は (a) timeout 拡張 90→180min or (b) shadow を別 job で
+        # 並列化、のいずれかを実装してから再開する（Sprint 10 残作業）。
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           MIIBO_API_KEY: ${{ secrets.MIIBO_API_KEY }}
           MIIBO_AGENT_ID: ${{ secrets.MIIBO_AGENT_ID }}
-          TRIBUNE_STAGE2_MODE: shadow
+          TRIBUNE_STAGE2_MODE: legacy
         run: |
           python -m scripts.regen_front_page_v3 --date "${{ steps.date.outputs.DATE }}"
 
