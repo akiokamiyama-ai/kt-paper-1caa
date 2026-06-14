@@ -35,7 +35,8 @@ from typing import Any, Callable
 from ..lib import llm_usage
 from .source_registry import SourceRegistry, build_registry
 from .stage1 import run_stage1
-from .stage2 import run_stage2
+from .stage2 import run_stage2  # noqa: F401  re-export 互換
+from .stage2_shadow import run_stage2_with_mode
 from .stage3 import integrate_scores
 
 # ---------------------------------------------------------------------------
@@ -739,7 +740,8 @@ def default_fetcher(
     cost = 0.0
     # Stage 2 (uncached 分のみ)
     if uncached_articles:
-        s2 = run_stage2(uncached_articles)
+        # C85 Sub-Step 6: TRIBUNE_STAGE2_MODE で legacy/shadow/layered 切替
+        s2 = run_stage2_with_mode(uncached_articles, caller="page3")
         cost += s2.cost_usd
         integrate_scores(s2.evaluations_by_url)
         by_url = s2.evaluations_by_url

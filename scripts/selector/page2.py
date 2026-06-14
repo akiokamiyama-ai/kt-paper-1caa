@@ -44,7 +44,8 @@ from typing import Any, Callable
 from ..lib import llm, llm_usage
 from .source_registry import SourceRegistry, build_registry
 from .stage1 import run_stage1
-from .stage2 import run_stage2
+from .stage2 import run_stage2  # noqa: F401  re-export 互換
+from .stage2_shadow import run_stage2_with_mode
 from .stage3 import integrate_scores
 
 # ---------------------------------------------------------------------------
@@ -1296,7 +1297,8 @@ def default_fetcher(
     if not surviving:
         return []
 
-    s2 = run_stage2(surviving)
+    # C85 Sub-Step 6: TRIBUNE_STAGE2_MODE で legacy/shadow/layered 切替
+    s2 = run_stage2_with_mode(surviving, caller="page2")
     integrate_scores(s2.evaluations_by_url)
 
     by_url = s2.evaluations_by_url

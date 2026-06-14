@@ -619,9 +619,29 @@ def evaluate_batch(
 # ---------------------------------------------------------------------------
 
 def _to_log_entry(
-    article: dict, evaluation: dict, *, model: str, evaluated_at: str
+    article: dict,
+    evaluation: dict,
+    *,
+    model: str,
+    evaluated_at: str,
+    layer: int | None = None,
+    evaluation_mode: str | None = None,
+    caller: str | None = None,
 ) -> dict:
-    """Convert (Stage 1 article + Stage 2 evaluation) into a scores log row."""
+    """Convert (Stage 1 article + Stage 2 evaluation) into a scores log row.
+
+    C85 Sub-Step 5a (Sprint 10, 2026-06-15, Phase B Step 4): layered モード対応
+    のため ``layer`` / ``evaluation_mode`` / ``caller`` フィールドを追加。
+    None の場合は legacy 動作（旧 scores_*.json schema 互換）として
+    キーを出力しない。
+
+    evaluation_mode の値:
+    - ``"sonnet_full"``    : 層 3 または 層 2 上位（Sonnet 5 項目）
+    - ``"haiku_full"``     : 層 1（Haiku 3 項目、5/6 は 0 + "haiku_unscored"）
+    - ``"haiku_prefilter_only"`` : 層 2 rest（pre-filter 後に Sonnet 評価 されなかった分）
+    - ``"legacy_sonnet"``  : legacy 経路（feature flag OFF）
+    - ``None``             : legacy 経路、互換のためキー欠落
+    """
     entry: dict[str, Any] = {}
     for eng, jp, _short in AESTHETIC_KEYS:
         entry[jp] = evaluation["scores"].get(eng, 3)
@@ -634,6 +654,13 @@ def _to_log_entry(
     }
     entry["evaluated_at"] = evaluated_at
     entry["model"] = model
+    # C85 Sub-Step 5a: layered モード関連メタ
+    if layer is not None:
+        entry["layer"] = layer
+    if evaluation_mode is not None:
+        entry["evaluation_mode"] = evaluation_mode
+    if caller is not None:
+        entry["caller"] = caller
     return entry
 
 
@@ -687,9 +714,12 @@ def run_stage2(
             )
             break
         try:
-            # legacy 動作は ``stage2.batch`` タグ維持（既存集計ツール互換）。
+            # legacy 動作は ``tag="stage2.batch"`` 維持（既存集計ツール互換、
+            # test_llm_tagging で literal 検証されている）。
             # layered モードは _run_stage2_layered 内で caller / model 別タグを使う。
-            br = evaluate_batch(batch, model=model, max_tokens=max_tokens)
+            br = evaluate_batch(
+                batch, model=model, max_tokens=max_tokens, tag="stage2.batch",
+            )
         except llm.CapExceededError as e:
             result.aborted = True
             result.abort_reason = str(e)
@@ -903,8 +933,20 @@ def _filter_top(
     return top, rest
 
 
-def _accumulate_batch(result: Stage2Result, br: BatchResult, articles: list[dict]) -> None:
-    """Merge a BatchResult into the running Stage2Result (helper)."""
+def _accumulate_batch(
+    result: Stage2Result,
+    br: BatchResult,
+    articles: list[dict],
+    *,
+    layer: int | None = None,
+    evaluation_mode: str | None = None,
+    caller: str | None = None,
+) -> None:
+    """Merge a BatchResult into the running Stage2Result (helper).
+
+    C85 Sub-Step 5a: layer / evaluation_mode / caller を ``_to_log_entry`` に
+    伝播。layered モードから呼ばれた batch は scores log にメタ情報が記録される。
+    """
     result.batches_run += 1
     result.input_tokens += br.input_tokens
     result.output_tokens += br.output_tokens
@@ -917,7 +959,11 @@ def _accumulate_batch(result: Stage2Result, br: BatchResult, articles: list[dict
         url = art.get("url")
         if not url:
             continue
-        entry = _to_log_entry(art, ev, model=br.model, evaluated_at=evaluated_at)
+        entry = _to_log_entry(
+            art, ev,
+            model=br.model, evaluated_at=evaluated_at,
+            layer=layer, evaluation_mode=evaluation_mode, caller=caller,
+        )
         result.evaluations_by_url[url] = entry
 
 
@@ -968,7 +1014,10 @@ def _run_stage2_layered(
             result.aborted = True
             result.abort_reason = str(e)
             break
-        _accumulate_batch(result, br, batch)
+        _accumulate_batch(
+            result, br, batch,
+            layer=1, evaluation_mode="haiku_full", caller=caller,
+        )
 
     # 3) 層 2: Haiku pre-filter → 上位を Sonnet
     layer_2_pre: list[tuple[dict, dict]] = []
@@ -1020,7 +1069,9 @@ def _run_stage2_layered(
             if not url:
                 continue
             entry = _to_log_entry(
-                art, ev, model=layer_config.haiku_model, evaluated_at=evaluated_at,
+                art, ev,
+                model=layer_config.haiku_model, evaluated_at=evaluated_at,
+                layer=2, evaluation_mode="haiku_prefilter_only", caller=caller,
             )
             result.evaluations_by_url[url] = entry
         # top: Sonnet full で精評価
@@ -1043,7 +1094,10 @@ def _run_stage2_layered(
                 result.aborted = True
                 result.abort_reason = str(e)
                 break
-            _accumulate_batch(result, br, batch)
+            _accumulate_batch(
+                result, br, batch,
+                layer=2, evaluation_mode="sonnet_full", caller=caller,
+            )
 
     # 4) 層 3: Sonnet full (5 項目)
     if not result.aborted:
@@ -1065,7 +1119,10 @@ def _run_stage2_layered(
                 result.aborted = True
                 result.abort_reason = str(e)
                 break
-            _accumulate_batch(result, br, batch)
+            _accumulate_batch(
+                result, br, batch,
+                layer=3, evaluation_mode="sonnet_full", caller=caller,
+            )
 
     write_scores_log(result)
     return result

@@ -50,7 +50,8 @@ from ..selector.dedup_filter import (
 )
 from ..selector.source_registry import SourceRegistry, build_registry
 from ..selector.stage1 import run_stage1
-from ..selector.stage2 import run_stage2
+from ..selector.stage2 import run_stage2  # noqa: F401  re-export 互換
+from ..selector.stage2_shadow import run_stage2_with_mode
 from ..selector.stage3 import integrate_scores
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -492,7 +493,8 @@ def _fetch_and_score_category(
 
     cost = 0.0
     if uncached:
-        s2 = run_stage2(uncached)
+        # C85 Sub-Step 6: TRIBUNE_STAGE2_MODE で legacy/shadow/layered 切替
+        s2 = run_stage2_with_mode(uncached, caller="page5")
         cost += s2.cost_usd
         integrate_scores(s2.evaluations_by_url)
         by_url = s2.evaluations_by_url

@@ -43,7 +43,8 @@ from .fetch import run as fetch_run
 from .lib.source import Article
 from .render import replace_page_one
 from .selector.stage1 import run_stage1
-from .selector.stage2 import run_stage2
+from .selector.stage2 import run_stage2  # noqa: F401  re-export 互換
+from .selector.stage2_shadow import run_stage2_with_mode
 from .selector.stage3 import integrate_scores
 from .selector.dedup_filter import (
     filter_recently_displayed,
@@ -370,7 +371,9 @@ def run_pipeline(
             candidates_scored=[],
         )
 
-    s2 = run_stage2(surviving)
+    # C85 Sub-Step 6 (2026-06-15, Phase B Step 4): TRIBUNE_STAGE2_MODE 環境変数で
+    # legacy / shadow / layered を切替。デフォルト "legacy" で既存挙動維持。
+    s2 = run_stage2_with_mode(surviving, caller="page1_master")
 
     # Stage 3 — in-place fill final_score on the Stage-2 entry dict.
     integrate_scores(s2.evaluations_by_url)
