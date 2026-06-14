@@ -42,6 +42,21 @@ DEFAULT_MODEL = "claude-sonnet-4-6"
 DEFAULT_BATCH_SIZE = 10
 DEFAULT_MAX_TOKENS = 4096
 
+# C85 Sub-Step 2 (Sprint 10, 2026-06-14, Phase B Step 4): layered モードで
+# 使う Haiku model id。Sub-Step 4 で実装する layered モードが参照する。
+DEFAULT_HAIKU_MODEL = "claude-haiku-4-5"
+
+# 既知 caller。``run_stage2(caller=...)`` で識別、llm_usage tag suffix に使う。
+# Phase B Step 1 のコスト按分（master 69% / page3 31% 等）と整合。
+KNOWN_CALLERS: tuple[str, ...] = (
+    "page1_master",   # regen_front_page_v2.run_pipeline（最大の caller）
+    "page3",          # selector/page3.py default_fetcher
+    "page2",          # selector/page2.py（companies 経路、現状 free rider）
+    "page4",          # page4/article_rotator.py
+    "page5",          # page5/serendipity_selector.py
+    "page6",          # page6/leisure_recommender.py
+)
+
 # §4.2 Mode-A vs Mode-B threshold (description char count).
 MODE_A_DESC_THRESHOLD = 80
 BODY_EXCERPT_LIMIT = 800
@@ -236,6 +251,50 @@ class Stage2Result:
 
 
 # ---------------------------------------------------------------------------
+# C85 Sub-Step 2 (2026-06-14, Phase B Step 4): LayerConfig
+# ---------------------------------------------------------------------------
+# Stage 2 を「Sonnet 一括」から「層 1=Haiku のみ / 層 2=Haiku pre-filter →
+# 上位 Sonnet / 層 3=Sonnet 必須」の 3 層構造に再編する設定。
+#
+# layered モード本体は Sub-Step 4 で実装する。本 Sub-Step は dataclass を
+# 用意 + run_stage2() に引数を通すだけ（``enabled=False`` がデフォルトで
+# 既存挙動が完全維持される feature flag）。
+#
+# 初期パラメータ（C84 神山さん判断、$52.58/月 シナリオ B2 で開始）：
+# - n_master = 0.30: page1 master batch の層 2 で上位 30% を Sonnet 評価
+# - n_page3  = 0.20: page3 default_fetcher の層 2 は採用本数少 → 20% で十分
+# - k_threshold = 15: 上位 N% かつ score ≥ 15/30（ハイブリッド閾値）
+# - haiku_model / sonnet_model: layered 経路の各層が使う model id
+
+@dataclass(frozen=True)
+class LayerConfig:
+    """Configuration for the layered (Haiku/Sonnet hybrid) Stage 2 mode.
+
+    Default は ``enabled=False`` で **legacy 動作（全件 Sonnet）** が保たれる。
+    layered モードを使うときは ``LayerConfig(enabled=True)`` を渡す。
+    """
+
+    enabled: bool = False
+    n_master: float = 0.30
+    n_page3: float = 0.20
+    k_threshold: int = 15
+    haiku_model: str = DEFAULT_HAIKU_MODEL
+    sonnet_model: str = DEFAULT_MODEL
+    # caller 別 N override（指定がなければ master / page3 / その他の default）。
+    # 例: caller_n_overrides={"page2": 0.25, "page4": 0.40} のように上書きできる。
+    caller_n_overrides: tuple[tuple[str, float], ...] = ()
+
+    def n_for_caller(self, caller: str) -> float:
+        """Return the layer-2 top-N ratio for a specific caller."""
+        for k, v in self.caller_n_overrides:
+            if k == caller:
+                return v
+        if caller == "page3":
+            return self.n_page3
+        return self.n_master
+
+
+# ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
@@ -420,12 +479,17 @@ def evaluate_batch(
     *,
     model: str = DEFAULT_MODEL,
     max_tokens: int = DEFAULT_MAX_TOKENS,
+    tag: str = "stage2.batch",
 ) -> BatchResult:
     """Evaluate one batch of up to 10 articles.
 
     The caller is responsible for slicing batches; this function will accept
     1–10 articles. Article dicts must contain at least ``url``, ``title``,
     and one of ``description`` / ``body``.
+
+    C85 Sub-Step 4 (Sprint 10, 2026-06-14): ``tag`` 引数を追加して llm_usage
+    に caller 別 / model 別の細分タグ（``stage2.batch.layer3.sonnet.page1_master``
+    等）を記録可能にした。デフォルト ``"stage2.batch"`` は旧挙動互換。
     """
     if not articles:
         return BatchResult(evaluations=[], model=model)
@@ -466,7 +530,7 @@ def evaluate_batch(
             model=model,
             max_tokens=max_tokens,
             cache_system=True,
-            tag="stage2.batch",
+            tag=tag,
         )
         raw_excerpt = llm.redact_key((last_response.text or "")[:400])
         parsed, parse_err = _parse_response_json(last_response.text)
@@ -579,8 +643,32 @@ def run_stage2(
     batch_size: int = DEFAULT_BATCH_SIZE,
     model: str = DEFAULT_MODEL,
     max_tokens: int = DEFAULT_MAX_TOKENS,
+    layer_config: "LayerConfig | None" = None,
+    caller: str = "page1_master",
 ) -> Stage2Result:
-    """Run Stage 2 over a list of Stage-1-passing articles."""
+    """Run Stage 2 over a list of Stage-1-passing articles.
+
+    Parameters
+    ----------
+    layer_config :
+        C85 Sub-Step 2 (2026-06-14, Phase B Step 4): None または
+        ``LayerConfig(enabled=False)`` の場合は **legacy 動作（全件 Sonnet）**。
+        ``LayerConfig(enabled=True)`` の場合は 3 層 layered モード（Sub-Step 4
+        で実装）。本 Sub-Step ではまだ legacy パスのみ実装、layered は
+        ``NotImplementedError`` で投げる（feature flag は OFF 前提）。
+    caller :
+        本関数を呼んだ caller の識別子。``KNOWN_CALLERS`` に含まれるべき。
+        llm_usage tag suffix と LayerConfig.n_for_caller() の判定に使う。
+        デフォルト "page1_master" で旧 caller 互換。
+    """
+    # C85: layered モードへの分岐。enabled=False がデフォルトなので、
+    # 既存呼び出し（layer_config=None）は全部 legacy に流れる。
+    if layer_config is not None and layer_config.enabled:
+        return _run_stage2_layered(
+            articles, layer_config=layer_config, caller=caller,
+            batch_size=batch_size, max_tokens=max_tokens,
+        )
+
     result = Stage2Result(model=model)
     if not articles:
         return result
@@ -599,6 +687,8 @@ def run_stage2(
             )
             break
         try:
+            # legacy 動作は ``stage2.batch`` タグ維持（既存集計ツール互換）。
+            # layered モードは _run_stage2_layered 内で caller / model 別タグを使う。
             br = evaluate_batch(batch, model=model, max_tokens=max_tokens)
         except llm.CapExceededError as e:
             result.aborted = True
@@ -622,6 +712,360 @@ def run_stage2(
             result.evaluations_by_url[url] = _to_log_entry(
                 art, ev, model=br.model, evaluated_at=evaluated_at
             )
+
+    write_scores_log(result)
+    return result
+
+
+# ---------------------------------------------------------------------------
+# C85 Sub-Step 2 (stub) / Sub-Step 4 (本実装): layered モード
+# ---------------------------------------------------------------------------
+
+def _classify_articles(
+    articles: list[dict],
+) -> tuple[list[dict], list[dict], list[dict]]:
+    """Split articles into (layer1, layer2, layer3) using source_layers.classify_layer.
+
+    C85 Sub-Step 4 helper。caller がレイヤー分類ロジックを直接 import しない
+    で済むよう、本 module に薄いラッパーを置く。
+    """
+    from ..source_layers import classify_layer  # lazy import to avoid cycle
+
+    layer_1: list[dict] = []
+    layer_2: list[dict] = []
+    layer_3: list[dict] = []
+    for art in articles:
+        lyr = classify_layer(
+            art.get("source_name") or "",
+            art.get("category"),
+        )
+        if lyr == 1:
+            layer_1.append(art)
+        elif lyr == 3:
+            layer_3.append(art)
+        else:
+            layer_2.append(art)
+    return layer_1, layer_2, layer_3
+
+
+def evaluate_batch_haiku_prefilter(
+    articles: list[dict],
+    *,
+    model: str = DEFAULT_HAIKU_MODEL,
+    max_tokens: int = DEFAULT_MAX_TOKENS,
+    tag: str = "stage2.batch.layer2.prefilter",
+) -> BatchResult:
+    """Run Haiku 3-aesthetic pre-filter on one batch.
+
+    C85 Sub-Step 4 (Sprint 10, 2026-06-14, Phase B Step 4): Haiku で美意識
+    1/3/8 を粗評価。出力 schema は ``stage2_haiku_prompts.HAIKU_PREFILTER_*``
+    に従う。``BatchResult.evaluations`` には full schema との互換のため 5 項目
+    が入るが、美意識 5/6 は値 0、reason は "haiku_unscored" マーカーで埋める。
+
+    既存 ``evaluate_batch`` と異なる点は system prompt と model のみ。
+    response parsing はゆるく行い、行動経済学なしの記事に対する低スコアは
+    そのまま受け入れる。
+    """
+    from . import stage2_haiku_prompts as hp
+
+    if not articles:
+        return BatchResult(evaluations=[], model=model)
+
+    ids = [f"art_{i + 1:03d}" for i in range(len(articles))]
+    article_blocks = "\n\n".join(
+        _format_article_block(aid, art) for aid, art in zip(ids, articles)
+    )
+    user_msg = hp.HAIKU_PREFILTER_USER_TEMPLATE.format(
+        n_articles=len(articles),
+        article_blocks=article_blocks,
+    )
+
+    last_response = llm.call_claude_with_retry(
+        system=hp.HAIKU_PREFILTER_SYSTEM_PROMPT,
+        user=user_msg,
+        model=model,
+        max_tokens=max_tokens,
+        cache_system=True,
+        tag=tag,
+    )
+    raw_excerpt = llm.redact_key((last_response.text or "")[:400])
+    parsed, parse_err = hp.parse_haiku_prefilter_response(last_response.text)
+
+    errors: list[EvaluationError] = []
+    evaluations: list[dict] = []
+
+    if parsed is None:
+        # 全件 fallback（低スコアで進める）
+        errors.append(EvaluationError(
+            article_id="<batch>", url=None,
+            error_type=parse_err or "haiku_parse_failed",
+            raw_response_excerpt=raw_excerpt,
+            occurred_at=_now_iso(),
+        ))
+        evaluations = [_fallback_eval(aid, "haiku_prefilter_failed") for aid in ids]
+    else:
+        haiku_evals = parsed.get("evaluations") or []
+        for expected_id, ev in zip(ids, haiku_evals + [None] * len(ids)):
+            if ev is None or not isinstance(ev, dict):
+                evaluations.append(_fallback_eval(expected_id, "haiku_missing"))
+                continue
+            scores = ev.get("scores") or {}
+            a1, _ = _clamp_int(scores.get("aesthetic_1_structure_detail"))
+            a3, _ = _clamp_int(scores.get("aesthetic_3_disciplinary_bridge"))
+            a8, _ = _clamp_int(scores.get("aesthetic_8_behavioral_economics"))
+            # 5 / 6 は Sonnet に委ねる → 一旦 0、上位 N% で Sonnet 再評価される
+            cleaned = {
+                "article_id": expected_id,
+                "scores": {
+                    "aesthetic_1_structure_detail": a1,
+                    "aesthetic_3_disciplinary_bridge": a3,
+                    "aesthetic_5_otherness": 0,
+                    "aesthetic_6_minority_value": 0,
+                    "aesthetic_8_behavioral_economics": a8,
+                },
+                "reasons": {
+                    "aesthetic_1_structure_detail":     ev.get("reason_short", "") or "",
+                    "aesthetic_3_disciplinary_bridge":  ev.get("reason_short", "") or "",
+                    "aesthetic_5_otherness":            "haiku_unscored",
+                    "aesthetic_6_minority_value":       "haiku_unscored",
+                    "aesthetic_8_behavioral_economics": ev.get("reason_short", "") or "",
+                },
+            }
+            evaluations.append(cleaned)
+
+    # Pad / trim
+    if len(evaluations) < len(ids):
+        evaluations += [
+            _fallback_eval(ids[i], "haiku_missing")
+            for i in range(len(evaluations), len(ids))
+        ]
+    elif len(evaluations) > len(ids):
+        evaluations = evaluations[: len(ids)]
+
+    cost = last_response.cost_usd
+    return BatchResult(
+        evaluations=evaluations,
+        errors=errors,
+        model=last_response.model,
+        input_tokens=last_response.input_tokens,
+        output_tokens=last_response.output_tokens,
+        cache_creation_tokens=last_response.cache_creation_tokens,
+        cache_read_tokens=last_response.cache_read_tokens,
+        cost_usd=cost,
+    )
+
+
+def _filter_top(
+    evaluations: list[tuple[dict, dict]],
+    *,
+    ratio: float,
+    min_score: int,
+) -> tuple[list[tuple[dict, dict]], list[tuple[dict, dict]]]:
+    """Apply hybrid threshold (top-N% AND score>=K) to Haiku evaluations.
+
+    Parameters
+    ----------
+    evaluations :
+        ``[(article, evaluation_dict), ...]`` の対。
+    ratio :
+        上位何 % を残すか（0.30 で上位 30%）。
+    min_score :
+        Haiku 3 項目の合計スコア（0-30）の下限。
+
+    Returns
+    -------
+    (top, rest):
+        top は両条件を満たし Sonnet 精評価に進む。rest は Haiku score のまま
+        採用ロジックに渡す。
+    """
+    from . import stage2_haiku_prompts as hp
+
+    if not evaluations:
+        return [], []
+    scored = []
+    for art, ev in evaluations:
+        s = hp.haiku_prefilter_score(
+            ev["scores"].get("aesthetic_1_structure_detail", 0),
+            ev["scores"].get("aesthetic_3_disciplinary_bridge", 0),
+            ev["scores"].get("aesthetic_8_behavioral_economics", 0),
+        )
+        scored.append((s, art, ev))
+    # sort by score desc
+    scored.sort(key=lambda x: x[0], reverse=True)
+    n_top = max(1, int(len(scored) * ratio))
+    top: list[tuple[dict, dict]] = []
+    rest: list[tuple[dict, dict]] = []
+    for i, (s, art, ev) in enumerate(scored):
+        if i < n_top and s >= min_score:
+            top.append((art, ev))
+        else:
+            rest.append((art, ev))
+    return top, rest
+
+
+def _accumulate_batch(result: Stage2Result, br: BatchResult, articles: list[dict]) -> None:
+    """Merge a BatchResult into the running Stage2Result (helper)."""
+    result.batches_run += 1
+    result.input_tokens += br.input_tokens
+    result.output_tokens += br.output_tokens
+    result.cache_creation_tokens += br.cache_creation_tokens
+    result.cache_read_tokens += br.cache_read_tokens
+    result.cost_usd = round(result.cost_usd + br.cost_usd, 6)
+    result.errors.extend(br.errors)
+    evaluated_at = _now_iso()
+    for art, ev in zip(articles, br.evaluations):
+        url = art.get("url")
+        if not url:
+            continue
+        entry = _to_log_entry(art, ev, model=br.model, evaluated_at=evaluated_at)
+        result.evaluations_by_url[url] = entry
+
+
+def _run_stage2_layered(
+    articles: list[dict],
+    *,
+    layer_config: LayerConfig,
+    caller: str,
+    batch_size: int = DEFAULT_BATCH_SIZE,
+    max_tokens: int = DEFAULT_MAX_TOKENS,
+) -> Stage2Result:
+    """3 層構造 Stage 2 の本実装（C85 Sub-Step 4, 2026-06-14, Phase B Step 4）.
+
+    分岐:
+    - 層 1 = Haiku full (3 項目) — そのまま採用ロジックへ
+    - 層 2 = Haiku pre-filter (3 項目) → 上位 N% かつ score≥K を Sonnet full
+      (5 項目) で再評価、残りは Haiku score のまま採用ロジックへ
+    - 層 3 = Sonnet full (5 項目) — Tribune 知的核心、評価品質の核心
+    """
+    result = Stage2Result(model=f"layered({layer_config.haiku_model}/{layer_config.sonnet_model})")
+    if not articles:
+        return result
+
+    # 1) 振り分け
+    layer_1, layer_2, layer_3 = _classify_articles(articles)
+    print(
+        f"[stage2.layered:{caller}] layer1={len(layer_1)} "
+        f"layer2={len(layer_2)} layer3={len(layer_3)}",
+        file=sys.stderr,
+    )
+
+    # 2) 層 1: Haiku full (3 項目)
+    for i in range(0, len(layer_1), batch_size):
+        batch = layer_1[i : i + batch_size]
+        cap = llm_usage.check_caps()
+        if not cap.ok:
+            result.aborted = True
+            result.abort_reason = cap.reason
+            break
+        try:
+            br = evaluate_batch_haiku_prefilter(
+                batch,
+                model=layer_config.haiku_model,
+                max_tokens=max_tokens,
+                tag=f"stage2.batch.layer1.haiku.{caller}",
+            )
+        except llm.CapExceededError as e:
+            result.aborted = True
+            result.abort_reason = str(e)
+            break
+        _accumulate_batch(result, br, batch)
+
+    # 3) 層 2: Haiku pre-filter → 上位を Sonnet
+    layer_2_pre: list[tuple[dict, dict]] = []
+    if not result.aborted:
+        for i in range(0, len(layer_2), batch_size):
+            batch = layer_2[i : i + batch_size]
+            cap = llm_usage.check_caps()
+            if not cap.ok:
+                result.aborted = True
+                result.abort_reason = cap.reason
+                break
+            try:
+                br = evaluate_batch_haiku_prefilter(
+                    batch,
+                    model=layer_config.haiku_model,
+                    max_tokens=max_tokens,
+                    tag=f"stage2.batch.layer2.prefilter.{caller}",
+                )
+            except llm.CapExceededError as e:
+                result.aborted = True
+                result.abort_reason = str(e)
+                break
+            # 統計 token / cost を集計（result への entry 投入は後段）
+            result.input_tokens += br.input_tokens
+            result.output_tokens += br.output_tokens
+            result.cache_creation_tokens += br.cache_creation_tokens
+            result.cache_read_tokens += br.cache_read_tokens
+            result.cost_usd = round(result.cost_usd + br.cost_usd, 6)
+            result.errors.extend(br.errors)
+            result.batches_run += 1
+            layer_2_pre.extend(zip(batch, br.evaluations))
+
+    # 3.1) 閾値判定: 上位 N% かつ score>=K
+    if layer_2_pre and not result.aborted:
+        ratio = layer_config.n_for_caller(caller)
+        top, rest = _filter_top(
+            layer_2_pre, ratio=ratio, min_score=layer_config.k_threshold,
+        )
+        print(
+            f"[stage2.layered:{caller}] layer2 pre-filter: "
+            f"top={len(top)} (ratio={ratio:.0%}, K={layer_config.k_threshold}) "
+            f"rest={len(rest)}",
+            file=sys.stderr,
+        )
+        # rest: Haiku score のまま採用ロジックへ
+        evaluated_at = _now_iso()
+        for art, ev in rest:
+            url = art.get("url")
+            if not url:
+                continue
+            entry = _to_log_entry(
+                art, ev, model=layer_config.haiku_model, evaluated_at=evaluated_at,
+            )
+            result.evaluations_by_url[url] = entry
+        # top: Sonnet full で精評価
+        top_articles = [a for a, _ in top]
+        for i in range(0, len(top_articles), batch_size):
+            batch = top_articles[i : i + batch_size]
+            cap = llm_usage.check_caps()
+            if not cap.ok:
+                result.aborted = True
+                result.abort_reason = cap.reason
+                break
+            try:
+                br = evaluate_batch(
+                    batch,
+                    model=layer_config.sonnet_model,
+                    max_tokens=max_tokens,
+                    tag=f"stage2.batch.layer2.sonnet.{caller}",
+                )
+            except llm.CapExceededError as e:
+                result.aborted = True
+                result.abort_reason = str(e)
+                break
+            _accumulate_batch(result, br, batch)
+
+    # 4) 層 3: Sonnet full (5 項目)
+    if not result.aborted:
+        for i in range(0, len(layer_3), batch_size):
+            batch = layer_3[i : i + batch_size]
+            cap = llm_usage.check_caps()
+            if not cap.ok:
+                result.aborted = True
+                result.abort_reason = cap.reason
+                break
+            try:
+                br = evaluate_batch(
+                    batch,
+                    model=layer_config.sonnet_model,
+                    max_tokens=max_tokens,
+                    tag=f"stage2.batch.layer3.sonnet.{caller}",
+                )
+            except llm.CapExceededError as e:
+                result.aborted = True
+                result.abort_reason = str(e)
+                break
+            _accumulate_batch(result, br, batch)
 
     write_scores_log(result)
     return result
