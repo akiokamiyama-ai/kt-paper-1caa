@@ -1,0 +1,38 @@
+{
+  "date": "2026-06-15",
+  "page1_urls": [
+    "https://www.ft.com/content/eb85e22d-cfd0-41ef-b752-8039fbf17902",
+    "https://www.economist.com/finance-and-economics/2026/06/14/does-donald-trump-make-latin-america-a-good-bet",
+    "https://news.yahoo.co.jp/pickup/6584109?source=rss",
+    "https://news.yahoo.co.jp/pickup/6584112?source=rss"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/news/articles/2606/14/news019.html",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2606/15/news012.html",
+    "web_repo": "https://www.bc01.net/article/fc-media_202606/"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/06/12/trump-west-china-rome-civilization-vance-iran-hegseth-russia/",
+    "http://www3.nhk.or.jp/news/html/20260615/k10015149981000.html",
+    "https://www.asahi.com/articles/ASV6D2RYSV6DULZU008M.html?ref=rss",
+    "https://www.mckinsey.com/capabilities/strategy-and-corporate-finance/our-insights/prudentials-charles-lowrey-on-finishing-strong-as-ceo",
+    "https://wordswithoutborders.org/read/article/2026-06/portentous-song-mehrdad-wolpe/",
+    "https://www.publicbooks.org/who-owns-argentine-football/"
+  ],
+  "page4_urls": [
+    "https://3quarksdaily.com/3quarksdaily/2026/06/the-skills-of-exile.html",
+    "https://www.publicbooks.org/resistance-disguised-as-a-history-lesson-fascism-and-the-university/",
+    "https://3quarksdaily.com/3quarksdaily/2026/06/the-best-religion-in-the-world.html"
+  ],
+  "page5_url": "https://www.nplusonemag.com/online-only/online-only/meet-me-in-the-darkroom/",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-06/portentous-song-mehrdad-wolpe/",
+    "music": "https://greenroom.jp/post-5458/",
+    "outdoor": "https://www.cleverhiker.com/more-gear/rei-ruckpack-40-travel-backpack-review/"
+  },
+  "headlines_urls": [
+    "https://www.bbc.com/news/articles/cwy031el03po?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/videos/cvgjx68nyvmo?at_medium=RSS&at_campaign=rss",
+    "https://news.yahoo.co.jp/pickup/6584246?source=rss"
+  ]
+}

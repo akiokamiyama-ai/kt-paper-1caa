@@ -359,6 +359,23 @@
           "cost_usd": 0.03384525,
           "is_fallback": false
         }
+      },
+      {
+        "date": "2026-06-15",
+        "day_label": "月",
+        "angle_key": "critical",
+        "angle_label_jp": "批判的",
+        "essay": {
+          "angle_label": "月曜 - 批判的",
+          "daily_question": "「注意＝愛」という等式は、思考停止を促す美しい罠ではないか",
+          "essay_title": "ヴェイユ的直観の死角——注意論の三つの盲点",
+          "body": "シモーヌ・ヴェイユの「注意＝愛」という命題は、読む者を瞬時に捉える。Hanbury の論考が持つ力もそこに由来する。だが、美しい命題ほど危険な罠を内包する。月曜朝の批判的検討として、あえてこの等式の亀裂を三点から照射したい。\n\n第一の亀裂は、「注意を向けること」と「愛すること」の間に横たわる非対称性である。認知科学者の立場からこの問いに挑んだのが、Gloria Mark 自身でもある。彼女の研究は確かに注意の断片化を示すが、同時に「注意の持続＝良質な関係」という等式を支持してはいない。精神分析家のアダム・フィリップスはむしろ逆の問いを立てる——「注意を向けすぎること」もまた愛の歪みであり、過干渉・監視・依存の温床になり得ると指摘する。スマートフォンを置いた保護者が子に全注意を注いだとき、それが常に愛の表れになるとは限らない。注意は愛の必要条件かもしれないが、十分条件ではない。\n\n第二の亀裂は、テクノロジー批判に潜む「エリート主義的懐古」という問題である。メディア研究者のウィットニー・フィリップスは、テック依存を個人の道徳的弱さや時代の退廃として描くナラティブが、しばしば特定の階層の経験を「普遍」として語り直す構造を持つと批判する。Hanbury が描く「祝日に携帯が手放せない」苦悩は、在宅勤務が可能な知識労働者の経験である。コールセンターの労働者、介護士、配送ドライバーにとって、スマートフォンは家族との唯一の接続回線であり、注意を「オフにする贅沢」自体がアクセス不可能な特権だ。注意の散漫を嘆く論考が、注意を向ける余裕を持てない人々の声を不可視化するなら、その倫理的射程は自己矛盾に陥る。\n\n第三の亀裂は、最も根本的な問いである——「注意の散漫」は、本当に現代テクノロジーの産物なのか。歴史家のマシュー・クロフォードは著書『注意と努力』の中で、注意の管理は産業革命以降一貫して外部から設計されてきた問題だと論じる。工場の時計、ラジオ、テレビ、そして今日のスマートフォン。人間の注意は常に、その時代の資本にとって最も換金しやすい資源として標的にされてきた。ヴェイユ自身が生きた1940年代もまた、ナチズムとプロパガンダが注意を収奪した時代である。「かつては注意が保たれていた」という前提は、歴史的に根拠が薄い。\n\nこれらの批判は、Hanbury の論考を否定しない。注意が愛の形をとり得るという直観は真実に響く。だが経営者として重要なのは、美しい命題をそのまま組織に持ち込む前に、その命題がどの文脈で機能し、どこで機能しないかを問う習慣である。「注意を向けよ」という規範を組織内で喧伝するとき、それが特定の立場の人に無言のコストを転嫁していないか、常に問い続けることが、ディープリスニング経営の起点となる。聴くことの倫理は、聴ける条件を問うことから始まる。",
+          "annotation_label": "反対論者・批判者",
+          "annotation_body": "アダム・フィリップス（英国、精神分析家）——過剰な注意が愛を歪める逆説を論じる。ウィットニー・フィリップス（米国、メディア研究者）——テック批判に潜む階層バイアスを指摘。マシュー・クロフォード（米国、哲学者・認知科学者）——注意の収奪は産業革命以来続く構造問題と位置づけ、テクノロジー固有論を相対化する。",
+          "quote_excerpt": "To give someone attention is to recognize that they exist and to assent that their needs, at least for a moment, are more important than my own. Now, like philosophers are wont to do, Weil packs her own stuff into her terms, and readers in 2023 should remember that Weil's definition of attention only partially aligns with the colloquial and scientific ways we tend to use it. Still, her idea of attention and love seems true. A perhaps trite example: If you've ever shared a table with someone who portaled attention everywhere but to you, then you know that table feels nothing like love.",
+          "cost_usd": 0.03416625,
+          "is_fallback": false
+        }
       }
     ]
   }

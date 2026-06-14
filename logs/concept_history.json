@@ -239,6 +239,11 @@
       "concept_id": "black_swan",
       "name_ja": "ブラックスワン",
       "displayed_on": "2026-06-14"
+    },
+    {
+      "concept_id": "monad",
+      "name_ja": "モナド",
+      "displayed_on": "2026-06-15"
     }
   ]
 }

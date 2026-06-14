@@ -806,6 +806,24 @@
       "ai_kamiyama_title": "How to See a Bird: Robert Macfarlane and Jackie Morris’s Exquisite Illustrated Field Guide to the Wonder of the Winged",
       "ai_kamiyama_category": "books:自然科学ノンフィクション",
       "ai_kamiyama_source_name": "The Marginalian（旧 Brain Pickings）"
+    },
+    {
+      "displayed_on": "2026-06-15",
+      "article_url": "https://www.nplusonemag.com/online-only/online-only/meet-me-in-the-darkroom/",
+      "article_title": "Meet Me in the Darkroom",
+      "article_category": "academic",
+      "tie_candidates": [
+        "academic"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.publicbooks.org/who-owns-argentine-football/",
+      "ai_kamiyama_title": "Who Owns Argentine Football?",
+      "ai_kamiyama_category": "academic",
+      "ai_kamiyama_source_name": "Public Books"
     }
   ]
 }
