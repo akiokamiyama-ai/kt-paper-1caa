@@ -51,14 +51,24 @@ jobs:
         # data/monthly_pivotal.json から当該週を引き当て、page-one のみ v3 案 C
         # 統合型に surgical swap する。月次選定未投入週・v3 例外時は v2 出力を
         # そのまま残す二段 fallback（regen_front_page_v3.py 冒頭の docstring 参照）。
+        #
+        # C85 Phase B Step 4 (Sprint 10, 2026-06-17 shadow 開始): TRIBUNE_STAGE2_MODE
+        # で Stage 2 mode を切替。"legacy"=既存挙動、"shadow"=legacy + layered の
+        # 両方実行（採用は legacy、layered は logs/stage2_shadow_*.json に artifact
+        # 化のみ）、"layered"=layered 単独採用。
+        # 6/17 → 6/23 shadow 期間 → 6/24 layered 本番切替の段階移行スケジュール。
+        # 不正値は legacy fallback（scripts/selector/stage2_shadow.py 参照）。
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           MIIBO_API_KEY: ${{ secrets.MIIBO_API_KEY }}
           MIIBO_AGENT_ID: ${{ secrets.MIIBO_AGENT_ID }}
+          TRIBUNE_STAGE2_MODE: shadow
         run: |
           python -m scripts.regen_front_page_v3 --date "${{ steps.date.outputs.DATE }}"
 
       - name: Upload audit logs as artifact
+        # C85 Phase B Step 4 (2026-06-17 shadow 開始): shadow log を artifact に追加。
+        # 神山さんが gh run download で取得 → layered vs legacy の採用パターン比較。
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -68,6 +78,7 @@ jobs:
             logs/llm_usage_*.json
             logs/page2_scores_*.json
             logs/page3_selection_*.json
+            logs/stage2_shadow_*.json
           retention-days: 90
 
       - name: Refresh index.html with today's archive
