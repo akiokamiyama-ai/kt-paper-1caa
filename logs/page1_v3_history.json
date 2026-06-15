@@ -376,6 +376,23 @@
           "cost_usd": 0.03416625,
           "is_fallback": false
         }
+      },
+      {
+        "date": "2026-06-16",
+        "day_label": "火",
+        "angle_key": "practitioner",
+        "angle_label_jp": "実践者",
+        "essay": {
+          "angle_label": "火曜 - 実践者",
+          "daily_question": "「注意を向ける」能力は、組織設計で意図的に守ることができるか",
+          "essay_title": "注意の設計——経営者が今選べる三つの実装",
+          "body": "月曜に問いを立て、火曜に疑い、水曜には現場に降りる。今日の論考が問うのは、「注意＝愛」という命題を経営者がどう実装するか、である。\n\n「注意を向けること」が愛の核心だとすれば、その喪失は単なる生産性の問題ではない。しかし現場の意思決定者にとって、思想は道具になって初めて意味を持つ。以下、組織設計の観点から三つの実装の選択肢を示す。\n\n第一の実装は、「保護された対話時間」の構造化である。ここで参照できるのは、Shopify が2023年に断行した会議の大規模削除だ。同社はカレンダー上の定例会議の76%を一旦廃止し、「静けさ」を組織のデフォルトに設定し直した。これは単なる効率化ではなく、注意を向ける資源を意図的に確保するための設計変更である。神山氏が手がける経営者支援やエグゼクティブコーチングの文脈に置き換えれば、1on1の時間が「どちらかが画面を見ながら行われていないか」という問い直しに相当する。会議体の数ではなく、その場で互いに注意を向け合える構造になっているか——という設計観点が今すぐ使える選択肢として成立する。\n\n第二の実装は、「入社・採用面接の場を注意の試金石にする」ことである。人材紹介事業を展開するこころみの現場では、候補者と組織の「出会い」の質が成果に直結する。面接官がスマートフォンをテーブルに置いたまま候補者と向き合うとき、その場は何を語っているか。候補者はその組織の注意の文化を、言葉より先に体感している。Airbnbが採用プロセスで重視する「ホスピタリティ観」の評価軸、すなわち「相手の必要に気づく感度」は、まさにヴェイユ的な注意の能力である。採用面接を「注意の文化の展示場」として再設計するという選択肢は、追加コストなく今日から実装できる。\n\n第三の実装は、組織の「中断コスト」を可視化することである。Gloria Mark の研究が示す23分の回復時間は、個人の集中力の話として読まれがちだが、組織的に見れば別の示唆を持つ。Human Energyのような組織開発の現場では、「注意の断片化」がチームのエネルギー収支にどう影響しているかを計測するフレームが成立する。従業員1人あたり年720時間が散漫で失われるという数字を自社に当てはめると、10人のチームで単純計算7200時間が消えていることになる。これをコストとして経営会議に乗せる設計、つまり「注意の損耗」を組織指標に組み込む選択肢は、既存のエンゲージメントサーベイとは異なる視座を提供する。ウェブリポが扱う組織診断ツールに「注意の質」という軸を加える構想は、差別化の種として十分に具体的だろう。\n\n三つの実装に共通するのは、いずれも「注意を向ける能力を個人の努力に任せない」という発想である。意志力に頼る組織設計は脆い。構造が人の行動を先導する——この原則を、注意の問題に適用するだけでよい。\n\n思想を現場に降ろすとき、最も重要なのは「すべき」の命令形を手放すことだ。Hanbury が描いた「愛なき食卓」を組織から排除しようとするとき、経営者に求められるのは倫理的な覚悟ではなく、設計の選択である。その選択が今、確かに存在している。",
+          "annotation_label": "関連企業・事例",
+          "annotation_body": "Shopify（2023年会議76%廃止）は「静けさ」をデフォルト設計として注意資源を保護した先行例。Airbnbは採用評価に「相手の必要に気づく感度」を組み込み、注意の文化を入口から形成。Gloria Markの研究（UC Irvine）は注意中断後の回復に平均23分を要することを実証し、組織コスト換算の根拠を与える。",
+          "quote_excerpt": "To give someone attention is to recognize that they exist and to assent that their needs, at least for a moment, are more important than my own. Now, like philosophers are wont to do, Weil packs her own stuff into her terms, and readers in 2023 should remember that Weil's definition of attention only partially aligns with the colloquial and scientific ways we tend to use it. Still, her idea of attention and love seems true. A perhaps trite example: If you've ever shared a table with someone who portaled attention everywhere but to you, then you know that table feels nothing like love.",
+          "cost_usd": 0.03590025,
+          "is_fallback": false
+        }
       }
     ]
   }
