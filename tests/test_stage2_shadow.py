@@ -91,6 +91,23 @@ def test_mode_case_insensitive():
         os.environ.pop(shw.ENV_MODE, None)
 
 
+def test_mode_shadow_page1_only_recognized():
+    """C86: 新モード 'shadow_page1_only' が VALID_MODES に含まれる."""
+    os.environ[shw.ENV_MODE] = "shadow_page1_only"
+    try:
+        _check("a6 TRIBUNE_STAGE2_MODE=shadow_page1_only → 認識",
+               shw.get_stage2_mode() == "shadow_page1_only"
+               and "shadow_page1_only" in shw.VALID_MODES)
+    finally:
+        os.environ.pop(shw.ENV_MODE, None)
+
+
+def test_shadow_page1_only_callers_set():
+    """C86: page1_master のみが shadow 対象."""
+    _check("a7 SHADOW_PAGE1_ONLY_CALLERS = {'page1_master'}",
+           shw.SHADOW_PAGE1_ONLY_CALLERS == frozenset({"page1_master"}))
+
+
 # ---------------------------------------------------------------------------
 # (b) run_stage2_with_mode dispatch
 # ---------------------------------------------------------------------------
@@ -222,6 +239,107 @@ def test_dispatch_shadow_mode_runs_both_and_returns_legacy():
             "b8 shadow log entry: overlap_count + overlap_ratio あり",
             "overlap_count" in entry and "overlap_ratio" in entry,
         )
+
+
+# ---------------------------------------------------------------------------
+# (b2) shadow_page1_only (C86)
+# ---------------------------------------------------------------------------
+
+def test_dispatch_shadow_page1_only_for_master_caller():
+    """C86: shadow_page1_only + caller='page1_master' → shadow 動作（2 回実行）."""
+    calls: list[dict] = []
+
+    def fake(articles, *, layer_config=None, caller="page1_master", **kw):
+        is_layered = layer_config is not None and layer_config.enabled
+        calls.append({"is_layered": is_layered, "caller": caller})
+        model = (
+            "layered(claude-haiku-4-5/claude-sonnet-4-6)"
+            if is_layered else "claude-sonnet-4-6"
+        )
+        return _stub_result(model, n_urls=2, cost=(0.5 if is_layered else 0.3))
+
+    orig = _patch_run_stage2(fake)
+    with tempfile.TemporaryDirectory() as td:
+        shadow_path = Path(td) / "stage2_shadow.json"
+        try:
+            r = shw.run_stage2_with_mode(
+                [{"url": "x"}], caller="page1_master",
+                mode="shadow_page1_only", shadow_log_path=shadow_path,
+            )
+        finally:
+            _restore_run_stage2(*orig)
+
+        _check(
+            "b9 shadow_page1_only + caller=page1_master → run_stage2 2 回",
+            len(calls) == 2
+            and not calls[0]["is_layered"]
+            and calls[1]["is_layered"],
+        )
+        _check(
+            "b10 shadow_page1_only + caller=page1_master → 採用は legacy",
+            "layered" not in r.model and r.cost_usd == 0.3,
+        )
+        _check(
+            "b11 shadow_page1_only + caller=page1_master → shadow log 生成",
+            shadow_path.exists(),
+        )
+
+
+def test_dispatch_shadow_page1_only_for_other_caller():
+    """C86: shadow_page1_only + caller='page3' → legacy 動作（1 回のみ）."""
+    calls: list[dict] = []
+
+    def fake(articles, *, layer_config=None, caller="page1_master", **kw):
+        is_layered = layer_config is not None and layer_config.enabled
+        calls.append({"is_layered": is_layered, "caller": caller})
+        return _stub_result("claude-sonnet-4-6", n_urls=1, cost=0.1)
+
+    orig = _patch_run_stage2(fake)
+    with tempfile.TemporaryDirectory() as td:
+        shadow_path = Path(td) / "stage2_shadow.json"
+        try:
+            r = shw.run_stage2_with_mode(
+                [{"url": "x"}], caller="page3",
+                mode="shadow_page1_only", shadow_log_path=shadow_path,
+            )
+        finally:
+            _restore_run_stage2(*orig)
+
+        _check(
+            "b12 shadow_page1_only + caller=page3 → run_stage2 1 回のみ（legacy 経路）",
+            len(calls) == 1 and not calls[0]["is_layered"],
+        )
+        _check(
+            "b13 shadow_page1_only + caller=page3 → shadow log 生成しない",
+            not shadow_path.exists(),
+        )
+
+
+def test_dispatch_shadow_page1_only_for_page4_page5_page6():
+    """C86: page4/5/6 もすべて legacy 経路（pre_evaluated 経由でほぼ free rider）."""
+    results = []
+    for caller in ("page4", "page5", "page6", "page2"):
+        calls = []
+
+        def fake(articles, *, layer_config=None, caller=caller, **kw):
+            is_layered = layer_config is not None and layer_config.enabled
+            calls.append(is_layered)
+            return _stub_result("claude-sonnet-4-6", cost=0.05)
+
+        orig = _patch_run_stage2(fake)
+        try:
+            shw.run_stage2_with_mode(
+                [{"url": "x"}], caller=caller, mode="shadow_page1_only",
+            )
+        finally:
+            _restore_run_stage2(*orig)
+        results.append((caller, len(calls), calls[0] if calls else None))
+
+    _check(
+        "b14 shadow_page1_only + page4/5/6/2 すべて legacy（1 回のみ、is_layered=False）",
+        all(n == 1 and is_l is False for _, n, is_l in results),
+        f"got {results}",
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -401,12 +519,20 @@ def main() -> int:
     test_mode_layered()
     test_mode_invalid_falls_back()
     test_mode_case_insensitive()
+    test_mode_shadow_page1_only_recognized()
+    test_shadow_page1_only_callers_set()
 
     print()
     print("(b) run_stage2_with_mode dispatch:")
     test_dispatch_legacy_mode()
     test_dispatch_layered_mode()
     test_dispatch_shadow_mode_runs_both_and_returns_legacy()
+
+    print()
+    print("(b2) C86 shadow_page1_only:")
+    test_dispatch_shadow_page1_only_for_master_caller()
+    test_dispatch_shadow_page1_only_for_other_caller()
+    test_dispatch_shadow_page1_only_for_page4_page5_page6()
 
     print()
     print("(c) build_shadow_entry / shadow log:")

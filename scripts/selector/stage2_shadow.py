@@ -41,8 +41,17 @@ LOG_DIR = PROJECT_ROOT / "logs"
 
 # 環境変数名（GHA workflow で指定可能）
 ENV_MODE = "TRIBUNE_STAGE2_MODE"
-VALID_MODES = ("legacy", "shadow", "layered")
+# C86 (Sprint 10, 2026-06-15): "shadow_page1_only" モード追加。6/15 cron で
+# 全 caller shadow (mode="shadow") が 90 分 timeout 強制 cancel された経験を
+# 受けて、page1_master のみ shadow + 他 caller は legacy という軽量化モードを
+# 用意する。stage2.batch 全体の 69% を占める master batch だけ観察すれば
+# overlap_ratio / cost 効果は捕捉できる（Phase B Step 1 コスト分析参照）。
+VALID_MODES = ("legacy", "shadow", "shadow_page1_only", "layered")
 DEFAULT_MODE = "legacy"
+
+# C86: shadow_page1_only モードで shadow を走らせる caller の allowlist。
+# 将来 page3 等を追加したくなったら本セットを拡張。
+SHADOW_PAGE1_ONLY_CALLERS: frozenset[str] = frozenset({"page1_master"})
 
 # shadow log 採用パターン比較用の top-N
 SHADOW_TOP_N = 30
@@ -105,7 +114,17 @@ def run_stage2_with_mode(
         cfg = layer_config or LayerConfig(enabled=True)
         return run_stage2(articles, layer_config=cfg, caller=caller, **kwargs)
 
+    # C86: shadow_page1_only は対象 caller のみ shadow、他 caller は legacy。
+    # mode を「実質的に shadow か否か」に正規化する。
+    run_shadow = False
     if effective_mode == "shadow":
+        run_shadow = True
+    elif effective_mode == "shadow_page1_only":
+        if caller in SHADOW_PAGE1_ONLY_CALLERS:
+            run_shadow = True
+        # else: 対象外 caller → legacy 経路へ fall through
+
+    if run_shadow:
         # 1. legacy run（採用に使う）
         legacy_result = run_stage2(
             articles, layer_config=None, caller=caller, **kwargs,
@@ -131,7 +150,7 @@ def run_stage2_with_mode(
         # 4. 採用は legacy 結果
         return legacy_result
 
-    # legacy mode（デフォルト）
+    # legacy mode（デフォルト）または shadow_page1_only で対象外 caller
     return run_stage2(articles, layer_config=None, caller=caller, **kwargs)
 
 

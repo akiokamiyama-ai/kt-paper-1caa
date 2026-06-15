@@ -10,7 +10,16 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  build:
+  # ===========================================================================
+  # morning_paper: 紙面生成 cron（必達）
+  # ===========================================================================
+  #
+  # C86 (Sprint 10, 2026-06-15): 旧 job 名 ``build`` をリネーム。役割は不変。
+  # TRIBUNE_STAGE2_MODE=legacy を明示し、90 分 timeout 内で確実に完走させる。
+  # shadow / layered モードは別 job (shadow_evaluation) に分離し、本 job は
+  # 紙面配信を最優先する。shadow_evaluation の成否は本 job に影響しない
+  # （並列実行、needs 関係なし）。
+  morning_paper:
     runs-on: ubuntu-latest
     # Sprint 5 ポストモーメント (2026-05-05): ラン #3 で 30:11 かかり 30 分 timeout
     # で強制 cancel。当日のばらつき（RSS timeout / LLM 混雑時間帯 / runner 性能差）
@@ -52,12 +61,9 @@ jobs:
         # 統合型に surgical swap する。月次選定未投入週・v3 例外時は v2 出力を
         # そのまま残す二段 fallback（regen_front_page_v3.py 冒頭の docstring 参照）。
         #
-        # C85 Phase B Step 4 (Sprint 10, 2026-06-17 shadow 開始予定だったが
-        # **6/15 cron で 90 分 timeout 強制 cancel**。shadow は legacy + layered
-        # の両方を順次実行するため、stage2 時間が 2 倍化（元 ~62 分 → ~124 分）。
-        # 緊急 revert: TRIBUNE_STAGE2_MODE を **legacy** に戻して通常運用を復旧。
-        # shadow の再投入は (a) timeout 拡張 90→180min or (b) shadow を別 job で
-        # 並列化、のいずれかを実装してから再開する（Sprint 10 残作業）。
+        # C85 / C86: TRIBUNE_STAGE2_MODE=legacy 固定。shadow は別 job
+        # (shadow_evaluation) に分離した（6/15 cron で全 caller shadow が
+        # 90 分 timeout 強制 cancel された経験）。
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           MIIBO_API_KEY: ${{ secrets.MIIBO_API_KEY }}
@@ -67,8 +73,7 @@ jobs:
           python -m scripts.regen_front_page_v3 --date "${{ steps.date.outputs.DATE }}"
 
       - name: Upload audit logs as artifact
-        # C85 Phase B Step 4 (2026-06-17 shadow 開始): shadow log を artifact に追加。
-        # 神山さんが gh run download で取得 → layered vs legacy の採用パターン比較。
+        # 神山さんが gh run download で取得 → 採用構造の確認用。
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -78,7 +83,6 @@ jobs:
             logs/llm_usage_*.json
             logs/page2_scores_*.json
             logs/page3_selection_*.json
-            logs/stage2_shadow_*.json
           retention-days: 90
 
       - name: Refresh index.html with today's archive
@@ -106,3 +110,75 @@ jobs:
             git pull --rebase origin main
             git push
           fi
+
+  # ===========================================================================
+  # shadow_evaluation: layered モード shadow 観察 job（並列、紙面に影響なし）
+  # ===========================================================================
+  #
+  # C86 (Sprint 10, 2026-06-15): morning_paper と並列実行（``needs:`` なし）し、
+  # ``TRIBUNE_STAGE2_MODE=shadow_page1_only`` で **page1_master の master batch
+  # のみ shadow 評価**。stage2 全体コストの 69% を占める master batch だけ
+  # 観察すれば、overlap_ratio / cost 効果は捕捉できる（Phase B Step 1 コスト
+  # 分析）。
+  #
+  # 失敗しても紙面に影響しないよう ``continue-on-error: true`` で隔離。
+  # cron スケジュール起動のみ対象（``if: github.event_name == 'schedule'``）、
+  # workflow_dispatch では走らせない（手動 dry-run は別途実行する設計）。
+  #
+  # timeout は 150 分（page1_master のみで stage2 ~62 分 × 2 ≒ 124 分 +
+  # その他オーバーヘッド ~20 分）。
+  #
+  # ローカル / 紙面 commit はしない（archive HTML / logs / index.html を
+  # commit しない）。artifact ``shadow-logs-YYYY-MM-DD`` のみ生成して
+  # 神山さん artifact レビュー用とする。
+  shadow_evaluation:
+    if: ${{ github.event_name == 'schedule' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    continue-on-error: true
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Compute target date (JST)
+        id: date
+        run: echo "DATE=$(TZ='Asia/Tokyo' date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+
+      - name: Generate Tribune (shadow_page1_only)
+        # C86: page1_master の master batch のみ shadow 評価。
+        # 他 caller (page3 / page4 / page5 / page6 / page2) は legacy 経路で
+        # 実行され、shadow 時間は紙面 cron + (master batch 1 回追加) 程度に
+        # 抑えられる。
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          MIIBO_API_KEY: ${{ secrets.MIIBO_API_KEY }}
+          MIIBO_AGENT_ID: ${{ secrets.MIIBO_AGENT_ID }}
+          TRIBUNE_STAGE2_MODE: shadow_page1_only
+        run: |
+          python -m scripts.regen_front_page_v3 --date "${{ steps.date.outputs.DATE }}"
+
+      - name: Upload shadow logs as artifact
+        # 神山さん artifact レビュー: layered vs legacy の採用パターン / cost 比較。
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: shadow-logs-${{ steps.date.outputs.DATE }}
+          path: |
+            logs/stage2_shadow_*.json
+            logs/scores_*.json
+            logs/llm_usage_*.json
+          retention-days: 90
