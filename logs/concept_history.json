@@ -244,6 +244,11 @@
       "concept_id": "monad",
       "name_ja": "モナド",
       "displayed_on": "2026-06-15"
+    },
+    {
+      "concept_id": "dependent_origination",
+      "name_ja": "縁起",
+      "displayed_on": "2026-06-16"
     }
   ]
 }

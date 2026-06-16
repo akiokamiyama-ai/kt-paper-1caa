@@ -1,0 +1,38 @@
+{
+  "date": "2026-06-16",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/18828/",
+    "https://www.economist.com/finance-and-economics/2026/06/15/meet-the-worlds-top-ai-pilled-economists",
+    "https://que.dailyshincho.jp/node/18924/",
+    "https://que.dailyshincho.jp/node/18912/"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2606/15/2000000091/",
+    "human_energy": "https://jinjibu.jp/news/detl/26465/",
+    "web_repo": "https://www.bc01.net/article/kakucho_202606/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/magazine/haiti-revolution-showed-hypocrisy-of-us-declaration-of-independence-approach-to-slavery-by-sudhir-hazareesingh-2026-06",
+    "https://toyokeizai.net/articles/-/948212?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://warontherocks.com/south-korea-could-build-nuclear-submarines-but-it-shouldnt/",
+    "https://www.mckinsey.com/industries/healthcare/our-insights/phil-ozuah-on-enhancing-ambulatory-care-and-accessibility",
+    "https://wordswithoutborders.org/read/article/2026-05/the-city-and-the-writer-in-al-kabri-with-mai-serhan-nathalie-handal/",
+    "https://nautil.us/how-to-feel-at-home-in-the-modern-world-1281964/"
+  ],
+  "page4_urls": [
+    "https://3quarksdaily.com/3quarksdaily/2026/06/on-the-art-of-ljubodrag-andric.html",
+    "https://www.themarginalian.org/2026/06/14/jeanne-villepreux-power-argonaut/",
+    "https://www.themarginalian.org/2026/06/11/emily-dickinson-hope-kate/"
+  ],
+  "page5_url": "https://natalie.mu/music/news/676324",
+  "page6_urls": {
+    "books": "https://locusmag.com/2026/06/2026-future-worlds-prize-shortlist/",
+    "music": "https://natalie.mu/music/news/676284",
+    "outdoor": "https://www.atlasobscura.com/places/ripon-workhouse-museum"
+  },
+  "headlines_urls": [
+    "https://www.bbc.com/news/articles/c0ey87z1ggjo?at_medium=RSS&at_campaign=rss",
+    "https://www.ft.com/content/adb68e67-3d04-4a60-af30-dd9b1faee62b",
+    "http://www3.nhk.or.jp/news/html/20260616/k10015150621000.html"
+  ]
+}

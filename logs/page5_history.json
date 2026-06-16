@@ -824,6 +824,24 @@
       "ai_kamiyama_title": "Who Owns Argentine Football?",
       "ai_kamiyama_category": "academic",
       "ai_kamiyama_source_name": "Public Books"
+    },
+    {
+      "displayed_on": "2026-06-16",
+      "article_url": "https://natalie.mu/music/news/676324",
+      "article_title": "5cmサイズのミセスがあなたのスマホに、「淡麗グリーンラベル」AR動画",
+      "article_category": "music",
+      "tie_candidates": [
+        "music"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.project-syndicate.org/magazine/haiti-revolution-showed-hypocrisy-of-us-declaration-of-independence-approach-to-slavery-by-sudhir-hazareesingh-2026-06",
+      "ai_kamiyama_title": "The Declaration of the Enslaved",
+      "ai_kamiyama_category": "geopolitics",
+      "ai_kamiyama_source_name": "Project Syndicate"
     }
   ]
 }
