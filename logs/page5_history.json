@@ -842,6 +842,24 @@
       "ai_kamiyama_title": "The Declaration of the Enslaved",
       "ai_kamiyama_category": "geopolitics",
       "ai_kamiyama_source_name": "Project Syndicate"
+    },
+    {
+      "displayed_on": "2026-06-17",
+      "article_url": "https://www.axismag.jp/posts/2026/06/710925.html",
+      "article_title": "北欧の日常美を支えた器たち。静岡市美術館の「スウェーデンのうつわ グスタフスベリのある暮らし」展",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://3quarksdaily.com/3quarksdaily/2026/06/review-of-flamboyance-by-jack-parlett-a-serious-study-of-the-spectacular.html",
+      "ai_kamiyama_title": "Review of “Flamboyance” by Jack Parlett – a serious study of the spectacular",
+      "ai_kamiyama_category": "academic",
+      "ai_kamiyama_source_name": "3 Quarks Daily"
     }
   ]
 }

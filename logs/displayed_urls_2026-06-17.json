@@ -1,0 +1,38 @@
+{
+  "date": "2026-06-17",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/18930/",
+    "https://www.economist.com/finance-and-economics/2026/06/16/americas-bull-market-has-entered-its-manic-phase",
+    "https://www.bbc.com/news/articles/ce8jmg2e4kro?at_medium=RSS&at_campaign=rss",
+    "https://que.dailyshincho.jp/node/18936/"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://japan.zdnet.com/article/35248934/",
+    "human_energy": "https://jinjibu.jp/news/detl/26518/",
+    "web_repo": "https://www.bc01.net/article/move-move_202606/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/can-bankova-muster-political-will-to-make-institutional-reforms-during-war/",
+    "https://toyokeizai.net/articles/-/947941?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    null,
+    "https://www.mckinsey.com/industries/technology-media-and-telecommunications/our-insights/the-agentic-advertising-economy-from-attention-to-action",
+    "https://warontherocks.com/the-fall-of-fortress-singapore-three-lessons-from-the-collapse-of-britains-great-asian-bastion/",
+    "https://3quarksdaily.com/3quarksdaily/2026/06/toni-morrisons-native-figures-a-new-reading-of-race-in-her-novels.html"
+  ],
+  "page4_urls": [
+    "https://3quarksdaily.com/3quarksdaily/2026/06/review-of-flamboyance-by-jack-parlett-a-serious-study-of-the-spectacular.html",
+    "https://thepointmag.com/criticism/panahis-laboratory/",
+    "https://3quarksdaily.com/3quarksdaily/2026/06/chabrol-huppert-doing-wrong.html"
+  ],
+  "page5_url": "https://www.axismag.jp/posts/2026/06/710925.html",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/06/16/the-ultimate-fighting-championship-goes-to-washington/",
+    "music": "https://natalie.mu/music/news/676398",
+    "outdoor": "https://sectionhiker.com/26-best-hiking-boots-and-mids/"
+  },
+  "headlines_urls": [
+    "https://que.dailyshincho.jp/node/18987/",
+    "http://www3.nhk.or.jp/news/html/20260617/k10015151911000.html",
+    "https://www.ft.com/content/b780e03d-02b7-452f-944c-a71b8f237c7e"
+  ]
+}
