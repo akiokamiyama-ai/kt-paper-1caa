@@ -343,6 +343,81 @@ def test_dispatch_shadow_page1_only_for_page4_page5_page6():
 
 
 # ---------------------------------------------------------------------------
+# (b3) C88 JST date anchor
+# ---------------------------------------------------------------------------
+
+def test_jst_today_returns_date_object():
+    """C88: _jst_today() は date 型を返す."""
+    import datetime as _dt
+    today = shw._jst_today()
+    _check("b15 _jst_today() returns datetime.date", isinstance(today, _dt.date))
+
+
+def test_jst_today_uses_tokyo_timezone():
+    """C88: UTC が前日でも JST 換算で当日を返す（UTC 23:50 = JST 翌 08:50）."""
+    import datetime as _dt
+    from unittest.mock import patch
+
+    # UTC 2026-06-15 23:50 = JST 2026-06-16 08:50。_jst_today() は 6/16 を返すべき。
+    fixed_utc = _dt.datetime(2026, 6, 15, 23, 50, tzinfo=_dt.timezone.utc)
+
+    class _FakeDT(_dt.datetime):
+        @classmethod
+        def now(cls, tz=None):
+            if tz is None:
+                return fixed_utc.replace(tzinfo=None)
+            return fixed_utc.astimezone(tz)
+
+    with patch.object(shw, "datetime", _FakeDT):
+        result = shw._jst_today()
+    _check(
+        "b16 UTC 6/15 23:50 → JST 換算で 6/16 を返す",
+        result == _dt.date(2026, 6, 16),
+        f"got {result}",
+    )
+
+
+def test_shadow_log_path_uses_jst_date():
+    """C88: shadow log ファイル名 / 内部 date フィールドは JST 日付."""
+    import datetime as _dt
+    from unittest.mock import patch
+
+    # UTC 6/15 20:38（= 6/16 朝 cron 起動の実例、JST 05:38）
+    fixed_utc = _dt.datetime(2026, 6, 15, 20, 38, tzinfo=_dt.timezone.utc)
+
+    class _FakeDT(_dt.datetime):
+        @classmethod
+        def now(cls, tz=None):
+            if tz is None:
+                return fixed_utc.replace(tzinfo=None)
+            return fixed_utc.astimezone(tz)
+
+    legacy = _stub_result("claude-sonnet-4-6", n_urls=3, cost=0.1)
+    layered = _stub_result("layered(claude-haiku-4-5/claude-sonnet-4-6)", n_urls=3, cost=0.05)
+
+    with tempfile.TemporaryDirectory() as td:
+        # path 指定なし → 自動命名を JST 化したか確認
+        with patch.object(shw, "datetime", _FakeDT), \
+             patch.object(shw, "LOG_DIR", Path(td)):
+            written = shw.write_shadow_comparison(
+                legacy, layered,
+                caller="page1_master", articles=[{"url": "x"}],
+            )
+        expected_name = "stage2_shadow_2026-06-16.json"
+        _check(
+            "b17 ファイル名が JST 日付 (2026-06-16) で命名される",
+            written.name == expected_name,
+            f"got {written.name}",
+        )
+        body = json.loads(written.read_text(encoding="utf-8"))
+        _check(
+            "b18 JSON 内 date フィールドも JST 日付",
+            body.get("date") == "2026-06-16",
+            f"got {body.get('date')}",
+        )
+
+
+# ---------------------------------------------------------------------------
 # (c) build_shadow_entry / shadow log structure
 # ---------------------------------------------------------------------------
 
@@ -533,6 +608,12 @@ def main() -> int:
     test_dispatch_shadow_page1_only_for_master_caller()
     test_dispatch_shadow_page1_only_for_other_caller()
     test_dispatch_shadow_page1_only_for_page4_page5_page6()
+
+    print()
+    print("(b3) C88 JST date anchor:")
+    test_jst_today_returns_date_object()
+    test_jst_today_uses_tokyo_timezone()
+    test_shadow_log_path_uses_jst_date()
 
     print()
     print("(c) build_shadow_entry / shadow log:")

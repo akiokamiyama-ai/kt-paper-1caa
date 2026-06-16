@@ -26,9 +26,10 @@ from __future__ import annotations
 import json
 import os
 import sys
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 from .stage2 import (
     LayerConfig,
@@ -38,6 +39,19 @@ from .stage2 import (
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 LOG_DIR = PROJECT_ROOT / "logs"
+
+# C88 (Sprint 10, 2026-06-16): GHA runner は UTC のため ``date.today()`` を直接
+# 使うと、cron 起動 17:37 UTC + 3h 遅延 = 約 20:38 UTC ≒ JST 翌日 05:38 でも
+# UTC 日付がまだ前日のままとなり、shadow log ファイル名と紙面 archive 日付が
+# 1 日ずれる事故が起きていた（6/16 朝の artifact stage2_shadow_2026-06-15.json
+# が実は 6/16 朝刊分）。``scripts/lib/llm_usage.py`` と同じ JST anchor を採用し、
+# 日付を「Tribune の編集日」と一致させる。
+_JST = ZoneInfo("Asia/Tokyo")
+
+
+def _jst_today() -> date:
+    """Return today's date in JST (Tribune's editorial day, C88)."""
+    return datetime.now(_JST).date()
 
 # 環境変数名（GHA workflow で指定可能）
 ENV_MODE = "TRIBUNE_STAGE2_MODE"
@@ -257,20 +271,20 @@ def write_shadow_comparison(
     同日に複数 caller（page1_master / page3 等）が書き込むため、既存ファイルを
     読み込んで該当 caller を上書き or 追加した上で書き戻す。
     """
-    p = path or (LOG_DIR / f"stage2_shadow_{date.today().isoformat()}.json")
+    p = path or (LOG_DIR / f"stage2_shadow_{_jst_today().isoformat()}.json")
     p.parent.mkdir(parents=True, exist_ok=True)
 
-    existing: dict[str, Any] = {"date": date.today().isoformat(), "callers": {}}
+    existing: dict[str, Any] = {"date": _jst_today().isoformat(), "callers": {}}
     if p.exists():
         try:
             existing = json.loads(p.read_text(encoding="utf-8"))
             if not isinstance(existing, dict):
-                existing = {"date": date.today().isoformat(), "callers": {}}
+                existing = {"date": _jst_today().isoformat(), "callers": {}}
             if "callers" not in existing or not isinstance(existing["callers"], dict):
                 existing["callers"] = {}
         except (json.JSONDecodeError, OSError):
             # 破損時は新規上書き
-            existing = {"date": date.today().isoformat(), "callers": {}}
+            existing = {"date": _jst_today().isoformat(), "callers": {}}
 
     entry = build_shadow_entry(legacy, layered, caller=caller, articles=articles)
     existing["callers"][caller] = entry

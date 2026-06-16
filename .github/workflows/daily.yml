@@ -134,7 +134,11 @@ jobs:
   shadow_evaluation:
     if: ${{ github.event_name == 'schedule' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 150
+    # C88 (Sprint 10, 2026-06-16): 6/16 朝 cron 初回観察で 1h17m18s 実測（C87 報告）。
+    # 当初 150 分は dry-run なしの安全側設定。実測に対し 2 倍弱の余裕を確保しつつ、
+    # 異常時の張り付き時間を短縮するため 120 分に縮小。``morning_paper`` 90 分
+    # よりは長め（90 分→ legacy 経路のみ / 120 分→ legacy + shadow 2 回実行）。
+    timeout-minutes: 120
     continue-on-error: true
     permissions:
       contents: read
