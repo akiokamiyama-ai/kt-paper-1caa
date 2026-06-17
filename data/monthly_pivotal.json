@@ -3,7 +3,10 @@
   "weeks": {
     "W1": {
       "theme": "AIと暗黙知",
-      "period": ["2026-05-24", "2026-05-30"],
+      "period": [
+        "2026-05-24",
+        "2026-05-30"
+      ],
       "article": {
         "title": "The Death of Tacit Knowledge in the Age of Explicit Algorithms",
         "source": "The Past Tense of Tomorrow (Substack)",
@@ -30,7 +33,10 @@
     },
     "W2": {
       "theme": "インド台頭",
-      "period": ["2026-05-31", "2026-06-06"],
+      "period": [
+        "2026-05-31",
+        "2026-06-06"
+      ],
       "article": {
         "title": "India is No Longer A Future Superpower. It Is Already Reshaping The Global Economy",
         "source": "Weekly Voice",
@@ -57,7 +63,10 @@
     },
     "W3": {
       "theme": "縮小社会リーダーシップ",
-      "period": ["2026-06-07", "2026-06-13"],
+      "period": [
+        "2026-06-07",
+        "2026-06-13"
+      ],
       "article": {
         "title": "Demographic Decline and Resurgence in the Aging Century - Grid-level Population Tendency Grasped by Artificial Intelligence",
         "source": "Nature - Humanities and Social Sciences Communications",
@@ -84,7 +93,10 @@
     },
     "W4": {
       "theme": "注意経済の極限",
-      "period": ["2026-06-14", "2026-06-20"],
+      "period": [
+        "2026-06-14",
+        "2026-06-20"
+      ],
       "article": {
         "title": "Tech Addiction, Distraction, and Our Love-less Moment",
         "source": "Common Good Magazine",
@@ -109,10 +121,45 @@
           "fri": "神山さんへの問い：ディープリスニングと注意経済の関係"
         }
       }
+    },
+    "W5": {
+      "theme": "環世界",
+      "period": [
+        "2026-06-21",
+        "2026-06-27"
+      ],
+      "article": {
+        "title": "The autistic view of the world is not the neurotypical cliché",
+        "source": "Aeon Essays",
+        "author": "Katherine May",
+        "url": "https://aeon.co/essays/the-autistic-view-of-the-world-is-not-the-neurotypical-cliche",
+        "published": "2018",
+        "summary": "自閉症者の世界は「欠損」でも「無感情」でもない。それは別の Umwelt（環世界）であり、感覚情報の量と質が神経定型とは全く異なる仕方で立ち上がる場所だ。Katherine May は自身の体験から書く——賑やかな部屋の感覚的洪水に圧倒され涙が滲むほどなのに、神経定型の人々はその同じ部屋を音と光と匂いの雲のなかを淡々と歩いていく。反復運動、社会的撤退、ルーティンへの固執——観察可能な「自閉症的振る舞い」の多くは、感覚過多への合理的応答である。問題は自閉症者の知覚ではなく、それを「治療すべき逸脱」として読む神経定型側のクリシェの暴力である。ユクスキュル的に言えば、自閉症者は別の Suchbild（探索像）を持って世界に向き合っているにすぎない。",
+        "key_quote": "To an autistic viewer like me, neurotypical life can seem astonishingly unemotional. I'm so overwhelmed by the sensory onslaught of a busy room that I'm almost tearful, while neurotypical folk appear to wade through clouds of sound, light and odour, entirely oblivious.",
+        "key_quote_ja": "私のような自閉症の観察者にとって、神経定型の人々の生は驚くほど無感情に見える。私が賑やかな部屋の感覚の洪水に圧倒され、ほとんど涙が滲むほどなのに、神経定型の人々は音と光と匂いの雲のなかを、まるで何も気づいていないかのように淡々と歩いていくのだ。",
+        "points": [
+          "自閉症は「欠損」ではなく別の Umwelt（環世界）",
+          "観察可能な「自閉症的振る舞い」の多くは、感覚過多への合理的応答",
+          "問題は知覚ではなく、それを「治療すべき逸脱」として読む神経定型側のクリシェの暴力"
+        ],
+        "angles_hints": {
+          "sun": "「環世界」とは何か——ユクスキュル 1934 年の概念を、自閉症者の感覚世界という具体から導入。神山さんが 6/01〜6/17 紙面コメントで繰り返してきた「他者の環世界」という言葉の哲学的根源を提示する全体像",
+          "mon": "神経定型側のクリシェ批判——「感情の欠損」「社会性の欠如」というフレームの暴力性。Katherine May の核心引用「neurotypical folk appear to wade through clouds」を軸に、何が「正常」かを決める権力の位置を問う",
+          "tue": "こころみグループ・ディープリスニング経営現場への接続——顧客の Umwelt への参入、組織内の neurodiversity、聞き手の知覚バイアス。「相手のフレームに回収せず、相手の Umwelt に敬意を持つ」（6/06 紙面）の実装としての組織設計",
+          "wed": "思想家——ユクスキュル『動物と人間の環世界』、メルロ＝ポンティ「他者は別の身体的志向性」、オリヴァー・サックス『火星の人類学者』、Ed Yong『An Immense World』。Umwelt 概念の系譜と現代的読み",
+          "thu": "歴史——自閉症概念の歴史（Kanner 1943 / Asperger 1944）、戦後の「治療すべき逸脱」フレーム、1990 年代の neurodiversity 運動（Judy Singer 1998）、Temple Grandin の証言、当事者運動の系譜",
+          "fri": "★C「Why being autistic can be a lot of fun」（Chelsey Flood, Aeon, 2026 春, https://aeon.co/essays/why-being-autistic-can-be-a-lot-of-fun）へ転換。自閉症者の特別な興味・深い集中・感覚的歓喜（autistic joy / flow）。★B の批判から★C の祝祭への弁証法。神山さんへの問い：あなたの組織のどこに、未だ聞かれていない別の Umwelt がありますか"
+        }
+      }
     }
   },
   "next_month_planning": {
-    "weeks_planned": ["未定", "未定", "未定", "未定"],
+    "weeks_planned": [
+      "未定",
+      "未定",
+      "未定",
+      "未定"
+    ],
     "note": "7月分は2026-06-27（最終土曜）の月次選定セッションで決定"
   }
 }
