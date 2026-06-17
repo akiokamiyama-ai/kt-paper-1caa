@@ -1,0 +1,38 @@
+{
+  "date": "2026-06-18",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/18993/",
+    "https://www.ft.com/content/388d3883-c77a-410b-84ff-80e4971656b0",
+    "https://que.dailyshincho.jp/node/19077/",
+    "https://que.dailyshincho.jp/node/19089/"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://atmarkit.itmedia.co.jp/ait/articles/2606/17/news041.html",
+    "human_energy": "https://jinjibu.jp/news/detl/26507/",
+    "web_repo": "https://www.bc01.net/article/319_202606/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/new-evidence-shows-that-africa-investment-risk-is-lower-than-assumed-by-vera-songwe-and-mahmoud-mohieldin-2026-06",
+    "http://www3.nhk.or.jp/news/html/20260618/k10015152921000.html",
+    null,
+    "https://www.mckinsey.com/industries/industrials/our-insights/the-turning-point-for-real-world-robotics",
+    "https://www.theparisreview.org/blog/2026/06/17/making-of-a-poem-hannah-piette/",
+    "https://www.publicbooks.org/edward-said-my-grandfather-and-the-problem-of-home/"
+  ],
+  "page4_urls": [
+    "https://3quarksdaily.com/3quarksdaily/2026/06/the-simulation-hypothesis.html",
+    "https://www.publicbooks.org/rash-reading-slow-watching-with-virginia-woolf-and-chantal-akerman/",
+    "https://www.themarginalian.org/2026/06/16/amelie-rorty-the-identities-of-persons/"
+  ],
+  "page5_url": "https://thetrek.co/how-im-mentally-preparing-to-solo-hike-the-colorado-trail-as-an-anxious-girlie/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/06/17/making-of-a-poem-hannah-piette/",
+    "music": "https://greenroom.jp/post-5534/",
+    "outdoor": "https://sectionhiker.com/insect-repellents-bug-dope-how-to-choose/"
+  },
+  "headlines_urls": [
+    "https://www.ft.com/content/b5d664c4-88c1-4db4-b198-46db6da94f11",
+    "https://www.economist.com/finance-and-economics/2026/06/16/deal-or-no-deal-oil-prices-will-stay-high-for-months",
+    "https://www.ft.com/content/e22bf189-e598-43c1-a35c-596e46fd6766"
+  ]
+}
