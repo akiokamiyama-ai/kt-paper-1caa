@@ -1,0 +1,38 @@
+{
+  "date": "2026-06-19",
+  "page1_urls": [
+    "https://www.ft.com/content/62ffb859-44e9-4cf9-a839-3d509d8555f6",
+    "https://www.economist.com/finance-and-economics/2026/06/18/europe-buys-the-future-america-builds-it",
+    "https://www.ft.com/content/a12d9e0a-fc7a-48b4-baf7-1cd33abbc682",
+    "http://www3.nhk.or.jp/news/html/20260619/k10015153811000.html"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2606/18/2000000103/",
+    "human_energy": "https://jinjibu.jp/news/detl/26532/",
+    "web_repo": "https://www.jftc.go.jp/houdou/pressrelease/"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/06/18/migrant-labor-exploitation-guest-worker-united-states-qatar-gulf-agriculture-world-cup-stadiums-trump/",
+    null,
+    "https://www.project-syndicate.org/commentary/agi-could-liberate-everyone-or-create-new-aristocracy-by-kaushik-basu-2026-06",
+    "https://www.mckinsey.com/industries/consumer-packaged-goods/our-insights/state-of-beauty",
+    "https://wordswithoutborders.org/read/article/2026-06/the-city-and-the-writer-in-ibadan-with-adedayo-agarau-nathalie-handal/",
+    "https://3quarksdaily.com/3quarksdaily/2026/06/contra-chiang-on-machine-consciousness.html"
+  ],
+  "page4_urls": [
+    "https://3quarksdaily.com/3quarksdaily/2026/06/how-political-leaders-use-combat-spectacles-to-symbolize-national-power-and-purpose.html",
+    "https://thepointmag.com/criticism/the-way-the-wind-blows/",
+    "https://thepointmag.com/criticism/wisemans-children/"
+  ],
+  "page5_url": "https://www.axismag.jp/posts/2026/06/714074.html",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/06/18/drinking-movies-down-and-out-at-cannes/",
+    "music": "https://natalie.mu/music/news/676822",
+    "outdoor": "https://www.cleverhiker.com/apparel/norrona-falketind-warm1-active-review/"
+  },
+  "headlines_urls": [
+    "https://www.economist.com/finance-and-economics/2026/06/18/a-new-golden-age-for-japanese-banks-comes-with-a-catch",
+    "https://www.bbc.com/news/articles/c0rygp005wjo?at_medium=RSS&at_campaign=rss",
+    "https://www.ft.com/content/4d1db23d-7747-4e8a-a95f-d63af64458c2"
+  ]
+}

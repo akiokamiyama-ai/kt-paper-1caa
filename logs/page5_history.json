@@ -878,6 +878,24 @@
       "ai_kamiyama_title": "Edward Said, My Grandfather, and the Problem of Home",
       "ai_kamiyama_category": "academic",
       "ai_kamiyama_source_name": "Public Books"
+    },
+    {
+      "displayed_on": "2026-06-19",
+      "article_url": "https://www.axismag.jp/posts/2026/06/714074.html",
+      "article_title": "自らが驚き感動する作品を。アーティスト／デザイナーの岡﨑龍之祐の服づくり",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://3quarksdaily.com/3quarksdaily/2026/06/contra-chiang-on-machine-consciousness.html",
+      "ai_kamiyama_title": "Contra Chiang On Machine Consciousness",
+      "ai_kamiyama_category": "academic",
+      "ai_kamiyama_source_name": "3 Quarks Daily"
     }
   ]
 }

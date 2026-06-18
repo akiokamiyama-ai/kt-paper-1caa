@@ -259,6 +259,11 @@
       "concept_id": "glia",
       "name_ja": "グリア細胞",
       "displayed_on": "2026-06-18"
+    },
+    {
+      "concept_id": "ontology",
+      "name_ja": "オントロジー",
+      "displayed_on": "2026-06-19"
     }
   ]
 }
