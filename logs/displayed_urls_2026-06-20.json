@@ -1,0 +1,38 @@
+{
+  "date": "2026-06-20",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/19140/",
+    "https://www.bbc.com/news/articles/c072414183go?at_medium=RSS&at_campaign=rss",
+    "https://que.dailyshincho.jp/node/18906/",
+    "https://www.economist.com/finance-and-economics/2026/06/18/a-new-golden-age-for-japanese-banks-comes-with-a-catch"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://atmarkit.itmedia.co.jp/ait/articles/2606/19/news077.html",
+    "human_energy": "https://jinjibu.jp/news/detl/26520/",
+    "web_repo": "https://www.bc01.net/topinterview/workman_202606_02/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/vatican-consistory-on-just-war-should-overhaul-church-doctrine-by-richard-haass-2026-06",
+    "https://www.asahi.com/articles/ASV6M2W02V6MULFA016M.html?ref=rss",
+    "https://news.google.com/rss/articles/CBMiswFBVV95cUxNdVE2YVJoUzhHWXpFc0NJdEMxSzJ1cjJrX01ORTAzM2l2dU1lY3U3UlZBNHNXUGxSWHA4MGlEU21yNnlPank0WXpicEQwaFVOTFp4MnlPS0kxb1k2SllYbklELUozNkFZdVk5VFFwR3BTVy12SkZUU01zbjJUaktLMlFxY1JKdm1DamNkUmxKVGpTUV9WODh5bGsxWC1NeWJ2eW5ELTN0WktzaFJIaWk5UlV6MA?oc=5",
+    "https://www.mckinsey.com/capabilities/people-and-organizational-performance/our-insights/europes-skilling-dividend-turning-talent-into-growth",
+    "https://www.theparisreview.org/blog/2026/06/09/the-vanishing-library-timothy-elys-odd-little-book-from-outer-space/",
+    "https://nautil.us/can-dantes-inferno-tell-us-something-about-space-rocks-1282127/"
+  ],
+  "page4_urls": [
+    "https://3quarksdaily.com/3quarksdaily/2026/06/panahis-laboratory.html",
+    "https://www.themarginalian.org/2026/06/15/hakagure-death/",
+    "https://3quarksdaily.com/3quarksdaily/2026/06/how-the-brain-builds-sentences-neuron-by-neuron.html"
+  ],
+  "page5_url": "https://natalie.mu/music/news/677004",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/06/19/three-horses/",
+    "music": "https://natalie.mu/music/news/677036",
+    "outdoor": "https://www.atlasobscura.com/places/grotte-scladina"
+  },
+  "headlines_urls": [
+    "https://www.bbc.com/news/articles/c74yl4gknzno?at_medium=RSS&at_campaign=rss",
+    "https://www.economist.com/finance-and-economics/2026/06/11/stears-wants-to-be-africas-bloomberg-terminal",
+    "https://www.ft.com/content/44b48a15-1f7b-44fa-803c-27659b3d2690"
+  ]
+}

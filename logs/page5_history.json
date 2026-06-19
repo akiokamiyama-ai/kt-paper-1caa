@@ -896,6 +896,24 @@
       "ai_kamiyama_title": "Contra Chiang On Machine Consciousness",
       "ai_kamiyama_category": "academic",
       "ai_kamiyama_source_name": "3 Quarks Daily"
+    },
+    {
+      "displayed_on": "2026-06-20",
+      "article_url": "https://natalie.mu/music/news/677004",
+      "article_title": "フレデリック、地上波復活アニメ「あはれ！名作くん」の主題歌書き下ろし",
+      "article_category": "music",
+      "tie_candidates": [
+        "music"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://3quarksdaily.com/3quarksdaily/2026/06/panahis-laboratory.html",
+      "ai_kamiyama_title": "Panahi’s Laboratory",
+      "ai_kamiyama_category": "academic",
+      "ai_kamiyama_source_name": "3 Quarks Daily"
     }
   ]
 }

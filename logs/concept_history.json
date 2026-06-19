@@ -264,6 +264,11 @@
       "concept_id": "ontology",
       "name_ja": "オントロジー",
       "displayed_on": "2026-06-19"
+    },
+    {
+      "concept_id": "turing_test",
+      "name_ja": "チューリング・テスト",
+      "displayed_on": "2026-06-20"
     }
   ]
 }
