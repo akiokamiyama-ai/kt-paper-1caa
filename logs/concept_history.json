@@ -269,6 +269,11 @@
       "concept_id": "turing_test",
       "name_ja": "チューリング・テスト",
       "displayed_on": "2026-06-20"
+    },
+    {
+      "concept_id": "tacit_knowledge",
+      "name_ja": "暗黙知",
+      "displayed_on": "2026-06-21"
     }
   ]
 }

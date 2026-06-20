@@ -1,0 +1,38 @@
+{
+  "date": "2026-06-21",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/19143/",
+    "https://que.dailyshincho.jp/node/18747/",
+    "https://que.dailyshincho.jp/node/19134/",
+    "https://www.bbc.com/news/articles/c74yl4gknzno?at_medium=RSS&at_campaign=rss"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.ppc.go.jp/news/",
+    "human_energy": "https://jinjibu.jp/news/detl/26518/",
+    "web_repo": "https://www.bc01.net/topinterview/workman_202606_01/"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/06/19/america-250-foreign-pressure-american-freedom-ideals/",
+    "http://www3.nhk.or.jp/news/html/20260619/k10015154701000.html",
+    null,
+    "https://www.mckinsey.com/capabilities/mckinsey-technology/our-insights/what-corporate-leaders-can-learn-from-start-up-founders",
+    "https://wordswithoutborders.org/read/article/2026-06/the-other-side-of-the-sun-mars-dize/",
+    "https://3quarksdaily.com/3quarksdaily/2026/06/panahis-laboratory.html"
+  ],
+  "page4_urls": [
+    "https://www.themarginalian.org/2026/06/19/kafka-insomnia/",
+    "https://www.publicbooks.org/undoing-platform-humanitarianism/",
+    "https://www.nplusonemag.com/online-only/online-only/in-the-reality-lab/"
+  ],
+  "page5_url": "https://www.atlasobscura.com/places/battle-of-marolles-commemorative-plaque",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-06/the-other-side-of-the-sun-mars-dize/",
+    "music": "https://natalie.mu/music/news/677117",
+    "outdoor": "https://www.atlasobscura.com/places/battle-of-marolles-commemorative-plaque"
+  },
+  "headlines_urls": [
+    "https://que.dailyshincho.jp/node/19149/",
+    "https://www.bbc.com/news/articles/cvg75npqkq4o?at_medium=RSS&at_campaign=rss",
+    "https://www.economist.com/finance-and-economics/2026/06/16/deal-or-no-deal-oil-prices-will-stay-volatile-for-months"
+  ]
+}
