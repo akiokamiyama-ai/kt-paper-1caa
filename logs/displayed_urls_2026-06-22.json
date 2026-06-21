@@ -1,0 +1,38 @@
+{
+  "date": "2026-06-22",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/19146/",
+    "https://www.ft.com/content/4a9be9b8-4cac-49d5-8e08-cb750007b2db",
+    "https://que.dailyshincho.jp/node/19230/",
+    "https://que.dailyshincho.jp/node/19233/"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.ipa.go.jp/news/index.html",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2606/19/news014.html",
+    "web_repo": "http://www3.nhk.or.jp/news/html/20260619/k10015154731000.html"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/06/18/france-intellectuals-edgar-morin-philosophy-history/",
+    "https://www.asahi.com/articles/ASV6L3HK8V6LULFA010M.html?ref=rss",
+    null,
+    "https://www.mckinsey.com/industries/retail/our-insights/the-rise-of-the-agentic-shopper-asoss-ai-investment",
+    "https://www.theparisreview.org/blog/2026/06/19/three-horses/",
+    "https://nautil.us/science-is-political-and-spiritual-1282081/"
+  ],
+  "page4_urls": [
+    "https://www.themarginalian.org/2026/06/21/bayo-akomolafe-wilds-obstacles/",
+    "https://www.themarginalian.org/2026/06/20/george-forster-andrea-wulf/",
+    "https://3quarksdaily.com/3quarksdaily/2026/06/sunday-poem-483.html"
+  ],
+  "page5_url": "https://www.themarginalian.org/2026/06/20/george-forster-andrea-wulf/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/06/16/announcing-our-summer-issue-256/",
+    "music": "https://natalie.mu/music/news/677199",
+    "outdoor": "https://www.outsideonline.com/outdoor-adventure/environment/drag-me-outside-portland-queer-hiking/"
+  },
+  "headlines_urls": [
+    "https://www.economist.com/finance-and-economics/2026/06/21/how-stretched-is-the-american-consumer",
+    "https://www.ft.com/content/102b1b7b-59dc-4150-8312-af6360e07d47",
+    "https://www.ft.com/content/1adcac1d-d2d3-4a62-855d-7dd56319edbf"
+  ]
+}

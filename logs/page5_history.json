@@ -932,6 +932,24 @@
       "ai_kamiyama_title": "Panahi’s Laboratory",
       "ai_kamiyama_category": "academic",
       "ai_kamiyama_source_name": "3 Quarks Daily"
+    },
+    {
+      "displayed_on": "2026-06-22",
+      "article_url": "https://www.themarginalian.org/2026/06/20/george-forster-andrea-wulf/",
+      "article_title": "The Man Who Thought with His Heart: George Forster and the Birth of Sensitive Science",
+      "article_category": "books",
+      "tie_candidates": [
+        "books"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://nautil.us/science-is-political-and-spiritual-1282081/",
+      "ai_kamiyama_title": "Science Is Political—and Spiritual",
+      "ai_kamiyama_category": "books:自然科学ノンフィクション",
+      "ai_kamiyama_source_name": "Nautilus"
     }
   ]
 }

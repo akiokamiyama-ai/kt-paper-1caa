@@ -274,6 +274,11 @@
       "concept_id": "tacit_knowledge",
       "name_ja": "暗黙知",
       "displayed_on": "2026-06-21"
+    },
+    {
+      "concept_id": "knowledge_management",
+      "name_ja": "知識経営",
+      "displayed_on": "2026-06-22"
     }
   ]
 }
