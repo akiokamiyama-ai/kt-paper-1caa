@@ -60,12 +60,24 @@ ENV_MODE = "TRIBUNE_STAGE2_MODE"
 # 受けて、page1_master のみ shadow + 他 caller は legacy という軽量化モードを
 # 用意する。stage2.batch 全体の 69% を占める master batch だけ観察すれば
 # overlap_ratio / cost 効果は捕捉できる（Phase B Step 1 コスト分析参照）。
-VALID_MODES = ("legacy", "shadow", "shadow_page1_only", "layered")
+#
+# C93 (Sprint 10, 2026-06-22): "layered_page1" モード追加。Phase B 本番切替の
+# 軽量版で、page1_master のみ恒久 layered、他 caller は legacy。shadow 観察
+# 6 日（C92）で安全性が立証された範囲のみ切替えるための保守的な mode。
+# 全 caller layered の "layered" モードは将来（C94 で page3 拡張等）に取って
+# おく。
+VALID_MODES = (
+    "legacy", "shadow", "shadow_page1_only", "layered_page1", "layered",
+)
 DEFAULT_MODE = "legacy"
 
 # C86: shadow_page1_only モードで shadow を走らせる caller の allowlist。
 # 将来 page3 等を追加したくなったら本セットを拡張。
 SHADOW_PAGE1_ONLY_CALLERS: frozenset[str] = frozenset({"page1_master"})
+
+# C93: layered_page1 モードで layered を走らせる caller の allowlist。
+# shadow_page1_only と同じ caller セット（観察と本番切替の対称性を保つ）。
+LAYERED_PAGE1_CALLERS: frozenset[str] = frozenset({"page1_master"})
 
 # shadow log 採用パターン比較用の top-N
 SHADOW_TOP_N = 30
@@ -127,6 +139,19 @@ def run_stage2_with_mode(
     if effective_mode == "layered":
         cfg = layer_config or LayerConfig(enabled=True)
         return run_stage2(articles, layer_config=cfg, caller=caller, **kwargs)
+
+    # C93: layered_page1 は対象 caller のみ恒久 layered、他 caller は legacy。
+    # shadow ではなく本番切替モードなので、採用結果も layered。
+    if effective_mode == "layered_page1":
+        if caller in LAYERED_PAGE1_CALLERS:
+            cfg = layer_config or LayerConfig(enabled=True)
+            return run_stage2(
+                articles, layer_config=cfg, caller=caller, **kwargs,
+            )
+        # else: 対象外 caller → legacy 経路へ fall through
+        return run_stage2(
+            articles, layer_config=None, caller=caller, **kwargs,
+        )
 
     # C86: shadow_page1_only は対象 caller のみ shadow、他 caller は legacy。
     # mode を「実質的に shadow か否か」に正規化する。

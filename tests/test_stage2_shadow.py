@@ -108,6 +108,23 @@ def test_shadow_page1_only_callers_set():
            shw.SHADOW_PAGE1_ONLY_CALLERS == frozenset({"page1_master"}))
 
 
+def test_mode_layered_page1_recognized():
+    """C93: 新モード 'layered_page1' が VALID_MODES に含まれる."""
+    os.environ[shw.ENV_MODE] = "layered_page1"
+    try:
+        _check("a8 TRIBUNE_STAGE2_MODE=layered_page1 → 認識",
+               shw.get_stage2_mode() == "layered_page1"
+               and "layered_page1" in shw.VALID_MODES)
+    finally:
+        os.environ.pop(shw.ENV_MODE, None)
+
+
+def test_layered_page1_callers_set():
+    """C93: page1_master のみが layered 対象."""
+    _check("a9 LAYERED_PAGE1_CALLERS = {'page1_master'}",
+           shw.LAYERED_PAGE1_CALLERS == frozenset({"page1_master"}))
+
+
 # ---------------------------------------------------------------------------
 # (b) run_stage2_with_mode dispatch
 # ---------------------------------------------------------------------------
@@ -343,6 +360,75 @@ def test_dispatch_shadow_page1_only_for_page4_page5_page6():
 
 
 # ---------------------------------------------------------------------------
+# (b4) C93 layered_page1 (本番切替モード)
+# ---------------------------------------------------------------------------
+
+def test_dispatch_layered_page1_for_master_caller():
+    """C93: layered_page1 + caller='page1_master' → layered 1 回（採用 = layered）."""
+    calls: list[dict] = []
+
+    def fake(articles, *, layer_config=None, caller="page1_master", **kw):
+        is_layered = layer_config is not None and layer_config.enabled
+        calls.append({"is_layered": is_layered, "caller": caller})
+        model = (
+            "layered(claude-haiku-4-5/claude-sonnet-4-6)"
+            if is_layered else "claude-sonnet-4-6"
+        )
+        return _stub_result(model, n_urls=2, cost=(0.10 if is_layered else 0.40))
+
+    orig = _patch_run_stage2(fake)
+    with tempfile.TemporaryDirectory() as td:
+        shadow_path = Path(td) / "stage2_shadow.json"
+        try:
+            r = shw.run_stage2_with_mode(
+                [{"url": "x"}], caller="page1_master",
+                mode="layered_page1", shadow_log_path=shadow_path,
+            )
+        finally:
+            _restore_run_stage2(*orig)
+
+        _check(
+            "b19 layered_page1 + caller=page1_master → run_stage2 1 回（layered）",
+            len(calls) == 1 and calls[0]["is_layered"] is True,
+        )
+        _check(
+            "b20 layered_page1 + caller=page1_master → 採用は layered（shadow ではなく本番切替）",
+            "layered" in r.model and r.cost_usd == 0.10,
+        )
+        _check(
+            "b21 layered_page1 + caller=page1_master → shadow log は生成しない",
+            not shadow_path.exists(),
+        )
+
+
+def test_dispatch_layered_page1_for_other_callers():
+    """C93: layered_page1 + page3/4/5/6/2 → すべて legacy 1 回のみ."""
+    results = []
+    for caller in ("page3", "page4", "page5", "page6", "page2"):
+        calls = []
+
+        def fake(articles, *, layer_config=None, caller=caller, **kw):
+            is_layered = layer_config is not None and layer_config.enabled
+            calls.append(is_layered)
+            return _stub_result("claude-sonnet-4-6", cost=0.05)
+
+        orig = _patch_run_stage2(fake)
+        try:
+            shw.run_stage2_with_mode(
+                [{"url": "x"}], caller=caller, mode="layered_page1",
+            )
+        finally:
+            _restore_run_stage2(*orig)
+        results.append((caller, len(calls), calls[0] if calls else None))
+
+    _check(
+        "b22 layered_page1 + page3/4/5/6/2 すべて legacy（1 回のみ、is_layered=False）",
+        all(n == 1 and is_l is False for _, n, is_l in results),
+        f"got {results}",
+    )
+
+
+# ---------------------------------------------------------------------------
 # (b3) C88 JST date anchor
 # ---------------------------------------------------------------------------
 
@@ -555,6 +641,62 @@ def test_to_log_entry_legacy_no_metadata_keys():
     )
 
 
+def test_run_stage2_legacy_writes_caller_to_log_entry():
+    """C93: run_stage2 legacy 経路でも caller / evaluation_mode が scores log に残る.
+
+    C92 で発覚した C85 Sub-Step 5a の落ち（shadow scores ファイル内で
+    layer / evaluation_mode / caller が全件 None）を修正したことを検証。
+    """
+    from scripts.selector.stage2 import run_stage2, BatchResult, Stage2Result
+    from unittest.mock import patch
+
+    fake_eval = {
+        "scores": {
+            "aesthetic_1_structure_detail": 6,
+            "aesthetic_3_disciplinary_bridge": 5,
+            "aesthetic_5_otherness": 4,
+            "aesthetic_6_minority_value": 3,
+            "aesthetic_8_behavioral_economics": 2,
+        },
+        "reasons": {k: "r" for k in (
+            "aesthetic_1_structure_detail",
+            "aesthetic_3_disciplinary_bridge",
+            "aesthetic_5_otherness",
+            "aesthetic_6_minority_value",
+            "aesthetic_8_behavioral_economics",
+        )},
+    }
+    fake_br = BatchResult(
+        evaluations=[fake_eval], model="claude-sonnet-4-6",
+        input_tokens=10, output_tokens=20,
+        cache_creation_tokens=0, cache_read_tokens=0,
+        cost_usd=0.001,
+    )
+    with patch("scripts.selector.stage2.evaluate_batch", return_value=fake_br), \
+         patch("scripts.selector.stage2.llm_usage.check_caps",
+               return_value=type("C", (), {"ok": True, "reason": ""})()), \
+         patch("scripts.selector.stage2.write_scores_log"):
+        result = run_stage2(
+            [{"url": "https://x/1"}],
+            caller="page3",  # 任意 caller を渡して伝播確認
+        )
+    entry = result.evaluations_by_url.get("https://x/1") or {}
+    _check(
+        "d3 C93 run_stage2 legacy: caller='page3' が記録される",
+        entry.get("caller") == "page3",
+        f"got caller={entry.get('caller')!r}",
+    )
+    _check(
+        "d4 C93 run_stage2 legacy: evaluation_mode='legacy_sonnet' が記録される",
+        entry.get("evaluation_mode") == "legacy_sonnet",
+        f"got evaluation_mode={entry.get('evaluation_mode')!r}",
+    )
+    _check(
+        "d5 C93 run_stage2 legacy: layer は記録しない（legacy 経路は layer 不明）",
+        "layer" not in entry,
+    )
+
+
 def test_to_log_entry_layered_metadata():
     ev = {
         "scores": {
@@ -596,6 +738,8 @@ def main() -> int:
     test_mode_case_insensitive()
     test_mode_shadow_page1_only_recognized()
     test_shadow_page1_only_callers_set()
+    test_mode_layered_page1_recognized()
+    test_layered_page1_callers_set()
 
     print()
     print("(b) run_stage2_with_mode dispatch:")
@@ -608,6 +752,11 @@ def main() -> int:
     test_dispatch_shadow_page1_only_for_master_caller()
     test_dispatch_shadow_page1_only_for_other_caller()
     test_dispatch_shadow_page1_only_for_page4_page5_page6()
+
+    print()
+    print("(b4) C93 layered_page1 (本番切替):")
+    test_dispatch_layered_page1_for_master_caller()
+    test_dispatch_layered_page1_for_other_callers()
 
     print()
     print("(b3) C88 JST date anchor:")
@@ -625,6 +774,7 @@ def main() -> int:
     print()
     print("(d) Scores log extended fields:")
     test_to_log_entry_legacy_no_metadata_keys()
+    test_run_stage2_legacy_writes_caller_to_log_entry()
     test_to_log_entry_layered_metadata()
 
     print()

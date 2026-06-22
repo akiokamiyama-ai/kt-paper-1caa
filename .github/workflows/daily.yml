@@ -64,11 +64,17 @@ jobs:
         # C85 / C86: TRIBUNE_STAGE2_MODE=legacy 固定。shadow は別 job
         # (shadow_evaluation) に分離した（6/15 cron で全 caller shadow が
         # 90 分 timeout 強制 cancel された経験）。
+        #
+        # C93 (Sprint 10, 2026-06-22): Phase B 本番切替。shadow 観察 6 日
+        # （C92 報告：overlap 77.8% / aborted 0 件 / revert 基準全 OK）に
+        # 基づき、page1_master のみ恒久 layered。他 caller (page3 / page4 /
+        # page5 / page6 / page2) は legacy 維持。問題発生時は
+        # ``TRIBUNE_STAGE2_MODE: legacy`` に戻すだけで完全 revert 可能。
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           MIIBO_API_KEY: ${{ secrets.MIIBO_API_KEY }}
           MIIBO_AGENT_ID: ${{ secrets.MIIBO_AGENT_ID }}
-          TRIBUNE_STAGE2_MODE: legacy
+          TRIBUNE_STAGE2_MODE: layered_page1
         run: |
           python -m scripts.regen_front_page_v3 --date "${{ steps.date.outputs.DATE }}"
 

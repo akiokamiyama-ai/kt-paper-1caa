@@ -739,8 +739,13 @@ def run_stage2(
             url = art.get("url")
             if not url:
                 continue
+            # C93 (Sprint 10, 2026-06-22): legacy 経路でも caller / evaluation_mode
+            # を scores log に残す。C85 Sub-Step 5a で _to_log_entry 引数は追加
+            # 済みだったが、legacy run_stage2 の呼び出し側で渡し漏れていた
+            # （shadow 観察 6 日でフィールド全件 None が判明、C92 報告）。
             result.evaluations_by_url[url] = _to_log_entry(
-                art, ev, model=br.model, evaluated_at=evaluated_at
+                art, ev, model=br.model, evaluated_at=evaluated_at,
+                evaluation_mode="legacy_sonnet", caller=caller,
             )
 
     write_scores_log(result)
