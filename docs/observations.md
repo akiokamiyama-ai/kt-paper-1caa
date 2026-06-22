@@ -54,13 +54,41 @@ Tribune の運用中に神山さんが発見した改善点・違和感・将来
 - **状態**: 未着手
 - **メモ**:
 
+### 公正取引委員会 報道発表の scraper 未実装
+
+- **発見日**: 2026-06-19（朝刊レビュー）
+- **観察**: 2面ウェブリポ記事として公取委ニュースを
+  ピックしたが、scraper 未実装で記事中身が読めない
+  - 表示：「[scraper not implemented] 公正取引委員会 報道発表」
+  - RSS unavailable. Add a per-site HtmlScrapeDriver subclass
+- **具体例**: https://www.jftc.go.jp/houdou/pressrelease/2026/jun/260618_spc.html
+- **検討案**: HtmlScrapeDriver サブクラス追加で
+  公取委 pressrelease ページを scrape
+- **Sprint 候補**: Sprint 11
+- **関連 commit**: -
+- **状態**: 未着手
+- **メモ**:
+
 ### Sprint 11 候補（既存・神山さん管理）
 
 下記は神山さん管理の Sprint 11 候補項目。詳細内容は神山さん追記待ち。
 
-- **C70**: （内容詳細追記欄）
-- **C71**: （内容詳細追記欄）
-- **C77**: （内容詳細追記欄）
+-
+- **C70 books カテゴリの偏り**
+  - 現状：The Paris Review が 50% 占有
+  - 検討：NYRB / The Marginalian / その他で多様化
+  - sources/books.md の High Priority 見直し
+  
+- **C71 music カテゴリの偏り**
+  - 現状：natalie.mu が 63% 占有
+  - 検討：他の音楽メディアの High Priority 化
+  - sources/culture.md or sources/music.md の調整
+  
+- **C77 観測性向上**
+  - 課題：stage2_daily_summary.json が
+    GHA Artifact のみで commit されない
+  - 検討：日次 summary を commit 対象に
+  - 神山さんローカルでも確認可能に
 
 ---
 
