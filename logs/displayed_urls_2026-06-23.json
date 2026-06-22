@@ -1,0 +1,38 @@
+{
+  "date": "2026-06-23",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/19095/",
+    "https://que.dailyshincho.jp/node/19245/",
+    "https://que.dailyshincho.jp/node/18987/",
+    "https://www.economist.com/finance-and-economics/2026/06/22/how-to-turn-compute-into-a-financial-asset"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/enterprise/articles/2606/22/news076.html",
+    "human_energy": "https://jinjibu.jp/news/detl/26532/",
+    "web_repo": "https://www.bc01.net/back-number/2026%e5%b9%b48%e6%9c%88%e5%8f%b7/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/ai-abundance-without-purpose-meaning-by-carl-benedikt-frey-2026-06",
+    "http://www3.nhk.or.jp/news/html/20260623/k10015156751000.html",
+    null,
+    "https://www.mckinsey.com/capabilities/growth-marketing-and-sales/our-insights/from-anxiety-to-advantage-a-marketing-organization-that-thrives-with-ai",
+    "https://www.theparisreview.org/blog/2026/06/12/diaries-from-the-psychic-capital-of-the-world/",
+    "https://www.nplusonemag.com/online-only/online-only/on-alexander-kluge-1932-2026/"
+  ],
+  "page4_urls": [
+    "https://3quarksdaily.com/3quarksdaily/2026/06/in-search-of-lost-tunnels.html",
+    "https://3quarksdaily.com/3quarksdaily/2026/06/british-intellectuals-from-world-war-ii-to-thatcherism.html",
+    "https://www.themarginalian.org/2026/06/22/polyvagal-theory/"
+  ],
+  "page5_url": "https://www.publicbooks.org/seize-the-means-of-knowledge-production-durba-mitra-on-third-world-feminists-and-their-fight-against-patriarchal-authoritarianism/",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-05/global-reads-summer-childrens-and-ya-releases-spanning-four-continents/",
+    "music": "https://natalie.mu/music/news/677333",
+    "outdoor": "https://www.backpacker.com/survival/surviving-animal-attacks/it-feels-like-bear-attacks-are-increasing-the-reality-is-more-complicated/"
+  },
+  "headlines_urls": [
+    "https://www.economist.com/finance-and-economics/2026/06/22/russias-war-economy-has-problems-but-is-not-about-to-crash",
+    "https://www.bbc.com/news/articles/cjer7x7yl12o?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.com/news/articles/c1ey6qy18jlo?at_medium=RSS&at_campaign=rss"
+  ]
+}

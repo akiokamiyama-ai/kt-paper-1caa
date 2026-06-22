@@ -279,6 +279,11 @@
       "concept_id": "knowledge_management",
       "name_ja": "知識経営",
       "displayed_on": "2026-06-22"
+    },
+    {
+      "concept_id": "genetic_algorithm",
+      "name_ja": "遺伝的アルゴリズム",
+      "displayed_on": "2026-06-23"
     }
   ]
 }
