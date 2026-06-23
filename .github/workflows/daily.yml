@@ -96,6 +96,7 @@ jobs:
           cp "archive/${{ steps.date.outputs.DATE }}.html" index.html
 
       - name: Commit and push
+        id: commit_push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -109,13 +110,33 @@ jobs:
           git add logs/page1_v3_history.json 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "No changes to commit"
+            echo "committed=false" >> "$GITHUB_OUTPUT"
           else
             git commit -m "chore(archive): ${{ steps.date.outputs.DATE }} 朝刊（自動生成）"
             # ラン中に main が進んでいた場合に push reject されないよう rebase。
             # archive/ や logs/ は workflow 専有なので conflict は理論的にあり得ない。
             git pull --rebase origin main
             git push
+            echo "committed=true" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: Trigger Vercel deploy hook
+        # C93 翌日 (2026-06-23): GHA bot による push を Vercel が webhook で
+        # 取りこぼし、6/23 朝刊が Production に反映されない事故が発生。
+        # push event 経由ではなく Deploy Hook で直接 trigger することで、
+        # GitHub→Vercel の webhook 配信失敗の影響を完全に無効化する。
+        #
+        # 条件:
+        # - 当該 run で commit が実際に発生したときのみ発火（no-op の日は不要）
+        # - Secrets VERCEL_DEPLOY_HOOK 未設定なら skip（fail-safe）
+        if: steps.commit_push.outputs.committed == 'true' && env.VERCEL_DEPLOY_HOOK != ''
+        env:
+          VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          echo "Triggering Vercel deploy hook..."
+          curl -fsSL -X POST "$VERCEL_DEPLOY_HOOK"
+          echo
+          echo "Vercel deploy hook triggered."
 
   # ===========================================================================
   # shadow_evaluation: layered モード shadow 観察 job（並列、紙面に影響なし）
