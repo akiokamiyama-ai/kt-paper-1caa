@@ -1,0 +1,38 @@
+{
+  "date": "2026-06-24",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/19008/",
+    "https://que.dailyshincho.jp/node/19131/",
+    "https://que.dailyshincho.jp/node/19266/",
+    "https://que.dailyshincho.jp/node/19098/"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://atmarkit.itmedia.co.jp/ait/articles/2606/23/news069.html",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2606/23/news066.html",
+    "web_repo": null
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/stop-asking-whether-microfinance-works-by-sophie-sirtaine-and-buhle-goslar-2026-06",
+    "https://toyokeizai.net/articles/-/947804?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://toyokeizai.net/articles/-/948887?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://www.mckinsey.com/capabilities/quantumblack/our-insights/capturing-central-europes-ai-opportunity",
+    "https://wordswithoutborders.org/read/article/2026-06/a-sami-womans-sin-imagining-other-peoples-sex-lives-west-spangenberg/",
+    "https://www.publicbooks.org/who-owns-argentine-football/"
+  ],
+  "page4_urls": [
+    "https://3quarksdaily.com/3quarksdaily/2026/06/edward-said-my-grandfather-and-the-problem-of-home.html",
+    "https://www.publicbooks.org/edward-said-my-grandfather-and-the-problem-of-home/",
+    "https://www.publicbooks.org/seize-the-means-of-knowledge-production-durba-mitra-on-third-world-feminists-and-their-fight-against-patriarchal-authoritarianism/"
+  ],
+  "page5_url": "https://natalie.mu/music/news/677490",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-06/a-sami-womans-sin-imagining-other-peoples-sex-lives-west-spangenberg/",
+    "music": "https://natalie.mu/music/news/677490",
+    "outdoor": "https://www.atlasobscura.com/places/hotel-des-mille-collines"
+  },
+  "headlines_urls": [
+    "https://www.economist.com/finance-and-economics/2026/06/15/meet-the-worlds-top-ai-pilled-economists",
+    "https://que.dailyshincho.jp/node/19074/",
+    "https://www.economist.com/finance-and-economics/2026/06/22/how-to-turn-computing-power-into-a-financial-asset"
+  ]
+}

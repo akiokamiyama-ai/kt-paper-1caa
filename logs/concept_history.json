@@ -284,6 +284,11 @@
       "concept_id": "genetic_algorithm",
       "name_ja": "遺伝的アルゴリズム",
       "displayed_on": "2026-06-23"
+    },
+    {
+      "concept_id": "predictive_processing",
+      "name_ja": "プレディクティブ・プロセッシング",
+      "displayed_on": "2026-06-24"
     }
   ]
 }

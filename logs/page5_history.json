@@ -968,6 +968,24 @@
       "ai_kamiyama_title": "British Intellectuals from World War II to Thatcherism",
       "ai_kamiyama_category": "academic",
       "ai_kamiyama_source_name": "3 Quarks Daily"
+    },
+    {
+      "displayed_on": "2026-06-24",
+      "article_url": "https://natalie.mu/music/news/677490",
+      "article_title": "安本彩花×元JKT48・Sisca Sarasコラボ曲第2弾「Modorenai Yoru」本日配信リリース",
+      "article_category": "music",
+      "tie_candidates": [
+        "music"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.publicbooks.org/seize-the-means-of-knowledge-production-durba-mitra-on-third-world-feminists-and-their-fight-against-patriarchal-authoritarianism/",
+      "ai_kamiyama_title": "“Seize the Means of Knowledge Production”: Durba Mitra on Third World Feminists and Their Fight Against Patriarchal Authoritarianism",
+      "ai_kamiyama_category": "academic",
+      "ai_kamiyama_source_name": "Public Books"
     }
   ]
 }
