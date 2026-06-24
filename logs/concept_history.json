@@ -289,6 +289,11 @@
       "concept_id": "predictive_processing",
       "name_ja": "プレディクティブ・プロセッシング",
       "displayed_on": "2026-06-24"
+    },
+    {
+      "concept_id": "bayesian_inference",
+      "name_ja": "ベイズ推論",
+      "displayed_on": "2026-06-25"
     }
   ]
 }

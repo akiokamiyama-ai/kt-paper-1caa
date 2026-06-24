@@ -986,6 +986,24 @@
       "ai_kamiyama_title": "“Seize the Means of Knowledge Production”: Durba Mitra on Third World Feminists and Their Fight Against Patriarchal Authoritarianism",
       "ai_kamiyama_category": "academic",
       "ai_kamiyama_source_name": "Public Books"
+    },
+    {
+      "displayed_on": "2026-06-25",
+      "article_url": "https://www.axismag.jp/posts/2026/06/712694.html",
+      "article_title": "石油をアートと知の資源へ転換。ザハ・ハディド設計のKAPSARC内に美術館開館",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://3quarksdaily.com/3quarksdaily/2026/06/the-last-astronomers.html",
+      "ai_kamiyama_title": "The last astronomers",
+      "ai_kamiyama_category": "academic",
+      "ai_kamiyama_source_name": "3 Quarks Daily"
     }
   ]
 }
