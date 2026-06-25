@@ -125,6 +125,29 @@ def test_layered_page1_callers_set():
            shw.LAYERED_PAGE1_CALLERS == frozenset({"page1_master"}))
 
 
+def test_mode_layered_page1_page3_recognized():
+    """C94: 新モード 'layered_page1_page3' が VALID_MODES に含まれる."""
+    os.environ[shw.ENV_MODE] = "layered_page1_page3"
+    try:
+        _check("a10 TRIBUNE_STAGE2_MODE=layered_page1_page3 → 認識",
+               shw.get_stage2_mode() == "layered_page1_page3"
+               and "layered_page1_page3" in shw.VALID_MODES)
+    finally:
+        os.environ.pop(shw.ENV_MODE, None)
+
+
+def test_layered_page1_page3_callers_set():
+    """C94: page1_master + page3 が layered 対象（layered_page1 の superset）."""
+    _check(
+        "a11 LAYERED_PAGE1_PAGE3_CALLERS = {'page1_master', 'page3'}",
+        shw.LAYERED_PAGE1_PAGE3_CALLERS == frozenset({"page1_master", "page3"}),
+    )
+    _check(
+        "a12 LAYERED_PAGE1_PAGE3_CALLERS ⊃ LAYERED_PAGE1_CALLERS（拡張で superset 化）",
+        shw.LAYERED_PAGE1_CALLERS.issubset(shw.LAYERED_PAGE1_PAGE3_CALLERS),
+    )
+
+
 # ---------------------------------------------------------------------------
 # (b) run_stage2_with_mode dispatch
 # ---------------------------------------------------------------------------
@@ -423,6 +446,100 @@ def test_dispatch_layered_page1_for_other_callers():
 
     _check(
         "b22 layered_page1 + page3/4/5/6/2 すべて legacy（1 回のみ、is_layered=False）",
+        all(n == 1 and is_l is False for _, n, is_l in results),
+        f"got {results}",
+    )
+
+
+# ---------------------------------------------------------------------------
+# (b5) C94 layered_page1_page3 (本番拡張モード)
+# ---------------------------------------------------------------------------
+
+def test_dispatch_layered_page1_page3_for_master_caller():
+    """C94: layered_page1_page3 + caller='page1_master' → layered（1 回）."""
+    calls: list[dict] = []
+
+    def fake(articles, *, layer_config=None, caller="page1_master", **kw):
+        is_layered = layer_config is not None and layer_config.enabled
+        calls.append({"is_layered": is_layered, "caller": caller})
+        model = (
+            "layered(claude-haiku-4-5/claude-sonnet-4-6)"
+            if is_layered else "claude-sonnet-4-6"
+        )
+        return _stub_result(model, n_urls=2, cost=(0.10 if is_layered else 0.40))
+
+    orig = _patch_run_stage2(fake)
+    try:
+        r = shw.run_stage2_with_mode(
+            [{"url": "x"}], caller="page1_master", mode="layered_page1_page3",
+        )
+    finally:
+        _restore_run_stage2(*orig)
+
+    _check(
+        "b23 layered_page1_page3 + caller=page1_master → run_stage2 1 回（layered）",
+        len(calls) == 1 and calls[0]["is_layered"] is True,
+    )
+    _check(
+        "b24 layered_page1_page3 + caller=page1_master → 採用は layered",
+        "layered" in r.model and r.cost_usd == 0.10,
+    )
+
+
+def test_dispatch_layered_page1_page3_for_page3_caller():
+    """C94 核心: layered_page1_page3 + caller='page3' → layered（1 回）."""
+    calls: list[dict] = []
+
+    def fake(articles, *, layer_config=None, caller="page1_master", **kw):
+        is_layered = layer_config is not None and layer_config.enabled
+        calls.append({"is_layered": is_layered, "caller": caller})
+        model = (
+            "layered(claude-haiku-4-5/claude-sonnet-4-6)"
+            if is_layered else "claude-sonnet-4-6"
+        )
+        return _stub_result(model, n_urls=2, cost=(0.40 if is_layered else 1.50))
+
+    orig = _patch_run_stage2(fake)
+    try:
+        r = shw.run_stage2_with_mode(
+            [{"url": "x"}], caller="page3", mode="layered_page1_page3",
+        )
+    finally:
+        _restore_run_stage2(*orig)
+
+    _check(
+        "b25 layered_page1_page3 + caller=page3 → run_stage2 1 回（layered）",
+        len(calls) == 1 and calls[0]["is_layered"] is True
+        and calls[0]["caller"] == "page3",
+    )
+    _check(
+        "b26 layered_page1_page3 + caller=page3 → 採用は layered（cost 削減対象）",
+        "layered" in r.model and r.cost_usd == 0.40,
+    )
+
+
+def test_dispatch_layered_page1_page3_for_other_callers():
+    """C94: layered_page1_page3 + page4/5/6/2 → すべて legacy（1 回のみ）."""
+    results = []
+    for caller in ("page4", "page5", "page6", "page2"):
+        calls = []
+
+        def fake(articles, *, layer_config=None, caller=caller, **kw):
+            is_layered = layer_config is not None and layer_config.enabled
+            calls.append(is_layered)
+            return _stub_result("claude-sonnet-4-6", cost=0.05)
+
+        orig = _patch_run_stage2(fake)
+        try:
+            shw.run_stage2_with_mode(
+                [{"url": "x"}], caller=caller, mode="layered_page1_page3",
+            )
+        finally:
+            _restore_run_stage2(*orig)
+        results.append((caller, len(calls), calls[0] if calls else None))
+
+    _check(
+        "b27 layered_page1_page3 + page4/5/6/2 → 全 legacy（1 回のみ、is_layered=False）",
         all(n == 1 and is_l is False for _, n, is_l in results),
         f"got {results}",
     )
@@ -740,6 +857,8 @@ def main() -> int:
     test_shadow_page1_only_callers_set()
     test_mode_layered_page1_recognized()
     test_layered_page1_callers_set()
+    test_mode_layered_page1_page3_recognized()
+    test_layered_page1_page3_callers_set()
 
     print()
     print("(b) run_stage2_with_mode dispatch:")
@@ -757,6 +876,12 @@ def main() -> int:
     print("(b4) C93 layered_page1 (本番切替):")
     test_dispatch_layered_page1_for_master_caller()
     test_dispatch_layered_page1_for_other_callers()
+
+    print()
+    print("(b5) C94 layered_page1_page3 (本番拡張):")
+    test_dispatch_layered_page1_page3_for_master_caller()
+    test_dispatch_layered_page1_page3_for_page3_caller()
+    test_dispatch_layered_page1_page3_for_other_callers()
 
     print()
     print("(b3) C88 JST date anchor:")

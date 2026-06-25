@@ -66,8 +66,14 @@ ENV_MODE = "TRIBUNE_STAGE2_MODE"
 # 6 日（C92）で安全性が立証された範囲のみ切替えるための保守的な mode。
 # 全 caller layered の "layered" モードは将来（C94 で page3 拡張等）に取って
 # おく。
+#
+# C94 (Sprint 10, 2026-06-26): "layered_page1_page3" モード追加。layered_page1
+# の 3 日連続安定稼働 (C97 報告) を受けた段階的拡張。page1_master に加えて
+# page3 caller も layered 化する。page4 / page5 / page6 / page2 は引き続き
+# legacy 維持。Phase B 設計目標 ($30-45/月 削減) への到達を狙う。
 VALID_MODES = (
-    "legacy", "shadow", "shadow_page1_only", "layered_page1", "layered",
+    "legacy", "shadow", "shadow_page1_only",
+    "layered_page1", "layered_page1_page3", "layered",
 )
 DEFAULT_MODE = "legacy"
 
@@ -78,6 +84,10 @@ SHADOW_PAGE1_ONLY_CALLERS: frozenset[str] = frozenset({"page1_master"})
 # C93: layered_page1 モードで layered を走らせる caller の allowlist。
 # shadow_page1_only と同じ caller セット（観察と本番切替の対称性を保つ）。
 LAYERED_PAGE1_CALLERS: frozenset[str] = frozenset({"page1_master"})
+
+# C94: layered_page1_page3 モードで layered を走らせる caller の allowlist。
+# layered_page1 の上位 superset。将来 page2 / page4-6 拡張時は更に追加。
+LAYERED_PAGE1_PAGE3_CALLERS: frozenset[str] = frozenset({"page1_master", "page3"})
 
 # shadow log 採用パターン比較用の top-N
 SHADOW_TOP_N = 30
@@ -149,6 +159,18 @@ def run_stage2_with_mode(
                 articles, layer_config=cfg, caller=caller, **kwargs,
             )
         # else: 対象外 caller → legacy 経路へ fall through
+        return run_stage2(
+            articles, layer_config=None, caller=caller, **kwargs,
+        )
+
+    # C94: layered_page1_page3 は layered_page1 の上位 superset。
+    # page1_master + page3 → layered、他 caller (page4/page5/page6/page2) は legacy。
+    if effective_mode == "layered_page1_page3":
+        if caller in LAYERED_PAGE1_PAGE3_CALLERS:
+            cfg = layer_config or LayerConfig(enabled=True)
+            return run_stage2(
+                articles, layer_config=cfg, caller=caller, **kwargs,
+            )
         return run_stage2(
             articles, layer_config=None, caller=caller, **kwargs,
         )
