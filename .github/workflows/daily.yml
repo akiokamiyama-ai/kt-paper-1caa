@@ -159,7 +159,16 @@ jobs:
   # commit しない）。artifact ``shadow-logs-YYYY-MM-DD`` のみ生成して
   # 神山さん artifact レビュー用とする。
   shadow_evaluation:
-    if: ${{ github.event_name == 'schedule' }}
+    # C98 (Sprint 10, 2026-06-25): C97 報告で layered_page1 の安定稼働
+    # (3 日連続 success / master batch -$0.283/日 削減実証 / overlap 0.844)
+    # を確認、shadow の役目（C94 着手判断材料の提供）が完了したため一時停止。
+    # 7/1 月次 limit 復活後または C94 page3 拡張で shadow が必要になった
+    # タイミングで ``if: ${{ github.event_name == 'schedule' }}`` に戻す。
+    #
+    # 同時に 6/25 朝 cron で Anthropic API 月次 usage limit 到達により
+    # shadow_evaluation が落ちた（morning_paper はぎりぎり耐えた）件への
+    # 予算節約も兼ねる。$4.7/日 × 数日 = $20-30 節約見込み。
+    if: false
     runs-on: ubuntu-latest
     # C88 (Sprint 10, 2026-06-16): 6/16 朝 cron 初回観察で 1h17m18s 実測（C87 報告）。
     # 当初 150 分は dry-run なしの安全側設定。実測に対し 2 倍弱の余裕を確保しつつ、
