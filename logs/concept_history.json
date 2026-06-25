@@ -294,6 +294,11 @@
       "concept_id": "bayesian_inference",
       "name_ja": "ベイズ推論",
       "displayed_on": "2026-06-25"
+    },
+    {
+      "concept_id": "empathic_understanding",
+      "name_ja": "共感的理解",
+      "displayed_on": "2026-06-26"
     }
   ]
 }

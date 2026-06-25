@@ -1004,6 +1004,24 @@
       "ai_kamiyama_title": "The last astronomers",
       "ai_kamiyama_category": "academic",
       "ai_kamiyama_source_name": "3 Quarks Daily"
+    },
+    {
+      "displayed_on": "2026-06-26",
+      "article_url": "https://thetrek.co/the-devils-staircase/",
+      "article_title": "The Devils Staircase!",
+      "article_category": "outdoor",
+      "tie_candidates": [
+        "outdoor"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://3quarksdaily.com/3quarksdaily/2026/06/ai-collapses-on-a-classic-psychology-test-what-it-reveals-could-stall-human-level-ai.html",
+      "ai_kamiyama_title": "AI Collapses on a Classic Psychology Test. What It Reveals Could Stall Human-Level AI",
+      "ai_kamiyama_category": "academic",
+      "ai_kamiyama_source_name": "3 Quarks Daily"
     }
   ]
 }
