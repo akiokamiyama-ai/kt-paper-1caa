@@ -299,6 +299,11 @@
       "concept_id": "empathic_understanding",
       "name_ja": "共感的理解",
       "displayed_on": "2026-06-26"
+    },
+    {
+      "concept_id": "complex_systems",
+      "name_ja": "複雑系",
+      "displayed_on": "2026-06-27"
     }
   ]
 }

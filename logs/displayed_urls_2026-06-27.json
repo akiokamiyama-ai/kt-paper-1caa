@@ -1,0 +1,38 @@
+{
+  "date": "2026-06-27",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/18666/",
+    "https://que.dailyshincho.jp/node/19005/",
+    "https://que.dailyshincho.jp/node/19209/",
+    "https://www.economist.com/finance-and-economics/2026/06/25/will-ai-lower-interest-rates"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/business/articles/2606/26/news012.html",
+    "human_energy": "https://jinjibu.jp/news/detl/26572/",
+    "web_repo": "https://www.bc01.net/article/gyutan_tanto_202608/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/european-energy-single-market-political-risks-vs-economic-rewards-by-brigitte-granville-2026-06",
+    "http://www3.nhk.or.jp/news/html/20260626/k10015161631000.html",
+    "http://www3.nhk.or.jp/news/html/20260626/k10015160801000.html",
+    "https://www.mckinsey.com/capabilities/risk-and-resilience/our-insights/how-companies-can-strengthen-their-geopolitical-risk-readiness",
+    "https://foreignpolicy.com/2026/06/26/british-art-yale-east-india-company-colonialism-turner-india/",
+    "https://www.publicbooks.org/edward-said-my-grandfather-and-the-problem-of-home/"
+  ],
+  "page4_urls": [
+    "https://3quarksdaily.com/3quarksdaily/2026/06/superforecasting-the-art-and-science-of-prediction.html",
+    "https://www.themarginalian.org/2026/06/23/yes-to-life-in-spite-of-everything-viktor-frankl/",
+    "https://www.nplusonemag.com/online-only/online-only/strategic-amnesia/"
+  ],
+  "page5_url": "https://www.axismag.jp/posts/2026/06/714856.html",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/06/26/a-short-defense-of-sports-cliches/",
+    "music": "https://natalie.mu/music/news/678058",
+    "outdoor": "https://www.atlasobscura.com/places/doorless-shrine-of-gogni"
+  },
+  "headlines_urls": [
+    "https://www.economist.com/finance-and-economics/2026/06/18/europe-buys-the-future-america-builds-it",
+    "https://que.dailyshincho.jp/node/19161/",
+    "http://www3.nhk.or.jp/news/html/20260627/k10015162141000.html"
+  ]
+}
