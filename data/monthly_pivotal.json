@@ -181,6 +181,36 @@
           "fri": "神山さんへの問い：日常の経営判断に「限定戦争」概念は何を示唆するか。「全面戦争でも平和でもない時間」を生きる経営者は、どこに地政学を埋め込み、どこを切り離すか。W5「環世界」の他者性論と接続し、地政学的他者の認識を経営判断にどう翻訳するかを問う"
         }
       }
+    },
+    "W7": {
+      "theme": "フラット組織の限界",
+      "period": [
+        "2026-07-05",
+        "2026-07-11"
+      ],
+      "article": {
+        "title": "Hierarchies have a place even in societies built on equality",
+        "source": "Aeon Essays",
+        "author": "（要確認、Aeon の rate limit のため未確定。Julian Baggini もしくは Stephen C. Angle / Wang Pei 系の可能性、神山さん側で Aeon 直接アクセス時に確認）",
+        "url": "https://aeon.co/essays/hierarchies-have-a-place-even-in-societies-built-on-equality",
+        "published": "2020-08-03",
+        "summary": "平等を理想とする社会でも階層は完全には消えない、というよりも消すべきではない。本論考が引く線は「階層的社会と平等的社会のあいだ」ではなく、「良い階層と悪い階層のあいだ」だ。良い階層は「いつ、誰に敬意を払うべきか」を示すシグナルとして機能し、他者から学ぶ開かれた姿勢を可能にする。悪い階層は誤った敬意を強要し、権力関係を硬直させる。フラット化議論の前提そのものを問い直し、「階層を消す」ではなく「シグナルとして設計し直す」という選択肢を経営者に提示する。",
+        "key_quote": "The distinction we should be making is not between hierarchical and egalitarian societies, but between good hierarchies and bad ones. Good hierarchies signal the right kinds of deference; bad ones demand the wrong ones.",
+        "key_quote_ja": "我々が引くべき線は、階層的社会と平等的社会のあいだではない——良い階層と悪い階層のあいだだ。良い階層は正しい敬意のシグナルになり、悪い階層は間違った敬意を強要する。",
+        "points": [
+          "問うべきは「階層 vs フラット」ではなく「良い階層 vs 悪い階層」の区別",
+          "良い階層は「いつ、誰に敬意を払うべきか」のシグナルとして機能し、他者から学ぶ開かれた姿勢を可能にする",
+          "フラット化は権力関係を消すのではなく不可視化するだけ——可視化された階層こそ設計可能"
+        ],
+        "angles_hints": {
+          "sun": "「フラット組織」の理想と現実——階層は本当に消せるか。2010 年代の「フラット礼賛」（ホラクラシー、ティール組織）の系譜と、実装現場での頓挫を概観し、Aeon の議論「良い階層 / 悪い階層の二分」を導入として提示する全体像",
+          "mon": "「良い階層 / 悪い階層」の区別——Aeon の核心引用を軸に、敬意のシグナルとしての階層という視点を批判的に展開。「権力の真空」「意思決定の遅延」「心理的安全性の喪失」（HBR 2024 Anicich/Lee の 3 つの落とし穴、副軸として参照）を当てる",
+          "tue": "こころみグループ実装論——シグナルとしての階層設計。「ディープリスニング = 誰の声をいつ聴くか」の問いと階層論を接続。聞き手企業として、組織の階層を「シグナル」に翻訳する実装。Tomy 'M & A' 体験談、現場 1on1 設計への含意",
+          "wed": "思想家——アリストテレス『政治学』（自然的階層論）、Pierre Rosanvallon『La Société des Égaux』（平等社会の歴史社会学）、Frederick Laloux『Reinventing Organizations』（ティール組織論）との対比。良い階層論の系譜",
+          "thu": "歴史——ギルド制（中世、職人階層の社会的機能）、Max Weber『官僚制』（合理化と階層）、ホラクラシー（Brian Robertson, 2007）、ティール組織（Frederic Laloux, 2014）、Zappos 実験（2013-2018）—階層論の系譜と「フラット化」の歴史的試行",
+          "fri": "神山さんへの問い：あなたの組織の階層は「シグナル」として機能しているか、それとも惰性的な命令系統か。W5「環世界」の他者性論（他者を聴く）と接続し、「誰の声をいつ聴くか」という階層的判断を、ディープリスニング経営の中心に据え直す問いとして提示"
+        }
+      }
     }
   },
   "next_month_planning": {
