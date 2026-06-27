@@ -1040,6 +1040,24 @@
       "ai_kamiyama_title": "Superforecasting: The Art and Science of Prediction",
       "ai_kamiyama_category": "academic",
       "ai_kamiyama_source_name": "3 Quarks Daily"
+    },
+    {
+      "displayed_on": "2026-06-28",
+      "article_url": "https://natalie.mu/music/news/678153",
+      "article_title": "キノコホテルが“創業”20周年記念ライブをZepp新宿で開催「ビビってなんか居ないわよ」",
+      "article_category": "music",
+      "tie_candidates": [
+        "music"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://aeon.co/essays/organised-violence-is-a-trade-whether-legal-or-illegal",
+      "ai_kamiyama_title": "The violence specialists",
+      "ai_kamiyama_category": "academic:国際",
+      "ai_kamiyama_source_name": "Aeon"
     }
   ]
 }

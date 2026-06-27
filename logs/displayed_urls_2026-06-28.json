@@ -1,0 +1,38 @@
+{
+  "date": "2026-06-28",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/19251/",
+    "https://que.dailyshincho.jp/node/19272/",
+    "https://www.economist.com/finance-and-economics/2026/06/18/europe-buys-the-future-america-builds-it",
+    "https://www.ft.com/content/b68964c9-f3d0-48e8-8873-8f463834936c"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/business/articles/2606/26/news076.html",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2606/26/news038.html",
+    "web_repo": "https://www.foodrink.co.jp/news/2026/06/2553516.html"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/cogs-of-war/designing-drones-for-africa/",
+    "http://www3.nhk.or.jp/news/html/20260626/k10015161581000.html",
+    null,
+    "https://www.mckinsey.com/industries/engineering-construction-and-building-materials/our-insights/how-titan-groups-ceo-is-transforming-a-century-old-company",
+    "https://www.theparisreview.org/blog/2026/06/17/making-of-a-poem-hannah-piette/",
+    "https://3quarksdaily.com/3quarksdaily/2026/06/superforecasting-the-art-and-science-of-prediction.html"
+  ],
+  "page4_urls": [
+    "https://www.themarginalian.org/2026/06/26/fungi-orion/",
+    "https://www.themarginalian.org/2026/06/27/trees/",
+    "https://aeon.co/essays/organised-violence-is-a-trade-whether-legal-or-illegal"
+  ],
+  "page5_url": "https://natalie.mu/music/news/678153",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/06/24/taiwan-english/",
+    "music": "https://natalie.mu/music/news/678156",
+    "outdoor": "https://www.backpacker.com/stories/essays/i-monetized-my-love-for-backpacking-it-took-quitting-a-thru-hike-to-realize-what-it-cost-me/"
+  },
+  "headlines_urls": [
+    "https://www.ft.com/content/404f832c-89cf-49f7-a546-b0e4eb965f15",
+    "https://www.bbc.co.uk/news/articles/cly716qd146o?at_medium=RSS&at_campaign=rss",
+    "https://www.ft.com/content/831d18c4-7272-4543-bcfc-d134df238dd7"
+  ]
+}

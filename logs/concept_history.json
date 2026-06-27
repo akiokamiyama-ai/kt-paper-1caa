@@ -304,6 +304,11 @@
       "concept_id": "complex_systems",
       "name_ja": "複雑系",
       "displayed_on": "2026-06-27"
+    },
+    {
+      "concept_id": "measurement_problem",
+      "name_ja": "観測問題",
+      "displayed_on": "2026-06-28"
     }
   ]
 }
