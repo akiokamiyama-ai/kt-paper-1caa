@@ -121,7 +121,16 @@ def _build_context(args: argparse.Namespace) -> NoteContext:
 # Build LLM input + call
 # ---------------------------------------------------------------------------
 
-def build_user_message(ctx: NoteContext) -> str:
+def build_user_message(ctx: NoteContext, pivotal_section: str = "") -> str:
+    """User prompt 組み立て (C107 v2: pivotal_section 追加).
+
+    Parameters
+    ----------
+    pivotal_section : str
+        ``prompts.render_pivotal_block`` の戻り値、または空文字。
+        空の場合は ``USER_TEMPLATE`` の該当行が空白になり、note は
+        従来通り「主軸記事なし」モードで生成される。
+    """
     blocks: list[str] = []
     for i, d in enumerate(ctx.days, start=1):
         blocks.append(prompts.render_day_block(
@@ -136,17 +145,72 @@ def build_user_message(ctx: NoteContext) -> str:
         start_date=ctx.start_date.isoformat(),
         end_date=ctx.end_date.isoformat(),
         daily_blocks=daily_blocks,
+        pivotal_section=pivotal_section,
     )
+
+
+def _load_pivotal_block(week_label: str | None) -> str:
+    """``data/monthly_pivotal.json`` から該当週の article を取り出し、
+    user prompt 用ブロックに整形する (C107 v2)。
+
+    Parameters
+    ----------
+    week_label : str | None
+        ``monthly_pivotal.json`` の ``weeks`` キー（"W5" 等）。None なら
+        空文字を返す。
+
+    Returns
+    -------
+    str
+        ``USER_TEMPLATE.pivotal_section`` に埋め込む文字列。記事が
+        存在しなければ空文字。
+    """
+    if not week_label:
+        return ""
+    pivotal_path = PROJECT_ROOT / "data" / "monthly_pivotal.json"
+    if not pivotal_path.exists():
+        print(
+            f"[notes] WARN: --pivotal-week={week_label} 指定だが "
+            f"{pivotal_path} が存在しない、主軸記事なしで生成します",
+            file=sys.stderr,
+        )
+        return ""
+    import json
+    try:
+        data = json.loads(pivotal_path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError) as e:
+        print(
+            f"[notes] WARN: monthly_pivotal.json 読み込み失敗 ({e!r})、"
+            f"主軸記事なしで生成します",
+            file=sys.stderr,
+        )
+        return ""
+    weeks = data.get("weeks") or {}
+    week_entry = weeks.get(week_label) or {}
+    article = week_entry.get("article") or {}
+    if not article:
+        print(
+            f"[notes] WARN: monthly_pivotal.json に {week_label} の article "
+            f"が見つからない、主軸記事なしで生成します",
+            file=sys.stderr,
+        )
+        return ""
+    # 副軸記事は angles_hints.fri 等に URL 形式で混入することがあるが、
+    # 構造化された secondary_article フィールドが将来追加された場合のみ
+    # 拾う（現状は None 想定）。
+    secondary = week_entry.get("secondary_article")
+    return prompts.render_pivotal_block(article, secondary=secondary)
 
 
 def call_llm(ctx: NoteContext, *, model: str | None = None,
              max_tokens: int = DEFAULT_MAX_TOKENS,
              temperature: float = DEFAULT_TEMPERATURE,
-             use_style_cache: bool = True) -> GeneratedNote:
+             use_style_cache: bool = True,
+             pivotal_section: str = "") -> GeneratedNote:
     # Lazy import — extractor / models は LLM 不要、テスト容易性のため。
     from ..lib import llm
 
-    user_msg = build_user_message(ctx)
+    user_msg = build_user_message(ctx, pivotal_section=pivotal_section)
     used_model = model or llm.DEFAULT_MODEL
 
     # C38b 第二弾 (2026-06-09): 神山さん note ブログを参照した文体ガイダンスを注入。
@@ -222,6 +286,14 @@ def main(argv: list[str] | None = None) -> int:
         "--no-style-cache", action="store_true",
         help="Skip the kamiyama_style.json injection (use bare system prompt only)",
     )
+    parser.add_argument(
+        "--pivotal-week",
+        help=(
+            "C107 v2: data/monthly_pivotal.json の weeks キー (例: W5)。"
+            "指定すると該当週の article (title/author/url/key_quote) を "
+            "user prompt に注入し、note 内で必ず明示紹介させる"
+        ),
+    )
     args = parser.parse_args(argv)
 
     if not args.week and not (args.start and args.end):
@@ -261,12 +333,21 @@ def main(argv: list[str] | None = None) -> int:
         print("[notes] style cache: disabled by --no-style-cache",
               file=sys.stderr)
 
+    # C107 v2: 主軸記事ブロックを monthly_pivotal.json から取り出す
+    pivotal_section = _load_pivotal_block(args.pivotal_week)
+    if pivotal_section:
+        print(
+            f"[notes] pivotal block injected for week={args.pivotal_week!r} "
+            f"({len(pivotal_section)} chars)",
+            file=sys.stderr,
+        )
+
     if args.dry_run:
         print("\n=== SYSTEM PROMPT (dry-run) ===\n", file=sys.stderr)
         style_block = build_style_block_from_disk() if use_style else None
         print(prompts.build_system_prompt(style_block=style_block))
         print("\n=== USER MESSAGE (dry-run) ===\n", file=sys.stderr)
-        print(build_user_message(ctx))
+        print(build_user_message(ctx, pivotal_section=pivotal_section))
         return 0
 
     note = call_llm(
@@ -275,6 +356,7 @@ def main(argv: list[str] | None = None) -> int:
         max_tokens=args.max_tokens,
         temperature=args.temperature,
         use_style_cache=use_style,
+        pivotal_section=pivotal_section,
     )
 
     path = save_note(note)
