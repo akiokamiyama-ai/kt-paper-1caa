@@ -211,6 +211,36 @@
           "fri": "神山さんへの問い：あなたの組織の階層は「シグナル」として機能しているか、それとも惰性的な命令系統か。W5「環世界」の他者性論（他者を聴く）と接続し、「誰の声をいつ聴くか」という階層的判断を、ディープリスニング経営の中心に据え直す問いとして提示"
         }
       }
+    },
+    "W8": {
+      "theme": "教育の構造変化",
+      "period": [
+        "2026-07-12",
+        "2026-07-18"
+      ],
+      "article": {
+        "title": "How do we transmit culture when it cannot be put into words?",
+        "source": "Aeon Essays",
+        "author": "Helena Miton",
+        "url": "https://aeon.co/essays/how-do-we-transmit-culture-when-it-cannot-be-put-into-words",
+        "published": "2024-08-27",
+        "summary": "人類の知識がこれほど容易に消えうるのに、なぜ多くの文化的実践は文字記録なしに何百年、何千年と生き延びてきたのか。Helena Miton はこの問いから出発し、文化的知識が記録媒体だけでなく、人間の身体と神経系に宿るものとして整理する。Polanyi が「暗黙知」と呼んだもの——「我々は語りうる以上を知っている」——は、模倣でも言語でも十分には伝わらない。実践が「どう感じられるか」を学ぶ必要があり、それは観察したり指示書を読んだりするだけでは届かない。AI が形式知の処理を高速で担う時代、教育の本質的な問いは「言葉にできない知をどう次世代に渡すか」に帰着する。W1「AI と暗黙知」（産業の暗黙知伝承）の系譜を、文化・教育の現場に拡張する論考。",
+        "key_quote": "Tacit knowledge is what we know but cannot say. Since this kind of knowledge typically requires learning how a practice feels, which can't be conveyed through words alone, neither imitation nor language are much help when it comes to learning this kind of knowledge—you can't simply watch someone, or read some instructions.",
+        "key_quote_ja": "暗黙知とは、知っているが語れないもののこと。この種の知識を学ぶには、実践が「どう感じられるか」を学ぶ必要があり、それは言葉だけでは伝わらない。模倣も言語も、この種の知識を学ぶ際にはあまり助けにならない——誰かを見ているだけでも、指示書を読むだけでも、伝わらないのだ。",
+        "points": [
+          "文化的知識は記録媒体だけでなく身体と神経系に宿る——「言葉にできない知」が文化伝達の核心",
+          "Polanyi の暗黙知論（我々は語りうる以上を知っている）が、AI 時代の教育論の中心に再浮上",
+          "なぜ文字記録なしに何百年も生き延びる文化的実践があるのか——その「伝わり方」の構造を問う"
+        ],
+        "angles_hints": {
+          "sun": "「言葉にできない知」の伝達——AI 時代の教育の核心問題。W1「AI と暗黙知」（産業の暗黙知伝承）で扱った問題を、教育・文化の現場で再考する。W1 系譜の系列継承として全体像を導入",
+          "mon": "「形式知偏重」の学校教育批判——カリキュラム / 評価試験 / 言語化重視のシステムが、本来の「身体に宿る学び」を切り捨てている構造を批判的に展開。Aeon の核心引用「indeed neither imitation nor language are much help」を軸に",
+          "tue": "こころみグループ実装論——ディープリスニング経営 = 「暗黙知の伝達現場」、聞き手企業として、若手社員への伝達設計。OJT / メンタリング / ペアワーク等の現場で「言葉にできない知」を渡す仕組み。W1 note「暗黙知を継ぐのは誰か」（既公開）の延長",
+          "wed": "思想家——Michael Polanyi『暗黙知の次元』(1966)、Marcel Mauss『身体技法』(1934)、Pierre Bourdieu『実践感覚』(1980, ハビトゥス論)、Lev Vygotsky『思考と言語』(1934, 最近接発達領域)、野中郁次郎『知識創造企業』(1995)",
+          "thu": "歴史——中世徒弟制（職人ギルドの暗黙知伝承）、近代公教育（プロイセン式の制度化、19 世紀）、John Dewey『民主主義と教育』(1916, 経験主義)、Ivan Illich『脱学校論』(1971)、Paulo Freire『被抑圧者の教育学』(1968)、Howard Gardner 多重知能論 (1983)——「暗黙知を渡す制度」の系譜",
+          "fri": "神山さんへの問い：あなたの組織で「言葉にできない知」を渡す現場はどこにあるか、AI 時代にどう守るか。W1 で扱った「ベテランの判断」が消えていく問題を、子の世代に渡すという視座から問い直す。W7「階層 = シグナル」論との接続：暗黙知の伝達には「誰がいつ敬意を払うべきか」という階層的判断が不可欠"
+        }
+      }
     }
   },
   "next_month_planning": {
