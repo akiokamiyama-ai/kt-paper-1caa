@@ -241,6 +241,37 @@
           "fri": "神山さんへの問い：あなたの組織で「言葉にできない知」を渡す現場はどこにあるか、AI 時代にどう守るか。W1 で扱った「ベテランの判断」が消えていく問題を、子の世代に渡すという視座から問い直す。W7「階層 = シグナル」論との接続：暗黙知の伝達には「誰がいつ敬意を払うべきか」という階層的判断が不可欠"
         }
       }
+    },
+    "W9": {
+      "theme": "身体性の価値の変化",
+      "category_note": "カテゴリ 7『思索と価値観の変化』初解禁（docs/themes.md：Sprint 8 で長期保存プール整備後に解禁条件達成済）",
+      "period": [
+        "2026-07-19",
+        "2026-07-25"
+      ],
+      "article": {
+        "title": "The interoceptive turn is maturing as a rich science of selfhood",
+        "source": "Aeon Essays",
+        "author": "Noga Arikha",
+        "url": "https://aeon.co/essays/the-interoceptive-turn-is-maturing-as-a-rich-science-of-selfhood",
+        "published": "2024-04",
+        "summary": "「内受容感覚（interoception）」が、自己（selfhood）の新しい科学として成熟しつつある。心臓の鼓動、呼吸、内臓の感覚——身体の内側からの信号が、自己と他者の境界を形作る。歴史家・哲学者 Noga Arikha は、メルロ＝ポンティの現象学、仏教の身体観、計算神経科学を統合した「反認知主義的神経哲学」として整理する。AI が「身体を持たない知能」として現れる時代、人間の自己はますます「身体の内側から感じる能力」によって規定される。経営者の「肌感覚」「胸騒ぎ」「言葉になる前の判断」を、内受容感覚という最新科学の言葉で読み直す視座を開く。",
+        "key_quote": "Our ability to form a boundary between self and other is a function of our ability to feel our embodied selves from within.",
+        "key_quote_ja": "自己と他者のあいだに境界を引く我々の能力は、身体としての自分を内側から感じる能力の働きなのだ。",
+        "points": [
+          "内受容感覚（心拍 / 呼吸 / 内臓感覚）が selfhood の核心、自己と他者の境界を形作る",
+          "メルロ＝ポンティの現象学 + 仏教の身体観 + 計算神経科学を統合した反認知主義的神経哲学",
+          "AI 時代に「身体を持たない知能」と対比される人間の自己——「内側から感じる能力」によって規定される"
+        ],
+        "angles_hints": {
+          "sun": "内受容感覚とは何か——AI 時代の selfhood の新科学。「心臓の鼓動 / 呼吸 / 内臓感覚」など身体の内側からの信号が自己を形作る、という反認知主義的視座を全体像として導入。カテゴリ 7『思索と価値観の変化』初解禁の象徴記事として位置づける",
+          "mon": "「脳中心主義」の認知科学批判——「脳 = コンピューター」のメタファーが見落としてきた身体の内側の信号。Aeon の核心引用「Our ability to form a boundary between self and other is a function of our ability to feel our embodied selves from within」を軸に、AI が「身体を持たない知能」として浮上する時代の鏡として展開",
+          "tue": "経営者の『肌感覚』『胸騒ぎ』を内受容感覚として読み直す——こころみグループ実装論、聞き手の身体的次元。ディープリスニングは耳ではなく身体全体で聴く実践、相手の身体からの信号を内受容感覚で受け取る回路。「言葉になる前の判断」が科学的に裏付けられる経営現場",
+          "wed": "思想家——Antonio Damasio『デカルトの誤り』(1994, ソマティック・マーカー仮説)、Maurice Merleau-Ponty『知覚の現象学』(1945, 身体図式)、Andy Clark『生まれながらのサイボーグ』、Karl Friston (predictive processing / 自由エネルギー原理)、Anil Seth『あなたの脳は予測する』、仏教マインドフルネス（ヴィパッサナー、内観）。身体感覚論の現代的系譜",
+          "thu": "歴史——William James + Carl Lange『情動の身体起源説』(1884)、Walter Cannon の批判 (1927)、Stanley Schachter の二要因説 (1962)、Antonio Damasio『デカルトの誤り』(1994)、Hugo Critchley の interoception 研究 (2000s-)、現代 interoception 研究の制度化 (2010s-)——140 年の身体感覚科学史",
+          "fri": "神山さんへの問い：経営者の身体は何を知っているか、なぜ言葉になる前に判断できるか。W5「環世界 = 別の身体的志向性」/ W8「言葉にできない知の伝達」と接続し、内受容感覚は両者の身体的基盤として位置づけ直す。AI 時代に「身体を持つ経営者」が残せる判断とは何か"
+        }
+      }
     }
   },
   "next_month_planning": {
@@ -250,6 +281,6 @@
       "未定",
       "未定"
     ],
-    "note": "7月分は2026-06-27（最終土曜）の月次選定セッションで決定"
+    "note": "7月分（W6-W9）は2026-06-27〜28 の月次選定セッションで決定済。8月分（W10-W13）は2026-07-25（最終土曜）の月次選定セッションで決定"
   }
 }
