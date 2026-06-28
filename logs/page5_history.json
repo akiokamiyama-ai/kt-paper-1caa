@@ -1058,6 +1058,24 @@
       "ai_kamiyama_title": "The violence specialists",
       "ai_kamiyama_category": "academic:国際",
       "ai_kamiyama_source_name": "Aeon"
+    },
+    {
+      "displayed_on": "2026-06-29",
+      "article_url": "https://thetrek.co/continental-divide-trail/pre-cdt-a-late-start-a-shakedown-hike-and-a-gear-list/",
+      "article_title": "Pre-CDT: a late start, a shakedown hike, and a gear list",
+      "article_category": "outdoor",
+      "tie_candidates": [
+        "outdoor"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.project-syndicate.org/onpoint/why-rules-based-orders-fail-by-benn-steil-2026-06",
+      "ai_kamiyama_title": "Why Rules-Based Orders Fail",
+      "ai_kamiyama_category": "geopolitics",
+      "ai_kamiyama_source_name": "Project Syndicate"
     }
   ]
 }

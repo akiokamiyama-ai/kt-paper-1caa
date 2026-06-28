@@ -309,6 +309,11 @@
       "concept_id": "measurement_problem",
       "name_ja": "観測問題",
       "displayed_on": "2026-06-28"
+    },
+    {
+      "concept_id": "kuhn",
+      "name_ja": "クーン",
+      "displayed_on": "2026-06-29"
     }
   ]
 }

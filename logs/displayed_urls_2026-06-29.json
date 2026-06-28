@@ -1,0 +1,38 @@
+{
+  "date": "2026-06-29",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/19494/",
+    "https://www.bbc.co.uk/news/articles/cly716qd146o?at_medium=RSS&at_campaign=rss",
+    "https://www.ft.com/content/b21b4c57-b403-4748-8b4d-945f5efa9863",
+    "https://que.dailyshincho.jp/node/19323/"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2606/27/2000000134/",
+    "human_energy": "https://jinjibu.jp/news/detl/26547/",
+    "web_repo": "https://www.jftc.go.jp/houdou/pressrelease/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/onpoint/why-rules-based-orders-fail-by-benn-steil-2026-06",
+    null,
+    null,
+    "https://www.mckinsey.com/capabilities/strategy-and-corporate-finance/our-insights/what-matters-most-to-investors-in-2026-and-what-it-means-for-companies",
+    "https://www.theparisreview.org/blog/2026/06/26/a-short-defense-of-sports-cliches/",
+    "https://3quarksdaily.com/3quarksdaily/2026/06/good-lives.html"
+  ],
+  "page4_urls": [
+    "https://www.themarginalian.org/2026/06/26/fungi-orion/",
+    "https://www.themarginalian.org/2026/06/27/trees/",
+    "https://aeon.co/essays/organised-violence-is-a-trade-whether-legal-or-illegal"
+  ],
+  "page5_url": "https://thetrek.co/continental-divide-trail/pre-cdt-a-late-start-a-shakedown-hike-and-a-gear-list/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/06/26/at-the-crucible-snookers-world-series/",
+    "music": "https://natalie.mu/music/news/678245",
+    "outdoor": "https://www.atlasobscura.com/places/campo-grande-park"
+  },
+  "headlines_urls": [
+    "https://www.economist.com/finance-and-economics/2026/06/28/china-cracks-down-on-rule-bending-offshore-investments",
+    "https://www.bbc.co.uk/news/articles/cx2j7v51l5ko?at_medium=RSS&at_campaign=rss",
+    "https://www.economist.com/finance-and-economics/2026/06/18/a-new-golden-age-for-japanese-banks-comes-with-a-catch"
+  ]
+}
