@@ -1,0 +1,38 @@
+{
+  "date": "2026-06-30",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/18972/",
+    "https://que.dailyshincho.jp/node/19464/",
+    "https://que.dailyshincho.jp/node/19467/",
+    "https://que.dailyshincho.jp/node/19461/"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://atmarkit.itmedia.co.jp/ait/articles/2606/29/news061.html",
+    "human_energy": "https://jinjibu.jp/news/detl/26578/",
+    "web_repo": "https://www.jfa-fc.or.jp/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/why-ai-adoption-requires-trust-in-government-by-ngaire-woods-2026-06",
+    "https://toyokeizai.net/articles/-/949144?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://www.project-syndicate.org/commentary/government-response-to-ai-sputnik-moments-mythos-has-fallen-short-by-gabriela-ramos-and-emilija-stojmenova-duh-2026-06",
+    "https://www.mckinsey.com/capabilities/strategy-and-corporate-finance/our-insights/in-an-ai-driven-world-the-fastest-learner-will-win-an-interview-with-mckinseys-sven-smit",
+    "https://www.project-syndicate.org/commentary/hungary-albania-rejecting-maga-international-by-harold-james-2026-06",
+    "https://3quarksdaily.com/3quarksdaily/2026/06/euphemisms-are-like-underwear-best-changed-frequently.html"
+  ],
+  "page4_urls": [
+    "https://www.themarginalian.org/2026/06/26/fungi-orion/",
+    "https://www.themarginalian.org/2026/06/27/trees/",
+    "https://aeon.co/essays/organised-violence-is-a-trade-whether-legal-or-illegal"
+  ],
+  "page5_url": "https://www.themarginalian.org/2026/06/28/why-you/",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-06/pink-dogs-goldschmidt-lechner-ledwon/",
+    "music": "https://rockinon.com/news/detail/215363",
+    "outdoor": "https://www.cleverhiker.com/backpacking/kershaw-bel-air-pocket-knife-review/"
+  },
+  "headlines_urls": [
+    "https://www.ft.com/content/16b80794-3898-4010-b7d8-5c8cf59dd7ef",
+    "https://www.bbc.co.uk/news/articles/cgrkd41n2v9o?at_medium=RSS&at_campaign=rss",
+    "https://www.economist.com/finance-and-economics/2026/06/21/how-stretched-is-the-american-consumer"
+  ]
+}

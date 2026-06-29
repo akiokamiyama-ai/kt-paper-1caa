@@ -1076,6 +1076,24 @@
       "ai_kamiyama_title": "Why Rules-Based Orders Fail",
       "ai_kamiyama_category": "geopolitics",
       "ai_kamiyama_source_name": "Project Syndicate"
+    },
+    {
+      "displayed_on": "2026-06-30",
+      "article_url": "https://www.themarginalian.org/2026/06/28/why-you/",
+      "article_title": "Why You",
+      "article_category": "books",
+      "tie_candidates": [
+        "books"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.themarginalian.org/2026/06/26/fungi-orion/",
+      "ai_kamiyama_title": "Mushrooms and Our Search for Meaning",
+      "ai_kamiyama_category": "books:自然科学ノンフィクション",
+      "ai_kamiyama_source_name": "The Marginalian（旧 Brain Pickings）"
     }
   ]
 }

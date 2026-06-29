@@ -314,6 +314,11 @@
       "concept_id": "kuhn",
       "name_ja": "クーン",
       "displayed_on": "2026-06-29"
+    },
+    {
+      "concept_id": "interoception",
+      "name_ja": "内受容感覚",
+      "displayed_on": "2026-06-30"
     }
   ]
 }
