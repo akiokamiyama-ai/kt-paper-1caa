@@ -146,12 +146,6 @@ Tribune の運用中に神山さんが発見した改善点・違和感・将来
   - 現状：natalie.mu が 63% 占有
   - 検討：他の音楽メディアの High Priority 化
   - sources/culture.md or sources/music.md の調整
-  
-- **C77 観測性向上**
-  - 課題：stage2_daily_summary.json が
-    GHA Artifact のみで commit されない
-  - 検討：日次 summary を commit 対象に
-  - 神山さんローカルでも確認可能に
 
 ---
 
