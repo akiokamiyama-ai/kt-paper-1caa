@@ -1094,6 +1094,24 @@
       "ai_kamiyama_title": "Mushrooms and Our Search for Meaning",
       "ai_kamiyama_category": "books:自然科学ノンフィクション",
       "ai_kamiyama_source_name": "The Marginalian（旧 Brain Pickings）"
+    },
+    {
+      "displayed_on": "2026-07-01",
+      "article_url": "https://3quarksdaily.com/3quarksdaily/2026/06/a-natural-history-of-william-kentridges-studio.html",
+      "article_title": "A Natural History of William Kentridge’s Studio",
+      "article_category": "academic",
+      "tie_candidates": [
+        "academic"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://warontherocks.com/lost-in-translation-how-a-premier-chinese-think-tank-views-u-s-chinese-competition/",
+      "ai_kamiyama_title": "Lost in Translation: How A Premier Chinese Think Tank Views U.S.-Chinese Competition",
+      "ai_kamiyama_category": "geopolitics",
+      "ai_kamiyama_source_name": "War on the Rocks"
     }
   ]
 }

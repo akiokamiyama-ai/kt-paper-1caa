@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-01",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/19482/",
+    "https://www.bbc.co.uk/news/articles/cdej6ej7w4go?at_medium=RSS&at_campaign=rss",
+    "https://que.dailyshincho.jp/node/19302/",
+    "https://www.ft.com/content/55911ca2-9728-48ac-a874-5a3b37d3fb3e"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2606/30/2000000139/",
+    "human_energy": "https://jinjibu.jp/news/detl/26572/",
+    "web_repo": "https://www.bc01.net/article/franchisee_ranking2025_01/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/lost-in-translation-how-a-premier-chinese-think-tank-views-u-s-chinese-competition/",
+    "https://que.dailyshincho.jp/node/19155/",
+    "https://www.mckinsey.com/mgi/our-research/semiconductors-etching-the-new-map-of-strategic-supply",
+    "https://www.mckinsey.com/mgi/our-research/biopharma-r-and-d-the-evolving-formula-for-discovery-and-development",
+    "https://www.theparisreview.org/blog/2026/06/24/taiwan-english/",
+    "https://nautil.us/the-trouble-with-trash-1282371/"
+  ],
+  "page4_urls": [
+    "https://3quarksdaily.com/3quarksdaily/2026/06/the-idea-that-success-is-deserved-has-great-traction-in-the-world-but-it-is-a-deeply-flawed-notion.html",
+    "https://3quarksdaily.com/3quarksdaily/2026/06/nine-books-that-showcase-queer-life-in-the-arab-world.html",
+    "https://3quarksdaily.com/3quarksdaily/2026/06/a-natural-history-of-william-kentridges-studio.html"
+  ],
+  "page5_url": "https://3quarksdaily.com/3quarksdaily/2026/06/a-natural-history-of-william-kentridges-studio.html",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/06/30/united-nations-art-tour/",
+    "music": "https://rockinon.com/news/detail/215403",
+    "outdoor": "https://www.cleverhiker.com/camping/ncamp-cafe-review/"
+  },
+  "headlines_urls": [
+    "https://www.bbc.co.uk/news/articles/cvgdn3qqg7po?at_medium=RSS&at_campaign=rss",
+    "http://www3.nhk.or.jp/news/html/20260630/k10015165091000.html",
+    "https://www.economist.com/finance-and-economics/2026/06/22/how-to-turn-compute-into-a-financial-asset"
+  ]
+}
