@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-02",
+  "page1_urls": [
+    "https://www.economist.com/finance-and-economics/2026/06/22/how-to-turn-compute-into-a-financial-asset",
+    "https://que.dailyshincho.jp/node/19491/",
+    "https://www.bbc.co.uk/news/articles/c8e2yp1gg37o?at_medium=RSS&at_campaign=rss",
+    "https://www.bbc.co.uk/news/articles/cj0gez6d50ro?at_medium=RSS&at_campaign=rss"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/news/articles/2607/01/news068.html",
+    "human_energy": "https://jinjibu.jp/news/detl/26573/",
+    "web_repo": null
+  },
+  "page3_urls": [
+    "https://warontherocks.com/the-hizballah-predicament-why-an-integrated-approach-is-necessary/",
+    "https://toyokeizai.net/articles/-/949140?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://www.ft.com/content/5d9eee57-f08c-4b28-a9d5-57578fbc1f8f",
+    "https://www.mckinsey.com/mhi/our-insights/closing-the-womens-health-gap-the-united-kingdoms-36-billion-pound-opportunity",
+    "https://www.theparisreview.org/blog/2026/06/26/at-the-crucible-snookers-world-series/",
+    "https://3quarksdaily.com/3quarksdaily/2026/07/what-split-brain-patients-reveal-about-consciousness.html"
+  ],
+  "page4_urls": [
+    "https://www.themarginalian.org/2026/06/28/why-you/",
+    "https://thepointmag.com/dialogue/searching-for-the-unexpected/",
+    "https://3quarksdaily.com/3quarksdaily/2026/07/right-and-left-even-when-facts-are-agreed-upon-interpretations-are-wildly-different.html"
+  ],
+  "page5_url": "https://rockinon.com/news/detail/215404",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/06/30/rachel-avivs-act-of-revision/",
+    "music": "https://rockinon.com/news/detail/215400",
+    "outdoor": "https://www.outsideonline.com/health/wellness/therme-spa/"
+  },
+  "headlines_urls": [
+    "https://que.dailyshincho.jp/node/19329/",
+    "https://www.economist.com/finance-and-economics/2026/06/29/turkeys-economic-plan-to-win-from-the-iran-war",
+    "https://www.ft.com/content/5627d320-920b-4527-8b52-71f7d182d968"
+  ]
+}

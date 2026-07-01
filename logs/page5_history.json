@@ -1112,6 +1112,24 @@
       "ai_kamiyama_title": "Lost in Translation: How A Premier Chinese Think Tank Views U.S.-Chinese Competition",
       "ai_kamiyama_category": "geopolitics",
       "ai_kamiyama_source_name": "War on the Rocks"
+    },
+    {
+      "displayed_on": "2026-07-02",
+      "article_url": "https://rockinon.com/news/detail/215404",
+      "article_title": "ニュース - 【JAPAN最新号】RO JACK優勝アーティスト・Awesome Brothersが登場！ HIPHOPの枠を超えて響く、熱くてメロウな「Awesome」スタイルにハマれ！",
+      "article_category": "music",
+      "tie_candidates": [
+        "music"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://thepointmag.com/dialogue/searching-for-the-unexpected/",
+      "ai_kamiyama_title": "Searching for the Unexpected",
+      "ai_kamiyama_category": "academic",
+      "ai_kamiyama_source_name": "The Point Magazine"
     }
   ]
 }
