@@ -71,9 +71,16 @@ ENV_MODE = "TRIBUNE_STAGE2_MODE"
 # の 3 日連続安定稼働 (C97 報告) を受けた段階的拡張。page1_master に加えて
 # page3 caller も layered 化する。page4 / page5 / page6 / page2 は引き続き
 # legacy 維持。Phase B 設計目標 ($30-45/月 削減) への到達を狙う。
+#
+# C115 (Sprint 10, 2026-07-01): "layered_page1_page3_page2" モード追加。
+# layered_page1_page3 の 4 日連続安定稼働（6/27-30）+ 月次 API limit 復活後の
+# 余裕内での段階拡張。page2 caller (Today's Headlines) も layered 化。
+# page4 / page5 / page6 は引き続き legacy 維持。段階 5a として Phase B 完成
+# へ 1 歩ずつ進める慎重路線。
 VALID_MODES = (
     "legacy", "shadow", "shadow_page1_only",
-    "layered_page1", "layered_page1_page3", "layered",
+    "layered_page1", "layered_page1_page3",
+    "layered_page1_page3_page2", "layered",
 )
 DEFAULT_MODE = "legacy"
 
@@ -88,6 +95,12 @@ LAYERED_PAGE1_CALLERS: frozenset[str] = frozenset({"page1_master"})
 # C94: layered_page1_page3 モードで layered を走らせる caller の allowlist。
 # layered_page1 の上位 superset。将来 page2 / page4-6 拡張時は更に追加。
 LAYERED_PAGE1_PAGE3_CALLERS: frozenset[str] = frozenset({"page1_master", "page3"})
+
+# C115: layered_page1_page3_page2 モードで layered を走らせる caller の allowlist。
+# layered_page1_page3 の上位 superset。将来 page4 / page5 / page6 拡張時に更に追加。
+LAYERED_PAGE1_PAGE3_PAGE2_CALLERS: frozenset[str] = frozenset(
+    {"page1_master", "page3", "page2"}
+)
 
 # shadow log 採用パターン比較用の top-N
 SHADOW_TOP_N = 30
@@ -167,6 +180,18 @@ def run_stage2_with_mode(
     # page1_master + page3 → layered、他 caller (page4/page5/page6/page2) は legacy。
     if effective_mode == "layered_page1_page3":
         if caller in LAYERED_PAGE1_PAGE3_CALLERS:
+            cfg = layer_config or LayerConfig(enabled=True)
+            return run_stage2(
+                articles, layer_config=cfg, caller=caller, **kwargs,
+            )
+        return run_stage2(
+            articles, layer_config=None, caller=caller, **kwargs,
+        )
+
+    # C115: layered_page1_page3_page2 は layered_page1_page3 の上位 superset。
+    # page1_master + page3 + page2 → layered、他 caller (page4/page5/page6) は legacy。
+    if effective_mode == "layered_page1_page3_page2":
+        if caller in LAYERED_PAGE1_PAGE3_PAGE2_CALLERS:
             cfg = layer_config or LayerConfig(enabled=True)
             return run_stage2(
                 articles, layer_config=cfg, caller=caller, **kwargs,
