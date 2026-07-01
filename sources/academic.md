@@ -77,6 +77,15 @@
 - **対象**: 心理学・認知科学・哲学・神経科学・人間性・文学を架橋する英語エッセイ
 - **位置付け**: news_profile.md §4.4 関心領域 (i) 現象学・(ii) 認知科学を **英語圏の一般読者向けエッセイで深める** 用途。Aeon Psychology / Philosophy カテゴリは入門〜中級者向けに学問領域を架橋する記事を提供（例：「Yorùbá の世界観は意識をどう捉えるか」「ユクスキュルの環世界と現代の精神医学」）。C36 Step 2a (2026-06-05) で academic.md primary 化、page4 fetch 経路へ到達可能にした（旧 cross-ref 構成では見出しに含まれる "Reference #N" が parser に Priority.REFERENCE 切替と誤認識されて entry 自体が dropped されていた）
 
+### 6b. Psyche ✅
+- **URL**: https://psyche.co/
+- **RSS**: https://psyche.co/feed.rss
+- **language**: en
+- **形式**: RSS 2.0（サイト全体、最新 20 件）
+- **対象**: 心理学・哲学・神経科学・実存的問い・スピリチュアリティを扱う短めのエッセイ・動画媒体。Aeon の姉妹サイトで編集部が共通、"Ideas" / "Guides" / "Videos" / "Portraits" の 4 セクションが RSS に混在
+- **位置付け**: C116 (Sprint 10, 2026-07-01) 追加。W5/W7/W8/W9 で Aeon 4 週連続採用の偏重バランス調整 + Aeon が対象外にする「日常生活に密着した心理学 / セルフワーク」領域を補完。W9「内受容感覚」（7/19-25）期間には自然な採用候補となる想定。RSS URL パターン (`feed.rss`) が Aeon と同一のため、既存 Aeon RSS driver がそのまま流用可能（C116 動作確認済：feed に 20 items、最新は「Pierre Bourdieu: habitus」「The thinking style that makes people vulnerable to extremism」等 Tribune 射程との親和性高）
+- **重複回避**: Aeon (#6) と編集部共通のため同一記事の可能性は低いが、著者名 / タイトル類似で 30 日 dedup が効く想定。実運用で観察する
+
 ### 7. Philosophy Now ✅
 - **URL**: https://philosophynow.org/
 - **RSS**: https://philosophynow.org/rss

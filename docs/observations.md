@@ -107,30 +107,6 @@ Tribune の運用中に神山さんが発見した改善点・違和感・将来
 - **状態**: 未着手
 - **メモ**:
 
-### Psyche.co を記事プールに追加検討
-
-- **発見日**: 2026-06-28（月次選定セッション中）
-- **観察**: Psyche.co は Aeon の姉妹メディア。
-  心理学・哲学・神経科学・実存的問いを扱う短めの
-  エッセイ媒体。Tribune の射程と高い親和性。
-- **意義**:
-  - Tribune の academic 系ソース多様化
-  - 「Aeon 偏重」（W5 / W7 / W8 / W9 で連続採用）の
-    バランス調整
-  - 神山さん事業ドメイン（聞き手 / 内受容感覚 等）に
-    直結
-- **検討案**:
-  - sources/leisure.md or sources/academic.md に追加
-  - RSS フィード or HtmlScrapeDriver 確認
-  - Aeon scraper の流用可能性検証
-  - 既存採用実績 確認
-- **URL**: https://psyche.co/
-- **Sprint 候補**: Sprint 11
-- **関連 commit**: -
-- **状態**: 未着手
-- **メモ**: Aeon 系姉妹メディアでバリエーション確保。
-  W9「内受容感覚」期間（7/19-7/25）に Psyche 採用が
-  あれば自然な実証機会
 
 ### Sprint 11 候補（既存・神山さん管理）
 
@@ -168,6 +144,30 @@ Tribune の運用中に神山さんが発見した改善点・違和感・将来
   - 「9 日間ゼロ」は誤認識、日次ばらつきが激しいだけで構造的問題なし
 - **状態**: 完了（修正不要）
 - **関連 commit**: C110 調査結果報告のみ
+
+### Psyche.co を記事プールに追加 → 完了
+
+- **発見日**: 2026-06-28（月次選定セッション中）
+- **背景**: Psyche.co は Aeon の姉妹メディア（心理学・哲学・神経科学・
+  実存的問い）。Tribune 射程と高親和、W5/W7/W8/W9 の Aeon 4 週連続
+  採用の偏重バランス調整 + W9「内受容感覚」（7/19-25）期間の自然な
+  採用候補として追加検討していた
+- **C116 実装**（2026-07-01）:
+  - RSS URL: `https://psyche.co/feed.rss`（Aeon と同一パターン、既存
+    Aeon RSS driver そのまま流用）
+  - `sources/academic.md` に「6b. Psyche ✅」として追加（Aeon (#6) の
+    姉妹関係を可視化する枝番）
+  - fetch CLI dry-run: 3 記事取得成功（「Pierre Bourdieu: habitus」
+    「The thinking style that makes people vulnerable to extremism」等、
+    Tribune 射程との親和性が実物で確認）
+  - 「125 sources」に組み込み確認
+- **想定採用機会**:
+  - W9「内受容感覚」（7/19-25）期間：Psyche の心理学・neuroscience
+    エッセイが自然な候補
+  - W5/W7/W8 の Aeon 連続採用の代替として、以降の Aeon vs Psyche
+    バランス観察
+- **状態**: 完了
+- **関連 commit**: C116
 
 ### 2 面 Headlines 英語ソース（BBC 等）の和訳消失 → 仕様として受容
 
