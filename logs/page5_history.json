@@ -1130,6 +1130,24 @@
       "ai_kamiyama_title": "Searching for the Unexpected",
       "ai_kamiyama_category": "academic",
       "ai_kamiyama_source_name": "The Point Magazine"
+    },
+    {
+      "displayed_on": "2026-07-03",
+      "article_url": "https://www.houyhnhnm.jp/news/1140861/",
+      "article_title": "継続は力なり。写真を通して30年以上頭の中をカタチにし続ける、うつゆみこの展示が今日からスタートです。",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://wordswithoutborders.org/read/article/2026-06/the-city-and-the-writer-in-ibadan-with-adedayo-agarau-nathalie-handal/",
+      "ai_kamiyama_title": "The City and the Writer: In Ibadan with Adedayo Agarau",
+      "ai_kamiyama_category": "books:海外純文学",
+      "ai_kamiyama_source_name": "Words Without Borders"
     }
   ]
 }

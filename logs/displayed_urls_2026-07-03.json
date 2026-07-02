@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-03",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/19548/",
+    "https://www.economist.com/interactive/finance-and-economics/2026/07/02/is-the-economist-always-wrong",
+    "https://que.dailyshincho.jp/node/19293/",
+    "https://que.dailyshincho.jp/node/19281/"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.ppc.go.jp/news/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2607/02/news107.html",
+    "web_repo": "https://www.jftc.go.jp/houdou/pressrelease/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/onpoint/ancient-greece-oligarchy-bitter-struggle-with-democracy-by-matt-simonton-2026-07",
+    "http://www3.nhk.or.jp/news/html/20260702/k10015167201000.html",
+    "https://toyokeizai.net/articles/-/950020?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://www.mckinsey.com/featured-insights/mckinsey-explainers/lights-camera-algorithm-how-ai-is-rewriting-the-rules-of-film-and-tv",
+    "https://wordswithoutborders.org/read/article/2026-06/the-city-and-the-writer-in-ibadan-with-adedayo-agarau-nathalie-handal/",
+    "https://3quarksdaily.com/3quarksdaily/2026/07/joshua-bennetts-prophetic-we.html"
+  ],
+  "page4_urls": [
+    "https://www.themarginalian.org/2026/06/30/martha-nussbaum-loves-knowledge/",
+    "https://3quarksdaily.com/3quarksdaily/2026/07/have-people-stopped-trusting-science-the-data-tell-a-surprising-story.html",
+    "https://3quarksdaily.com/3quarksdaily/2026/07/sartre-and-choice.html"
+  ],
+  "page5_url": "https://www.houyhnhnm.jp/news/1140861/",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-06/the-watchlist-june-2026-tobias-carroll/",
+    "music": "https://rockinon.com/news/detail/215404",
+    "outdoor": "https://www.atlasobscura.com/places/hm-prison-maze-long-kesh"
+  },
+  "headlines_urls": [
+    "https://www.ft.com/content/556a939d-b080-4fc4-a799-2807c465ea29",
+    "https://que.dailyshincho.jp/node/19341/",
+    "http://www3.nhk.or.jp/news/html/20260703/k10015167551000.html"
+  ]
+}
