@@ -334,6 +334,11 @@
       "concept_id": "hegel",
       "name_ja": "ヘーゲル",
       "displayed_on": "2026-07-03"
+    },
+    {
+      "concept_id": "medium_is_the_message",
+      "name_ja": "メディアはメッセージ",
+      "displayed_on": "2026-07-04"
     }
   ]
 }

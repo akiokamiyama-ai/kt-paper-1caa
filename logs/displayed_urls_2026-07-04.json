@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-04",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/19602/",
+    "https://que.dailyshincho.jp/node/19605/",
+    "https://www.economist.com/finance-and-economics/2026/07/02/are-stablecoins-money",
+    "https://que.dailyshincho.jp/node/19485/"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.ipa.go.jp/news/index.html",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2607/03/news024.html",
+    "web_repo": "https://www.jfa-fc.or.jp/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/ai-could-give-europe-unexpected-competitive-edge-by-kenneth-rogoff-2026-07",
+    "http://www3.nhk.or.jp/news/html/20260703/k10015167801000.html",
+    "https://warontherocks.com/cogs-of-war/the-integrated-circuit-and-the-future-of-ai-leadership/",
+    "https://www.mckinsey.com/industries/healthcare/our-insights/the-real-future-of-work-in-healthcare",
+    "https://wordswithoutborders.org/read/article/2026-06/a-sami-womans-sin-imagining-other-peoples-sex-lives-west-spangenberg/",
+    "https://www.publicbooks.org/the-emotional-economy-of-parenting-a-conversation-with-nina-bandelj/"
+  ],
+  "page4_urls": [
+    "https://3quarksdaily.com/3quarksdaily/2026/07/on-maxxing-and-the-man-from-song.html",
+    "https://thepointmag.com/criticism/the-stretch-of-a-soul/",
+    "https://www.themarginalian.org/2026/07/01/marie-tharp-traversal/"
+  ],
+  "page5_url": "https://thetrek.co/camino-frances-out-of-the-meseta-into-the-mountains/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/07/01/saint-peter-hujars-contact-sheets-at-the-morgan/",
+    "music": "https://rockinon.com/news/detail/215409",
+    "outdoor": "https://www.outsideonline.com/outdoor-adventure/environment/grand-canyon-tourist-damages-hopi-artifact/"
+  },
+  "headlines_urls": [
+    "https://www.ft.com/content/5ee80a17-7277-41dd-bc3d-8817b400a757",
+    "https://www.bbc.co.uk/news/articles/cj6gr0xkyr3o?at_medium=RSS&at_campaign=rss",
+    "https://que.dailyshincho.jp/node/19506/"
+  ]
+}

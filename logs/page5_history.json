@@ -1148,6 +1148,24 @@
       "ai_kamiyama_title": "The City and the Writer: In Ibadan with Adedayo Agarau",
       "ai_kamiyama_category": "books:海外純文学",
       "ai_kamiyama_source_name": "Words Without Borders"
+    },
+    {
+      "displayed_on": "2026-07-04",
+      "article_url": "https://thetrek.co/camino-frances-out-of-the-meseta-into-the-mountains/",
+      "article_title": "Camino Francés: Out of the Meseta, Into the Mountains",
+      "article_category": "outdoor",
+      "tie_candidates": [
+        "outdoor"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.themarginalian.org/2026/07/01/marie-tharp-traversal/",
+      "ai_kamiyama_title": "The Violinist Who Solved the Ancient Riddle of How the World Holds Together",
+      "ai_kamiyama_category": "books:自然科学ノンフィクション",
+      "ai_kamiyama_source_name": "The Marginalian（旧 Brain Pickings）"
     }
   ]
 }
