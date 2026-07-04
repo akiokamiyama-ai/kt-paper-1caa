@@ -34,6 +34,10 @@ from pathlib import Path
 
 from .lib.config_loader import load_site_config
 from .lib.dedupe import append_today, dedupe
+from .lib.drivers.fitness_business import (
+    HOST as FITNESS_BUSINESS_HOST,
+    FitnessBusinessDriver,
+)
 from .lib.drivers.html import HtmlScrapeDriver
 from .lib.drivers.jftc import HOST as JFTC_HOST, JftcDriver
 from .lib.drivers.que_shincho import HOST as QUE_HOST, QueShinchoDriver
@@ -91,6 +95,11 @@ def run(
     # ため、月別 index → 個別記事の 2 段 fetch で scrape。host が
     # www.jftc.go.jp なら JftcDriver を使う。
     jftc = JftcDriver(site_config=site_cfg)
+    # C122 (Sprint 11, 2026-07-04): Fitness Business (Web-Repo フィットネス
+    # 事業ドメイン) は RSS 未提供のため sitemap.xml + 個別記事 JSON-LD
+    # 経由で scrape。host が business.fitnessclub.jp なら FitnessBusinessDriver
+    # を使う。
+    fitness_business = FitnessBusinessDriver(site_config=site_cfg)
 
     all_sources = load_all_sources(sources_dir)
     selected = select_sources(
@@ -117,6 +126,8 @@ def run(
             driver = que_shincho
         elif JFTC_HOST in (src.url or ""):
             driver = jftc
+        elif FITNESS_BUSINESS_HOST in (src.url or ""):
+            driver = fitness_business
         else:
             driver = html
         try:

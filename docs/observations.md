@@ -31,21 +31,6 @@ Tribune の運用中に神山さんが発見した改善点・違和感・将来
 ## 未着手
 
 
-### Web-Repo 事業ドメイン「フィットネス系」業界ニュース未カバー
-
-- **発見日**: 2026-07-04（C121 実装時に判明）
-- **観察**: Web-Repo が扱うフィットネス事業領域の業界メディアが
-  sources/companies.md に未登録。RSS 提供メディア調査で「Fitness Business」
-  (https://business.fitnessclub.jp/) を発見したが RSS 未提供のため
-  HtmlScrapeDriver サブクラス実装が必要
-- **検討案**:
-  - Fitness Business の HTML scraper 実装（C120 JFTC と同パターン）
-  - 別の RSS 提供フィットネス系メディア探索
-- **Sprint 候補**: Sprint 11 中盤 or 後半
-- **関連 commit**: -
-- **状態**: 未着手
-- **メモ**: C121 で買取系（リユース経済新聞）+ 飲食系（食品新聞）は
-  RSS 経由で追加完了、フィットネス系のみ持ち越し
 
 ### 第6面 ハイク欄の UL 偏り
 
@@ -117,6 +102,50 @@ Tribune の運用中に神山さんが発見した改善点・違和感・将来
   - 「9 日間ゼロ」は誤認識、日次ばらつきが激しいだけで構造的問題なし
 - **状態**: 完了（修正不要）
 - **関連 commit**: C110 調査結果報告のみ
+
+### Web-Repo 事業ドメイン「フィットネス系」業界ニュース未カバー → 完了
+
+- **発見日**: 2026-07-04（C121 実装時に判明、当日 C122 で解決）
+- **観察当初**: Web-Repo のフィットネス事業領域が未カバー。C121 で
+  買取・飲食は RSS で追加できたが、Fitness Business
+  (https://business.fitnessclub.jp/) は RSS 未提供
+- **C122 実装**（2026-07-04）:
+  - サイト構造調査:
+    - robots.txt: `/articles/-/*` と `sitemap.xml` は許可、Disallow は
+      `/search/` / `/category/seminar|tour|data/` のみ
+    - sitemap.xml に article URL 2424 件、ただし `<lastmod>` 無し
+    - 個別記事に JSON-LD Article schema あり
+      （`datePublished` / `description`）
+    - 有料 wall のため本文全文は取れないが meta description で冒頭
+      100-200 字取得可
+  - `scripts/lib/drivers/fitness_business.py` 新規実装:
+    - `FitnessBusinessDriver(HtmlScrapeDriver)` サブクラス、
+      `HOST = "business.fitnessclub.jp"`
+    - sitemap.xml → `/articles/-/{ID}` 抽出、lastmod あれば降順、
+      無ければ article ID 降順 fallback（初回実装で lastmod あり想定
+      が実運用では ID 降順のみ動作、テスト側で両ケースをカバー）
+    - 個別記事 → JSON-LD Article schema と meta description から
+      title / pub_dt / body 抽出、3 段 fallback（JSON-LD → h1 →
+      `<title>` の "| Fitness Business" suffix 剥がし）
+  - `scripts/fetch.py` dispatch loop に FITNESS_BUSINESS_HOST 分岐追加
+    （QUE / JFTC と同パターン）
+  - `tests/test_fitness_business.py` 新規（15 tests: sitemap parse
+    ×3 / article parse ×7 / 定数 sanity ×2 / 各種 fallback）
+  - `sources/companies.md` Web-Repo Reference 群直前に `#9 Fitness Business ✅`
+    追加
+- **動作確認**:
+  - Unit tests: 15/15 pass
+  - 主要 7 testsuite regression: 168/168 pass
+  - fetch CLI dry-run: 3 記事取得成功:
+    - [2026-07-03] AI 姿勢分析「Sportip Pro」SPORTEC2026 出展
+    - [2026-07-02] アイレクススポーツライフ「ILEX AI GYM 24」豊橋駅開業
+    - [2026-07-02] メディカルフィットネス・フォーラム 2026 参加申込受付
+- **想定効果**:
+  - Web-Repo フィットネス事業領域が日次カバー
+  - C121 の買取・飲食追加と合わせて 3 領域完成
+  - 「ビジネスチャンス」偏重の完全解消
+- **状態**: 完了
+- **関連 commit**: C122
 
 ### 第 2 面 Web-Repo 業界ニュースの「ビジネスチャンス」偏り → 部分完了（買取・飲食追加、フィットネスは別案件持ち越し）
 

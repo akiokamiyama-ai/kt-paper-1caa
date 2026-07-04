@@ -271,6 +271,15 @@
 - **対象**: 食品業界総合情報（外食・加工食品・市況・企業活動・人事・健康機能性食品）
 - **位置付け**: C121 (Sprint 11, 2026-07-04) 追加。Web-Repo が扱う **飲食・外食系事業領域** の業界専門紙。フードリンクニュース (#6) との重複回避は、フードリンクが「FC 経営者視座 / ホンネ」、食品新聞が「業界全体・加工食品も含む網羅性」で分担。ビジネスチャンス偏重の解消に寄与
 
+#### 9. Fitness Business ✅
+- **URL**: https://business.fitnessclub.jp/
+- **RSS**: 未提供（`/feed` / `/rss` 全て 404 でC122 検証時に確認）→ 専用 sitemap + JSON-LD scraper で対応
+- **形式**: HTML (sitemap.xml 経由 → 個別記事 JSON-LD/meta)
+- **fetch_method**: HTML（`FitnessBusinessDriver` 経由）
+- **mainstream**: false
+- **対象**: フィットネス業界唯一の経営情報誌「Fitness Business」（クラブビジネスジャパン発行）の Web 版。業界データ、新サービス、業界トレンド、経営分析
+- **位置付け**: C122 (Sprint 11, 2026-07-04) 追加。Web-Repo が扱う **フィットネス系事業領域** をカバー。C121 で買取・飲食を追加したが、フィットネスは RSS 未提供のため scraper 実装が必要だった。sitemap.xml から `/articles/-/{ID}` を lastmod 降順で最大 10 件抽出、個別記事は JSON-LD Article schema の `datePublished` / `description`（会員制 wall のため冒頭抜粋のみ）を採取。robots.txt で `/articles/-/*` は明示的許可（Disallow は `/search/` / `/category/seminar|tour|data/` のみ）
+
 ### Reference（月1の俯瞰用）
 
 #### 7. 経済産業省 商取引・サービス政策 ✅
