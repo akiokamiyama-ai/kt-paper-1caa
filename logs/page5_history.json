@@ -1166,6 +1166,24 @@
       "ai_kamiyama_title": "The Violinist Who Solved the Ancient Riddle of How the World Holds Together",
       "ai_kamiyama_category": "books:自然科学ノンフィクション",
       "ai_kamiyama_source_name": "The Marginalian（旧 Brain Pickings）"
+    },
+    {
+      "displayed_on": "2026-07-05",
+      "article_url": "https://www.axismag.jp/posts/2026/06/712017.html",
+      "article_title": "明治・大正期の出版・デザイン文化をたどる展覧会。夢美術館で「大正イマジュリィの世界」開催",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://thepointmag.com/dialogue/searching-for-the-unexpected/",
+      "ai_kamiyama_title": "Searching for the Unexpected",
+      "ai_kamiyama_category": "academic",
+      "ai_kamiyama_source_name": "The Point Magazine"
     }
   ]
 }

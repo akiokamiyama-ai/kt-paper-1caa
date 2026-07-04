@@ -339,6 +339,11 @@
       "concept_id": "medium_is_the_message",
       "name_ja": "メディアはメッセージ",
       "displayed_on": "2026-07-04"
+    },
+    {
+      "concept_id": "copernican_revolution",
+      "name_ja": "コペルニクス的転回",
+      "displayed_on": "2026-07-05"
     }
   ]
 }

@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-05",
+  "page1_urls": [
+    "https://www.ft.com/content/4787fc56-f131-4b3b-b90d-c22aa68e7354",
+    "https://que.dailyshincho.jp/node/19473/",
+    "https://que.dailyshincho.jp/node/19641/",
+    "https://www.economist.com/finance-and-economics/2026/06/25/will-ai-lower-interest-rates"
+  ],
+  "page2_urls": {
+    "cocolomi": null,
+    "human_energy": "https://sloanreview.mit.edu/article/redefine-what-professionalism-means/",
+    "web_repo": "https://www.bc01.net/article/franchisee_ranking2025_01/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/the-blind-spots-in-chinese-military-studies/",
+    "http://www3.nhk.or.jp/news/html/20260703/k10015168311000.html",
+    "http://www3.nhk.or.jp/news/html/20260704/k10015168891000.html",
+    "https://www.mckinsey.com/industries/healthcare/our-insights/betsy-nabel-on-physicians-and-women-in-healthcare-leadership-roles",
+    "https://www.theparisreview.org/blog/2026/06/30/rachel-avivs-act-of-revision/",
+    "https://thepointmag.com/dialogue/searching-for-the-unexpected/"
+  ],
+  "page4_urls": [
+    "https://3quarksdaily.com/3quarksdaily/2026/07/on-maxxing-and-the-man-from-song.html",
+    "https://thepointmag.com/criticism/the-stretch-of-a-soul/",
+    "https://www.themarginalian.org/2026/07/01/marie-tharp-traversal/"
+  ],
+  "page5_url": "https://www.axismag.jp/posts/2026/06/712017.html",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/06/28/the-mariah-carey-fan-club-a-conversation-with-alex-da-corte/",
+    "music": "https://rockinon.com/news/detail/215401",
+    "outdoor": "https://www.cleverhiker.com/more-gear/the-north-face-base-camp-waterproof-duffel-review/"
+  },
+  "headlines_urls": [
+    "https://www.ft.com/content/96f06629-225a-4408-b0bb-d4869bb4c3bc",
+    "https://www.ft.com/content/911ad6e1-154d-4d10-a7dc-2bd0fd6fbdc2",
+    "https://que.dailyshincho.jp/node/19599/"
+  ]
+}
