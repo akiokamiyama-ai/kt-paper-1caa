@@ -83,11 +83,20 @@ jobs:
         # page4 / page5 / page6 は引き続き legacy 維持。Phase B 完成へ 1 歩
         # ずつ進める慎重路線。問題時は前段の ``layered_page1_page3`` /
         # ``layered_page1`` / ``legacy`` への 1 行 revert で復帰可能。
+        #
+        # C119 (Sprint 10, 2026-07-04): "layered" へ段階 5b 拡張（Phase B
+        # 主要完成）。C118 報告で段階 5a 平均 -$38/月削減を確認、page2 layered
+        # タグ実測 + wall-clock 15-20 分短縮を確認。全 caller (page4/5/6 含む)
+        # を layered 化する。``layered`` mode は C85 で既に実装済、dispatcher
+        # は unconditionally ``run_stage2(layer_config=cfg)`` を呼ぶ。問題時
+        # は前段の ``layered_page1_page3_page2`` 以下への revert で復帰可能。
+        # Phase B 主要削減は完成、Sprint 11 で追加最適化（設計目標 $30-50/月
+        # への到達）を継続。
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           MIIBO_API_KEY: ${{ secrets.MIIBO_API_KEY }}
           MIIBO_AGENT_ID: ${{ secrets.MIIBO_AGENT_ID }}
-          TRIBUNE_STAGE2_MODE: layered_page1_page3_page2
+          TRIBUNE_STAGE2_MODE: layered
         run: |
           python -m scripts.regen_front_page_v3 --date "${{ steps.date.outputs.DATE }}"
 
