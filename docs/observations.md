@@ -43,15 +43,7 @@ Tribune の運用中に神山さんが発見した改善点・違和感・将来
 下記は神山さん管理の Sprint 11 候補項目。詳細内容は神山さん追記待ち。
 
 -
-- **C70 books カテゴリの偏り**
-  - 現状：The Paris Review が 50% 占有
-  - 検討：NYRB / The Marginalian / その他で多様化
-  - sources/books.md の High Priority 見直し
-  
-- **C71 music カテゴリの偏り**
-  - 現状：natalie.mu が 63% 占有
-  - 検討：他の音楽メディアの High Priority 化
-  - sources/culture.md or sources/music.md の調整
+*C70/C71 は C125 で対応、完了セクション参照*
 
 ---
 
@@ -74,6 +66,46 @@ Tribune の運用中に神山さんが発見した改善点・違和感・将来
   - 「9 日間ゼロ」は誤認識、日次ばらつきが激しいだけで構造的問題なし
 - **状態**: 完了（修正不要）
 - **関連 commit**: C110 調査結果報告のみ
+
+### C70 books カテゴリ偏り (Paris Review 50% 占有) + C71 music カテゴリ偏り (natalie.mu 63% 占有) → 完了
+
+- **発見日**: 神山さん管理の Sprint 11 候補、C121-C123 と同パターンで消化
+- **観察当初**:
+  - books: The Paris Review (#5) が過去採用の 50% 占有、神山さんの多様な
+    文学関心（現代英米文学 / 翻訳文学 / ノンフィクション横断）に対して
+    供給偏り
+  - music: ナタリー音楽 (#6) が過去採用の 63% 占有、海外インディー・
+    フェス関連の供給不足（The Quietus は WAF 遮断で ❌、Pitchfork は
+    Reference で日次頻度低い）
+- **C125 実装**（2026-07-04）:
+  - 4 RSS 探索、両方の追加候補が RSS 完全動作:
+    - **LitHub (Literary Hub)** `lithub.com/feed` — 200 OK,
+      application/rss+xml, items 10, 7/2 直近更新
+    - **Stereogum** `stereogum.com/feed` — 200 OK,
+      application/rss+xml, items 40, 7/3 直近更新
+    - The Millions / Mikiki: Content-Type text/html で RSS 不成立
+    - NPR Music: 403 遮断
+    - OTONANO: 全 000
+  - `sources/books.md` 海外純文学 Medium に `#7 Literary Hub ✅` 追加。
+    Paris Review (#5, 作家インタビュー最高峰) との分担で日次総合媒体
+    として補完
+  - `sources/music.md` 海外ロックメディア Reference に `#12 Stereogum ✅`
+    追加。The Quietus (#11 ❌) の閉鎖代替候補として正式格上げ、
+    Pitchfork (#10) との分担で日次インディー・フェス情報を強化
+- **動作確認**:
+  - `python3 -m scripts.fetch --source "Literary Hub" --limit 3`:
+    3 記事取得成功（What to read next based on your favorite A24 movie /
+    Independent Press Top 40 / Am I the Asshole）
+  - `python3 -m scripts.fetch --source "Stereogum" --limit 3`:
+    3 記事取得成功（Michael Stipe & Brandi Carlile カバー / Touch & Go
+    創業者訃報 / Julian Casablancas Oxford 講演）
+  - 主要 7 testsuite regression: 172/172 pass
+- **想定効果**:
+  - books: Paris Review 一極を緩和、日次総合文学媒体で英米中心の広い供給
+  - music: ナタリー独占を緩和、海外インディー・フェス関連の日次配信
+    （神山さんのフェス関心と整合）
+- **状態**: 完了
+- **関連 commit**: C125
 
 ### W5 Day 4 表題と本文のロジック不整合 → 完了
 

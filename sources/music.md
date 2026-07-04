@@ -117,6 +117,15 @@
 - **対象**: UK alternative/avant rock メディア。商業性より目利き重視のレビュー、実験音楽・アンビエント・ポストロックも扱う
 - **位置付け**: **目利き枠の本命候補だったが配信インフラが完全閉鎖**。代替候補としてフェーズ2で **Stereogum**（米インディー）、**DIY Mag**（UK）、**The Wire**（UK 実験音楽）の検証を予定。重要記事は Twitter/X 経由で察知して手動URL取得運用
 
+### 12. Stereogum ✅
+- **URL**: https://www.stereogum.com/
+- **RSS**: https://www.stereogum.com/feed（C125 検証時に 200 OK、application/rss+xml、items 40、7/3 直近配信確認）
+- **language**: en
+- **形式**: RSS 2.0
+- **mainstream**: false
+- **対象**: 米インディー・オルタナ音楽メディア。新譜情報、カバー曲、ライブレポート、業界ニュース、フェス関連
+- **位置付け**: C125 (Sprint 11, 2026-07-04) 追加。**ナタリー音楽独占（過去採用の 63%）の緩和** が目的。The Quietus (#11) の閉鎖代替候補として本 #12 で正式追加。Pitchfork (#10) が「点数レビュー中心の権威」なら Stereogum は「日次のインディー・オルタナ情報網羅」で分担。神山さんのフェス関心（コーチェラ / Roskilde / Glastonbury 等の海外フェス、§4.6）にも 40 items 日次配信で応える
+
 ---
 
 ## 一次情報URL（参考メモ）
