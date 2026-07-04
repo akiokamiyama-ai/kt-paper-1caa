@@ -32,16 +32,6 @@ Tribune の運用中に神山さんが発見した改善点・違和感・将来
 
 
 
-### 第6面 ハイク欄の UL 偏り
-
-- **発見日**: 2026-06-18（朝刊レビュー）
-- **観察**: ハイク欄が UL（ウルトラライト）系のみで偏り
-- **検討案**: キャンプ・自然親しむ系ソースを追加。クラシックハイキング系、
-  ファミリーキャンプ系、ネイチャーライティング系の補強
-- **Sprint 候補**: Sprint 11
-- **関連 commit**: -
-- **状態**: 未着手
-- **メモ**:
 
 
 
@@ -102,6 +92,45 @@ Tribune の運用中に神山さんが発見した改善点・違和感・将来
   - 「9 日間ゼロ」は誤認識、日次ばらつきが激しいだけで構造的問題なし
 - **状態**: 完了（修正不要）
 - **関連 commit**: C110 調査結果報告のみ
+
+### 第 6 面 ハイク欄の UL 偏り（記事側ソース）→ 部分完了（BE-PAL 追加、追加候補は parser 対応後）
+
+- **発見日**: 2026-06-18（朝刊レビュー、C117 でコメント側 UL バイアス
+  緩和は済）
+- **観察当初**: 記事側ソースが UL（山と道・ハイカーズデポ系）に偏り、
+  キャンプ・自然観察・自然文化系の RSS 実運用ゼロ。C117 でコメント側は
+  緩和済だが記事側の多様化は別課題
+- **C123 実装**（2026-07-04）:
+  - 現状分析: UL/縦走系 (Backpacking Light / Section Hiker / CleverHiker
+    / The Trek) と海外総合 (Atlas Obscura / Outside / Backpacker) は
+    RSS 動作、日本語キャンプ・自然系はハピキャン ⚠️ のみで RSS 未提供
+  - 4-7 サイト調査で以下の RSS 動作を確認:
+    - **BE-PAL** (`bepal.net/feed`) — 小学館、200 OK、WordPress RSS 2.0
+    - CAMP HACK (`camphack.nap-camp.com/feed`) — 200 OK だが XML
+      unbound prefix parse エラー
+    - ナショナル ジオグラフィック日本語版 — 200 OK だが XML not
+      well-formed
+    - 好日山荘マガジン — 200 OK だが XML not well-formed
+    - 他候補（TABI LABO / Camp in Japan / ソトシル 等）は範囲不整合
+  - `sources/outdoor.md` に `#14 BE-PAL ✅`（国内キャンプ・自然情報 Medium）
+    を追加。CAMP HACK / NatGeo日本 / 好日山荘は「候補メモ」として
+    parser 強化後の再検討候補として outdoor.md 内に記録
+- **動作確認**:
+  - fetch CLI dry-run: BE-PAL 3 記事取得成功:
+    - [2026-07-04] Snow Peak × URBAN RESEARCH DOORS の別注 T シャツ
+    - [2026-07-03] 業務スーパーの冷凍魚介
+    - [2026-07-03] TOKYO CRAFTS 新作ギアでキャンプサイト快適アップデート
+  - 主要 7 testsuite regression: 172/172 pass
+- **想定効果**:
+  - 6 面ハイク欄に日本語キャンプ・野遊び記事が日次流入
+  - UL 系（山と道・ハイカーズデポ系）と BE-PAL（大人の野遊び）で
+    ローテーション、C117 のコメント緩和と併せて UL 偏りが構造的に解消
+- **持ち越し**:
+  - CAMP HACK / NatGeo日本 / 好日山荘 は RSS driver 側の XML parser
+    強化（tolerant parser / namespace 対応強化）後の再挑戦候補
+- **状態**: 部分完了（BE-PAL 追加で当初目的の 6 面 UL 偏り緩和は達成、
+  追加ソースは parser 対応後）
+- **関連 commit**: C123
 
 ### Web-Repo 事業ドメイン「フィットネス系」業界ニュース未カバー → 完了
 

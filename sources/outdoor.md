@@ -148,6 +148,32 @@
 
 ---
 
+## 国内キャンプ・自然情報（Medium — C123 多様化, 2026-07-04 追加）
+
+**背景**：観察事項「6 面ハイク欄 UL 偏り（記事側ソース）」（2026-06-18 発見）
+への対応。C117 で page6 コメント生成側の UL バイアスは緩和済、C123 は
+**記事側ソースの多様化** を担う。UL/縦走系が 4-5 ソース RSS 稼働している
+のに対し、キャンプ・自然観察・自然文化系は日本語 RSS がハピキャン ⚠️
+（RSS 未提供）のみで実運用ゼロだった。BE-PAL と CampHack の 2 サイトを
+RSS 経由で追加、UL 偏りを構造的に緩和する。
+
+### 14. BE-PAL（ビーパル）✅
+- **URL**: https://www.bepal.net/
+- **RSS**: https://www.bepal.net/feed（WordPress 標準 RSS 2.0、C123 検証時に 200 OK、application/rss+xml、hourly 更新）
+- **language**: ja
+- **形式**: RSS 2.0
+- **mainstream**: true
+- **対象**: 小学館運営、No.1 アウトドア情報誌「ビーパル」公式サイト。キャンプ場、キャンプ道具、キャンピングカー、焚き火、野外料理、登山、自転車、サステイナブルな生活、DIY、防災、フェス情報等を毎日配信
+- **位置付け**: C123 (Sprint 11, 2026-07-04) 追加。**6 面ハイク欄の UL 偏り緩和** が目的。news_profile.md §4.7 の「未踏で興味のある領域：ソロキャンプ・縦走」に対する **老舗の権威ある入り口**。BE-PAL は 1981 年創刊で「野遊びを楽しむ大人」層向け、Snow Peak / mont-bell 等の国内老舗ブランド情報も豊富。C122 Fitness Business が同じ小学館の Fitness Business 誌グループなのに対し、BE-PAL は同社アウトドア誌でメディア質の高さは共通
+
+**候補メモ**: C123 検証時に CAMP HACK (https://camphack.nap-camp.com/feed)、
+ナショナル ジオグラフィック日本語版、好日山荘マガジンも RSS 提供を確認したが、
+既存 RSS driver で XML parse エラー（CAMP HACK: unbound prefix / 他 2 サイト:
+not well-formed）を出したため見送り。将来 RSS driver 側で namespace 対応や
+tolerant parser を強化した際に再追加候補。
+
+---
+
 ## ソロキャンプ（Reference）
 
 ### 13. ハピキャン ⚠️
