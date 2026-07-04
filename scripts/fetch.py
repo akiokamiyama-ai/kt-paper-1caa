@@ -35,6 +35,7 @@ from pathlib import Path
 from .lib.config_loader import load_site_config
 from .lib.dedupe import append_today, dedupe
 from .lib.drivers.html import HtmlScrapeDriver
+from .lib.drivers.jftc import HOST as JFTC_HOST, JftcDriver
 from .lib.drivers.que_shincho import HOST as QUE_HOST, QueShinchoDriver
 from .lib.drivers.rss import RssDriver
 from .lib.source import Article, FetchMethod, Priority, Source, load_all_sources
@@ -86,6 +87,10 @@ def run(
     # source に対して host が que.dailyshincho.jp なら QueShinchoDriver を
     # 優先する（dispatch ループ内で分岐）。
     que_shincho = QueShinchoDriver(site_config=site_cfg)
+    # C120 (Sprint 11, 2026-07-04): 公取委 (JFTC) 報道発表は RSS 未提供の
+    # ため、月別 index → 個別記事の 2 段 fetch で scrape。host が
+    # www.jftc.go.jp なら JftcDriver を使う。
+    jftc = JftcDriver(site_config=site_cfg)
 
     all_sources = load_all_sources(sources_dir)
     selected = select_sources(
@@ -110,6 +115,8 @@ def run(
             driver = rss
         elif QUE_HOST in (src.url or ""):
             driver = que_shincho
+        elif JFTC_HOST in (src.url or ""):
+            driver = jftc
         else:
             driver = html
         try:

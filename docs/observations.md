@@ -56,20 +56,6 @@ Tribune の運用中に神山さんが発見した改善点・違和感・将来
 - **メモ**:
 
 
-### 公正取引委員会 報道発表の scraper 未実装
-
-- **発見日**: 2026-06-19（朝刊レビュー）
-- **観察**: 2面ウェブリポ記事として公取委ニュースを
-  ピックしたが、scraper 未実装で記事中身が読めない
-  - 表示：「[scraper not implemented] 公正取引委員会 報道発表」
-  - RSS unavailable. Add a per-site HtmlScrapeDriver subclass
-- **具体例**: https://www.jftc.go.jp/houdou/pressrelease/2026/jun/260618_spc.html
-- **検討案**: HtmlScrapeDriver サブクラス追加で
-  公取委 pressrelease ページを scrape
-- **Sprint 候補**: Sprint 11
-- **関連 commit**: -
-- **状態**: 未着手
-- **メモ**:
 
 
 ### W5 Day 4 表題と本文のロジック不整合
@@ -128,6 +114,42 @@ Tribune の運用中に神山さんが発見した改善点・違和感・将来
   - 「9 日間ゼロ」は誤認識、日次ばらつきが激しいだけで構造的問題なし
 - **状態**: 完了（修正不要）
 - **関連 commit**: C110 調査結果報告のみ
+
+### 公正取引委員会 報道発表の scraper 未実装 → 完了
+
+- **発見日**: 2026-06-19（朝刊レビュー、6/25 / 7/2 再発）
+- **観察当初**: 2 面ウェブリポ記事として公取委ニュースを pick したが、
+  scraper 未実装で「[scraper not implemented] 公正取引委員会 報道発表」
+  表示。RSS unavailable、HtmlScrapeDriver subclass 未追加。7/2 には
+  こころみ・ウェブリポ 2 社関連で登場し、中身なし
+- **C120 実装**（2026-07-04, Sprint 11 第 1 案件）:
+  - 公取委サイト構造調査:
+    - robots.txt: 全 Allow、AI 向け `llms.txt` も提供
+    - 個別記事 URL パターン: `/houdou/pressrelease/YYYY/{mon}/YYMMDD_xxx.html`
+    - `<h1>(令和X年M月D日)実タイトル</h1>` 構造で date + title を分離抽出可
+    - 本文は `<div class="p_title">` 以降、`<h2>関連ファイル</h2>` の前まで
+  - `scripts/lib/drivers/jftc.py` 新規実装:
+    - `JftcDriver(HtmlScrapeDriver)` サブクラス、`HOST = "www.jftc.go.jp"`
+    - 当月 + 前月の月別 index を fetch（月替わり取りこぼし防止）
+    - `parse_index_links()` で記事リンク抽出、`parse_article_page()` で
+      title / date / body を分離
+    - 令和 X 年 = 2018 + X 年で西暦変換
+    - QueShinchoDriver（sitemap + JSON-LD、複雑）に比べて大幅にシンプル
+  - `scripts/fetch.py` dispatch loop に JFTC 分岐追加（QUE と同パターン）
+  - `tests/test_jftc.py` 新規（15 tests: 令和変換 / index parse /
+    article parse / 定数 sanity）
+- **動作確認**:
+  - fetch CLI dry-run: 3 記事取得成功
+    - ブロードコム・インコーポレイテッドに対する独占禁止法違反被疑事件の処理について
+    - 北星学園大学における「独占禁止法教室」の開催について
+    - 駒澤大学における「独占禁止法教室」の開催について
+  - title (`(令和...)` prefix 剥がれ) / date (2026-07-03) / body 抽出 OK
+  - 「125 sources」→「126 sources」に組み込み確認
+- **想定効果**:
+  - こころみグループ・ウェブリポ関連の公取委発表が中身付きで採用可能に
+  - 独占禁止法違反、下請法違反、勧告等の企業ニュースが 2 面 / 3 面で流入
+- **状態**: 完了
+- **関連 commit**: C120
 
 ### 6 面ハイク欄コメントの UL バイアス → 完了
 
