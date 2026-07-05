@@ -344,6 +344,11 @@
       "concept_id": "copernican_revolution",
       "name_ja": "コペルニクス的転回",
       "displayed_on": "2026-07-05"
+    },
+    {
+      "concept_id": "copenhagen_interpretation",
+      "name_ja": "コペンハーゲン解釈",
+      "displayed_on": "2026-07-06"
     }
   ]
 }

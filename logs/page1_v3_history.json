@@ -695,6 +695,23 @@
           "cost_usd": 0.032277,
           "is_fallback": false
         }
+      },
+      {
+        "date": "2026-07-06",
+        "day_label": "月",
+        "angle_key": "critical",
+        "angle_label_jp": "批判的",
+        "essay": {
+          "angle_label": "月曜 - 批判的",
+          "daily_question": "「良い階層」の設計者は、誰が決めるのか",
+          "essay_title": "善意の階層論が見落とす「設計者問題」",
+          "body": "昨日の論考は、Berggruen Institute の共同宣言が「フラット化」という思考の罠を解体してみせた快作であることを認めた。だが今日は、その宣言の内側に潜む断層を直視したい。哲学者15名が描く「良い階層」の絵図は知的に精巧だが、そこにはほぼ問われていない問いがある——その階層を「良い」と判定するのは誰か、そしてその判定者はどのような立場に立っているか。\n\n論考は「良い階層は正しい敬意のシグナルになり、悪い階層は間違った敬意を強要する」と断言する。しかし「正しい敬意」の内実を定義する権限が、すでに高位にいる者の手に集まっているとしたら、この言明は循環している。フランスの社会学者ピエール・ブルデューはまさにこの点を突いた。彼の「文化資本」概念が示すのは、支配的集団が自らの趣味・作法・判断基準を「卓越性」として定義し、それを通じて階層の再生産を正当化するメカニズムだ。appraisal respect（卓越に対する特別な尊重）という論考のキーワードも、誰の卓越性基準を使うかという問いを素通りすれば、既存秩序の美化装置に転化しうる。\n\n批判の矛先は別の方向からも来る。政治哲学者のアイリス・マリオン・ヤングは、「害のある抑圧は個人の悪意ではなく、善意の制度構造から生まれる」と論じた。論考が称揚する官僚制的階層や年功に基づく序列も、設計者が「これは少数派を守る仕組みだ」と真摯に信じていたとしても、その恩恵が届かない集団を構造的に不可視化する。清朝の老人政治が低所得層の政治参加を促したという論考中のエピソードは興味深いが、その同じ制度が女性を徹底的に排除していた事実には触れていない。「動的で domain-specific であれ」という処方箋は正しい方向を向いているが、処方を書く医師が誰かという問いには答えていない。\n\n さらに根本的な批判を加えるなら、社会学者ウルリッヒ・ベックの「リスク社会」論が示唆する視点がある。近代の専門家システムが生み出したリスク（原発事故、金融危機、パンデミック対応の失敗）は、まさに「良い階層」として設計・運営されていた制度から流出した。論考は専門家崇拝の限界を認め、「generalist 集団の熟議」を推奨するが、その generalist を選ぶ基準と手続きには再び階層が介在する。階層の正当化ロジックが再帰的に階層を必要とするこの構造を、論考は十分に意識していない。\n\n誤解してはならないのは、これらの批判が「階層を消せ」という結論を導くわけではない点だ。ブルデューもヤングもベックも、フラット化礼賛論者ではない。彼らが問うのは、「良い階層の設計」が常にすでに政治的な行為であるという事実だ。誰の価値観を「卓越性」とするか、どの domain を分離しどこに境界を引くか、hierarchical drift の監視者を誰が監視するか——これらは哲学的に解決できる問いではなく、対立する利害を持つ当事者間の交渉と権力闘争を通じて暫定的に決着される問いだ。\n\n経営者にとっての実践的含意はここにある。「良い階層を設計しよう」という意志は正しい出発点だが、その設計プロセス自体を開かれた場に置かなければ、善意は容易に支配の隠れ蓑になる。設計の議論から誰が排除されているかを問うこと、hierarchical drift を監視する仕組みに設計者自身が服すること、そして「これは良い階層だ」という自己申告を外部から審問できる回路を残すこと——これらが「良い階層の設計」に不可欠な、論考が踏み込まなかった一段である。",
+          "annotation_label": "反対論者・批判者",
+          "annotation_body": "ピエール・ブルデュー（仏、社会学）は「文化資本」概念で支配集団による卓越性定義の循環を批判。アイリス・マリオン・ヤング（米、政治哲学）は善意の制度構造が抑圧を生む「五つの顔」論を展開。ウルリッヒ・ベック（独、社会学）は「リスク社会」論で専門家システムが内包するリスクを告発した。三者はいずれも「階層廃絶」ではなく「設計者の権力への問い」を軸に据えた点で共通する。",
+          "quote_excerpt": "We can acknowledge that individuals differ from one another in embodying excellence of various sorts, and these various forms of human excellence elicit from us a special kind of positive regard that philosophers call 'appraisal respect'. Appraisal respect is a form of esteem that we have for those who display certain excellences: for example, for their high moral character, or their great skill in argument. Since excellences are intrinsically comparative, people will inevitably be ranked through these appraisals, and so to honour someone is to regard them as (in some particular respects) better than people who embody or advance the value less.",
+          "cost_usd": 0.046278,
+          "is_fallback": false
+        }
       }
     ]
   }

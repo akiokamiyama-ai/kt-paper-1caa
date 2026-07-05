@@ -1184,6 +1184,24 @@
       "ai_kamiyama_title": "Searching for the Unexpected",
       "ai_kamiyama_category": "academic",
       "ai_kamiyama_source_name": "The Point Magazine"
+    },
+    {
+      "displayed_on": "2026-07-06",
+      "article_url": "https://stereogum.com/2504216/the-guy-she-was-interested-in-wasnt-a-guy-at-all-anime-to-feature-nirvana-theme-song-dave-grohl-says-kurt-cobain-wouldve-loved-the-manga/news/",
+      "article_title": "The Guy She Was Interested In Wasn’t A Guy At All Anime To Feature Nirvana Theme Song, Dave Grohl Says Kurt Cobain Would’ve Loved The Manga",
+      "article_category": "music",
+      "tie_candidates": [
+        "music"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.themarginalian.org/2026/07/04/carl-jung-neurosis-creativity/",
+      "ai_kamiyama_title": "The Pain in You and the God in You: Carl Jung on the Relationship Between Psychological Suffering and Creativity",
+      "ai_kamiyama_category": "books:自然科学ノンフィクション",
+      "ai_kamiyama_source_name": "The Marginalian（旧 Brain Pickings）"
     }
   ]
 }

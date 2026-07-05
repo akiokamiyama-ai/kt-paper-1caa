@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-06",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/19557/",
+    "https://que.dailyshincho.jp/node/19644/",
+    "https://www.bbc.co.uk/news/articles/c982e3k9zw9o?at_medium=RSS&at_campaign=rss",
+    "https://www.economist.com/finance-and-economics/2026/06/29/turkeys-economic-plan-to-win-from-the-iran-war"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2607/04/2000000159/",
+    "human_energy": "https://sloanreview.mit.edu/article/the-real-question-to-ask-about-ai-governance/",
+    "web_repo": null
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/07/02/united-states-economy-slavery-empire-immigration-socialism/",
+    "http://www3.nhk.or.jp/news/html/20260703/k10015167911000.html",
+    "http://www3.nhk.or.jp/news/html/20260703/k10015168281000.html",
+    "https://www.mckinsey.com/featured-insights/annual-book-recommendations/mckinsey-global-publishings-book-picks",
+    "https://wordswithoutborders.org/read/article/2026-06/a-letter-from-the-farmer-suicide-commission/",
+    "https://thepointmag.com/criticism/panahis-laboratory/"
+  ],
+  "page4_urls": [
+    "https://www.themarginalian.org/2026/07/04/carl-jung-neurosis-creativity/",
+    "https://www.themarginalian.org/2026/06/30/jo-marchant-now/",
+    "https://3quarksdaily.com/3quarksdaily/2026/07/trespassing.html"
+  ],
+  "page5_url": "https://stereogum.com/2504216/the-guy-she-was-interested-in-wasnt-a-guy-at-all-anime-to-feature-nirvana-theme-song-dave-grohl-says-kurt-cobain-wouldve-loved-the-manga/news/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/07/03/two-hundred-and-fifty/",
+    "music": "https://rockinon.com/news/detail/215418",
+    "outdoor": "https://www.cleverhiker.com/more-gear/rei-big-haul-60-duffel-review/"
+  },
+  "headlines_urls": [
+    "https://www.bbc.co.uk/news/articles/c78yj9p0m91o?at_medium=RSS&at_campaign=rss",
+    "https://www.ft.com/content/8cb4128b-8dbc-45fd-afdc-1e6f2530536d",
+    "https://que.dailyshincho.jp/node/19545/"
+  ]
+}
