@@ -225,7 +225,7 @@ URL: {url}
 注目箇所（key_quote）:
 原文: {key_quote}
 和訳: {key_quote_ja}
-
+{full_text_section}
 【当日】
 日付: {date_str} ({day_label})
 角度: {angle_label_jp} ({angle_key})
@@ -237,6 +237,23 @@ URL: {url}
 
 上記を踏まえ、当日の角度に応じた論考を JSON で出力してください。
 """
+
+
+def format_full_text_section(full_text_excerpt: str) -> str:
+    """Optional な記事全文抜粋を prompt section 形式に整形.
+
+    C126 (Sprint 11, 2026-07-05): 神山さんが monthly_pivotal.json の article
+    に ``full_text_excerpt`` フィールドを追加した場合のみ、【原文抜粋（主要
+    段落）】セクションを USER TEMPLATE に埋め込む。フィールドが無い / 空
+    の場合は空文字を返し、セクション自体が現れない（既存 W entry との
+    完全互換）。
+    """
+    if not full_text_excerpt or not full_text_excerpt.strip():
+        return ""
+    return (
+        "\n【原文抜粋（主要段落、summary / points で拾いきれない具体思想を LLM に届ける）】\n"
+        f"{full_text_excerpt.strip()}\n"
+    )
 
 
 # ============================================================================

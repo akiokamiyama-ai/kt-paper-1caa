@@ -23,6 +23,7 @@ from .prompts import (
     ANGLE_INSTRUCTIONS,
     ESSAY_SYSTEM_PROMPT,
     ESSAY_USER_TEMPLATE,
+    format_full_text_section,
 )
 
 ESSAY_MODEL = "claude-sonnet-4-6"
@@ -106,6 +107,10 @@ def _build_user_message(
         points_bullet=_format_points(a.get("points")),
         key_quote=a.get("key_quote", ""),
         key_quote_ja=a.get("key_quote_ja", ""),
+        # C126 (2026-07-05): monthly_pivotal.json の article に
+        # ``full_text_excerpt`` フィールドがあれば原文抜粋を LLM に届ける。
+        # 無い / 空なら空文字（既存 W entry 完全互換）。
+        full_text_section=format_full_text_section(a.get("full_text_excerpt", "")),
         date_str=target_date.isoformat(),
         day_label=week.day_label,
         angle_label_jp=week.angle_label_jp,
