@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-07",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/19500/",
+    "https://que.dailyshincho.jp/node/19650/",
+    "https://www.economist.com/finance-and-economics/2026/07/05/womens-progress-at-work-appears-to-be-stalling",
+    "https://que.dailyshincho.jp/node/19587/"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2607/06/2000000160/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2607/06/news013.html",
+    "web_repo": null
+  },
+  "page3_urls": [
+    "https://warontherocks.com/a-catholic-security-scholars-case-for-responsible-military-ai/",
+    "https://toyokeizai.net/articles/-/950089?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "http://www3.nhk.or.jp/news/html/20260706/k10015169791000.html",
+    "https://www.mckinsey.com/featured-insights/americas/a-microscope-on-small-businesses-chiles-productivity-opportunity",
+    "https://www.theparisreview.org/blog/2026/06/26/a-short-defense-of-sports-cliches/",
+    "https://3quarksdaily.com/3quarksdaily/2026/07/the-philosopher-inside-google-deepmind-ai.html"
+  ],
+  "page4_urls": [
+    "https://www.publicbooks.org/lineages-of-the-engineering-state-on-china-the-united-states-and-the-future/",
+    "https://www.publicbooks.org/the-emotional-economy-of-parenting-a-conversation-with-nina-bandelj/",
+    "https://3quarksdaily.com/3quarksdaily/2026/07/stephen-foster-and-that-old-weird-america.html"
+  ],
+  "page5_url": "https://thetrek.co/hiking-abroad-venturing-across-the-pond/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/07/06/helene-bessettes-novel-as-arc-lamp/",
+    "music": "https://greenroom.jp/post-5489/",
+    "outdoor": "https://www.atlasobscura.com/places/the-looming-head-of-janis-zvidra"
+  },
+  "headlines_urls": [
+    "https://www.ft.com/content/3065dde2-452a-4455-a176-f7ded484b86b",
+    "https://www.economist.com/finance-and-economics/2026/07/02/unpacking-venezuelas-peculiar-debt-restructuring",
+    "https://www.ft.com/content/0782f819-6c82-4bc1-aca7-550270cc8449"
+  ]
+}

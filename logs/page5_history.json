@@ -1202,6 +1202,24 @@
       "ai_kamiyama_title": "The Pain in You and the God in You: Carl Jung on the Relationship Between Psychological Suffering and Creativity",
       "ai_kamiyama_category": "books:自然科学ノンフィクション",
       "ai_kamiyama_source_name": "The Marginalian（旧 Brain Pickings）"
+    },
+    {
+      "displayed_on": "2026-07-07",
+      "article_url": "https://thetrek.co/hiking-abroad-venturing-across-the-pond/",
+      "article_title": "Hiking Abroad – Venturing across the pond",
+      "article_category": "outdoor",
+      "tie_candidates": [
+        "outdoor"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://3quarksdaily.com/3quarksdaily/2026/07/stephen-foster-and-that-old-weird-america.html",
+      "ai_kamiyama_title": "Stephen Foster and That Old, Weird America",
+      "ai_kamiyama_category": "academic",
+      "ai_kamiyama_source_name": "3 Quarks Daily"
     }
   ]
 }
