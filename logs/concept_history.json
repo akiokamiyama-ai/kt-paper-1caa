@@ -354,6 +354,11 @@
       "concept_id": "aristotle",
       "name_ja": "アリストテレス",
       "displayed_on": "2026-07-07"
+    },
+    {
+      "concept_id": "socrates",
+      "name_ja": "ソクラテス",
+      "displayed_on": "2026-07-08"
     }
   ]
 }

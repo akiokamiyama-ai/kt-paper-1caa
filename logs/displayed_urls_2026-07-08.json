@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-08",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/19707/",
+    "https://que.dailyshincho.jp/node/19284/",
+    "https://que.dailyshincho.jp/node/19530/",
+    "https://que.dailyshincho.jp/node/19665/"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2607/07/2000000162/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2607/07/news031.html",
+    "web_repo": "https://www.jfa-fc.or.jp/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/ai-designer-babies-technologies-that-can-disrupt-society-as-we-know-it-by-daron-acemoglu-2026-07",
+    "http://www3.nhk.or.jp/news/html/20260707/k10015170941000.html",
+    "http://www3.nhk.or.jp/news/html/20260707/k10015170841000.html",
+    "https://www.mckinsey.com/industries/public-sector/our-insights/building-americas-innovation-engine-an-interview-with-david-lebryk",
+    "https://www.theparisreview.org/blog/2026/07/06/helene-bessettes-novel-as-arc-lamp/",
+    "https://www.publicbooks.org/lineages-of-the-engineering-state-on-china-the-united-states-and-the-future/"
+  ],
+  "page4_urls": [
+    "https://3quarksdaily.com/3quarksdaily/2026/07/sounds-from-rikers-island.html",
+    "https://www.nplusonemag.com/online-only/online-only/sounds-from-rikers-island/",
+    "https://www.publicbooks.org/we-want-you-to-leave-home-crystal-sanders-on-black-southerners-and-segregation-scholarships/"
+  ],
+  "page5_url": "https://www.themarginalian.org/2026/07/06/thich-nhat-hanh-listening-love/",
+  "page6_urls": {
+    "books": "https://www.nybooks.com/articles/2026/07/23/when-india-reinvented-prints-divine-color-household-gods/",
+    "music": "https://rockinon.com/news/detail/215453",
+    "outdoor": "https://www.cleverhiker.com/footwear/birkenstock-arizona-essentials-eva-review/"
+  },
+  "headlines_urls": [
+    "https://www.economist.com/finance-and-economics/2026/07/06/the-world-bank-has-ditched-its-climate-targets",
+    "https://www.economist.com/finance-and-economics/2026/06/30/a-new-plaza-accord-for-global-currencies-wouldnt-work",
+    "https://www.ft.com/content/629cedac-1ed9-42a7-b1cc-bc6cd2384f6c"
+  ]
+}

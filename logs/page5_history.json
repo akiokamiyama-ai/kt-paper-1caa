@@ -1220,6 +1220,24 @@
       "ai_kamiyama_title": "Stephen Foster and That Old, Weird America",
       "ai_kamiyama_category": "academic",
       "ai_kamiyama_source_name": "3 Quarks Daily"
+    },
+    {
+      "displayed_on": "2026-07-08",
+      "article_url": "https://www.themarginalian.org/2026/07/06/thich-nhat-hanh-listening-love/",
+      "article_title": "Thich Nhat Hanh on the Art of Deep Listening and the 3 Buddhist Steps to Repairing a Relationship",
+      "article_category": "books",
+      "tie_candidates": [
+        "books"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.publicbooks.org/we-want-you-to-leave-home-crystal-sanders-on-black-southerners-and-segregation-scholarships/",
+      "ai_kamiyama_title": "“We Want You to Leave Home”: Crystal Sanders on Black Southerners and “Segregation Scholarships”",
+      "ai_kamiyama_category": "academic",
+      "ai_kamiyama_source_name": "Public Books"
     }
   ]
 }
