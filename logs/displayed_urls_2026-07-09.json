@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-09",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/19668/",
+    "https://www.bbc.co.uk/news/articles/cy49w2knlrdo?at_medium=RSS&at_campaign=rss",
+    "https://que.dailyshincho.jp/node/19686/",
+    "https://www.ft.com/content/354c1cf8-e96a-44f7-a8f5-c477d797d852"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://japan.zdnet.com/article/35250328/",
+    "human_energy": "https://sloanreview.mit.edu/article/leaderships-blind-spot-in-the-age-of-ai/",
+    "web_repo": "https://www.bc01.net/article/franchisee_ranking2025_01/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/mamdani-american-dream-july-4-address-versus-maga-narrative-by-slavoj-zizek-2026-07",
+    "http://www3.nhk.or.jp/news/html/20260708/k10015172091000.html",
+    null,
+    "https://www.mckinsey.com/featured-insights/future-of-asia/future-of-asia-podcasts/from-healthcare-to-health-asias-longevity-opportunity",
+    "https://www.theparisreview.org/blog/2026/07/08/clearly-fake-zurbarans-uncanny-realism/",
+    "https://3quarksdaily.com/3quarksdaily/2026/07/turning-to-the-oldest-omen-for-an-answer.html"
+  ],
+  "page4_urls": [
+    "https://www.themarginalian.org/2026/07/07/the-souls-of-animals/",
+    "https://3quarksdaily.com/3quarksdaily/2026/07/lineages-of-the-engineering-state-on-china-the-united-states-and-the-future.html",
+    "https://www.themarginalian.org/2026/07/07/richard-feynman-arline-letter/"
+  ],
+  "page5_url": "https://3quarksdaily.com/3quarksdaily/2026/07/saint-peter-hujars-contact-sheets-at-the-morgan.html",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-07/the-city-and-the-writer-in-dubai-with-danabelle-gutierrez-nathalie-handal/",
+    "music": "https://rockinon.com/news/detail/215461",
+    "outdoor": "https://www.cleverhiker.com/footwear/chaco-zcloud-review/"
+  },
+  "headlines_urls": [
+    "https://www.bbc.co.uk/news/articles/cd95wendvdeo?at_medium=RSS&at_campaign=rss",
+    "https://www.economist.com/finance-and-economics/2026/07/07/ai-has-taken-over-the-stock-market-the-bond-market-is-next",
+    "https://www.ft.com/content/1a9a9b88-5f42-47a9-b307-7fd86c3c25c6"
+  ]
+}

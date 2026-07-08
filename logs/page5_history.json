@@ -1238,6 +1238,24 @@
       "ai_kamiyama_title": "“We Want You to Leave Home”: Crystal Sanders on Black Southerners and “Segregation Scholarships”",
       "ai_kamiyama_category": "academic",
       "ai_kamiyama_source_name": "Public Books"
+    },
+    {
+      "displayed_on": "2026-07-09",
+      "article_url": "https://3quarksdaily.com/3quarksdaily/2026/07/saint-peter-hujars-contact-sheets-at-the-morgan.html",
+      "article_title": "Saint Peter: Hujar’s Contact Sheets at the Morgan",
+      "article_category": "academic",
+      "tie_candidates": [
+        "academic"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://3quarksdaily.com/3quarksdaily/2026/07/lineages-of-the-engineering-state-on-china-the-united-states-and-the-future.html",
+      "ai_kamiyama_title": "Lineages of the Engineering State: On China, the United States, and the Future",
+      "ai_kamiyama_category": "academic",
+      "ai_kamiyama_source_name": "3 Quarks Daily"
     }
   ]
 }
