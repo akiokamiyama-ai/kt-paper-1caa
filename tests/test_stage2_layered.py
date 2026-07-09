@@ -117,17 +117,19 @@ def test_run_stage2_empty_articles_layered():
 # ---------------------------------------------------------------------------
 
 def test_classify_articles_basic():
+    """C133 (2026-07-09) で Foresight を LAYER_3 → LAYER_2 に降格したため、
+    代わりに Project Syndicate（C133 維持の地政学コア）を使う."""
     arts = [
         {"source_name": "BBC Business",         "category": "business"},
-        {"source_name": "Foresight（新潮社）",     "category": "geopolitics"},
+        {"source_name": "Project Syndicate",     "category": "geopolitics"},
         {"source_name": "東洋経済オンライン",         "category": "business"},
     ]
     l1, l2, l3 = _classify_articles(arts)
-    _check("c1 BBC → layer 1, 東洋経済 → layer 2, Foresight → layer 3",
+    _check("c1 BBC → layer 1, 東洋経済 → layer 2, Project Syndicate → layer 3",
            len(l1) == 1 and len(l2) == 1 and len(l3) == 1
            and l1[0]["source_name"] == "BBC Business"
            and l2[0]["source_name"] == "東洋経済オンライン"
-           and l3[0]["source_name"] == "Foresight（新潮社）",
+           and l3[0]["source_name"] == "Project Syndicate",
            f"l1={[a['source_name'] for a in l1]} l2={[a['source_name'] for a in l2]} l3={[a['source_name'] for a in l3]}")
 
 

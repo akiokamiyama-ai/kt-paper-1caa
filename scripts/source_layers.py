@@ -58,73 +58,71 @@ LAYER_1_SOURCES: frozenset[str] = frozenset({
 
 
 # ---------------------------------------------------------------------------
-# 層 3: Sonnet 必須（Tribune 知的核心、39 件、C132 で Psyche + LitHub 昇格）
+# 層 3: Sonnet 必須（Tribune 知的核心、17 件、C133 で採用実績主導の精査）
 # ---------------------------------------------------------------------------
-# 内訳: 地政学 10 / 学術人文 15 / 経営思想 5 / 思想・科学哲学 7 / 行動経済 2
-# 旧コメントの内訳「11 / 14 / 5 / 6 / 2 = 38」は QUE の comment 出現数を
-# 実 layer3 と誤って算入していた。C132 (2026-07-09) で実態カウント
-# （HEAD 37 + Psyche + LitHub = 39）に修正。
+# 内訳: 地政学 3 / 学術人文 6 / 経営思想 2 / 思想・科学哲学 + 文学 6
 #
 # 神山さん事業ドメイン直結度、美意識評価の決定性、過去採用実績を総合判断。
 # 詳細は /tmp/phase_b_step3_layer3_detail.md 参照。
 #
-# C132 (Sprint 12, 2026-07-09) 昇格:
-# - "Psyche"（Aeon 姉妹サイト、C116 追加、academic:国際）
-#   W9「内受容感覚」期間（7/19-25）の心理学・neuroscience 評価を Sonnet
-#   フル評価に載せる。C129 parser 修正で name-key が clean になったため
-#   本 exact match が正しく機能する
-# - "Literary Hub（LitHub）"（C125 追加、books:海外純文学）
-#   Paris Review の姉妹的位置付け、日次の総合文学ポータル。同じく C129
-#   parser 修正で name-key が clean（'Literary Hub（LitHub）✅' → clean）
+# C133 (Sprint 12, 2026-07-09) 降格 + dead weight 整理:
+#   Phase B コスト目標 $30-50/月 に対する現状 $96/月 の圧縮。C132 の実測
+#   30 日採用実績集計に基づき、以下 22 件を LAYER_3_SOURCES から除外。
 #
-# BE-PAL（C123 追加）は layer 3 昇格せず。outdoor は CleverHiker (layer 2)
-# が採用実績あり、様子見。
+#   Step 1 降格 11 件（採用ゼロ × Sonnet コスト大、合計約 $21/月 削減見込み）:
+#   - Foresight（新潮社）（2026-05-18 に新潮QUE 統合で新規配信停止、後継は QUE）
+#   - Stanford Encyclopedia of Philosophy（SEP）
+#   - 集英社新書プラス
+#   - Foreign Affairs（CFR）
+#   - Philosophy Now
+#   - Quanta Magazine
+#   - 春秋社
+#   - CSIS（戦略国際問題研究所）
+#   - London Review of Books（LRB）
+#   - 青土社（現代思想）
+#   - DIAMONDハーバード・ビジネス・レビュー（DHBR）
+#   ※ 降格後も layer 2（Haiku prefilter 経路）で評価継続。完全遮断ではない
+#
+#   Step 2 dead weight 11 件（30 日 eval ゼロ、コスト影響ゼロ、定義の健全化）:
+#   - NBR（National Bureau of Asian Research）
+#   - 日本認知科学会 / PhilPapers / WEBちくま（status=FAILED / BLOCKED）
+#   - RAND Corporation / Harvard Business Review（HBR.org） / Brookings Institution
+#   - Aeon（Psychology / Philosophy）（companies:Human Energy 経路の name collision、
+#     実 URL は aeon.co で "Aeon" に吸収される dead entry）
+#   - NBER Working Papers / Behavioral Scientist / 東京大学 公共政策大学院（GraSPP）
+#   ※ fetch 復旧（BLOCKED/FAILED 解消）は別案件、observations.md に記録
+#
+# C132 (Sprint 12, 2026-07-09) 昇格（C133 でも維持）:
+# - "Psyche"（Aeon 姉妹サイト、C116 追加、academic:国際）
+# - "Literary Hub（LitHub）"（C125 追加、books:海外純文学）
+# 両者は昇格直後で採用実績はまだ蓄積中。W9「内受容感覚」（7/19-25）期間の
+# Psyche 採用実績を見て次回判断。
+#
+# BE-PAL（C123 追加）は layer 3 昇格せず（outdoor は CleverHiker layer 2 が
+# 採用実績あり、Sprint 13 で再判断）。
 LAYER_3_SOURCES: frozenset[str] = frozenset({
-    # 地政学（11 件）
-    "Foresight（新潮社）",
+    # 地政学（3 件、C133 で 10 → 3）
     # "Shincho QUE（新潮QUE）" の geopolitics 経路は LAYER_3_DYNAMIC で扱う
-    "Foreign Affairs（CFR）",
     "Project Syndicate",
     "Foreign Policy",
-    "Brookings Institution",
-    "CSIS（戦略国際問題研究所）",
     "War on the Rocks",
-    "RAND Corporation",
-    "NBR（National Bureau of Asian Research）",
-    "東京大学 公共政策大学院（GraSPP）",
-    # 学術人文（15 件、C132 で Psyche 昇格）
-    "集英社新書プラス",
-    "春秋社",
-    "青土社（現代思想）",
-    "WEBちくま",
-    "日本認知科学会",
+    # 学術人文（6 件、C133 で 15 → 6、Psyche 維持）
     "Aeon",
     "Psyche",  # C132 昇格（Aeon 姉妹、C116 追加、W9 内受容感覚期間の評価向上狙い）
-    "Philosophy Now",
-    "Stanford Encyclopedia of Philosophy（SEP）",
-    "PhilPapers",
     "3 Quarks Daily",
     "Public Books",
     "The Point Magazine",
     "n+1",
-    "London Review of Books（LRB）",
-    # 経営思想（5 件、C84 で McKinsey 昇格）
+    # 経営思想（2 件、C133 で 5 → 2）
     "MIT Sloan Management Review",
-    "Harvard Business Review（HBR.org）",
-    "Aeon（Psychology / Philosophy）",
-    "DIAMONDハーバード・ビジネス・レビュー（DHBR）",
     "McKinsey Insights",  # C84 昇格（採用 50 件/46 日、経営思想中核）
-    # 思想・科学哲学 + 文学（7 件、C84 で Nautilus / C132 で LitHub 昇格）
+    # 思想・科学哲学 + 文学（6 件、C133 で 7 → 6、LitHub 維持）
     "New York Review of Books（NYRB）",
     "The Paris Review",
     "Literary Hub（LitHub）",  # C132 昇格（Paris Review 姉妹的、C125 追加、books:海外純文学）
-    "Quanta Magazine",
     "The Marginalian（旧 Brain Pickings）",
     "AXIS",
     "Nautilus",  # C84 昇格（採用 8 件/46 日、§4.5.4 嗜好の本質と合致）
-    # 行動経済（2 件、採用 0 件だが層 3 維持、score 分布ログで真因調査）
-    "Behavioral Scientist",
-    "NBER Working Papers",
 })
 
 

@@ -538,6 +538,78 @@ Tribune の運用中に神山さんが発見した改善点・違和感・将来
 - **状態**: 調査完了、A 実施済、B/C 観察待ち
 - **関連 commit**: C130 (調査記録 + JftcDriver UA override)
 
+### C132 layer3 昇格 + C133 降格第1弾 + dead weight 整理 → 完了
+
+- **発見日**: 2026-07-09
+- **背景**: Phase B 再設計の第一歩。神山さん Phase B コスト目標 $30-50/月
+  に対する現状 $96/月 の圧縮のため、C132 で採用実績集計 → C133 で判断
+- **C132 Step 1（Psyche + LitHub 昇格、commit `f266169`）**:
+  - Psyche（Aeon 姉妹サイト、C116 追加、academic:国際）→ layer 3
+  - Literary Hub（LitHub）（C125 追加、books:海外純文学）→ layer 3
+  - W9「内受容感覚」（7/19-25）期間の Psyche 記事を Sonnet フル評価で
+    捕捉する目的
+- **C132 Step 2 集計結果（30 日 2026-06-10 〜 2026-07-09）**:
+  - LAYER 3 全体の月次 Sonnet コスト: $68.45/月（採用ゼロ 13 ソース =
+    $22.59/月 = 33% が waste）
+  - Sonnet per-entry cost 実測: $0.01115（llm_usage_*.json 集計から算出）
+  - 詳細テーブルは C132 report 参照
+- **C133 Step 1 降格 11 件**（採用ゼロ × 高コスト、想定削減 約 $21/月）:
+  - Foresight（新潮社）※新潮QUE 統合で 2026-05-17 以降新記事なし、
+    sources/geopolitics.md に「休刊済」明記
+  - Stanford Encyclopedia of Philosophy（SEP）
+  - 集英社新書プラス / Foreign Affairs（CFR）/ Philosophy Now
+  - Quanta Magazine / 春秋社 / CSIS / London Review of Books（LRB）
+  - 青土社（現代思想）/ DIAMONDハーバード・ビジネス・レビュー（DHBR）
+  - 降格後も layer 2（Haiku prefilter 経路）で評価継続、完全遮断ではない
+- **C133 Step 2 dead weight 11 件を LAYER_3 定義から除外**（コスト影響
+  ゼロ、定義の健全化）:
+  - NBR / 日本認知科学会 / PhilPapers / RAND / HBR.org / Brookings /
+    Aeon（Psychology / Philosophy）/ NBER / WEBちくま / Behavioral Scientist /
+    東大 GraSPP
+  - eval 0 のまま LAYER_3 に居るのは「LAYER_3 定義が形骸化」の状態
+    （fetch 失敗 or 記事流入なし）
+- **C133 維持 17 件**（採用実績 15 + 新規 2）:
+  - 地政学: Project Syndicate / Foreign Policy / War on the Rocks
+  - 学術人文: Aeon / **Psyche**(C132) / 3 Quarks Daily / Public Books /
+    The Point Magazine / n+1
+  - 経営思想: MIT Sloan Management Review / McKinsey Insights
+  - 思想・科学哲学 + 文学: NYRB / The Paris Review /
+    **Literary Hub（LitHub）**(C132) / The Marginalian / AXIS / Nautilus
+- **降格後の LAYER_3_SOURCES 件数**: 39 → **17**（動的 QUE 1 件を含めて 18）
+- **実測計画**（3-5 日）:
+  - 次の cron 7/9 UTC (JST 7/10 早朝) から降格反映
+  - 3-5 日実測で $75 想定との突合（$96 現状 - $21 削減想定）
+  - 目標 $50 への残ギャップ ≈ $25 → 第 2 弾降格の候補は eval 実測後判断
+- **状態**: 完了
+- **関連 commit**: C132 (`f266169`) / C133 (本 commit)
+
+### C133 副次課題 — LAYER_3 定義除外 11 件の fetch 復旧（Sprint 12+ 別案件）
+
+- **発見日**: 2026-07-09（C132 30 日集計で eval 0 として発覚）
+- **観察**: 以下 11 ソースは LAYER_3_SOURCES に居ながら 30 日間 Stage 2
+  評価に 1 件も到達していない = fetch 経路が壊れているか記事流入自体が
+  ない状態:
+
+  | ソース | 想定原因 | 修復難易度 |
+  |---|---|---|
+  | NBR（National Bureau of Asian Research） | RSS 未検証 or 未実装 | 中 |
+  | 日本認知科学会 | status=FAILED、fetch_method=BLOCKED | 高（RSS 廃止？） |
+  | PhilPapers | status=FAILED、fetch_method=BLOCKED | 高 |
+  | RAND Corporation | RSS 未検証 or 実装ミス | 中 |
+  | Harvard Business Review（HBR.org） | Cloudflare / rate limit 予想 | 中〜高 |
+  | Brookings Institution | RSS parse error 観測 | 中 |
+  | Aeon（Psychology / Philosophy） | companies.md name collision の dead entry | 低（削除で OK） |
+  | NBER Working Papers | RSS 未検証 or 未実装 | 中 |
+  | WEBちくま | status=FAILED、fetch_method=BLOCKED | 高（RSS 廃止？） |
+  | Behavioral Scientist | RSS 未検証 or 未実装 | 中 |
+  | 東京大学 公共政策大学院（GraSPP） | RSS 未検証 or 未実装 | 中 |
+
+- **判断**: C133 では LAYER_3 定義から除外のみ実施。fetch 復旧は別案件
+  として Sprint 12/13 で個別調査。復旧できたら都度 LAYER_3 復帰判断
+- **優先順**: 低（現在の紙面編集への直接影響なし、コスト影響もゼロ）
+- **状態**: 未着手（Sprint 12/13 backlog）
+- **関連 commit**: C133 で LAYER_3 から除外のみ
+
 ### 2 面 Headlines 英語ソース（BBC 等）の和訳消失 → 仕様として受容
 
 - **発見日**: 2026-06-29（W6 Day 2 朝刊レビュー）

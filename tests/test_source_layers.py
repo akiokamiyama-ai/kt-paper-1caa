@@ -45,20 +45,28 @@ def test_layer1_count_14():
     )
 
 
-def test_layer3_count_39_static_plus_1_dynamic():
-    """C132 神山さん判断後の層 3 = 40 件（39 静的 + 1 動的）.
+def test_layer3_count_17_static_plus_1_dynamic():
+    """C133 神山さん判断後の層 3 = 18 件（17 静的 + 1 動的）.
 
     Shincho QUE（新潮QUE）は LAYER_1_SOURCES に登録しつつ、category=geopolitics
-    のときだけ層 3 にする動的振り分け。これにより業務上の「層 3 = 40 件」と
-    LAYER_3_SOURCES frozenset の件数 (39) が乖離するが、合算で 40。
+    のときだけ層 3 にする動的振り分け。これにより業務上の「層 3 = 18 件」と
+    LAYER_3_SOURCES frozenset の件数 (17) が乖離するが、合算で 18。
 
-    C132 (Sprint 12, 2026-07-09) で C84 の 37 → 39 に増加:
-    - Psyche (Aeon 姉妹、C116 追加、W9 内受容感覚期間の評価向上狙い)
-    - Literary Hub（LitHub） (Paris Review 姉妹、C125 追加、books:海外純文学)
+    C133 (Sprint 12, 2026-07-09) 降格 + dead weight 整理で 39 → 17:
+    - Step 1: 採用ゼロ × 高コスト 11 件降格（Foresight / SEP / 集英社新書
+      プラス / Foreign Affairs / Philosophy Now / Quanta / 春秋社 / CSIS /
+      LRB / 青土社 / DHBR）→ Phase B $21/月 削減見込み
+    - Step 2: eval ゼロ dead weight 11 件を LAYER_3 定義から除外（NBR /
+      日本認知科学会 / PhilPapers / RAND / HBR.org / Brookings / Aeon P&P /
+      NBER / WEBちくま / Behavioral Scientist / GraSPP）
+    - 維持: 採用実績 15 件（Aeon / Project Syndicate / Foreign Policy /
+      War on the Rocks / 3 Quarks Daily / Public Books / The Point Magazine /
+      n+1 / MIT SMR / McKinsey / NYRB / Paris Review / Marginalian / AXIS /
+      Nautilus）+ C132 新規 2 件（Psyche / LitHub）= 17 件
     """
     _check(
-        "a2 LAYER_3_SOURCES = 39 件（静的、QUE geopolitics 経路は dynamic 1 件で別管理）",
-        len(sl.LAYER_3_SOURCES) == 39,
+        "a2 LAYER_3_SOURCES = 17 件（静的、QUE geopolitics 経路は dynamic 1 件で別管理）",
+        len(sl.LAYER_3_SOURCES) == 17,
         f"got {len(sl.LAYER_3_SOURCES)}",
     )
     _check(
@@ -72,7 +80,7 @@ def test_layer3_count_39_static_plus_1_dynamic():
 def test_layer_counts_meta():
     _check(
         "a4 LAYER_COUNTS メタ情報の整合",
-        sl.LAYER_COUNTS == {"layer_1": 14, "layer_3": 39, "layer_3_dynamic": 1},
+        sl.LAYER_COUNTS == {"layer_1": 14, "layer_3": 17, "layer_3_dynamic": 1},
         f"got {sl.LAYER_COUNTS}",
     )
 
@@ -116,52 +124,101 @@ def test_classify_layer_1_for_telcom_sources():
 
 
 def test_classify_layer_3_for_geopolitics_cores():
+    """C133 降格後の地政学コア（3 件）→ 層 3.
+
+    降格: Foresight / Foreign Affairs / Brookings / CSIS / RAND / NBR / GraSPP
+    """
     cases = [
-        "Foresight（新潮社）",
-        "Foreign Affairs（CFR）",
         "Project Syndicate",
         "War on the Rocks",
         "Foreign Policy",
     ]
     all_ok = all(sl.classify_layer(src) == 3 for src in cases)
-    _check("b3 地政学コア → 層 3", all_ok)
+    _check("b3 地政学コア → 層 3（C133 降格後 3 件）", all_ok)
 
 
 def test_classify_layer_3_for_academic_cores():
+    """C133 降格後の学術人文コア（6 件）→ 層 3、C132 昇格 Psyche 維持.
+
+    降格: 集英社新書プラス / SEP / Philosophy Now / 春秋社 / LRB / 青土社 /
+    WEBちくま / 日本認知科学会 / PhilPapers
+    """
     cases = [
-        "集英社新書プラス",
         "Aeon",
-        "Stanford Encyclopedia of Philosophy（SEP）",
+        "Psyche",  # C132 昇格、C133 で維持
         "Public Books",
+        "The Point Magazine",
         "n+1",
+        "3 Quarks Daily",
     ]
     all_ok = all(sl.classify_layer(src) == 3 for src in cases)
-    _check("b4 学術人文コア → 層 3", all_ok)
+    _check("b4 学術人文コア → 層 3（C133 降格後 6 件）", all_ok)
 
 
 def test_classify_layer_3_for_c84_promoted():
-    """C84 で layer_2 から layer_3 に昇格した 2 件."""
+    """C84 で layer_2 から layer_3 に昇格した 2 件（C133 でも維持）."""
     _check(
-        "b5 C84 昇格: McKinsey Insights → 層 3",
+        "b5 C84 昇格: McKinsey Insights → 層 3（C133 維持）",
         sl.classify_layer("McKinsey Insights") == 3,
     )
     _check(
-        "b6 C84 昇格: Nautilus → 層 3",
+        "b6 C84 昇格: Nautilus → 層 3（C133 維持）",
         sl.classify_layer("Nautilus") == 3,
     )
 
 
 def test_classify_layer_3_for_thought_science_philosophy():
+    """C133 降格後の思想・科学哲学 + 文学（6 件）→ 層 3.
+
+    降格: Quanta Magazine / DHBR
+    C132 で LitHub 昇格、C133 で維持
+    """
     cases = [
         "New York Review of Books（NYRB）",
         "The Paris Review",
-        "Quanta Magazine",
+        "Literary Hub（LitHub）",  # C132 昇格、C133 で維持
         "The Marginalian（旧 Brain Pickings）",
         "AXIS",
         "Nautilus",  # C84 昇格
     ]
     all_ok = all(sl.classify_layer(src) == 3 for src in cases)
-    _check("b7 思想・科学哲学（6 件、C84 後）→ 層 3", all_ok)
+    _check("b7 思想・科学哲学 + 文学 → 層 3（C133 降格後 6 件）", all_ok)
+
+
+def test_classify_layer_2_for_c133_demoted():
+    """C133 で LAYER_3 → LAYER_2 に降格した 11 件 + dead weight 除外 11 件は
+    暗黙のデフォルト（layer 2）で扱われる."""
+    demoted = [
+        # Step 1 降格 11 件（採用ゼロ × 高コスト）
+        "Foresight（新潮社）",
+        "Stanford Encyclopedia of Philosophy（SEP）",
+        "集英社新書プラス",
+        "Foreign Affairs（CFR）",
+        "Philosophy Now",
+        "Quanta Magazine",
+        "春秋社",
+        "CSIS（戦略国際問題研究所）",
+        "London Review of Books（LRB）",
+        "青土社（現代思想）",
+        "DIAMONDハーバード・ビジネス・レビュー（DHBR）",
+        # Step 2 dead weight 11 件（eval ゼロ、LAYER_3 定義除外）
+        "NBR（National Bureau of Asian Research）",
+        "日本認知科学会",
+        "PhilPapers",
+        "RAND Corporation",
+        "Harvard Business Review（HBR.org）",
+        "Brookings Institution",
+        "Aeon（Psychology / Philosophy）",
+        "NBER Working Papers",
+        "WEBちくま",
+        "Behavioral Scientist",
+        "東京大学 公共政策大学院（GraSPP）",
+    ]
+    all_ok = all(sl.classify_layer(src) == 2 for src in demoted)
+    _check(
+        "b8 C133 降格 11 件 + dead weight 11 件 → 層 2（暗黙のデフォルト）",
+        all_ok,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -266,7 +323,7 @@ def main() -> int:
     print()
     print("(a) 件数 / 構造:")
     test_layer1_count_14()
-    test_layer3_count_39_static_plus_1_dynamic()
+    test_layer3_count_17_static_plus_1_dynamic()
     test_layer_counts_meta()
     test_no_overlap_between_layer1_and_layer3()
 
@@ -278,6 +335,7 @@ def main() -> int:
     test_classify_layer_3_for_academic_cores()
     test_classify_layer_3_for_c84_promoted()
     test_classify_layer_3_for_thought_science_philosophy()
+    test_classify_layer_2_for_c133_demoted()
 
     print()
     print("(c) Shincho QUE 動的振り分け:")
