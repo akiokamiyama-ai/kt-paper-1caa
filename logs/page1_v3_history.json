@@ -763,6 +763,23 @@
           "cost_usd": 0.056481,
           "is_fallback": false
         }
+      },
+      {
+        "date": "2026-07-10",
+        "day_label": "金",
+        "angle_key": "integration",
+        "angle_label_jp": "統合＋問い",
+        "essay": {
+          "angle_label": "金曜 - 統合＋問い",
+          "daily_question": "「良い階層」を設計した者が、その階層に呑み込まれるとき、何が起きているか",
+          "essay_title": "一週間の問いが収束する場所——設計者は誰のために設計するか",
+          "body": "月曜、編集部は「フラット化という思考の罠」を問い直した。火曜は「良い階層」を誰が定義するのかという設計者問題を抉った。水曜は実装の三選択肢を示し、木曜は孔子とアリストテレスという思想的地層を掘り返した。金曜の今日、編集部はこれらの論点を一つの問いに収束させたい。\n\n五日間の議論を貫いている緊張は、じつは一点に集まる。「良い階層を設計する」という意志と、「設計した階層に設計者自身が取り込まれていく」という逆説のあいだにある亀裂だ。\n\nBerggruen Institute の宣言が示した「hierarchical drift」——権限が正当な領域を越境していく現象——は、組織の外側から観察すれば見えやすい。しかし設計者の立場にいる者、すなわち経営者にとって、このドリフトは往々にして自覚されないまま進行する。なぜか。設計者が「良い階層だ」と判断した根拠そのものが、その者の立ち位置から発せられているからだ。火曜の論考が指摘したとおり、判定者の位置が問われていない。\n\n木曜の思想史が教えるのは、アリストテレスの「プロネーシス（実践的知恵）」が本質的に他者の視点を必要とするという事実だった。孔子が「師は弟子が自分を超えることを目指す」と説いたのも、同じ構造を持つ。良い階層は設計者が完結させるのではなく、それを経験する側の成長によって事後的に検証される。言い換えれば、設計者は「自分の設計が良かったかどうか」を、設計の瞬間には原理的に知ることができない。\n\nここに経営の実践的な急所がある。水曜に示した三つの選択肢——domain-specific な権限地図の可視化、動的な見直しサイクルの制度化、一般能力を持つ集団による熟議の導入——はいずれも、設計者がみずからの判断を外部化し、検証にさらし続ける仕組みとして読み直せる。それらは実装の技法であると同時に、設計者が階層に呑み込まれることへの防御機構でもある。\n\n歴史の縦軸を見れば、フランス革命後の混乱も、清朝の科挙制度の硬直化も、良い意図で設計されたシステムが設計者の意図を離れて生き続けた結果だった。制度は設計者より長く生きる。そして長く生きた制度は、やがて新たな設計者を生み出し、その設計者を形成する。設計者が階層を作るのではなく、階層が設計者を作り直す——この循環こそが、歴史的転換点のたびに繰り返されてきたパターンだ。\n\n一週間の議論を経て、編集部が辿り着く問いはこれだ。「良い階層を設計する」とは、自分が作ったものにいつか自分が問われる側に立つことを引き受けることではないか。設計者の誠実さは、設計の巧みさではなく、設計を検証される場に自分を置き続けるかどうかで測られる。\n\n神山氏への問いを最後に一つ置きたい。あなたが今、「良い階層だ」と判断している何かについて——それを「良い」と評価している人物が、あなたの判断に同意する立場にいない者であるとしたら、その評価はどこまで信頼できますか。",
+          "annotation_label": "1週間の論点総括",
+          "annotation_body": "月曜に「フラット化という思考の罠」を問い直し、火曜に「設計者問題」という断層を直視した。水曜は実装の三選択肢を提示し、木曜は孔子・アリストテレスの思想的地層を掘り返した。木曜（歴史）は歴史上の四つの転換点を縦軸に、良い階層概念の形成と限界を検証した。金曜の統合は、五日間を貫く一つの亀裂——設計者は自らの設計に呑み込まれるか——へと収束する。",
+          "quote_excerpt": "The distinction we should be making is not between hierarchical and egalitarian societies, but between good hierarchies and bad ones. Good hierarchies signal the right kinds of deference; bad ones demand the wrong ones.\n\nTo protect against abuse by those with higher status, hierarchies should also be domain-specific: hierarchies become problematic when they become generalised, so that people who have power, authority or respect in one domain command it in others too. Hence, we need to guard against what we might call hierarchical drift: the extension of power from a specific, legitimate domain to other, illegitimate ones.\n\nA common Confucian ideal is that a master ought to aim for the student to surpass him or her. Confucian hierarchies are marked by reciprocity and mutual concern. Inequalities of status and power can therefore be acceptable to the extent that these inequalities are embedded in relationships of reciprocity and mutual concern, and conducive to the advancement of those lower in the hierarchy.",
+          "cost_usd": 0.050052,
+          "is_fallback": false
+        }
       }
     ]
   }

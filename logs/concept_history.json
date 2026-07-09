@@ -364,6 +364,11 @@
       "concept_id": "visionary_company",
       "name_ja": "ビジョナリー・カンパニー",
       "displayed_on": "2026-07-09"
+    },
+    {
+      "concept_id": "dialogical_self",
+      "name_ja": "対話的自己",
+      "displayed_on": "2026-07-10"
     }
   ]
 }

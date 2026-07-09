@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-10",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/19728/",
+    "https://que.dailyshincho.jp/node/19725/",
+    "https://que.dailyshincho.jp/node/14458/",
+    "https://www.ft.com/content/2478afc6-e7af-4ebe-8d87-e7bf0f4f3052"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/business/articles/2607/09/news022.html",
+    "human_energy": "https://jinjibu.jp/news/detl/26630/",
+    "web_repo": "https://www.jfa-fc.or.jp/particle/5164.html"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/david-hockney-lessons-for-economics-by-angus-armstrong-2026-07",
+    "https://que.dailyshincho.jp/node/19716/",
+    "http://www3.nhk.or.jp/news/html/20260709/k10015172501000.html",
+    "https://www.mckinsey.com/mgi/our-research/agents-robots-and-us-how-ai-reshapes-work-and-skills-in-latin-america",
+    "https://www.theparisreview.org/blog/2026/07/09/cesar-airas-art-of-not-editing/",
+    "https://3quarksdaily.com/3quarksdaily/2026/07/theres-this-deep-mystery-of-what-actually-is-this-thing-the-philosopher-inside-google-deepmind-ai.html"
+  ],
+  "page4_urls": [
+    "https://3quarksdaily.com/3quarksdaily/2026/07/whats-behind-the-evolution-of-neanderthal-portraits.html",
+    "https://3quarksdaily.com/3quarksdaily/2026/07/you-are-not-the-person-you-see-in-the-mirror.html",
+    "https://www.themarginalian.org/2026/07/06/thich-nhat-hanh-listening-love/"
+  ],
+  "page5_url": "https://stereogum.com/2504747/msg-kept-a-database-flagging-lgbtqia-celebrities/news/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/07/08/clearly-fake-zurbarans-uncanny-realism/",
+    "music": "https://stereogum.com/2504747/msg-kept-a-database-flagging-lgbtqia-celebrities/news/",
+    "outdoor": "https://www.outsideonline.com/culture/essays-culture/male-loneliness-epidemic-solitude-outdoors/"
+  },
+  "headlines_urls": [
+    "https://www.bbc.co.uk/news/articles/c9q29j47v9ro?at_medium=RSS&at_campaign=rss",
+    "https://www.economist.com/finance-and-economics/2026/07/09/an-ageing-society-might-not-cost-too-much",
+    "https://www.economist.com/finance-and-economics/2026/07/05/womens-progress-at-work-is-stalling"
+  ]
+}

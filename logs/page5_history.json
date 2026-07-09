@@ -1256,6 +1256,24 @@
       "ai_kamiyama_title": "Lineages of the Engineering State: On China, the United States, and the Future",
       "ai_kamiyama_category": "academic",
       "ai_kamiyama_source_name": "3 Quarks Daily"
+    },
+    {
+      "displayed_on": "2026-07-10",
+      "article_url": "https://stereogum.com/2504747/msg-kept-a-database-flagging-lgbtqia-celebrities/news/",
+      "article_title": "MSG Kept A Database Flagging LGBTQIA Celebrities",
+      "article_category": "music",
+      "tie_candidates": [
+        "music"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://3quarksdaily.com/3quarksdaily/2026/07/whats-behind-the-evolution-of-neanderthal-portraits.html",
+      "ai_kamiyama_title": "What’s Behind the Evolution of Neanderthal Portraits",
+      "ai_kamiyama_category": "academic",
+      "ai_kamiyama_source_name": "3 Quarks Daily"
     }
   ]
 }
