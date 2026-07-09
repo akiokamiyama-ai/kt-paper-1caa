@@ -117,6 +117,8 @@
 - **対象**: UK alternative/avant rock メディア。商業性より目利き重視のレビュー、実験音楽・アンビエント・ポストロックも扱う
 - **位置付け**: **目利き枠の本命候補だったが配信インフラが完全閉鎖**。代替候補としてフェーズ2で **Stereogum**（米インディー）、**DIY Mag**（UK）、**The Wire**（UK 実験音楽）の検証を予定。重要記事は Twitter/X 経由で察知して手動URL取得運用
 
+## 海外ロックメディア（Medium）— C131 格上げ, 2026-07-09 更新
+
 ### 12. Stereogum ✅
 - **URL**: https://www.stereogum.com/
 - **RSS**: https://www.stereogum.com/feed（C125 検証時に 200 OK、application/rss+xml、items 40、7/3 直近配信確認）
@@ -124,7 +126,7 @@
 - **形式**: RSS 2.0
 - **mainstream**: false
 - **対象**: 米インディー・オルタナ音楽メディア。新譜情報、カバー曲、ライブレポート、業界ニュース、フェス関連
-- **位置付け**: C125 (Sprint 11, 2026-07-04) 追加。**ナタリー音楽独占（過去採用の 63%）の緩和** が目的。The Quietus (#11) の閉鎖代替候補として本 #12 で正式追加。Pitchfork (#10) が「点数レビュー中心の権威」なら Stereogum は「日次のインディー・オルタナ情報網羅」で分担。神山さんのフェス関心（コーチェラ / Roskilde / Glastonbury 等の海外フェス、§4.6）にも 40 items 日次配信で応える
+- **位置付け**: C125 (Sprint 11, 2026-07-04) 追加、C131 (Sprint 11, 2026-07-09) で Reference → Medium に格上げ。**ナタリー音楽独占（過去採用の 63%）の緩和** が目的。The Quietus (#11) の閉鎖代替候補として本 #12 で正式追加。Pitchfork (#10) が「点数レビュー中心の権威」なら Stereogum は「日次のインディー・オルタナ情報網羅」で分担。神山さんのフェス関心（コーチェラ / Roskilde / Glastonbury 等の海外フェス、§4.6）にも 40 items 日次配信で応える。**Medium 格上げ理由**: `scripts/page6/leisure_recommender.py:169` の music area fetch は high/medium のみで reference は対象外。日次 fetch 経路に載せて C125 の当初目的（natalie 一極緩和、フェス情報の日次流入）を実際に発火させる
 
 ---
 
