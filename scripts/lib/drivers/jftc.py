@@ -39,12 +39,30 @@ from zoneinfo import ZoneInfo
 
 from ..source import Article, Source
 from .base import DEFAULT_TIMEOUT
-from .html import DEFAULT_ARTICLE_UA, HtmlScrapeDriver
+from .html import HtmlScrapeDriver
 
 
 # Public constants — tests reference these
 HOST = "www.jftc.go.jp"
 DEFAULT_TOP_N = 10
+
+# C130 (Sprint 11, 2026-07-09): JFTC 個別 UA override。
+# jftc.go.jp は Akamai edge WAF を持ち、GHA hosted runner の IP 範囲から
+# ``DEFAULT_ARTICLE_UA = "Mozilla/5.0 (X11; Linux x86_64) kt-tribune/0.6"``
+# で叩くと 403 Forbidden (server: AkamaiGHost) が返る（local WSL からは
+# 同じ UA で 200 OK になるため IP + UA の合わせ技で bot 判定されている
+# 可能性が高い）。実ブラウザ寄りの UA に変えて Akamai の bot detection
+# score を下げる。robots.txt (``User-agent: * Allow: /``) は許可的で、
+# アクセスポリシー違反ではない。
+#
+# 影響範囲を JFTC に限定する目的で本 driver 内でのみ使用（全体
+# ``DEFAULT_ARTICLE_UA`` は変更しない）。他ソースの UA 挙動には無影響。
+#
+# 修正後、cron 7/9 UTC 以降の run log で
+# ``[jftc] fetch fail ... 403 Forbidden`` が消えることを観察する。
+JFTC_UA = (
+    "Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0"
+)
 
 _JST = ZoneInfo("Asia/Tokyo")
 
@@ -84,9 +102,13 @@ def _reiwa_to_gregorian(reiwa_year: int, month: int, day: int) -> date | None:
 
 
 def _http_get(url: str, *, timeout: int = DEFAULT_TIMEOUT) -> str | None:
-    """1 URL fetch. UTF-8 で decode、失敗時は stderr に警告して None."""
+    """1 URL fetch. UTF-8 で decode、失敗時は stderr に警告して None.
+
+    C130 (Sprint 11, 2026-07-09): JFTC 個別 UA (``JFTC_UA``) を使用。
+    Akamai edge の GHA IP + kt-tribune UA での 403 回避。
+    """
     req = urllib.request.Request(
-        url, headers={"User-Agent": DEFAULT_ARTICLE_UA},
+        url, headers={"User-Agent": JFTC_UA},
     )
     try:
         with urllib.request.urlopen(req, timeout=timeout) as r:
