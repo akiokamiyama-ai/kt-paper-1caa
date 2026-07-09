@@ -16,7 +16,7 @@
 
 ## High Priority（毎日チェック）
 
-### 1. Foresight（新潮社） ⚠️ **休刊済**
+### 1. Foresight（新潮社） ⚠️
 - **URL**: https://www.fsight.jp/
 - **RSS**: https://www.fsight.jp/list/feed/rss
 - **形式**: RSS 2.0（検証時 2026-04-26 配信「『危険すぎるAI』の『持てる者と持たざる者』」を取得確認、カテゴリ「経済・ビジネス」「テック」付与）

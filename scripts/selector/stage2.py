@@ -25,10 +25,11 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
 from dataclasses import dataclass, field
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -248,6 +249,9 @@ class Stage2Result:
     cache_read_tokens: int = 0
     cost_usd: float = 0.0
     model: str = DEFAULT_MODEL
+    # C135 (Sprint 12, 2026-07-09): cross-day cache hit count for this run.
+    # Cache hit entries are added to ``evaluations_by_url`` without LLM cost.
+    cache_hits_count: int = 0
 
 
 # ---------------------------------------------------------------------------
@@ -618,6 +622,182 @@ def evaluate_batch(
 # run_stage2
 # ---------------------------------------------------------------------------
 
+# ---------------------------------------------------------------------------
+# C135 (Sprint 12, 2026-07-09): cross-day Stage 2 score cache
+# ---------------------------------------------------------------------------
+#
+# C134 の実測で判明した「Stage 2 評価の 50.3% が同一 URL の再評価、月次
+# $47.25 の無駄（Sonnet $42.64）」に対する対策。
+#
+# 設計:
+# - `TRIBUNE_STAGE2_CACHE_DAYS` (env, デフォルト 7) で lookback 日数指定
+# - 過去 N 日の logs/scores_YYYY-MM-DD.json から URL→entry 辞書を構築
+# - run_stage2 冒頭で articles を cached / uncached に分割
+# - uncached だけ LLM 評価、cached は entry を caller 再割当してマージ
+# - 「Sonnet full 相当の cache のみ再利用」の保守的ルール:
+#   * cache 対象: evaluation_mode ∈ {sonnet_full, legacy_sonnet, None(pre-C85)}
+#   * cache 除外: haiku_full, haiku_prefilter_only（美意識 5/6=0 の未完了評価）
+#   * 理由: layer 変更で「昨日 haiku、今日 sonnet 必要」パターンで cache
+#     再利用すると美意識 5/6=0 のまま layer 3 競争に出て構造的スコア敗北
+# - model 版数不一致（Sonnet 4.6 → 4.7 等）で cache 無効化
+# - `cache_lookback_days=0` or `TRIBUNE_STAGE2_CACHE_DAYS=0` で完全に revert
+#   （legacy 挙動、cache 無視）
+#
+# revert 手段:
+# - GHA workflow に `env: TRIBUNE_STAGE2_CACHE_DAYS: '0'` を追加すれば即座に
+#   cache 経路を無効化、次の cron から従来通り全件 LLM 評価
+# - または本 module 側で DEFAULT_CACHE_LOOKBACK_DAYS = 0 に変更 + commit revert
+
+DEFAULT_CACHE_LOOKBACK_DAYS: int = 7
+ENV_CACHE_DAYS: str = "TRIBUNE_STAGE2_CACHE_DAYS"
+
+# Modes representing "full Sonnet-quality" evaluation (all 5 aesthetics).
+# Only these modes are safe to reuse across days regardless of layer change.
+_SONNET_FULL_MODES: frozenset[str | None] = frozenset({
+    "sonnet_full", "legacy_sonnet", None,
+})
+
+
+def _get_cache_lookback_days(default: int = DEFAULT_CACHE_LOOKBACK_DAYS) -> int:
+    """Read cache lookback from env var, fall back to default.
+
+    ``TRIBUNE_STAGE2_CACHE_DAYS=0`` に設定すれば cache を完全無効化して
+    legacy 挙動に戻す（C135 revert 手段）。
+    """
+    raw = os.environ.get(ENV_CACHE_DAYS)
+    if raw is None or not raw.strip():
+        return default
+    try:
+        n = int(raw.strip())
+    except ValueError:
+        print(
+            f"[stage2.cache] WARN: invalid {ENV_CACHE_DAYS}={raw!r}, "
+            f"using default {default}",
+            file=sys.stderr,
+        )
+        return default
+    if n < 0:
+        return 0
+    return n
+
+
+def _load_recent_scores(
+    lookback_days: int = DEFAULT_CACHE_LOOKBACK_DAYS,
+    *,
+    exclude_today: bool = True,
+    today: date | None = None,
+    log_dir: Path | None = None,
+) -> dict[str, dict]:
+    """Load past N days' scores logs into a URL→entry cache.
+
+    C135 (Sprint 12, 2026-07-09). Iterates from oldest to newest so newer
+    entries overwrite older ones for the same URL (last-write-wins).
+
+    Parameters
+    ----------
+    lookback_days:
+        0 以下なら空 dict を返す（cache 無効化）。
+    exclude_today:
+        True なら当日の scores log は cache から除外（現在 run 自身の書込と
+        衝突しないため）。
+    today:
+        基準日。デフォルト ``date.today()``。
+    log_dir:
+        テスト用オーバーライド。デフォルト ``LOG_DIR``。
+    """
+    if lookback_days <= 0:
+        return {}
+    if today is None:
+        today = date.today()
+    if log_dir is None:
+        log_dir = LOG_DIR
+
+    cache: dict[str, dict] = {}
+    start_offset = 1 if exclude_today else 0
+    for offset in range(lookback_days, start_offset - 1, -1):
+        d = today - timedelta(days=offset)
+        path = log_dir / f"scores_{d.isoformat()}.json"
+        if not path.exists():
+            continue
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError):
+            continue
+        for url, entry in (data.get("evaluations") or {}).items():
+            if not isinstance(entry, dict) or not url:
+                continue
+            cache[url] = entry
+    return cache
+
+
+def _is_cache_hit(cached_entry: dict, *, expected_sonnet_model: str) -> bool:
+    """Return True if cached entry can be reused as sonnet-full result.
+
+    C135 保守的ルール:
+    - Sonnet 完全評価 (evaluation_mode ∈ _SONNET_FULL_MODES) のみ再利用
+    - モデル版数完全一致
+    - Haiku 評価は再利用しない（安価 + 美意識 5/6=0 の staleness 回避）
+    """
+    mode = cached_entry.get("evaluation_mode")
+    if mode not in _SONNET_FULL_MODES:
+        return False
+    cached_model = (cached_entry.get("model") or "").strip()
+    if not cached_model:
+        return False
+    if cached_model.lower() != expected_sonnet_model.lower():
+        return False
+    # Basic sanity: at least 3 of the 5 aesthetic keys must be numeric.
+    numeric_keys = sum(
+        1 for k in ("美意識1", "美意識3", "美意識5", "美意識6", "美意識8")
+        if isinstance(cached_entry.get(k), (int, float))
+    )
+    if numeric_keys < 3:
+        return False
+    return True
+
+
+def _apply_cache_hits(
+    articles: list[dict],
+    *,
+    cache: dict[str, dict],
+    expected_sonnet_model: str,
+    caller: str,
+) -> tuple[list[dict], dict[str, dict]]:
+    """Split ``articles`` into (uncached_list, cache_hit_entries_by_url).
+
+    C135. cache_hit_entries は Stage 2 結果に直接マージできる形。原本を
+    コピーして cache_hit=True / cache_source_date / cache_original_caller
+    メタを添付、caller は現在の呼び出し元に再割当。
+    """
+    if not cache:
+        return list(articles), {}
+    uncached: list[dict] = []
+    hits: dict[str, dict] = {}
+    for art in articles:
+        url = art.get("url")
+        if not url or url not in cache:
+            uncached.append(art)
+            continue
+        cached_entry = cache[url]
+        if not _is_cache_hit(cached_entry, expected_sonnet_model=expected_sonnet_model):
+            uncached.append(art)
+            continue
+        new_entry = dict(cached_entry)
+        new_entry["cache_hit"] = True
+        original_caller = cached_entry.get("caller")
+        if original_caller is not None:
+            new_entry["cache_original_caller"] = original_caller
+        original_date = (cached_entry.get("evaluated_at") or "")[:10]
+        if original_date:
+            new_entry["cache_source_date"] = original_date
+        new_entry["caller"] = caller
+        # final_score は cache 済みだが、Stage 3 で再計算されるため念のため
+        # None に戻す（stage3.compute_final_score は idempotent）。
+        new_entry["final_score"] = None
+        hits[url] = new_entry
+    return uncached, hits
+
+
 def _to_log_entry(
     article: dict,
     evaluation: dict,
@@ -664,38 +844,20 @@ def _to_log_entry(
     return entry
 
 
-def run_stage2(
+def _run_stage2_legacy(
     articles: list[dict],
     *,
-    batch_size: int = DEFAULT_BATCH_SIZE,
-    model: str = DEFAULT_MODEL,
-    max_tokens: int = DEFAULT_MAX_TOKENS,
-    layer_config: "LayerConfig | None" = None,
-    caller: str = "page1_master",
+    batch_size: int,
+    model: str,
+    max_tokens: int,
+    caller: str,
 ) -> Stage2Result:
-    """Run Stage 2 over a list of Stage-1-passing articles.
+    """Legacy 経路（全件 Sonnet）の内部実装。
 
-    Parameters
-    ----------
-    layer_config :
-        C85 Sub-Step 2 (2026-06-14, Phase B Step 4): None または
-        ``LayerConfig(enabled=False)`` の場合は **legacy 動作（全件 Sonnet）**。
-        ``LayerConfig(enabled=True)`` の場合は 3 層 layered モード（Sub-Step 4
-        で実装）。本 Sub-Step ではまだ legacy パスのみ実装、layered は
-        ``NotImplementedError`` で投げる（feature flag は OFF 前提）。
-    caller :
-        本関数を呼んだ caller の識別子。``KNOWN_CALLERS`` に含まれるべき。
-        llm_usage tag suffix と LayerConfig.n_for_caller() の判定に使う。
-        デフォルト "page1_master" で旧 caller 互換。
+    C135 refactor: 旧 ``run_stage2`` inline 実装を独立関数に切り出し、
+    cache 分岐との整合を取りやすくする。``write_scores_log`` の呼出は
+    廃止（run_stage2 top-level で 1 回だけ呼ぶ）。
     """
-    # C85: layered モードへの分岐。enabled=False がデフォルトなので、
-    # 既存呼び出し（layer_config=None）は全部 legacy に流れる。
-    if layer_config is not None and layer_config.enabled:
-        return _run_stage2_layered(
-            articles, layer_config=layer_config, caller=caller,
-            batch_size=batch_size, max_tokens=max_tokens,
-        )
-
     result = Stage2Result(model=model)
     if not articles:
         return result
@@ -748,6 +910,83 @@ def run_stage2(
                 evaluation_mode="legacy_sonnet", caller=caller,
             )
 
+    return result
+
+
+def run_stage2(
+    articles: list[dict],
+    *,
+    batch_size: int = DEFAULT_BATCH_SIZE,
+    model: str = DEFAULT_MODEL,
+    max_tokens: int = DEFAULT_MAX_TOKENS,
+    layer_config: "LayerConfig | None" = None,
+    caller: str = "page1_master",
+    cache_lookback_days: int | None = None,
+) -> Stage2Result:
+    """Run Stage 2 over a list of Stage-1-passing articles.
+
+    Parameters
+    ----------
+    layer_config :
+        C85 Sub-Step 2 (2026-06-14, Phase B Step 4): None または
+        ``LayerConfig(enabled=False)`` の場合は **legacy 動作（全件 Sonnet）**。
+        ``LayerConfig(enabled=True)`` の場合は 3 層 layered モード（Sub-Step 4
+        で実装）。本 Sub-Step ではまだ legacy パスのみ実装、layered は
+        ``NotImplementedError`` で投げる（feature flag は OFF 前提）。
+    caller :
+        本関数を呼んだ caller の識別子。``KNOWN_CALLERS`` に含まれるべき。
+        llm_usage tag suffix と LayerConfig.n_for_caller() の判定に使う。
+        デフォルト "page1_master" で旧 caller 互換。
+    cache_lookback_days :
+        C135 (Sprint 12, 2026-07-09): cross-day score cache の lookback 日数。
+        ``None`` なら ``TRIBUNE_STAGE2_CACHE_DAYS`` 環境変数 → 未設定なら
+        ``DEFAULT_CACHE_LOOKBACK_DAYS`` (7)。0 で cache 完全無効化 (revert)。
+    """
+    # C135: cross-day cache 分岐（先に articles を uncached + cache_hits に分割）
+    if cache_lookback_days is None:
+        cache_lookback_days = _get_cache_lookback_days()
+    expected_sonnet_model = (
+        layer_config.sonnet_model
+        if (layer_config is not None and layer_config.enabled)
+        else model
+    )
+    cache = _load_recent_scores(cache_lookback_days, exclude_today=True)
+    uncached_articles, cache_hits = _apply_cache_hits(
+        articles, cache=cache,
+        expected_sonnet_model=expected_sonnet_model,
+        caller=caller,
+    )
+    hit_ratio = (
+        len(cache_hits) / max(1, len(articles)) * 100 if articles else 0.0
+    )
+    print(
+        f"[stage2.cache:{caller}] lookback={cache_lookback_days}d "
+        f"total={len(articles)} hits={len(cache_hits)} "
+        f"miss={len(uncached_articles)} hit_ratio={hit_ratio:.1f}%",
+        file=sys.stderr,
+    )
+
+    # C85: layered モードへの分岐。enabled=False がデフォルトなので、
+    # 既存呼び出し（layer_config=None）は全部 legacy に流れる。
+    if layer_config is not None and layer_config.enabled:
+        result = _run_stage2_layered(
+            uncached_articles, layer_config=layer_config, caller=caller,
+            batch_size=batch_size, max_tokens=max_tokens,
+        )
+    else:
+        result = _run_stage2_legacy(
+            uncached_articles, batch_size=batch_size, model=model,
+            max_tokens=max_tokens, caller=caller,
+        )
+
+    # C135: cache hits をマージ
+    if cache_hits:
+        for url, entry in cache_hits.items():
+            result.evaluations_by_url[url] = entry
+        result.cache_hits_count = len(cache_hits)
+
+    # C135 refactor: write_scores_log を top-level で 1 回だけ呼ぶ。
+    # _run_stage2_layered / _run_stage2_legacy 内部の write_scores_log は削除。
     write_scores_log(result)
     return result
 
@@ -1129,7 +1368,7 @@ def _run_stage2_layered(
                 layer=3, evaluation_mode="sonnet_full", caller=caller,
             )
 
-    write_scores_log(result)
+    # C135 refactor: write_scores_log は run_stage2 top-level で 1 回だけ呼ぶ。
     return result
 
 

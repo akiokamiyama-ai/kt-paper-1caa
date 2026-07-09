@@ -610,6 +610,74 @@ Tribune の運用中に神山さんが発見した改善点・違和感・将来
 - **状態**: 未着手（Sprint 12/13 backlog）
 - **関連 commit**: C133 で LAYER_3 から除外のみ
 
+### C134 stage2 同一記事再評価調査 → C135 cross-day score cache 実装 → 完了
+
+- **発見日**: 2026-07-09
+- **背景**: C132 集計時に「layer3 主要ソースが 30 日で ~310 件 = 1 日 10-11 件」
+  という cadence が偶然 fetch top_n と一致することに違和感、C134 調査へ
+- **C134 実測発見**（直近 7 日 audit-logs から）:
+  - Stage 2 総評価件数: 3,103 件、うちユニーク URL 1,541 件、**再評価 1,562 件 (50.3%)**
+  - 毎日評価される URL: 109 件 (7.1%)、その 763 evals が総評価の 24.6%
+  - 再評価コスト: **月次 $47.25**（うち Sonnet $42.64、Haiku $4.63）
+  - 発生機構: 各 caller が `no_dedupe=True` で毎日 RSS 最新 N 件を fetch →
+    Stage 2 が URL キャッシュを一切参照せず LLM 呼出 → `write_scores_log` は
+    当日 log のみ更新、昨日以前は読まれない
+- **C135 実装** (`scripts/selector/stage2.py`):
+  - `_load_recent_scores(lookback_days=7, exclude_today=True, log_dir=...)`:
+    過去 N 日の `logs/scores_YYYY-MM-DD.json` を URL→entry 辞書化。
+    newer overwrites older（last-write-wins）
+  - `_is_cache_hit(cached_entry, expected_sonnet_model)`: **保守的ルール**で
+    Sonnet 完全評価 (`sonnet_full` / `legacy_sonnet` / pre-C85 legacy None)
+    のみ再利用。Haiku 評価は再利用しない（安価 $0.0016 + 美意識 5/6=0 の
+    staleness 回避）
+  - `_apply_cache_hits(articles, cache, ..., caller)`: articles を
+    (uncached, hits) に分割。hit エントリは `cache_hit=True` /
+    `cache_source_date` / `cache_original_caller` を添付、caller を現行に再割当、
+    `final_score` は None にリセット（Stage 3 で再計算）
+  - `run_stage2()` 冒頭で cache lookup → uncached だけ legacy/layered 経路に
+    渡す → cache hits をマージ → `write_scores_log` を **top-level で 1 回**
+    呼ぶ（`_run_stage2_layered` / 新設 `_run_stage2_legacy` 内部の
+    `write_scores_log` は削除、errors 二重登録を防ぐ）
+  - `Stage2Result.cache_hits_count` フィールド追加（観察用）
+- **revert 手段**:
+  1. **env var**: GHA workflow に `TRIBUNE_STAGE2_CACHE_DAYS: '0'` を追加
+     → 次の cron から cache 経路無効化、従来通り全件 LLM 評価
+  2. **defaults**: `DEFAULT_CACHE_LOOKBACK_DAYS = 0` に変更 + commit
+  3. **git revert**: 本 commit を revert して 1 行変更で完全に旧挙動
+- **テスト** (28 件全 pass、`tests/test_stage2_cache.py` 新設):
+  - (a) env var: 未設定 / 0 / 正の値 / 負値 / 不正文字列 の各パス
+  - (b) load: lookback=0 / 不在 dir / 3 日分読み込み / today 除外 /
+    newer overwrites / malformed JSON skip
+  - (c) hit判定: sonnet_full / legacy_sonnet / pre-C85 None (全 hit) /
+    haiku_full / haiku_prefilter_only (全 miss) / model mismatch / model 欠落 /
+    スコア全 None
+  - (d) split: 空 cache / hit+miss+haiku 分割 / メタデータ / URL 欠落 article
+  - (e) integration: `cache_lookback_days=0` / env=0 / `write_scores_log`
+    top-level 1 回のみ (legacy + layered) / hit=1 miss=1 で LLM 1 回のみ
+  - 主要 20 testsuite (test_stage2_layered / shadow / source_layers / QUE 等)
+    regression 0 件
+- **副次修正**: C133 の sources/geopolitics.md で Foresight heading 末尾に
+  `**休刊済**` を追加していたが `_STATUS_EMOJI_RE` が末尾 emoji を strip
+  できず、name に markdown が残って `test_source_language e2` を破損させて
+  いた（C133 で気づかず push、C135 で発覚）。heading から `**休刊済**` を
+  削除、休刊メモは position 位置付け body に既存記述あり
+- **想定効果**:
+  - Sonnet 再評価コスト $42.64/月 の大部分を削減
+  - 現実値（cache miss / model 変動考慮）: **$30-38/月削減**
+  - C133 の $21/月 と合算で **$51-59/月削減 → 現状 $96 → $37-45/月**
+  - Phase B 目標 **$30-50/月 到達可能性大**
+- **観察 checklist**（3-5 日 = 2026-07-12 頃）:
+  - GHA run log の `[stage2.cache:{caller}] lookback=7d total=... hits=... miss=... hit_ratio=...%`
+    行を集計、caller 別 hit_ratio が 30-50% 前後になっているか
+  - `audit-logs-*` の scores log で `cache_hit=True` エントリの割合
+  - `llm_usage_*.json` で `stage2.batch.layer3.sonnet.*` の月次相当コストが
+    $75 (C133 想定) → $37-45 (C135 想定) に落ちているか
+  - **紙面品質**: 神山さんレビューで cached score による選定に違和感がないか。
+    特に W9「内受容感覚」（7/19-25）期間の Psyche/LitHub 昇格影響と混同しないよう、
+    C133 昇格分と cache hit の telemetry を分けて追う
+- **状態**: 実装完了、観察待ち
+- **関連 commit**: C135 (本 commit)
+
 ### 2 面 Headlines 英語ソース（BBC 等）の和訳消失 → 仕様として受容
 
 - **発見日**: 2026-06-29（W6 Day 2 朝刊レビュー）
