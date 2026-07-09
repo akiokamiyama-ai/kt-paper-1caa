@@ -471,6 +471,73 @@ Tribune の運用中に神山さんが発見した改善点・違和感・将来
 - **状態**: 完了（parser 修正のみ、layer 設計は Sprint 12 積み残し）
 - **関連 commit**: C129
 
+### C128 疎通調査 続 → C130 Web-Repo 系ソースの断続的 fetch 失敗調査 → 3 真因に切り分け完了
+
+- **発見日**: 2026-07-09
+- **観察当初**: C128 疎通調査で「Web-Repo 系 4 件 + JFA が断続的にしか
+  fetch されない」と報告（7/5-7 評価到達 8 件、7/4/8/9 ゼロ、等の日次
+  ばらつき）
+- **C130 実データ収集**（GHA `audit-logs-2026-07-{04..09}` artifact 復元）:
+
+  | Archive | JFTC | リユース | 食品新聞 | Fitness | JFA | Web-Repo stage |
+  |---|---|---|---|---|---|---|
+  | 7/4 | 1★ | 0 | 0 | 0 | 1★ | medium |
+  | **7/5** | 0 | **0** | **0** | **0** | 0 | **high** |
+  | 7/6 | 0 | 8 | 8 | 8 | 1★ | none |
+  | 7/7 | 0 | 8 | 8 | 8 | 1★ | none |
+  | 7/8 | 0 | 8 | 8 | 8 | 1★ | medium |
+  | **7/9** | 0 | **0** | **0** | **0** | 0 | **high** |
+
+  ★ = HtmlScrapeDriver placeholder（source.url 1 件、[scraper not implemented] title、実記事なし）
+
+- **C130 真因** — 「断続的」の実態は 3 つの独立した原因に切り分け:
+
+  **真因 ①【設計仕様】Page 2 Medium fetch は High 敗北時のみ発火**
+  - `scripts/selector/page2.py:970-1032` の段階的選定: Stage 1 (high 共有
+    pool) で `page2_final_score >= threshold(35.0)` の pick が出ると
+    `stage_used="high"` で確定、その company の Stage 2 (medium fetch) は
+    **未発火** で skip
+  - Web-Repo High Priority「ビジネスチャンス」が 7/5 (41.07) / 7/9 (46.75)
+    で threshold 通過 → その日 Medium (リユース / 食品新聞 / Fitness
+    Business / JFA) は fetch されず 0 entries
+  - **「断続的」の 8 割はこの by-design な stage 制御**。修正の要否は
+    「Medium も毎日確実に fetch したい」という意向次第（下記 B 参照）
+
+  **真因 ②【本物のバグ】JFTC Akamai WAF が GHA runner IP を 403 ブロック**
+  - GHA run 実測: `[jftc] fetch fail https://www.jftc.go.jp/houdou/pressrelease/2026/{jun,jul}/index.html: HTTP Error 403: Forbidden`（server: AkamaiGHost）
+  - Local WSL からは同じ `DEFAULT_ARTICLE_UA` で 200 OK 確認、robots.txt も
+    `User-agent: * Allow: /` で許可的
+  - 結論: **UA 起因ではなく Akamai edge の IP-based bot detection**。
+    GHA hosted runner の IP 範囲が blocked
+  - 副作用: 公取委が page2 High pool に常に流入せず、ビジネスチャンス
+    独占を構造的に強化
+
+  **真因 ③【時間経過で自然解決】JFA C127 実装が cron 7/8 UTC より後**
+  - C127 (b1b93db) commit 2026-07-09 04:01 UTC
+  - Archive 7/9 の cron: 2026-07-08 18:54 UTC （C127 前）
+  - 全 archive 7/4-7/9 で HtmlScrapeDriver placeholder が動作、
+    source.url 1 entry のみ（scores 上は 1 だが実記事なし）
+  - Archive 7/10 (今夜 7/9 UTC cron) 以降で C127 本格発火予定
+
+- **C130 修正実施 → 別 commit で JftcDriver 個別 UA override**:
+  - JftcDriver 内でのみ Akamai bot detection を回避する UA を使用
+  - 全体 `DEFAULT_ARTICLE_UA` は変更しない（影響範囲を JFTC に限定）
+  - 修正後、cron 7/9 UTC 以降で `[jftc] fetch fail` の 403 が解消される
+    ことを観察
+
+- **C（JFA C127 反映）**: 7/10-11 の archive を観察、自然発火確認予定
+
+- **B（Web-Repo Medium 毎日 fetch）観察後判断保留**:
+  - C130 真因 ② の JFTC UA 修正が入ると、公取委が page2 High pool に
+    入り Web-Repo High の競争構造が変わる（ビジネスチャンス独占が
+    緩む）→ Medium 発火頻度も自然に増える可能性
+  - A 修正後 2-3 日観察してから B 着手判断
+  - 判断材料: 修正後 3 日間の Web-Repo stage_used 分布、公取委が
+    High で pick される日の割合、Medium 発火頻度の変化
+
+- **状態**: 調査完了、A 実施済、B/C 観察待ち
+- **関連 commit**: C130 (調査記録 + JftcDriver UA override)
+
 ### 2 面 Headlines 英語ソース（BBC 等）の和訳消失 → 仕様として受容
 
 - **発見日**: 2026-06-29（W6 Day 2 朝刊レビュー）
