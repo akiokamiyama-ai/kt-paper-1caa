@@ -412,6 +412,65 @@ Tribune の運用中に神山さんが発見した改善点・違和感・将来
 - **状態**: 完了
 - **関連 commit**: C116
 
+### C128 疎通調査 → C129 sources.md parser regex 修正で完結
+
+- **発見日**: 2026-07-09
+- **観察当初**: C128 の Sprint 11 追加ソース疎通調査で「Psyche / BE-PAL /
+  LitHub は Stage 2 に 8-9 件/日 到達するが final_score = None のまま
+  (Stage 3 integrate_scores 未接続)」と報告
+- **C129 Step 1 真因究明**:
+  - 実コードを網羅 trace した結果、3 ソースとも fetch → Stage 1 → area/
+    humanities filter → Stage 2 uncached → `integrate_scores()` を経由する
+    経路が確立されており、**final_score は numeric 値が正しく付与される**
+  - C128 の「final_score = None」は具体的 artifact に基づかない推測だった
+    と判明（scores_2026-07-\*.json / stage2_shadow_2026-07-\*.json どちらも
+    logs/ に存在しない）
+  - archive で 3 ソースが選定されない現象は **layer 2 haiku prefilter で
+    美意識 5/6 が 0 固定 → layer 3 の Marginalian / 3 Quarks Daily / Paris
+    Review 等に final_score でスコア敗北している** 可能性が高い（ただし
+    CleverHiker (layer 2) が 7/9 outdoor 勝利しており「layer 2 = 自動敗北」
+    ではない）
+- **C129 Step 1 副次発見: parser regex 2 bug**（本 C129 で修正）:
+  - `_NUMBERED_PREFIX_RE = r"^(\d+)\.\s+(.+?)\s*$"` が `6b.` (letter suffix)
+    にマッチせず、Psyche が prefix 込み `'6b. Psyche ✅'` として registered
+  - `_STATUS_EMOJI_RE = r"\s+(✅|⚠️|⚠|❌|🔗)\s*$"` が `\s+` 必須のため
+    「）✅」直後（全角括弧直後）の emoji を strip できず、LitHub は
+    `'Literary Hub（LitHub）✅'`、BE-PAL は `'BE-PAL（ビーパル）✅'` として
+    registered。副作用として全 3 ソースが `Status.PARTIAL` に fallback
+    （本来 VERIFIED）
+- **C129 実装**（2026-07-09）:
+  - `scripts/lib/source.py`
+    - `_NUMBERED_PREFIX_RE` → `r"^(\d+[a-z]*)\.\s+(.+?)\s*$"` (letter suffix
+      accept)
+    - `_STATUS_EMOJI_RE` → `r"\s*(✅|⚠️|⚠|❌|🔗)\s*$"` (leading whitespace
+      optional)
+  - **regression 確認**: 全 131 sources の name/status を before/after
+    snapshot 比較、差分は上記 3 ソースのみ。他 128 sources は完全一致
+  - 主要 testsuite pass: `test_source_language` 13/13、`test_source_allowlist`
+    8/8、`test_source_layers` 23/23、`test_stage2_layered` 26/26、
+    `test_stage2_shadow` 56/56、`test_todays_headlines` 39/39
+    （`test_article_rotator` b2 は pre-existing fail、本修正と無関係）
+- **修正後の状態**:
+  - Registry 名がクリーン: `Psyche` / `Literary Hub（LitHub）` /
+    `BE-PAL（ビーパル）`
+  - Status: 全 VERIFIED
+  - `classify_layer` は layer 2 のまま（LAYER_3_SOURCES 昇格判断は本 C129
+    のスコープ外）
+- **Sprint 12 積み残し（layer 2 評価設計の再検討）**:
+  - 現行 Phase B 設計では layer 2 rest（top N% + K threshold 未満）が
+    Haiku prefilter のみで採用され、美意識 5/6 が **強制 0**。これにより
+    layer 3 の Sonnet full 評価ソースと同一枠競合すると構造的スコア不利
+  - Sprint 11 追加ソース 3 件は現在すべて layer 2 だが、選定に到達しない
+    のが「品質差」なのか「layer 2 の scoring 設計」なのか切り分けが必要
+  - Sprint 12 で以下を検討:
+    - LAYER_3_SOURCES 絞り込み（現行 37 件、Foreign Policy 等の未採用低頻
+      度ソース含む）
+    - layer 2 の美意識 5/6 補正設計（0 固定 → 3 デフォルトなど）
+    - Sprint 11 追加 3 件のうち Psyche / LitHub は Aeon / Paris Review と
+      同格の位置付けなので LAYER_3 昇格が妥当か検討
+- **状態**: 完了（parser 修正のみ、layer 設計は Sprint 12 積み残し）
+- **関連 commit**: C129
+
 ### 2 面 Headlines 英語ソース（BBC 等）の和訳消失 → 仕様として受容
 
 - **発見日**: 2026-06-29（W6 Day 2 朝刊レビュー）

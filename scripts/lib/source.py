@@ -198,11 +198,21 @@ class Article:
 # ---------------------------------------------------------------------------
 
 _HEADING_RE = re.compile(r"^(#{2,4})\s+(.+?)\s*$")
-_NUMBERED_PREFIX_RE = re.compile(r"^(\d+)\.\s+(.+?)\s*$")
+# C129 (Sprint 11, 2026-07-09): letter suffix 対応。``6b.`` / ``12a.`` のような
+# 枝番付き heading（Aeon の姉妹サイト Psyche を ``### 6b. Psyche ✅`` として
+# 追加した C116 で導入された記法）を numbered heading として認識させる。
+# 従来は ``\d+`` のみで letter suffix はマッチせず、Psyche が prefix + emoji
+# 生のまま registered name になっていた。
+_NUMBERED_PREFIX_RE = re.compile(r"^(\d+[a-z]*)\.\s+(.+?)\s*$")
 # Status emoji can include variation selector (️) appended to ⚠. Match
 # the trailing emoji explicitly rather than via a character class so the
 # composite sequence ⚠+️ is kept together.
-_STATUS_EMOJI_RE = re.compile(r"\s+(✅|⚠️|⚠|❌|🔗)\s*$")
+# C129 (Sprint 11, 2026-07-09): ``\s+`` → ``\s*`` に緩和。``Literary Hub
+# （LitHub）✅`` / ``BE-PAL（ビーパル）✅`` のような全角括弧 ``）`` 直後
+# （whitespace なし）の emoji もこれで正しく strip される。従来は emoji
+# が name に残り、Status.VERIFIED が Status.PARTIAL に誤って fallback して
+# いた。
+_STATUS_EMOJI_RE = re.compile(r"\s*(✅|⚠️|⚠|❌|🔗)\s*$")
 _FIELD_RE = re.compile(r"^-\s+\*\*([^*]+)\*\*\s*[:：]\s*(.+?)\s*$")
 # A URL stops at ASCII whitespace, common ASCII punctuation that can end a
 # sentence, full-width brackets/quotes used in Japanese prose, brace-expansion
