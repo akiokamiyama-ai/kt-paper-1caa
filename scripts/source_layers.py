@@ -58,12 +58,27 @@ LAYER_1_SOURCES: frozenset[str] = frozenset({
 
 
 # ---------------------------------------------------------------------------
-# 層 3: Sonnet 必須（Tribune 知的核心、38 件、C84 で Nautilus + McKinsey 昇格）
+# 層 3: Sonnet 必須（Tribune 知的核心、39 件、C132 で Psyche + LitHub 昇格）
 # ---------------------------------------------------------------------------
-# 内訳: 地政学 11 / 学術人文 14 / 経営思想 5 / 思想・科学哲学 6 / 行動経済 2
+# 内訳: 地政学 10 / 学術人文 15 / 経営思想 5 / 思想・科学哲学 7 / 行動経済 2
+# 旧コメントの内訳「11 / 14 / 5 / 6 / 2 = 38」は QUE の comment 出現数を
+# 実 layer3 と誤って算入していた。C132 (2026-07-09) で実態カウント
+# （HEAD 37 + Psyche + LitHub = 39）に修正。
 #
 # 神山さん事業ドメイン直結度、美意識評価の決定性、過去採用実績を総合判断。
 # 詳細は /tmp/phase_b_step3_layer3_detail.md 参照。
+#
+# C132 (Sprint 12, 2026-07-09) 昇格:
+# - "Psyche"（Aeon 姉妹サイト、C116 追加、academic:国際）
+#   W9「内受容感覚」期間（7/19-25）の心理学・neuroscience 評価を Sonnet
+#   フル評価に載せる。C129 parser 修正で name-key が clean になったため
+#   本 exact match が正しく機能する
+# - "Literary Hub（LitHub）"（C125 追加、books:海外純文学）
+#   Paris Review の姉妹的位置付け、日次の総合文学ポータル。同じく C129
+#   parser 修正で name-key が clean（'Literary Hub（LitHub）✅' → clean）
+#
+# BE-PAL（C123 追加）は layer 3 昇格せず。outdoor は CleverHiker (layer 2)
+# が採用実績あり、様子見。
 LAYER_3_SOURCES: frozenset[str] = frozenset({
     # 地政学（11 件）
     "Foresight（新潮社）",
@@ -77,13 +92,14 @@ LAYER_3_SOURCES: frozenset[str] = frozenset({
     "RAND Corporation",
     "NBR（National Bureau of Asian Research）",
     "東京大学 公共政策大学院（GraSPP）",
-    # 学術人文（14 件）
+    # 学術人文（15 件、C132 で Psyche 昇格）
     "集英社新書プラス",
     "春秋社",
     "青土社（現代思想）",
     "WEBちくま",
     "日本認知科学会",
     "Aeon",
+    "Psyche",  # C132 昇格（Aeon 姉妹、C116 追加、W9 内受容感覚期間の評価向上狙い）
     "Philosophy Now",
     "Stanford Encyclopedia of Philosophy（SEP）",
     "PhilPapers",
@@ -98,9 +114,10 @@ LAYER_3_SOURCES: frozenset[str] = frozenset({
     "Aeon（Psychology / Philosophy）",
     "DIAMONDハーバード・ビジネス・レビュー（DHBR）",
     "McKinsey Insights",  # C84 昇格（採用 50 件/46 日、経営思想中核）
-    # 思想・科学哲学（6 件、C84 で Nautilus 昇格）
+    # 思想・科学哲学 + 文学（7 件、C84 で Nautilus / C132 で LitHub 昇格）
     "New York Review of Books（NYRB）",
     "The Paris Review",
+    "Literary Hub（LitHub）",  # C132 昇格（Paris Review 姉妹的、C125 追加、books:海外純文学）
     "Quanta Magazine",
     "The Marginalian（旧 Brain Pickings）",
     "AXIS",

@@ -45,16 +45,20 @@ def test_layer1_count_14():
     )
 
 
-def test_layer3_count_37_static_plus_1_dynamic():
-    """C84 神山さん判断後の層 3 = 38 件（37 静的 + 1 動的）.
+def test_layer3_count_39_static_plus_1_dynamic():
+    """C132 神山さん判断後の層 3 = 40 件（39 静的 + 1 動的）.
 
     Shincho QUE（新潮QUE）は LAYER_1_SOURCES に登録しつつ、category=geopolitics
-    のときだけ層 3 にする動的振り分け。これにより業務上の「層 3 = 38 件」と
-    LAYER_3_SOURCES frozenset の件数 (37) が乖離するが、合算で 38。
+    のときだけ層 3 にする動的振り分け。これにより業務上の「層 3 = 40 件」と
+    LAYER_3_SOURCES frozenset の件数 (39) が乖離するが、合算で 40。
+
+    C132 (Sprint 12, 2026-07-09) で C84 の 37 → 39 に増加:
+    - Psyche (Aeon 姉妹、C116 追加、W9 内受容感覚期間の評価向上狙い)
+    - Literary Hub（LitHub） (Paris Review 姉妹、C125 追加、books:海外純文学)
     """
     _check(
-        "a2 LAYER_3_SOURCES = 37 件（静的、QUE geopolitics 経路は dynamic 1 件で別管理）",
-        len(sl.LAYER_3_SOURCES) == 37,
+        "a2 LAYER_3_SOURCES = 39 件（静的、QUE geopolitics 経路は dynamic 1 件で別管理）",
+        len(sl.LAYER_3_SOURCES) == 39,
         f"got {len(sl.LAYER_3_SOURCES)}",
     )
     _check(
@@ -68,7 +72,7 @@ def test_layer3_count_37_static_plus_1_dynamic():
 def test_layer_counts_meta():
     _check(
         "a4 LAYER_COUNTS メタ情報の整合",
-        sl.LAYER_COUNTS == {"layer_1": 14, "layer_3": 37, "layer_3_dynamic": 1},
+        sl.LAYER_COUNTS == {"layer_1": 14, "layer_3": 39, "layer_3_dynamic": 1},
         f"got {sl.LAYER_COUNTS}",
     )
 
@@ -262,7 +266,7 @@ def main() -> int:
     print()
     print("(a) 件数 / 構造:")
     test_layer1_count_14()
-    test_layer3_count_37_static_plus_1_dynamic()
+    test_layer3_count_39_static_plus_1_dynamic()
     test_layer_counts_meta()
     test_no_overlap_between_layer1_and_layer3()
 
