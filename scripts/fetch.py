@@ -39,6 +39,7 @@ from .lib.drivers.fitness_business import (
     FitnessBusinessDriver,
 )
 from .lib.drivers.html import HtmlScrapeDriver
+from .lib.drivers.jfa import HOST as JFA_HOST, JfaDriver
 from .lib.drivers.jftc import HOST as JFTC_HOST, JftcDriver
 from .lib.drivers.que_shincho import HOST as QUE_HOST, QueShinchoDriver
 from .lib.drivers.rss import RssDriver
@@ -100,6 +101,11 @@ def run(
     # 経由で scrape。host が business.fitnessclub.jp なら FitnessBusinessDriver
     # を使う。
     fitness_business = FitnessBusinessDriver(site_config=site_cfg)
+    # C127 (Sprint 11, 2026-07-09): JFA (日本フランチャイズチェーン協会) は
+    # RSS 未提供のためプレスリリース一覧ページから <dt>日付</dt><dd><h2><a>
+    # タイトル</a></h2></dd> の DL ペアを抽出。host が www.jfa-fc.or.jp なら
+    # JfaDriver を使う。
+    jfa = JfaDriver(site_config=site_cfg)
 
     all_sources = load_all_sources(sources_dir)
     selected = select_sources(
@@ -128,6 +134,8 @@ def run(
             driver = jftc
         elif FITNESS_BUSINESS_HOST in (src.url or ""):
             driver = fitness_business
+        elif JFA_HOST in (src.url or ""):
+            driver = jfa
         else:
             driver = html
         try:

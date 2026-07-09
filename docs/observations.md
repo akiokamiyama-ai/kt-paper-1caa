@@ -267,6 +267,58 @@ Tribune の運用中に神山さんが発見した改善点・違和感・将来
 - **状態**: 部分完了（買取・飲食完了、フィットネス持ち越し）
 - **関連 commit**: C121
 
+### 日本フランチャイズチェーン協会 (JFA) の scraper 未実装 → 完了
+
+- **発見日**: 2026-07-08 朝刊レビュー
+- **観察当初**: 7/8 朝刊 Web-Repo 枠で JFA 記事が pick されたが表示は
+  「[scraper not implemented] 日本フランチャイズチェーン協会（JFA）」+
+  「RSS unavailable. Add a per-site HtmlScrapeDriver subclass」
+- **背景**: JFA は Web-Repo の一次ソース（FC 統計・規制ガイドライン・
+  業界団体公式発表）。C120 公取委と同性質で事業直結度高い
+- **C127 実装**（2026-07-09）:
+  - サイト構造調査:
+    - robots.txt: Amazonbot / Perplexity / cohere-ai / Bytespider 等
+      AI クローラを個別 Disallow、汎用 UA は OK
+    - sitemap.xml: 2013 年で更新止まっている（静的ダミー）→ 使えない
+    - プレスリリース一覧 `/lpcarticle/release/1`: `<dl class="newsList">`
+      に `<dt>YYYY.MM.DD</dt><dd><h2><a href="URL">タイトル</a></h2></dd>`
+      の DL ペア構造
+    - 個別記事 `/particle/{ID}.html`: 本文構造弱い（h1 空 / mainCtt div
+      のみ / meta description 汎用）
+  - `scripts/lib/drivers/jfa.py` 新規実装（**HTTP 1 回で完結の軽量設計**):
+    - `JfaDriver(HtmlScrapeDriver)`, `HOST = "www.jfa-fc.or.jp"`,
+      `LIST_URL = /lpcarticle/release/1`
+    - Public: `parse_list_page(html)` / `_parse_ymd_dot(s)`
+    - 個別記事ページは叩かない（本文取得困難 + Stage 1/2 評価には
+      title + source_name で十分の判断）
+    - description は `"日本フランチャイズチェーン協会プレスリリース: <title>"`
+      で Stage 1 の 30 字フィルタ通過を確保
+  - `scripts/fetch.py` dispatch loop に JFA_HOST 分岐追加
+    （QUE / JFTC / Fitness Business と同パターン）
+  - `tests/test_jfa.py` 新規（12 tests: 日付 parse × 3 / list parse × 5 /
+    定数 sanity × 2 / 空 HTML 処理）
+  - `sources/companies.md` の JFA entry: ⚠️ → ✅、fetch_method: Web Fetch
+    → HTML、実装内容明記
+- **動作確認**:
+  - Unit tests: 12/12 pass
+  - fetch CLI dry-run:
+    - [2026-06-22] コンビニエンスストア統計調査5月度
+    - [2026-06-02] 「まちの安全・安心ステーション東京」共同宣言に伴う
+      コンビニエンスストア合同防犯訓練実施について
+    - [2026-05-20] コンビニエンスストア統計調査4月度
+  - date / title / URL 抽出 OK
+  - 主要 7 testsuite regression: 145/145 pass
+- **想定効果**:
+  - Web-Repo 枠に JFA プレスリリース（月次コンビニ・FC 統計・ガイドライン
+    改訂・業界公式発表）が中身付きで流入可能に
+  - 7/8 朝刊で発覚した scraper 未実装状態が解消
+- **設計特徴**:
+  - HTTP 1 回で完結（一覧ページのみ、個別記事は叩かない）→ rate limit
+    完全に非問題、JFTC (最大 21 HTTP) / Fitness Business (最大 11 HTTP)
+    より更にシンプル
+- **状態**: 完了
+- **関連 commit**: C127
+
 ### 公正取引委員会 報道発表の scraper 未実装 → 完了
 
 - **発見日**: 2026-06-19（朝刊レビュー、6/25 / 7/2 再発）

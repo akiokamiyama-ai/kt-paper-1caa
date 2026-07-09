@@ -231,13 +231,14 @@
 
 ### Medium Priority（候補が薄い日に拾う）
 
-#### 4. 日本フランチャイズチェーン協会（JFA） ⚠️
+#### 4. 日本フランチャイズチェーン協会（JFA） ✅
 - **URL**: https://www.jfa-fc.or.jp/
-- **RSS**: 未提供（"WHAT'S NEW" / "プレスリリース" の一覧表示のみ）
-- **形式**: Web Fetch
+- **RSS**: 未提供（"WHAT'S NEW" / "プレスリリース" の一覧表示のみ）→ 専用 scraper (JfaDriver) で対応
+- **形式**: HTML（`JfaDriver` 経由、プレスリリース一覧ページ 1 回 fetch で完結）
+- **fetch_method**: HTML
 - **mainstream**: false
 - **対象**: コンビニ・FC統計、業界ガイドライン、セミナー、海外展示会、環境対策（食品廃棄物・プラスチック等）
-- **位置付け**: **業界統計の一次情報源**。月次プレスリリースでコンビニ・FC統計が定期配信される。業界全体トレンドの把握に必須
+- **位置付け**: **業界統計の一次情報源**。月次プレスリリースでコンビニ・FC統計が定期配信される。業界全体トレンドの把握に必須。C127 (Sprint 11, 2026-07-09) 追加: 7/8 朝刊で `[scraper not implemented]` 表示になっていた対応。`https://www.jfa-fc.or.jp/lpcarticle/release/1` から `<dl class="newsList">` の `<dt>YYYY.MM.DD</dt><dd><h2><a>タイトル</a></h2></dd>` DL ペアを抽出、上位 top_n = 10 件を Article として返す。個別記事ページは叩かない（本文構造が弱く、Stage 1/2 評価には title + source_name で十分）
 
 #### 5. 外食ドットビズ ⚠️
 - **URL**: https://gaisyoku.biz/news/ （正しいドメインは `gaisyoku.biz`、`gaishoku` ではない）
