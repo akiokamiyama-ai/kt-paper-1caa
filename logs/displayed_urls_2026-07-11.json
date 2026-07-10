@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-11",
+  "page1_urls": [
+    "http://www3.nhk.or.jp/news/html/20260711/k10015174161000.html",
+    "https://que.dailyshincho.jp/node/19749/",
+    "https://que.dailyshincho.jp/node/19755/",
+    "https://www.economist.com/interactive/finance-and-economics/2026/07/02/is-the-economist-always-wrong"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2607/10/2000000182/",
+    "human_energy": "https://sloanreview.mit.edu/article/the-hidden-cost-of-ai-assisted-creativity/",
+    "web_repo": "https://www.jfa-fc.or.jp/particle/320.html"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/07/10/yahoo-boys-crime-nigeria-scams/",
+    "https://toyokeizai.net/articles/-/950923?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "http://www3.nhk.or.jp/news/html/20260710/k10015173461000.html",
+    "https://www.mckinsey.com/capabilities/quantumblack/our-insights/cost-versus-value-managing-agentic-ai-system-performance",
+    "https://wordswithoutborders.org/read/article/2026-07/the-city-and-the-writer-in-dubai-with-danabelle-gutierrez-nathalie-handal/",
+    "https://www.nplusonemag.com/online-only/online-only/sounds-from-rikers-island/"
+  ],
+  "page4_urls": [
+    "https://www.publicbooks.org/a-tale-of-two-families-birthright-citizenship-and-family-reunification-for-chinese-migrants-in-1925/",
+    "https://www.publicbooks.org/documenting-birthright-citizenship-under-chinese-exclusion/",
+    "https://www.nplusonemag.com/online-only/gooooaaal/world-cupcophony/"
+  ],
+  "page5_url": "https://www.axismag.jp/posts/2026/07/715575.html",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/07/09/cesar-airas-art-of-not-editing/",
+    "music": "https://stereogum.com/2504874/open-mike-eagle-kenny-segal-watching-a-movie-called-freedom-by-myself/music/",
+    "outdoor": "https://www.cleverhiker.com/camping/nemo-flyer-cloud-review/"
+  },
+  "headlines_urls": [
+    "http://www3.nhk.or.jp/news/html/20260710/k10015173661000.html",
+    "https://que.dailyshincho.jp/node/19626/",
+    "https://www.bbc.co.uk/news/articles/c9v29d7vml7o?at_medium=RSS&at_campaign=rss"
+  ]
+}

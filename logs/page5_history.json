@@ -1274,6 +1274,24 @@
       "ai_kamiyama_title": "What’s Behind the Evolution of Neanderthal Portraits",
       "ai_kamiyama_category": "academic",
       "ai_kamiyama_source_name": "3 Quarks Daily"
+    },
+    {
+      "displayed_on": "2026-07-11",
+      "article_url": "https://www.axismag.jp/posts/2026/07/715575.html",
+      "article_title": "趣味から広がるデザインの世界 「NEURON 」第7回レポート 後編",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://foreignpolicy.com/2026/07/10/yahoo-boys-crime-nigeria-scams/",
+      "ai_kamiyama_title": "A World of Scams",
+      "ai_kamiyama_category": "geopolitics",
+      "ai_kamiyama_source_name": "Foreign Policy"
     }
   ]
 }

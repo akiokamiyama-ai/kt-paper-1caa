@@ -369,6 +369,11 @@
       "concept_id": "dialogical_self",
       "name_ja": "対話的自己",
       "displayed_on": "2026-07-10"
+    },
+    {
+      "concept_id": "pattern_language",
+      "name_ja": "パターンランゲージ",
+      "displayed_on": "2026-07-11"
     }
   ]
 }
