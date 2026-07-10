@@ -117,6 +117,37 @@ jobs:
         run: |
           cp "archive/${{ steps.date.outputs.DATE }}.html" index.html
 
+      - name: Prune old scores logs (C137, retention 8 days)
+        # C137 (Sprint 12, 2026-07-10): C135 cross-day score cache が過去 7 日の
+        # logs/scores_YYYY-MM-DD.json を GHA runner の checkout 時に参照するため
+        # scores log を repo に持たせる。無制限に増えないよう 8 日超の古い log を
+        # 削除（cache lookback 7 日 + 1 日の buffer）。ISO 日付文字列は辞書順で
+        # 大小比較できるので bash の [[ < ]] で正しく判定される。
+        #
+        # git rm --ignore-unmatch は tracked file の削除を stage、untracked file
+        # は silent に skip（初回 bootstrap 直後の混在状態でも安全）。
+        # 削除の staging は次の commit step に引き継がれる。
+        #
+        # Prune step は Refresh index の後、Commit の直前に置く。scores 生成
+        # （Generate Tribune）の後なので今日の新規 log は残る。
+        run: |
+          CUTOFF=$(TZ='Asia/Tokyo' date -d '8 days ago' +%Y-%m-%d)
+          echo "Pruning scores_*.json older than $CUTOFF"
+          removed=0
+          for f in logs/scores_*.json; do
+            [ -f "$f" ] || continue
+            name=$(basename "$f" .json)
+            date_str="${name#scores_}"
+            if [[ "$date_str" < "$CUTOFF" ]]; then
+              echo "  removing $f (date=$date_str)"
+              # tracked なら stage 削除、untracked なら silent skip
+              git rm --ignore-unmatch --quiet "$f" || true
+              rm -f "$f"
+              removed=$((removed+1))
+            fi
+          done
+          echo "Pruned $removed old scores logs"
+
       - name: Commit and push
         id: commit_push
         run: |
@@ -126,6 +157,11 @@ jobs:
           git add logs/concept_history.json logs/cooking_history.json
           git add logs/displayed_urls_*.json logs/market_history.json
           git add logs/page4_rotation.json logs/page5_history.json
+          # C137 (Sprint 12, 2026-07-10): scores_*.json を追跡対象化して
+          # C135 cross-day score cache の永続化を実現。今日書かれた新しい
+          # log をここで add（prune step で削除された古い log は既に stage
+          # 済みなので commit に含まれる）。
+          git add logs/scores_*.json
           # Phase 3 (2026-05-23): page1_v3 の週単位 essay キャッシュ。
           # 翌日ランで「過去日論考」を context として参照するため永続化必須。
           # 当該日が v3 適用外（v2 fallback）なら file 不在のままで no-op。

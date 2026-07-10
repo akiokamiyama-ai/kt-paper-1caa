@@ -678,6 +678,62 @@ Tribune の運用中に神山さんが発見した改善点・違和感・将来
 - **状態**: 実装完了、観察待ち
 - **関連 commit**: C135 (本 commit)
 
+### C137 C135 score cache の永続化修復 → 完了
+
+- **発見日**: 2026-07-10 (C136 実測で判明)
+- **背景**: C136 実測で C135 cache が全 caller で `hit_ratio=0.0%`。真因は
+  `.gitignore` の `logs/scores_*.json` 除外で GHA runner の checkout 時に
+  scores log が存在せず、`_load_recent_scores` が空 dict を返していたこと。
+  cache 機構自体は正常（テスト 28/28 pass）で、データが GHA runner に
+  届いていなかった。**「テスト通過 ≠ 実運用稼働」の事例**（Sprint 11 の
+  「dry-run 成功 ≠ 実運用稼働」と同型）。
+- **C137 実装**:
+  - `.gitignore` から `logs/scores_*.json` の除外行を削除
+    → repo で追跡可能に。llm_usage / page2_scores / page3_selection /
+    cron log は継続 ignore（cache 参照経路なし）
+  - `.github/workflows/daily.yml` に新規 step 追加:
+    * **Prune old scores logs (retention 8 days)**: Refresh index 後 /
+      Commit 前に発火。`TZ='Asia/Tokyo' date -d '8 days ago' +%Y-%m-%d`
+      で cutoff 計算、`[[ "$date_str" < "$CUTOFF" ]]` で bash 辞書順比較
+      （ISO 日付は辞書順で正しく大小比較できる）。`git rm --ignore-unmatch
+      --quiet` で tracked file の削除を stage、untracked は silent skip
+    * **Commit step**: `git add logs/scores_*.json` を追加（今日の新規 log
+      を含める、prune で staged された削除は自動的に commit に含まれる）
+  - **Bootstrap**: GHA `audit-logs-*` artifact から scores_2026-07-03〜
+    scores_2026-07-09（7 ファイル、合計 3.4MB）を `logs/` に配置。次 cron
+    で即 cache 有効化するため
+- **push 前の実地検証** (`cd /home/akiok/projects/tribune && PYTHONPATH=. python3`):
+  - `_load_recent_scores(7, exclude_today=True, today=date(2026,7,11))` →
+    1,482 URLs 読込成功
+  - うち sonnet_full/legacy 相当: 443 entries (30%) → C135 rule で cache hit
+  - haiku_* : 1,039 entries → conservative rule で miss（安価なため妥当）
+  - `_apply_cache_hits` 実行: caller 別に URL 分割 + メタ添付が正しく動作
+- **cleanup script 単体検証** (`scratchpad/c137_test` で fresh git repo 作成):
+  - CUTOFF 計算: `2026-07-11 - 8 days` = `2026-07-03` ✓
+  - 削除された: 6/20 / 6/30 / 7/1 / 7/2 (4 件)
+  - 保持された: 7/3 / 7/9 / 7/10 / 7/11 (4 件)
+  - `git status` で削除 stage + 追加 stage 両方が正しく反映される
+- **主要 testsuite regression**: 202/202 pass
+  (test_stage2_cache 28 / test_stage2_layered 26 / test_stage2_shadow 56 /
+   test_source_layers 24 / test_source_allowlist 8 / test_layer3_diagnosis 17 /
+   test_llm_tagging 4 / test_todays_headlines 39)
+- **revert 手段**:
+  1. **env**: `TRIBUNE_STAGE2_CACHE_DAYS: '0'` を daily.yml に追加 → 即時
+     cache 経路無効化。scores log は追跡され続けるが lookup が空 dict
+  2. **git revert**: 本 commit を revert → `.gitignore` 復元 + workflow step 削除
+- **repo サイズ影響**:
+  - scores 1 日 = 462-534KB (実測、7/3-7/9 のフォーマット)
+  - retention 8 日 = 8 × ~500KB = **約 4MB で頭打ち**
+  - 過去の C137 前推定 (5-8MB × 7 = 35-56MB) は誤り、実測はその 1/10
+- **観察 checklist（次 cron = 2026-07-10 UTC 19:37 ≈ JST 7/11 04:37）**:
+  1. GHA run log で `[stage2.cache:{caller}] lookback=7d total=... hits=... miss=... hit_ratio=X.X%` の X が 0 でないこと
+  2. audit-logs artifact の `scores_2026-07-10.json` に `cache_hit=True` エントリが存在すること
+  3. `llm_usage_2026-07-10.json` の `stage2.batch.layer3.sonnet.*` コストが C136 実測 $2.02/日 (Sonnet stage2) から低下すること（想定 -30〜50%）
+  4. Prune step の stderr: `Pruned N old scores logs` が出力され、8 日超の
+     古い scores_*.json が repo から削除されること
+- **状態**: 実装完了、次 cron で稼働確認予定
+- **関連 commit**: C137 (本 commit)
+
 ### 2 面 Headlines 英語ソース（BBC 等）の和訳消失 → 仕様として受容
 
 - **発見日**: 2026-06-29（W6 Day 2 朝刊レビュー）

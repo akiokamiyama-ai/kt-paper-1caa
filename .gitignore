@@ -15,12 +15,16 @@ docs/*
 # Local session notes (prompt templates, scratch)
 archive/_*.txt
 
-# Runtime state JSON — 6 categories committed for GHA dedup persistence
+# Runtime state JSON — 7 categories committed for GHA dedup persistence
 # (concept_history / cooking_history / displayed_urls_*.json /
-# market_history / page4_rotation / page5_history). Audit logs (scores,
-# llm_usage, page2_scores, page3_selection) and the local cron wrapper
-# log are ignored; audit logs are kept for 90 days as GHA Artifacts.
-logs/scores_*.json
+# market_history / page4_rotation / page5_history / scores_*.json).
+# scores_*.json は C137 (Sprint 12, 2026-07-10) で追跡対象化。C135 の
+# cross-day cache が過去 7 日の scores_*.json を GHA runner の checkout 時に
+# 参照するため、artifact upload だけでは不十分（runner の checkout 直後には
+# 存在しない状態だった）。daily.yml の cleanup step で 8 日超の古い log を
+# 削除して repo 肥大化を抑える。
+# llm_usage / page2_scores / page3_selection / cron log は継続 ignore
+# （audit artifact 90 日保持で十分、cache 参照経路なし）。
 logs/llm_usage_*.json
 logs/cron_*.log
 logs/*.bak
