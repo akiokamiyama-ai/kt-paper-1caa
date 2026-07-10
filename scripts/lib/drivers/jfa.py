@@ -33,7 +33,7 @@ import re
 import sys
 import urllib.error
 import urllib.request
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from typing import Iterable
 from zoneinfo import ZoneInfo
 
@@ -45,6 +45,16 @@ from .html import DEFAULT_ARTICLE_UA, HtmlScrapeDriver
 HOST = "www.jfa-fc.or.jp"
 LIST_URL = f"https://{HOST}/lpcarticle/release/1"
 DEFAULT_TOP_N = 10
+
+# C140 (Sprint 12, 2026-07-10): press release 型 driver 用の日付足切り。
+# JFA は月 1-2 本の press release 更新 cadence で、list 上位 10 件が過去
+# 3-4 ヶ月に及ぶ。7/10 archive で 2026-04-16 記事（85 日前）が Page II
+# Web-Repo に採用された事象 (C138 調査) の対策。90 日窓で JFA は 2-4 本
+# 残る見込み（updates が月次のため）、Web-Repo Medium fetch 経路の
+# 「rate も高くない = 完全枯渇にならない」バランス。
+# pub_date が None の記事は permissive に通す（driver parse 失敗時の
+# 過剰除外を避ける、Stage 1/2 での filter に委ねる）。
+DEFAULT_MAX_AGE_DAYS = 90
 
 _JST = ZoneInfo("Asia/Tokyo")
 
@@ -112,9 +122,21 @@ class JfaDriver(HtmlScrapeDriver):
     C127 (Sprint 11, 2026-07-09) 初版。
     """
 
-    def __init__(self, *, site_config=None, top_n: int = DEFAULT_TOP_N):
+    def __init__(
+        self, *, site_config=None, top_n: int = DEFAULT_TOP_N,
+        max_age_days: int | None = DEFAULT_MAX_AGE_DAYS,
+    ):
+        """
+        Parameters
+        ----------
+        max_age_days :
+            C140 (Sprint 12, 2026-07-10): pub_date が今日から何日以内の
+            記事を通すか。None または 0 以下で足切り無効化（従来挙動）。
+            デフォルト 90 日。
+        """
         super().__init__(site_config=site_config)
         self.top_n = top_n
+        self.max_age_days = max_age_days
 
     def fetch(self, source: Source) -> Iterable[Article]:
         html = _http_get(LIST_URL)
@@ -123,11 +145,22 @@ class JfaDriver(HtmlScrapeDriver):
         entries = parse_list_page(html)
         entries = entries[: self.top_n]
 
+        # C140: 90 日 (デフォルト) より古い記事を除外。
+        # pub_date が None の記事は permissive に通す (driver parse 失敗時の
+        # 過剰除外回避、Stage 1/2 での filter に委ねる)。
+        cutoff_date: date | None = None
+        if self.max_age_days and self.max_age_days > 0:
+            cutoff_date = datetime.now(_JST).date() - timedelta(days=self.max_age_days)
+
         articles: list[Article] = []
+        skipped_old = 0
         for e in entries:
             title = e["title"]
             url = e["url"]
             d = e["date"]
+            if cutoff_date and d is not None and d < cutoff_date:
+                skipped_old += 1
+                continue
             # JFA 発表は JST の業務日、09:00 JST 仮想時刻
             pub_dt: datetime | None = None
             if d:
@@ -148,4 +181,10 @@ class JfaDriver(HtmlScrapeDriver):
                 body_paragraphs=[description],
                 source_language=source.language,
             ))
+        if skipped_old:
+            print(
+                f"[jfa] max_age_days={self.max_age_days}: skipped {skipped_old} "
+                f"articles older than {cutoff_date}",
+                file=sys.stderr,
+            )
         return articles

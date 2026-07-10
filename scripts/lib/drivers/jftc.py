@@ -33,7 +33,7 @@ import re
 import sys
 import urllib.error
 import urllib.request
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from typing import Iterable
 from zoneinfo import ZoneInfo
 
@@ -45,6 +45,15 @@ from .html import HtmlScrapeDriver
 # Public constants — tests reference these
 HOST = "www.jftc.go.jp"
 DEFAULT_TOP_N = 10
+
+# C140 (Sprint 12, 2026-07-10): press release 型 driver 用の日付足切り。
+# JFTC 報道発表は月別 index を fetch し当月+前月から top_n を取るため通常は
+# 直近 60 日以内に収まるが、月替わり直後や更新頻度低下時に古い記事が
+# 上位を占めるリスクがある。JFA と同型の 90 日足切りを保険として導入。
+# JFA (jfa.py) と同一の DEFAULT_MAX_AGE_DAYS=90 を採用（統一基準）。
+# 現在 GHA runner から 403 で fetch 失敗中（C130 A で UA 変更したが
+# Akamai IP+UA fingerprint で block）。将来 fetch 復旧時に備えた予防策。
+DEFAULT_MAX_AGE_DAYS = 90
 
 # C130 (Sprint 11, 2026-07-09): JFTC 個別 UA override。
 # jftc.go.jp は Akamai edge WAF を持ち、GHA hosted runner の IP 範囲から
@@ -192,9 +201,21 @@ class JftcDriver(HtmlScrapeDriver):
         1 fetch あたりに返す最大記事件数。デフォルト ``DEFAULT_TOP_N`` = 10。
     """
 
-    def __init__(self, *, site_config=None, top_n: int = DEFAULT_TOP_N):
+    def __init__(
+        self, *, site_config=None, top_n: int = DEFAULT_TOP_N,
+        max_age_days: int | None = DEFAULT_MAX_AGE_DAYS,
+    ):
+        """
+        Parameters
+        ----------
+        max_age_days :
+            C140 (Sprint 12, 2026-07-10): pub_date が今日から何日以内の
+            記事を通すか。None または 0 以下で足切り無効化。デフォルト 90 日。
+            JFA と同一基準。
+        """
         super().__init__(site_config=site_config)
         self.top_n = top_n
+        self.max_age_days = max_age_days
 
     def fetch(self, source: Source) -> Iterable[Article]:
         # 当月 + 前月の index URL 決定（JST 基準）
@@ -228,7 +249,15 @@ class JftcDriver(HtmlScrapeDriver):
         # index は最新順で並んでいる想定、上位 top_n 件を採用
         candidates = candidates[: self.top_n]
 
+        # C140: 90 日 (デフォルト) より古い記事を除外。cutoff は fetch 開始時の
+        # JST 基準。pub_date が None の記事は permissive に通す（本文 fetch 失敗
+        # or 令和表記の解析失敗ケースを Stage 1/2 の filter に委ねる）。
+        cutoff_date: date | None = None
+        if self.max_age_days and self.max_age_days > 0:
+            cutoff_date = today - timedelta(days=self.max_age_days)
+
         articles: list[Article] = []
+        skipped_old = 0
         for link, index_title in candidates:
             page_html = _http_get(link)
             if not page_html:
@@ -247,11 +276,17 @@ class JftcDriver(HtmlScrapeDriver):
                 ))
                 continue
 
+            # C140: 90 日超の記事を skip（pub_date が読み取れた場合のみ）
+            parsed_date: date | None = parsed["pub_date"]
+            if cutoff_date and parsed_date is not None and parsed_date < cutoff_date:
+                skipped_old += 1
+                continue
+
             pub_dt: datetime | None = None
-            if parsed["pub_date"]:
+            if parsed_date:
                 # JFTC 発表は原則 JST 業務日中、時刻不明のため 09:00 JST 仮定
                 pub_dt = datetime.combine(
-                    parsed["pub_date"], datetime.min.time(), tzinfo=_JST,
+                    parsed_date, datetime.min.time(), tzinfo=_JST,
                 ).replace(hour=9)
 
             body_text = parsed["body"] or ""
@@ -264,4 +299,10 @@ class JftcDriver(HtmlScrapeDriver):
                 body_paragraphs=[body_text] if body_text else [],
                 source_language=source.language,
             ))
+        if skipped_old:
+            print(
+                f"[jftc] max_age_days={self.max_age_days}: skipped {skipped_old} "
+                f"articles older than {cutoff_date}",
+                file=sys.stderr,
+            )
         return articles

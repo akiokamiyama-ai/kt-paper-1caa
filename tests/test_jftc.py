@@ -180,6 +180,173 @@ def test_month_map_full():
     )
 
 
+# ---------------------------------------------------------------------------
+# (e) C140 (Sprint 12, 2026-07-10): MAX_AGE_DAYS 日付足切り
+# ---------------------------------------------------------------------------
+
+def test_max_age_days_constant():
+    _check("e1 DEFAULT_MAX_AGE_DAYS = 90 (JFA と統一)",
+           J.DEFAULT_MAX_AGE_DAYS == 90)
+
+
+def test_driver_default_max_age():
+    d = J.JftcDriver()
+    _check("e2 driver default max_age_days = 90", d.max_age_days == 90)
+
+
+def test_driver_disabled_max_age():
+    d = J.JftcDriver(max_age_days=None)
+    _check("e3 max_age_days=None で足切り無効", d.max_age_days is None)
+
+
+def test_driver_max_age_zero_treated_as_disabled():
+    d = J.JftcDriver(max_age_days=0)
+    _check("e4 max_age_days=0 (境界) は足切り無効扱い",
+           d.max_age_days == 0)  # 保持は 0、fetch 内で 0 判定される
+
+
+def _make_jftc_source():
+    from scripts.lib.source import Source, Priority, Status, FetchMethod
+    return Source(
+        name="公取委", url=f"https://{J.HOST}/", category="companies:Web-Repo",
+        priority=Priority.HIGH, status=Status.PARTIAL,
+        fetch_method=FetchMethod.HTML, site_file="companies.md",
+    )
+
+
+def test_fetch_filters_old_articles():
+    """C140: 90 日超の記事は除外、90 日以内は通る."""
+    from datetime import date, timedelta
+    ref_today = date(2026, 7, 10)
+    ok_date = ref_today - timedelta(days=89)
+    old_date = ref_today - timedelta(days=91)
+
+    # index HTML: 2 リンクを返す
+    index_html = f"""
+<html><body>
+<a href="/houdou/pressrelease/2026/jul/new.html">新しい</a>
+<a href="/houdou/pressrelease/2026/apr/old.html">古い</a>
+</body></html>
+"""
+
+    def make_article_html(the_date):
+        y = the_date.year - 2018
+        return f"""
+<html><body>
+<h1>(令和{y}年{the_date.month}月{the_date.day}日)テスト</h1>
+<div class="p_title">本文</div>
+<h2>関連ファイル</h2>
+</body></html>
+"""
+
+    calls = []
+
+    def stub_http_get(url, timeout=None):
+        calls.append(url)
+        if "index.html" in url:
+            return index_html
+        if "new.html" in url:
+            return make_article_html(ok_date)
+        if "old.html" in url:
+            return make_article_html(old_date)
+        return None
+
+    from datetime import datetime as _dt
+    orig_http = J._http_get
+    orig_dt = J.datetime
+    J._http_get = stub_http_get
+
+    class _FakeDatetime(_dt):
+        @classmethod
+        def now(cls, tz=None):
+            return _dt.combine(ref_today, _dt.min.time(), tzinfo=tz)
+    J.datetime = _FakeDatetime
+    try:
+        articles = list(J.JftcDriver().fetch(_make_jftc_source()))
+    finally:
+        J._http_get = orig_http
+        J.datetime = orig_dt
+
+    urls = [a.link for a in articles]
+    _check("e5 89 日前は通る、91 日前は除外",
+           len(articles) == 1 and articles[0].link.endswith("/new.html"),
+           f"got urls={urls}")
+
+
+def test_fetch_pub_date_none_permissive():
+    """C140: parsed pub_date が None (令和 parse 失敗) → permissive に通す."""
+    # h1 に令和表記がない → title は index_title fallback、pub_date=None
+    index_html = f"""
+<html><body>
+<a href="/houdou/pressrelease/2026/jul/x.html">日付なし</a>
+</body></html>
+"""
+    article_html = """
+<html><body>
+<h1>普通のタイトル (令和表記なし)</h1>
+<div class="p_title">本文</div>
+<h2>関連ファイル</h2>
+</body></html>
+"""
+
+    def stub_http_get(url, timeout=None):
+        if "index.html" in url:
+            return index_html
+        return article_html
+
+    orig_http = J._http_get
+    J._http_get = stub_http_get
+    try:
+        articles = list(J.JftcDriver().fetch(_make_jftc_source()))
+    finally:
+        J._http_get = orig_http
+    _check("e6 pub_date=None (令和 parse 失敗) は permissive に通す",
+           len(articles) == 1 and articles[0].pub_date is None,
+           f"got {len(articles)}, pub_date={articles[0].pub_date if articles else 'N/A'}")
+
+
+def test_fetch_disabled_max_age_passes_old():
+    """C140: max_age_days=None なら 100 日前記事も通る."""
+    from datetime import date, timedelta
+    ref_today = date(2026, 7, 10)
+    old_date = ref_today - timedelta(days=100)
+    y = old_date.year - 2018
+    index_html = f"""
+<html><body>
+<a href="/houdou/pressrelease/2026/apr/old.html">古い</a>
+</body></html>
+"""
+    article_html = f"""
+<html><body>
+<h1>(令和{y}年{old_date.month}月{old_date.day}日)古い記事</h1>
+<div class="p_title">本文</div>
+<h2>関連ファイル</h2>
+</body></html>
+"""
+    def stub_http_get(url, timeout=None):
+        if "index.html" in url:
+            return index_html
+        return article_html
+
+    from datetime import datetime as _dt
+    orig_http = J._http_get
+    orig_dt = J.datetime
+    J._http_get = stub_http_get
+
+    class _FakeDatetime(_dt):
+        @classmethod
+        def now(cls, tz=None):
+            return _dt.combine(ref_today, _dt.min.time(), tzinfo=tz)
+    J.datetime = _FakeDatetime
+    try:
+        articles = list(J.JftcDriver(max_age_days=None).fetch(_make_jftc_source()))
+    finally:
+        J._http_get = orig_http
+        J.datetime = orig_dt
+    _check("e7 max_age_days=None で 100 日前記事も通る",
+           len(articles) == 1)
+
+
 def main() -> int:
     print("JFTC scraper unit tests (C120)")
     print()
@@ -205,6 +372,16 @@ def main() -> int:
     print("(d) 定数 sanity:")
     test_host_constant()
     test_month_map_full()
+
+    print()
+    print("(e) C140: MAX_AGE_DAYS 日付足切り:")
+    test_max_age_days_constant()
+    test_driver_default_max_age()
+    test_driver_disabled_max_age()
+    test_driver_max_age_zero_treated_as_disabled()
+    test_fetch_filters_old_articles()
+    test_fetch_pub_date_none_permissive()
+    test_fetch_disabled_max_age_passes_old()
 
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")
