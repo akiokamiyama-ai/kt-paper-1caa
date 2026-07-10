@@ -734,6 +734,77 @@ Tribune の運用中に神山さんが発見した改善点・違和感・将来
 - **状態**: 実装完了、次 cron で稼働確認予定
 - **関連 commit**: C137 (本 commit)
 
+### C138 Stereogum URL 重複採用 + JFA 3 ヶ月前記事採用 → C139/C140 で対処
+
+- **発見日**: 2026-07-10（7/10 archive レビュー）
+- **症状 1**: 同一 URL `stereogum.com/2504747/...` が Page V (serendipity)
+  + Page VI (music) の両方に採用された（archive 上の class は page-five /
+  page-six、神山さんが「4 面」と表記したのは記憶違いで実際は Page V）
+- **症状 2**: Page II Web-Repo に JFA 2026-04-16 (85 日前) 記事が採用された
+  「デジタル技術を活用した酒類・たばこ年齢確認ガイドライン改訂」
+
+- **C138 真因究明**:
+  - **症状 1**: Page V ↔ Page VI 相互 dedup が pre-existing 未実装。
+    `load_recently_displayed_urls` の window は
+    `[target_date - N, target_date - 1]` で当日を含まない仕様。
+    C131 で Stereogum が reference → medium 昇格し Page VI music の pool
+    に到達可能になったことで初めて衝突が顕在化（7/3-9 はゼロ、7/10 が初）。
+    C135 cache は関与せず（scores 上 `cache_hit=None`、cache 全 miss 状態）
+  - **症状 2**: Stage 1 に pub_date による日付足切りが一切存在せず、JFA の
+    月次更新 cadence で古い記事が list top_n に居座る構造。他 press
+    release 型 driver (JFTC 等) も同種リスク
+
+- **C139 実装（Page V ↔ Page VI dedup）** — commit `5ca4183`:
+  - `scripts/page6/leisure_recommender.py::recommend_for_area()` に
+    `displayed_urls_today: set[str] | None = None` 引数追加
+  - `scripts/regen_front_page_v2.py::build_page_six_v2()` に同引数 pass-through、
+    `main()` で Page V build 完了後に `page_five_telemetry` から serendipity
+    URL を抜き出して Page VI に渡す（Page IV が page3 selected URL を
+    同名引数で受け取るのと同型の水平展開）
+  - books/music/outdoor 3 area 全てに一律適用
+  - Page V が placeholder / 例外時は空 set → no-op
+  - テスト 5/5 pass: dedup 除外 / 全 dedup で placeholder / None / 空 set /
+    partial removal
+- **C140 実装（press release driver 日付足切り）** — commit `21f0e5e`:
+  - `scripts/lib/drivers/jfa.py`: `DEFAULT_MAX_AGE_DAYS = 90`、`JfaDriver`
+    `__init__` に `max_age_days: int | None = 90` 引数、`fetch()` で
+    `datetime.now(_JST).date() - timedelta(days=90)` cutoff 以前を skip、
+    None は permissive に通す（driver parse 失敗時の防御）
+  - `scripts/lib/drivers/jftc.py`: JFA と同一パターン + 同一 90 日基準
+  - **driver 判断**:
+    | driver | 判断 | 理由 |
+    |---|---|---|
+    | JfaDriver | 適用 | press release、月次 cadence |
+    | JftcDriver | 適用 | 規制発表 press release（現在 fetch 403 中、復旧時保険）|
+    | FitnessBusinessDriver | SKIP | 経営分析（evergreen 性あり）|
+    | QueShinchoDriver | SKIP | 論考媒体（Foresight 後継、evergreen）|
+    | RSS 汎用 | SKIP | Aeon/SEP/Marginalian 等 evergreen 大量含有 |
+  - dry-run 実測（JFA、2026-07-10 JST 時点）:
+    - 従来: 10 articles（1 月〜6 月分）
+    - フィルタ後: **5 articles**（4/16〜6/22、within 85 days）
+    - 神山さんの C138 で言及された 2026-04-16 は境界内で通る仕様
+      （更に短縮したい場合は `max_age_days=60` 等で調整可能）
+  - テスト 13/13 pass（境界 89/91 日、None permissive、disabled 挙動）
+- **Sprint 13 backlog として記録**:
+  - **C138 Priority 2**: cross-page selection 一貫性の一般化・対称設計
+    （Page V ↔ VI 双方向、Page I..VI 統一）。今回は Page V → Page VI の
+    一方向で足りたが、将来 Page III/IV から Page V/VI への伝搬も検討
+  - **C140 拡張候補**: FitnessBusiness / QueShincho の実運用で古い記事
+    採用が観測されたら MAX_AGE_DAYS 導入を再検討
+  - **C140 汎用化**: Stage 1 に category 別 / priority 別の日付フィルタ
+    追加（案 C/D、evergreen 保護と news 系絞りを両立）は Sprint 13 の
+    余地
+- **7/11 朝 cron での検証ポイント**:
+  1. `[page6/{area}] cross-page dedup (C139): removed N/M ...` が run log
+     に出るか（Page V serendipity が対象カテゴリを引いた日のみ）
+  2. `displayed_urls_2026-07-11.json` で page5_url と
+     page6_urls[music/books/outdoor] に同一 URL がないこと
+  3. `[jfa] max_age_days=90: skipped N articles older than YYYY-MM-DD`
+     が出るか（N が 5-10 件想定）
+  4. scores_2026-07-10.json の jfa-fc URL の pub_date が最新 90 日以内のみ
+- **状態**: 完了（C138 調査 + C139/C140 実装）
+- **関連 commit**: C139 (`5ca4183`) / C140 (`21f0e5e`)
+
 ### 2 面 Headlines 英語ソース（BBC 等）の和訳消失 → 仕様として受容
 
 - **発見日**: 2026-06-29（W6 Day 2 朝刊レビュー）
