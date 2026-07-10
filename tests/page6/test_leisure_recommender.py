@@ -214,6 +214,128 @@ def test_recommend_for_area_no_candidates_returns_placeholder(monkeypatch_compat
 
 
 # ---------------------------------------------------------------------------
+# (c') C139 (Sprint 12, 2026-07-10): displayed_urls_today cross-page dedup
+# ---------------------------------------------------------------------------
+
+def _recommend_with_stubs(*, scored, displayed_urls_today, past_urls=None,
+                         column_text='{"column_title": "T", "column_body": "b"' + ',"focus_work":""}'):
+    """Drive recommend_for_area with all IO stubbed.
+
+    Returns the result dict for assertions.
+    """
+    import scripts.selector.dedup_filter as dedup_mod
+    orig_fetch = leisure_recommender._fetch_and_score_area
+    orig_load = leisure_recommender.load_recently_displayed_urls
+    orig_history = leisure_recommender.HISTORY_LOOKBACK_DAYS
+    leisure_recommender._fetch_and_score_area = lambda area, **kw: (list(scored), 0.0)
+    leisure_recommender.load_recently_displayed_urls = lambda **kw: set(past_urls or [])
+    try:
+        with _StubLLM(text=column_text):
+            return leisure_recommender.recommend_for_area(
+                "music", target_date=date(2026, 7, 10),
+                displayed_urls_today=displayed_urls_today,
+            )
+    finally:
+        leisure_recommender._fetch_and_score_area = orig_fetch
+        leisure_recommender.load_recently_displayed_urls = orig_load
+        leisure_recommender.HISTORY_LOOKBACK_DAYS = orig_history
+
+
+def test_recommend_for_area_dedup_today_removes_page5_url():
+    """C139 primary: Page V が採用済の URL を Page VI が除外して次点を選ぶ."""
+    hit = "https://stereogum.com/hit/"
+    alt = "https://otherhost.example/second-best/"
+    scored = [
+        {"url": hit, "title": "Stereogum top", "source_name": "Stereogum",
+         "description": "d" * 40, "final_score": 90.0},
+        {"url": alt, "title": "Other article", "source_name": "Alt",
+         "description": "d" * 40, "final_score": 50.0},
+    ]
+    result = _recommend_with_stubs(
+        scored=scored, displayed_urls_today={hit},
+    )
+    ok = (
+        result["article"] is not None
+        and result["article"]["url"] == alt
+        and result["article"]["url"] != hit
+    )
+    _check("c3 C139: displayed_urls_today 内の URL は除外され次点が選ばれる",
+           ok, f"selected url={result['article'].get('url') if result['article'] else None}")
+
+
+def test_recommend_for_area_dedup_today_all_cross_page_deduped():
+    """C139: 全 scored URL が同日他面採用済 → placeholder 'all_deduped_cross_page'."""
+    urls = ["https://a.example/", "https://b.example/"]
+    scored = [
+        {"url": u, "title": f"T{i}", "source_name": "S",
+         "description": "d" * 40, "final_score": 50.0}
+        for i, u in enumerate(urls)
+    ]
+    result = _recommend_with_stubs(
+        scored=scored, displayed_urls_today=set(urls),
+    )
+    ok = (
+        result["is_fallback"] is True
+        and result["article"] is None
+        and result["fallback_reason"] == "all_deduped_cross_page"
+    )
+    _check("c4 C139: 全記事が同日他面採用済 → placeholder(all_deduped_cross_page)",
+           ok, f"fallback_reason={result.get('fallback_reason')}")
+
+
+def test_recommend_for_area_dedup_today_none_bypasses_check():
+    """C139 backward compat: displayed_urls_today=None なら従来通り最上位を採用."""
+    hit = "https://stereogum.com/hit/"
+    scored = [
+        {"url": hit, "title": "top", "source_name": "S",
+         "description": "d" * 40, "final_score": 90.0},
+    ]
+    result = _recommend_with_stubs(
+        scored=scored, displayed_urls_today=None,
+    )
+    ok = (
+        result["article"] is not None
+        and result["article"]["url"] == hit
+    )
+    _check("c5 C139: displayed_urls_today=None → 既存挙動 (top を採用)",
+           ok, f"url={result['article'].get('url') if result['article'] else None}")
+
+
+def test_recommend_for_area_dedup_today_empty_bypasses_check():
+    """C139: displayed_urls_today=空 set → 既存挙動（filter は no-op）."""
+    hit = "https://stereogum.com/hit/"
+    scored = [
+        {"url": hit, "title": "top", "source_name": "S",
+         "description": "d" * 40, "final_score": 90.0},
+    ]
+    result = _recommend_with_stubs(
+        scored=scored, displayed_urls_today=set(),
+    )
+    _check("c6 C139: displayed_urls_today=空 set → 従来通り",
+           result["article"] is not None
+           and result["article"]["url"] == hit)
+
+
+def test_recommend_for_area_dedup_today_partial_removal():
+    """C139: 一部だけ除外、残り最上位が選ばれる（scored の順序保持）."""
+    urls = [f"https://ex{i}.example/" for i in range(5)]
+    scored = [
+        {"url": u, "title": f"T{i}", "source_name": "S",
+         "description": "d" * 40, "final_score": 100 - i * 10}
+        for i, u in enumerate(urls)
+    ]
+    # 最上位 2 件を「他面採用済」とマーク → 次点 (index 2) が選ばれる
+    displayed = {urls[0], urls[1]}
+    result = _recommend_with_stubs(
+        scored=scored, displayed_urls_today=displayed,
+    )
+    _check("c7 C139: 上位 2 件を除外 → 次点 (index 2) が選ばれる",
+           result["article"] is not None
+           and result["article"]["url"] == urls[2],
+           f"selected={result['article'].get('url') if result['article'] else None}")
+
+
+# ---------------------------------------------------------------------------
 # (d) Books area filter — page3-R6 / page4 sources excluded
 # ---------------------------------------------------------------------------
 
@@ -490,6 +612,13 @@ def main() -> int:
     print("(c) recommend_for_area:")
     test_recommend_for_area_unsupported()
     test_recommend_for_area_no_candidates_returns_placeholder()
+    print()
+    print("(c') C139 cross-page dedup (displayed_urls_today):")
+    test_recommend_for_area_dedup_today_removes_page5_url()
+    test_recommend_for_area_dedup_today_all_cross_page_deduped()
+    test_recommend_for_area_dedup_today_none_bypasses_check()
+    test_recommend_for_area_dedup_today_empty_bypasses_check()
+    test_recommend_for_area_dedup_today_partial_removal()
     print()
     print("(d) Books area filter (page3-R6 / page4 boundary):")
     test_books_filter_excludes_quanta()

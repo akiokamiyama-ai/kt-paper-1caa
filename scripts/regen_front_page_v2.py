@@ -1590,20 +1590,33 @@ def build_page_six_v2(
     target_date: date,
     *,
     pre_evaluated: dict[str, dict] | None = None,
+    displayed_urls_today: set[str] | None = None,
 ) -> tuple[str, dict]:
     """Build the full <section class="page page-six"> block (Leisure 4 columns).
+
+    Parameters
+    ----------
+    displayed_urls_today :
+        C139 (Sprint 12, 2026-07-10): 当日既に他面で採用済の URL 集合。
+        Page IV の同名引数と対称的な設計。全 area (books/music/outdoor)
+        の ``recommend_for_area`` に流して同日 cross-page dedup を行う。
+        Page V serendipity 記事の URL がここに入る想定
+        （呼出側で orchestrate、Page V build → Page VI build の順序前提）。
 
     Returns (html, telemetry).
     """
     # 1) Books / Music / Outdoor — recommend + LLM column
     books = page6_leisure.recommend_for_area(
         "books", target_date=target_date, pre_evaluated=pre_evaluated,
+        displayed_urls_today=displayed_urls_today,
     )
     music = page6_leisure.recommend_for_area(
         "music", target_date=target_date, pre_evaluated=pre_evaluated,
+        displayed_urls_today=displayed_urls_today,
     )
     outdoor = page6_leisure.recommend_for_area(
         "outdoor", target_date=target_date, pre_evaluated=pre_evaluated,
+        displayed_urls_today=displayed_urls_today,
     )
 
     # 2) Cooking — LLM autonomous
@@ -2498,9 +2511,22 @@ def main(argv: list[str] | None = None) -> int:
         pre_evaluated_for_page6: dict[str, dict] = {
             a["url"]: a for a in result.candidates_scored if a.get("url")
         }
+        # C139 (Sprint 12, 2026-07-10): 当日 Page V serendipity 記事の URL を
+        # Page VI に渡して同日 cross-page dedup を行う。7/10 archive で
+        # Stereogum URL が Page V + Page VI music の両方に採用された事象
+        # (C138 調査) への恒久対策。Page V build（4c 節）が Page VI build
+        # より先に実行される順序を前提とする。Page V が placeholder / 例外で
+        # 記事を選ばなかった場合は set() を渡し、dedup は no-op。
+        page6_other_pages_urls: set[str] = set()
+        if page_five_telemetry is not None:
+            sty = page_five_telemetry.get("serendipity", {})
+            article = sty.get("article") if isinstance(sty, dict) else None
+            if article and article.get("url"):
+                page6_other_pages_urls.add(article["url"])
         try:
             page_six_html, page_six_telemetry = build_page_six_v2(
                 target, pre_evaluated=pre_evaluated_for_page6,
+                displayed_urls_today=page6_other_pages_urls or None,
             )
             books_t = page_six_telemetry["books"]
             music_t = page_six_telemetry["music"]

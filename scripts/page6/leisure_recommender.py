@@ -365,8 +365,21 @@ def recommend_for_area(
     target_date: date | None = None,
     pre_evaluated: dict[str, dict] | None = None,
     registry: SourceRegistry | None = None,
+    displayed_urls_today: set[str] | None = None,
 ) -> dict:
     """Run the full pipeline for one area; return a dict for page5 rendering.
+
+    Parameters
+    ----------
+    displayed_urls_today :
+        C139 (Sprint 12, 2026-07-10): 当日 Page V (serendipity) 等、他面で
+        既に採用済の URL 集合。過去 30 日 page6 dedup (``load_recently_
+        displayed_urls`` の window は ``[target_date - N, target_date - 1]``
+        で当日を含まない) の直後に「当日他面 dedup」段を挟んで衝突を防ぐ。
+        7/10 archive で Stereogum URL が Page V + Page VI music の両方に
+        採用された事象 (C138 調査) への恒久対策。None / 空 set は従来通り
+        動作（当日他面 dedup は no-op）。Page IV が page3 selected URL を
+        同名引数で受け取るのと同型の水平展開。
 
     Returns::
 
@@ -408,6 +421,23 @@ def recommend_for_area(
             )
     if not scored:
         return _placeholder_result(area, "all_deduped")
+
+    # 4.1) C139 (Sprint 12, 2026-07-10): 同日他面 dedup（当日 Page V 等）
+    # ``load_recently_displayed_urls`` の window に当日は含まれないため、
+    # 別途 caller から明示的に渡された当日採用済 URL を除外する。
+    # 全 area (books/music/outdoor) に一律適用。
+    if displayed_urls_today:
+        before = len(scored)
+        scored = filter_recently_displayed(scored, displayed_urls_today)
+        removed = before - len(scored)
+        if removed:
+            print(
+                f"[page6/{area}] cross-page dedup (C139): removed "
+                f"{removed}/{before} already shown on other pages today",
+                file=sys.stderr,
+            )
+        if not scored:
+            return _placeholder_result(area, "all_deduped_cross_page")
 
     # 4.5) C38a Step 2c (2026-06-09): host 単位ペナルティを final_score に適用。
     # 詳細は ``LEISURE_HOST_PENALTIES`` の docstring 参照。
