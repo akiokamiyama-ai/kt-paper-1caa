@@ -1292,6 +1292,24 @@
       "ai_kamiyama_title": "A World of Scams",
       "ai_kamiyama_category": "geopolitics",
       "ai_kamiyama_source_name": "Foreign Policy"
+    },
+    {
+      "displayed_on": "2026-07-12",
+      "article_url": "https://www.cleverhiker.com/backpacking/evolved-supply-co-ranger-review/",
+      "article_title": "Evolved Supply Co. The Ranger Ultralight Backpack Review",
+      "article_category": "outdoor",
+      "tie_candidates": [
+        "outdoor"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.themarginalian.org/2026/07/10/but-we-had-music/",
+      "ai_kamiyama_title": "But We Had Music",
+      "ai_kamiyama_category": "books:自然科学ノンフィクション",
+      "ai_kamiyama_source_name": "The Marginalian（旧 Brain Pickings）"
     }
   ]
 }

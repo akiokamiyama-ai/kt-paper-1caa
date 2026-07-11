@@ -374,6 +374,11 @@
       "concept_id": "pattern_language",
       "name_ja": "パターンランゲージ",
       "displayed_on": "2026-07-11"
+    },
+    {
+      "concept_id": "mot",
+      "name_ja": "技術経営",
+      "displayed_on": "2026-07-12"
     }
   ]
 }

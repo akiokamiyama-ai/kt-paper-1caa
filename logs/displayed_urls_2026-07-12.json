@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-12",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/19560/",
+    "https://que.dailyshincho.jp/node/19680/",
+    "https://www.ft.com/content/8916354a-4c7c-4df6-8c9e-2303f883855d",
+    "https://que.dailyshincho.jp/node/19785/"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://japan.zdnet.com/article/35250439/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2607/10/news012.html",
+    "web_repo": "https://www.bc01.net/article/up-bear_202608/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/american-tragedy-can-no-longer-end-in-catharsis-by-yanis-varoufakis-2026-07",
+    "https://www.asahi.com/articles/ASV7B44K2V7BULFA00SM.html?ref=rss",
+    "https://www.asahi.com/articles/ASV787H02V78USPT015M.html?ref=rss",
+    "https://www.mckinsey.com/mgi/media-center/mckinsey-global-institute-climate-planning-has-prioritized-floods-heat-demands-equal-attention",
+    "https://wordswithoutborders.org/read/article/2026-06/from-fractals-garma-defreese/",
+    "https://www.publicbooks.org/a-tale-of-two-families-birthright-citizenship-and-family-reunification-for-chinese-migrants-in-1925/"
+  ],
+  "page4_urls": [
+    "https://www.themarginalian.org/2026/07/10/but-we-had-music/",
+    "https://www.publicbooks.org/the-right-to-return-chinese-merchants-the-scott-act-and-legal-knowledge-in-an-era-of-exclusion/",
+    "https://3quarksdaily.com/3quarksdaily/2026/07/depraved-art.html"
+  ],
+  "page5_url": "https://www.cleverhiker.com/backpacking/evolved-supply-co-ranger-review/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/07/10/the-hydration-break-world-cup/",
+    "music": "https://stereogum.com/2504910/john-summits-latest-twitter-beef-is-with-pete-tong/news/",
+    "outdoor": "https://www.cleverhiker.com/backpacking/black-diamond-beta-light-45-review/"
+  },
+  "headlines_urls": [
+    "https://www.bbc.co.uk/news/articles/cj6g41pzy41o?at_medium=RSS&at_campaign=rss",
+    "https://www.ft.com/content/07fa9ce9-ac21-484c-a57c-078b0bb0fd3b",
+    "http://www3.nhk.or.jp/news/html/20260710/k10015173891000.html"
+  ]
+}
