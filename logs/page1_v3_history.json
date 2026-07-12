@@ -807,6 +807,23 @@
           "cost_usd": 0.037536,
           "is_fallback": false
         }
+      },
+      {
+        "date": "2026-07-13",
+        "day_label": "月",
+        "angle_key": "critical",
+        "angle_label_jp": "批判的",
+        "essay": {
+          "angle_label": "月曜 - 批判的",
+          "daily_question": "身体知の「ネットワーク論」は何を見落としているか",
+          "essay_title": "Mitonの楽観論が照らし出す三つの死角",
+          "body": "Helena Miton の論考は、暗黙知の伝達を「ビットのネットワーク」として捉えることで、一見不可能に思える身体知の伝承に構造的な解を与えた。いくつかの「鍵となるビット」を固定すれば、残りは物理的制約によって自動的に揃う——この洞察は鮮やかであり、日曜版の論考に相応しい知的興奮をもたらす。しかし編集部は、その鮮やかさの裏に、看過しがたい三つの死角が潜んでいると考える。\n\n第一の死角は、「制約」が解放でもあり得るという逆説である。Miton は身体的制約を伝承の助けとして描くが、認知人類学者のエドウィン・ハッチンズは「分散認知」の研究において、制約は同時に可能性を閉じると論じた。乗馬の鞍の種類が身体の動きを誘導するように、制約は特定の実践形態を温存すると同時に、それ以外の変異を淘汰する。つまり「何かが伝わる」という事実は、「何かが永遠に失われた」という事実の裏面である。ネットワーク論は伝承の成功例を説明するが、失われた可能性の広大な墓場には目を向けない。\n\n第二の死角は、権力と選択性の問題である。文化人類学者のマーシャル・サーリンズは、文化の伝承には常に「誰が何を伝えるか」という選択の政治学が伴うと指摘してきた。Miton のモデルでは、教師が「鍵となるビット」を選ぶ行為は中立的な教育技法として描かれる。しかし現実には、その選択は権威関係、ジェンダー、階級、民族といった社会的力学によって深く条件づけられている。伝承された知は「生き残った知」であると同時に、「権力によって選ばれた知」でもある。ビットのネットワークという精緻な認知モデルは、この政治的次元をきれいに捨象してしまう。\n\n第三の死角は、デジタル技術との関係において最も今日的である。Miton は「記録の山に信頼を置くのは誤りだ」と述べ、身体への回帰を促す。しかしメディア理論家のアンディ・クラークは「拡張された心（extended mind）」の観点から、道具や環境が認知の一部を構成すると論じた。スマートフォンの動作解析、センサーによる運動フィードバック、VR による没入型訓練——これらのデジタル技術は単なる「記録媒体」ではなく、身体的制約のネットワークそのものに介入し得る。Miton がデジタルを「形式知の倉庫」として片づける図式は、テクノロジーの役割を過小評価している可能性がある。\n\n三つの死角を並べると、Miton の論考が実は「楽観的な保守主義」に傾いていることが見えてくる。身体知は生き延びてきた、制約がそれを支えてきた、だから未来にも伝わるはずだ——この物語は美しいが、変容と喪失と権力という三つの摩擦力を脇に置いた上で成立している。\n\n経営の文脈に引き寄せれば、この問いは切実さを増す。組織の現場技術、顧客との関係性、チームの暗黙の規範——これらは「ビットのネットワーク」として何らかの形で伝わるかもしれない。しかしどのビットが「鍵」かを誰が決めるのか、何が失われているのかに気づく感度を誰が持つのか。ディープリスニング経営が問うのは、伝わったものへの信頼よりも、伝わらなかったものへの謙虚さではないだろうか。Miton の論考を入り口として、その先の不確かさに踏み込む構えこそが、今週の主軸テーマが経営者に要求していることだと編集部は考える。",
+          "annotation_label": "反対論者・批判者",
+          "annotation_body": "エドウィン・ハッチンズ（認知人類学）は「分散認知」から制約の両義性を、マーシャル・サーリンズ（文化人類学）は文化伝承における権力の選択性を問題化した。アンディ・クラーク（哲学・認知科学）は「拡張された心」論でデジタル技術を単なる記録媒体として退けるモデルを批判。三者はそれぞれ異なる立場から、Mitonの「ネットワーク論」が捨象した次元を照らし出す。",
+          "quote_excerpt": "Much of our cultural knowledge simply can't be put into words or recorded. It can, however, be stored in the constrained movements of our bodies. Optimising the transmission of a cultural practice doesn't always require a larger amount of information. It can be achieved by leveraging how some bits influence others in a network, by learning how some objects and materials exploit those networks, and by understanding how teachers use pedagogical techniques.\n\nIt is hard to say what forms of culture will exist in another 1,000 or 10,000 years. But if tacit knowledge is still around, then it will likely have been transmitted from body to body, by exploiting our physical constraints. This is how 'what we know but cannot say' might someday link our age with the cultures of the deep future.",
+          "cost_usd": 0.052179,
+          "is_fallback": false
+        }
       }
     ]
   }

@@ -379,6 +379,11 @@
       "concept_id": "mot",
       "name_ja": "技術経営",
       "displayed_on": "2026-07-12"
+    },
+    {
+      "concept_id": "silence_in_dialogue",
+      "name_ja": "沈黙の意味",
+      "displayed_on": "2026-07-13"
     }
   ]
 }

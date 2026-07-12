@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-13",
+  "page1_urls": [
+    "https://www.bbc.co.uk/news/articles/c9v29d7vml7o?at_medium=RSS&at_campaign=rss",
+    "https://que.dailyshincho.jp/node/19743/",
+    "https://www.bbc.co.uk/news/articles/cj6g41pzy41o?at_medium=RSS&at_campaign=rss",
+    "https://que.dailyshincho.jp/node/19569/"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.ppc.go.jp/news/",
+    "human_energy": "https://sloanreview.mit.edu/article/leaderships-blind-spot-in-the-age-of-ai/",
+    "web_repo": "https://www.bc01.net/article/makasete-group_202608/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/going-over-the-brink-how-hizballahs-risk-strategy-made-lebanon-impossible-to-ignore/",
+    null,
+    "http://www3.nhk.or.jp/news/html/20260711/k10015174281000.html",
+    "https://www.mckinsey.com/featured-insights/mckinsey-on-books/author-talks-in-hollywood-and-in-business-its-cool-to-be-kind",
+    "https://wordswithoutborders.org/read/article/2026-06/a-sami-womans-sin-imagining-other-peoples-sex-lives-west-spangenberg/",
+    "https://nautil.us/how-the-rule-breaking-octopus-is-rewriting-the-evolution-of-intelligence-1282633/"
+  ],
+  "page4_urls": [
+    "https://3quarksdaily.com/3quarksdaily/2026/07/hammer-and-ballot.html",
+    "https://www.themarginalian.org/2026/07/12/no-te-salves/",
+    "https://www.nplusonemag.com/online-only/gooooaaal/from-mexico-1986-to-north-america-2026/"
+  ],
+  "page5_url": "https://www.houyhnhnm.jp/news/1148472/",
+  "page6_urls": {
+    "books": "https://lithub.com/from-stalin-to-trump-how-power-unmakes-the-world/",
+    "music": "https://stereogum.com/2505004/hear-magi-merlins-chrome-plated-rb-on-power-house/music/",
+    "outdoor": "https://www.cleverhiker.com/footwear/lowa-skyterra-womens-trail-runner-review/"
+  },
+  "headlines_urls": [
+    "https://www.bbc.co.uk/news/articles/ckg55v9e2y9o?at_medium=RSS&at_campaign=rss",
+    "https://que.dailyshincho.jp/node/19695/",
+    "https://www.economist.com/finance-and-economics/2026/07/12/storm-clouds-gather-over-americas-financial-supremacy"
+  ]
+}
