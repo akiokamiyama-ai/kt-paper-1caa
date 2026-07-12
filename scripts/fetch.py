@@ -41,6 +41,7 @@ from .lib.drivers.fitness_business import (
 from .lib.drivers.html import HtmlScrapeDriver
 from .lib.drivers.jfa import HOST as JFA_HOST, JfaDriver
 from .lib.drivers.jftc import HOST as JFTC_HOST, JftcDriver
+from .lib.drivers.ppc import HOST as PPC_HOST, PpcDriver
 from .lib.drivers.que_shincho import HOST as QUE_HOST, QueShinchoDriver
 from .lib.drivers.rss import RssDriver
 from .lib.source import Article, FetchMethod, Priority, Source, load_all_sources
@@ -106,6 +107,11 @@ def run(
     # タイトル</a></h2></dd> の DL ペアを抽出。host が www.jfa-fc.or.jp なら
     # JfaDriver を使う。
     jfa = JfaDriver(site_config=site_cfg)
+    # C142 (Sprint 12, 2026-07-13): PPC (個人情報保護委員会) は RSS 未提供の
+    # ため報道発表一覧ページから <time datetime>+<div class="news-text"><a>
+    # を抽出。host が www.ppc.go.jp なら PpcDriver を使う。JFA と同型の
+    # 1 HTTP fetch / list-only 設計。
+    ppc = PpcDriver(site_config=site_cfg)
 
     all_sources = load_all_sources(sources_dir)
     selected = select_sources(
@@ -136,6 +142,8 @@ def run(
             driver = fitness_business
         elif JFA_HOST in (src.url or ""):
             driver = jfa
+        elif PPC_HOST in (src.url or ""):
+            driver = ppc
         else:
             driver = html
         try:

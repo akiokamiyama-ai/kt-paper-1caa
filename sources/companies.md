@@ -76,13 +76,14 @@
 - **対象**: ビジネス・経営全般。テクノロジー欄ではAI・DX関連の論考も
 - **位置付け**: 企業経営者層の視座でのAI記事を月単位で俯瞰。深掘り解説より時流の話題感を捉える用途
 
-#### 8. 個人情報保護委員会 ⚠️
+#### 8. 個人情報保護委員会 ✅
 - **URL**: https://www.ppc.go.jp/news/
-- **RSS**: 未提供（一覧ページのみ）
-- **形式**: Web Fetch
+- **RSS**: 未提供（C142 検証時に確認）→ 専用 HTML scraper `PpcDriver` で対応
+- **形式**: HTML（`https://www.ppc.go.jp/news/press/` 一覧ページから `<time datetime>+<div class="news-text"><a>` 抽出）
+- **fetch_method**: HTML（`PpcDriver` 経由、C142 実装）
 - **mainstream**: false
-- **対象**: 個人情報保護法改正、AI×個人情報のガイドライン、執行事例
-- **位置付け**: 生成AI導入時の法的論点（学習データ・出力管理・社員利用）に直結。月1の俯瞰で十分だが、ガイドライン改訂時は High 扱い
+- **対象**: 個人情報保護法改正、AI×個人情報のガイドライン、執行事例、報道発表
+- **位置付け**: 生成AI導入時の法的論点（学習データ・出力管理・社員利用）に直結。**こころみ（介護・傾聴事業）にとっては顧客対話・コンプライアンス直結の一次ソース**。月1の俯瞰で十分だが、ガイドライン改訂時は High 扱い。C142 (Sprint 12, 2026-07-13) で scraper 実装、それまでは placeholder driver（[scraper not implemented]）状態だった。C140 と同型の `MAX_AGE_DAYS=90` 日付足切りを driver 内で適用
 
 #### 9. 情報処理推進機構（IPA） ⚠️
 - **URL**: https://www.ipa.go.jp/news/index.html
