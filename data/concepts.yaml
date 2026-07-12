@@ -214,7 +214,21 @@
     心は頭蓋骨の内側に閉じていない。
     ノート、スマホ、外的道具も認知プロセスの一部を担う。
     心の境界を再定義する思考実験。
-  related: [embodied_cognition, actor_network_theory]
+  related: [embodied_cognition, actor_network_theory, distributed_cognition]
+  difficulty: 2
+
+- id: distributed_cognition
+  name_ja: 分散認知
+  name_en: Distributed Cognition
+  domain: 認知科学・組織学習論
+  thinkers: [エドウィン・ハッチンズ]
+  seed: |
+    認知プロセスは個人の頭の中に閉じていない。
+    船の航海、飛行機のコックピット、病院の手術室など、
+    複数の人と道具・環境が織りなす系全体が「認知の単位」として機能する。
+    ハッチンズ『Cognition in the Wild』(1995) が組織・チームの
+    学習と判断を分析する視座を提供する。
+  related: [extended_mind, embodied_cognition, tacit_knowledge, seci_model]
   difficulty: 2
 
 - id: predictive_processing

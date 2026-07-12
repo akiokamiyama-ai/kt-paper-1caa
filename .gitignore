@@ -11,6 +11,9 @@ docs/*
 !docs/themes.md
 !docs/c37_setup.md
 !docs/observations.md
+# C143 (Sprint 12, 2026-07-13): W テーマ特集の主軸記事本文投入ルール
+# （page1_v3 essay 生成における「本文必須」原則）を運用メモとして track。
+!docs/monthly_pivotal_ops_v1.md
 
 # Local session notes (prompt templates, scratch)
 archive/_*.txt
