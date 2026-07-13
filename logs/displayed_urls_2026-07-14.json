@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-14",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/19698/",
+    "https://que.dailyshincho.jp/node/19740/",
+    "https://www.economist.com/finance-and-economics/2026/07/07/ai-has-taken-over-the-stock-market-the-bond-market-is-next",
+    "https://www.ft.com/content/9a5294cf-0b64-4201-b88c-12ba586bb4fd"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.ppc.go.jp/news/press/2026/260707",
+    "human_energy": "https://jinjibu.jp/news/detl/26630/",
+    "web_repo": "https://www.jfa-fc.or.jp/particle/5164.html"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/ai-governance-framework-by-ana-palacio-2026-07",
+    "https://toyokeizai.net/articles/-/950930?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://www.bloomberg.com/news/articles/2026-07-13/capital-group-blackrock-said-to-buy-into-sbi-funds-anchor-book",
+    "https://www.mckinsey.com/industries/technology-media-and-telecommunications/our-insights/how-a-180-year-old-news-institution-prepares-for-its-next-reinvention",
+    "https://wordswithoutborders.org/read/article/2026-06/a-letter-from-the-farmer-suicide-commission/",
+    "https://3quarksdaily.com/3quarksdaily/2026/07/the-estranged-worlds-of-j-g-ballard.html"
+  ],
+  "page4_urls": [
+    "https://3quarksdaily.com/3quarksdaily/2026/07/does-the-idea-of-biological-agency-serve-a-scientific-purpose.html",
+    "https://www.themarginalian.org/2026/07/12/chronodiversity/",
+    "https://3quarksdaily.com/3quarksdaily/2026/07/in-the-face-fay-bound-alberti-examines-our-relationship-to-our-most-public-features.html"
+  ],
+  "page5_url": "https://stereogum.com/2505067/l7s-jennifer-finch-reveals-brain-cancer-diagnosis/news/",
+  "page6_urls": {
+    "books": "https://lithub.com/the-cell-phone-novel-craze-of-early-2000s-japan-did-not-in-fact-destroy-literature/",
+    "music": "https://stereogum.com/2505029/beck-karen-o-jackson-browne-more-play-wes-anderson-soundtrack-songs-at-the-hollywood-bowl/news/",
+    "outdoor": "https://www.cleverhiker.com/footwear/hoka-infini-hike-tc-review/"
+  },
+  "headlines_urls": [
+    "https://que.dailyshincho.jp/node/19746/",
+    "https://que.dailyshincho.jp/node/19776/",
+    "https://www.bbc.co.uk/news/articles/cly0l5d5xn7o?at_medium=RSS&at_campaign=rss"
+  ]
+}

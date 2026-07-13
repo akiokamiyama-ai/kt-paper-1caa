@@ -384,6 +384,11 @@
       "concept_id": "silence_in_dialogue",
       "name_ja": "沈黙の意味",
       "displayed_on": "2026-07-13"
+    },
+    {
+      "concept_id": "social_psychology",
+      "name_ja": "社会心理学",
+      "displayed_on": "2026-07-14"
     }
   ]
 }

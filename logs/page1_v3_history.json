@@ -824,6 +824,23 @@
           "cost_usd": 0.052179,
           "is_fallback": false
         }
+      },
+      {
+        "date": "2026-07-14",
+        "day_label": "火",
+        "angle_key": "practitioner",
+        "angle_label_jp": "実践者",
+        "essay": {
+          "angle_label": "火曜 - 実践者",
+          "daily_question": "暗黙知の伝承を、経営者はどう組織設計に落とすか",
+          "essay_title": "「身体知の回路」を組織に埋め込む三つの設計",
+          "body": "Miton の論考が示した核心を、経営現場の言葉に置き換えるとこうなる。優秀な人材が退職するとき、その人が持ち去るものの大半は、引継ぎ文書には載らない。マニュアル化されたプロセスではなく、「あの局面でどう踏み込むか」の感覚——すなわち身体知である。人材紹介や組織開発を事業の軸に置く神山氏にとって、これは抽象的な文化論ではなく、毎週の経営判断と直結した問いだ。\n\nMiton の分析で特に実践的な示唆を持つのは、「鍵となるビットを固定すれば、残りの動作は物理的制約によって自動的に揃う」という発見である。教えることができるのは全体ではなく、数個の決定的なビットだけでよい——この逆説は、組織設計に直接翻訳できる。\n\n第一の設計は、「判断の型」を言語化する前に、ケースで先行させることである。コンサルティングファームのマッキンゼーが長年維持してきた「エンゲージメント・マネジャーとアナリストの同行アサイン」は、まさにこの構造を持つ。クライアントとの対話に同席させることで、何を聞くか・どこで引くかという感覚を、説明ではなく文脈ごと渡す。人材紹介の文脈に置き換えれば、候補者面談に若手を同席させ、商談後に「あの問いかけはなぜそのタイミングだったか」を一言だけ話す——このループが、マニュアルより速く身体知を転写する。重要なのは、同席の頻度ではなく、「判断の直後に言語化する瞬間をつくる」という設計である。\n\n第二の設計は、「ツールが行動を制約する」という原理を意図的に使うことである。Miton は乗馬の鞍を例に挙げる——鞍の種類が骨盤と脚の位置を決め、それが全体の姿勢を規定する。組織においても同様に、ツールの設計が暗黙の行動規範をつくる。HubSpot がパイプライン管理の入力項目を意図的に絞り込んでいるのは、「記録の手間を減らす」ためではなく、「営業担当者が何に注意を向けるべきかを、UI が自然に誘導する」という設計思想の表れだ。神山氏の事業でいえば、ウェブリポのダッシュボード設計や、Human Energy のコーチングシートの構造そのものが、担当者の問いかけの質を規定する「鞍」になりうる。ツールは知識を「格納」するのではなく、身体知を「誘発」する装置として設計するという発想の転換がここにある。\n\n第三の設計は、「異常なケースの保存」を制度化することである。Miton が指摘するように、文化的実践の鎖は「冗長性と反復」によって生き延びる。組織知の伝承においても、標準ケースの蓄積よりも、「なぜあの局面でその判断をしたか」という例外ケースの記録の方が、身体知の伝承に効く。楽天が社内で続けてきたとされる「失敗事例共有会」の仕組みが示すように、うまくいかなかった判断を語る場は、成功事例の共有以上に、判断の「感触」を次世代に渡す機能を持つ。形式は問わない。週次の1on1で「今週で最も迷った判断」を一つ話す習慣だけでも、この回路は動き始める。\n\n三つの設計に共通するのは、「教える」ことではなく「感じる機会をつくる」という方向性である。ディープリスニングが経営の核心にあるなら、それを組織に伝承するための回路もまた、言葉ではなく場の設計によって埋め込まれる。暗黙知の伝承は、採用や研修の問題ではなく、日常の組織設計の問題として手元に引き寄せることができる。",
+          "annotation_label": "関連企業・事例",
+          "annotation_body": "マッキンゼーの同行アサイン制度は、エンゲージメント・マネジャーとアナリストが同一案件に関わることで判断感覚を転写する構造を持つ。HubSpot は CRM の入力設計を絞ることで営業行動を誘導する。楽天の失敗事例共有会は、例外ケースを通じて判断の「感触」を組織内で循環させる試みとして知られる。",
+          "quote_excerpt": "An alternative way of explaining the paradox between brittle transmission chains and the ubiquity of surviving cultural knowledge involves focusing on how knowledge is stored, not just transmitted. Cultural knowledge is held not only in records written on stone tablets, papyrus or other media. It also exists in bodies and nervous systems. At first glance, this may appear to make things more challenging for cultural transmission, since this kind of knowledge typically requires learning how a practice feels, which can't be conveyed through words alone. This is tacit knowledge, or, as the polymath Michael Polanyi describes it, what we know but cannot say.\n\nNeither imitation nor language are much help when it comes to learning this kind of knowledge. For it to be transmitted, you can't simply watch someone, or read some instructions. Language is perfectly suited to convey all kinds of cultural things that are mainly language to start with, such as stories, but many things need to be experienced firsthand.",
+          "cost_usd": 0.05394,
+          "is_fallback": false
+        }
       }
     ]
   }

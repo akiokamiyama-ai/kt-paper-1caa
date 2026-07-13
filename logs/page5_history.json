@@ -1328,6 +1328,24 @@
       "ai_kamiyama_title": "Do Not Spare Yourself",
       "ai_kamiyama_category": "books:自然科学ノンフィクション",
       "ai_kamiyama_source_name": "The Marginalian（旧 Brain Pickings）"
+    },
+    {
+      "displayed_on": "2026-07-14",
+      "article_url": "https://stereogum.com/2505067/l7s-jennifer-finch-reveals-brain-cancer-diagnosis/news/",
+      "article_title": "L7’s Jennifer Finch Reveals Brain Cancer Diagnosis",
+      "article_category": "music",
+      "tie_candidates": [
+        "music"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://3quarksdaily.com/3quarksdaily/2026/07/does-the-idea-of-biological-agency-serve-a-scientific-purpose.html",
+      "ai_kamiyama_title": "Does the idea of ‘biological agency’ serve a scientific purpose?",
+      "ai_kamiyama_category": "academic",
+      "ai_kamiyama_source_name": "3 Quarks Daily"
     }
   ]
 }
