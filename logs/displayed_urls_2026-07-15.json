@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-15",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/19794/",
+    "https://que.dailyshincho.jp/node/19830/",
+    "https://www.economist.com/finance-and-economics/2026/07/14/what-investment-gurus-get-wrong",
+    "https://www.economist.com/finance-and-economics/2026/07/13/the-stubborn-scarcity-of-female-breadwinners"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://atmarkit.itmedia.co.jp/ait/articles/2607/14/news031.html",
+    "human_energy": "https://jinjibu.jp/news/detl/26653/",
+    "web_repo": "https://www.bc01.net/article/stayand_202608/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/outgunned-but-not-outplayed-irans-theory-of-victory/",
+    "https://toyokeizai.net/articles/-/951147?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://news.google.com/rss/articles/CBMisgFBVV95cUxOQ2Z1VkUtc1lGYVJQaDlHVDF1LS1JNkVYcU1jSzF2dlRuZDdpYzlsRGhJb1ZEN0lJUTc5aW9IUkFpWU5iSmJKOFBJQjRHRDVtQk5KYXhZUEpTbXAwc0NrcE5sY0FTZjl1YUJnVmZLenZoSXZWZmJGaDE0OTBIeUpjV1hKZ1BmV0pKaXRWV3QxdVNqdmhsLXpyX1BzUEdEVGlrSU5XNk1LYVNHVm1qRHp1XzB3?oc=5",
+    "https://www.mckinsey.com/capabilities/people-and-organizational-performance/our-insights/building-expertise-in-the-age-of-ai-who-trains-the-next-generation",
+    "https://wordswithoutborders.org/read/article/2026-07/shouting-at-a-low-volume-a-conversation-with-e-m-palitha-edirisooriya-pathirage-porawagamage/",
+    "https://www.nplusonemag.com/online-only/gooooaaal/seeing-like-a-referee/"
+  ],
+  "page4_urls": [
+    "https://3quarksdaily.com/3quarksdaily/2026/07/from-a-i-to-the-deep-state-michel-foucault-foresaw-it-all.html",
+    "https://www.themarginalian.org/2026/07/13/lying-in-politics-hannah-arendt/",
+    "https://www.themarginalian.org/2026/07/13/tsunetomo-feedback/"
+  ],
+  "page5_url": "https://www.atlasobscura.com/places/musee-des-annees-30",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/07/14/zain-baweja-on-gloss/",
+    "music": "https://stereogum.com/2505156/the-mountain-goats-opening-for-candlebox-after-releasing-song-about-opening-for-candlebox/news/",
+    "outdoor": "https://www.cleverhiker.com/backpacking/mountainsmith-zerk-40-review/"
+  },
+  "headlines_urls": [
+    "https://www.bbc.co.uk/news/articles/cy8wlplellvo?at_medium=RSS&at_campaign=rss",
+    "https://que.dailyshincho.jp/node/19806/",
+    "https://que.dailyshincho.jp/node/19632/"
+  ]
+}

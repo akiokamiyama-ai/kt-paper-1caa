@@ -1346,6 +1346,24 @@
       "ai_kamiyama_title": "Does the idea of ‘biological agency’ serve a scientific purpose?",
       "ai_kamiyama_category": "academic",
       "ai_kamiyama_source_name": "3 Quarks Daily"
+    },
+    {
+      "displayed_on": "2026-07-15",
+      "article_url": "https://www.atlasobscura.com/places/musee-des-annees-30",
+      "article_title": "Musée des Années 30  in Boulogne-Billancourt, France",
+      "article_category": "outdoor",
+      "tie_candidates": [
+        "outdoor"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://wordswithoutborders.org/read/article/2026-07/shouting-at-a-low-volume-a-conversation-with-e-m-palitha-edirisooriya-pathirage-porawagamage/",
+      "ai_kamiyama_title": "“Shouting at a Low Volume”: A Conversation with E. M. Palitha Edirisooriya",
+      "ai_kamiyama_category": "books:海外純文学",
+      "ai_kamiyama_source_name": "Words Without Borders"
     }
   ]
 }

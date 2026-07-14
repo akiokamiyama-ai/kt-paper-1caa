@@ -841,6 +841,23 @@
           "cost_usd": 0.05394,
           "is_fallback": false
         }
+      },
+      {
+        "date": "2026-07-15",
+        "day_label": "水",
+        "angle_key": "thinker",
+        "angle_label_jp": "思想家",
+        "essay": {
+          "angle_label": "水曜 - 思想家",
+          "daily_question": "身体に宿る知を、思想史はいかに語ってきたか",
+          "essay_title": "ポランニーの先にある知の系譜",
+          "body": "Miton の論考が中心に据えるのは、Michael Polanyi の「暗黙知（tacit knowledge）」という概念である。1966年の著作『暗黙知の次元（The Tacit Dimension）』でポランニーは「我々は語りうる以上のことを知っている（We can know more than we can tell）」と宣言した。この一文は、20世紀の知識論における最もラディカルな転換のひとつとして今なお輝きを失わない。しかし思想史の地層を掘り下げると、ポランニーの直観は突然変異ではなく、長い系譜の結節点であることが見えてくる。\n\nその系譜の起点に置くべきは、アリストテレスの「フロネーシス（phronesis）」、すなわち実践的知恵という概念である。アリストテレスは『ニコマコス倫理学』の中で、知識を三つに分類した。理論的認識である「エピステーメー」、技術的製作知である「テクネー」、そして状況に即した実践的判断力としての「フロネーシス」である。フロネーシスは言語命題に還元できない。それは具体的な場面の只中で働き、経験の蓄積と文脈の感受によってしか育たない。ポランニーが「暗黙知」と呼んだものの原型は、すでに紀元前4世紀に描出されていたのだ。\n\nしかしここに見落とされがちな対比軸がある。西洋の知識論は、デカルト以降、知識を「明晰判明な命題」へと還元する方向に傾き続けた。デカルトの「我思う、ゆえに我あり」は、身体から切り離された純粋な思惟主体を立てる宣言であり、知識の正統性を言語化可能な命題に求める近代認識論の出発点である。フロネーシスの系譜はこのデカルト的転換によって哲学の傍流に追いやられ、知識論の中心は「記録し、複製し、検証できるもの」が占めるようになった。\n\n20世紀にこの傾向に正面から抗したのが、メルロ＝ポンティの現象学である。1945年の主著『知覚の現象学（Phénoménologie de la perception）』でメルロ＝ポンティは、身体を単なる道具ではなく「知覚の主体」として再措定した。彼が描く「身体図式（schéma corporel）」は、明示的な規則の集積ではなく、世界との習慣的な応答関係として意識の下で作動する。ピアノを弾く指は、楽譜の命題を逐一参照しながら動くのではない。指が世界を知っているのだ。\n\nポランニーとメルロ＝ポンティはほぼ同時代に、交差することなく、しかし驚くほど近接した場所に到達した。一方は科学哲学の文脈から「語れない知」を、他方は現象学の文脈から「身体が知る」ことを論じた。この二つの思想的水脈が合流するとき、Miton が論じる「ビットのネットワーク」という現代的枠組みは、実は非常に古い問いへの応答として読み直せる。身体の物理的制約が伝承の基盤となるという発見は、フロネーシスが「状況の制約の中で判断が生まれる」と述べていた構造と、驚くほど同型である。\n\nここで一歩踏み込んでおきたい。ポランニーの思想史的な位置づけを「言語 vs 身体」という単純な二項対立に回収することには、注意が必要だ。ポランニー自身は、暗黙知が明示知を根底で支えていると論じた。つまり言語的・命題的知識も、その下層には語りえない次元が走っている。AIが形式知の処理を高速で担う現代において重要なのは、この構造的な非対称性である。AIが処理できるのはポランニーの言う「明示知」の層であり、その下に広がる暗黙知の層は、デジタルアーカイブにも大規模言語モデルにも、原理的にアクセス困難である。\n\n経営の現場においてこの思想史的認識が持つ意味は一点に収束する。組織が「記録された知識」の充実にリソースを投じるとき、その行為はデカルト的転換の制度的反復である。フロネーシスの系譜が示すのは、知識の最も豊かな部分は場面の只中、師弟の身体的な近接、実践の反復の中にしか蓄積されないという認識である。思想史の地層は、AIが拡張する「記録の時代」に抗して、知の別の伝承回路を守ることの根拠を、静かに差し出している。",
+          "annotation_label": "中心思想家と主著",
+          "annotation_body": "マイケル・ポランニー（1891-1976）：科学哲学者。主著『暗黙知の次元』（1966）で「我々は語りうる以上を知っている」と宣言し、言語化不能な知識の存在を論証した。メルロ＝ポンティ（1908-1961）：フランスの現象学者。主著『知覚の現象学』（1945）で身体を知覚の主体として再定位し、「身体図式」概念を確立した。",
+          "quote_excerpt": "Tacit knowledge is what we know but cannot say. Since this kind of knowledge typically requires learning how a practice feels, which can't be conveyed through words alone, neither imitation nor language are much help when it comes to learning this kind of knowledge—you can't simply watch someone, or read some instructions.\n\nMuch of our cultural knowledge simply can't be put into words or recorded. It can, however, be stored in the constrained movements of our bodies. Optimising the transmission of a cultural practice doesn't always require a larger amount of information. It can be achieved by leveraging how some bits influence others in a network, by learning how some objects and materials exploit those networks, and by understanding how teachers use pedagogical techniques.",
+          "cost_usd": 0.057327,
+          "is_fallback": false
+        }
       }
     ]
   }

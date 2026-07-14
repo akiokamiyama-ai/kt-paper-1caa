@@ -389,6 +389,11 @@
       "concept_id": "social_psychology",
       "name_ja": "社会心理学",
       "displayed_on": "2026-07-14"
+    },
+    {
+      "concept_id": "overfitting",
+      "name_ja": "過学習",
+      "displayed_on": "2026-07-15"
     }
   ]
 }
