@@ -394,6 +394,11 @@
       "concept_id": "overfitting",
       "name_ja": "過学習",
       "displayed_on": "2026-07-15"
+    },
+    {
+      "concept_id": "conceptual_metaphor",
+      "name_ja": "概念メタファー",
+      "displayed_on": "2026-07-16"
     }
   ]
 }

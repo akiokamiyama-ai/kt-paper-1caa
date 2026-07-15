@@ -1364,6 +1364,24 @@
       "ai_kamiyama_title": "“Shouting at a Low Volume”: A Conversation with E. M. Palitha Edirisooriya",
       "ai_kamiyama_category": "books:海外純文学",
       "ai_kamiyama_source_name": "Words Without Borders"
+    },
+    {
+      "displayed_on": "2026-07-16",
+      "article_url": "https://www.themarginalian.org/2026/07/14/love-chekhov-the-darling-saunders/",
+      "article_title": "How to Get Love Less Wrong: George Saunders on Breaking the Patterns that Break Our Hearts",
+      "article_category": "books",
+      "tie_candidates": [
+        "books"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://warontherocks.com/breaking-americas-promise-to-pacific-island-veterans/",
+      "ai_kamiyama_title": "Breaking America’s Promise to Pacific Island Veterans",
+      "ai_kamiyama_category": "geopolitics",
+      "ai_kamiyama_source_name": "War on the Rocks"
     }
   ]
 }

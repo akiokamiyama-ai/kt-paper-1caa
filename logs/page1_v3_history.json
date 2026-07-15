@@ -858,6 +858,23 @@
           "cost_usd": 0.057327,
           "is_fallback": false
         }
+      },
+      {
+        "date": "2026-07-16",
+        "day_label": "木",
+        "angle_key": "history",
+        "angle_label_jp": "歴史",
+        "essay": {
+          "angle_label": "木曜 - 歴史",
+          "daily_question": "暗黙知の伝承制度は、歴史のどこで解体されたか",
+          "essay_title": "ギルドから野中まで——身体知制度の五百年史",
+          "body": "言葉にできない知が「どう伝わるか」を問う前に、まずその伝達を担った制度がいかに生まれ、いかに崩れてきたかを辿らなければならない。Miton の論考は暗黙知の認知科学的な構造を解明したが、その伝承の器——制度としての歴史——についてはほとんど触れていない。木曜版では、その制度史の地層を掘る。\n\n起点は中世ヨーロッパのギルドである。12世紀から15世紀にかけて、パリの皮革職人組合やロンドンの金細工師組合に代表されるギルドは、単なる同業者団体ではなかった。親方（マイスター）・職人・徒弟という三層構造のなかで、身体知の伝達は制度として設計されていた。徒弟は7年から10年かけて親方の工房に住み込み、道具の手入れから始めて素材の感触、炉の火の色、仕上げの力加減を、言葉なき模倣と反復によって刻み込んだ。Miton が「鍵となるビットを固定すれば残りの動作は制約によって揃う」と述べる学習構造は、まさにこの徒弟制の日常に埋め込まれていた。ギルドは、身体知の伝承を保護するために参入を厳しく管理し、門外秘の技術を世代ごとに繋いだ。\n\n転機は18世紀後半から19世紀初頭の産業革命である。蒸気機関と工場制の普及は、職人の身体知を機械の動作へと代替し始めた。1791年にフランス革命政府がギルドを法的に廃止（ル・シャプリエ法）し、イギリスでも1814年に徒弟制を義務づけていた職人法が撤廃された。この二つの立法措置は、偶然ではなく自由主義経済イデオロギーの表明であった。「知識は市場で流通すべきものであり、組合が囲い込むべきものではない」という論理が、数百年にわたる伝承の器を一世代で解体した。ストラディヴァリのヴァイオリン製法が失われた背景には、個人の天才性だけでなく、この制度的解体が重なっている。1737年にストラディヴァリが没した直後、職人の共同体はすでに産業化の波に飲まれ始めていたのである。\n\n20世紀に入ると、失われた身体知の器を「概念」として取り戻そうとする試みが生まれる。1958年、マイケル・ポランニーは『個人的知識（Personal Knowledge）』を著し、科学的知識の底層にも言語化されない判断や感覚が不可欠であると論じた。ギルド解体から150年を経て、哲学者がようやく「言葉にできない知」に名前を与えたのだ。さらに1995年、野中郁次郎と竹内弘高は『知識創造企業（The Knowledge-Creating Company）』において、暗黙知と形式知の相互変換モデル（SECIモデル）を提唱し、身体知を経営資源として再定義した。ポランニーが「ある」と言ったものを、野中は「使う」ものとして企業論に接続した。この転換は、制度として機能していた身体知伝承の器を、今度は「マネジメント」という形で再建しようとする試みであった。\n\nしかし野中モデルが登場してから30年、身体知の伝承は再び新たな解体圧力に直面している。デジタル化とリモートワークの常態化は、同じ空間・同じ時間を共有するという身体知伝達の基本前提を侵食する。かつてギルドが物理的な工房を媒介にしていたように、野中の「場（Ba）」の概念も共在性を前提としていた。AIが形式知の処理を高速化するほど、この共在性の経済的価値は見えにくくなる。\n\n歴史が示す教訓は冷静である。身体知はそれを守る制度的な器なしには伝わりにくく、その器は経済的・政治的な力によって何度でも解体されてきた。ギルド廃止から産業革命、ポランニーの概念化、野中の経営化——そして今日のAI転換期。この五百年の軌跡を踏まえるなら、神山氏の経営課題は「どの技術を導入するか」ではなく、「身体知が宿る共在の器を、今の時代にどう再設計するか」という問いとして立ち上がる。歴史は常に、制度の解体と再構築のサイクルを通じて、この問いを次の世代に投げ返してきた。",
+          "annotation_label": "歴史的事象・年表",
+          "annotation_body": "1791年：フランス革命政府、ル・シャプリエ法によりギルドを廃止。身体知の伝承制度が法的に解体される起点。1814年：イギリス、職人法廃止により徒弟制の法的義務が消滅。1958年：ポランニー『個人的知識』刊行、「暗黙知」概念を哲学的に定礎。1995年：野中・竹内『知識創造企業』、SECIモデルにより暗黙知を経営資源化。",
+          "quote_excerpt": "Though our collective forgetting is enormous, it is mostly unremarkable to those who study the transmission of culture. What puzzles me, and others who study transmission, is why so much unwritten knowledge has survived. Despite the brittleness of cultural practices, skills proliferate with and without records, chaining generation to generation, and binding us to our ancestors in deep time. So how do these practices persist if the paths of transmission are so brittle? How has anything at all been transmitted without physical records?\n\nIt is also why I, a French cognitive scientist in my early 30s, am unable to do many of the things that my ancestors once did, including illuminating manuscripts with immaculate handwriting, preparing herbal remedies, hunting with a bow, or making flint tools.",
+          "cost_usd": 0.059328,
+          "is_fallback": false
+        }
       }
     ]
   }

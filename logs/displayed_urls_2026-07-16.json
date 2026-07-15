@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-16",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/19815/",
+    "https://www.economist.com/finance-and-economics/2026/07/09/an-ageing-society-might-not-cost-too-much",
+    "https://www.bbc.co.uk/news/articles/c86e3q5j992o?at_medium=RSS&at_campaign=rss",
+    "http://www3.nhk.or.jp/news/html/20260715/k10015177231000.html"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2607/15/2000000192/",
+    "human_energy": "https://jinjibu.jp/news/detl/26622/",
+    "web_repo": "https://www.bc01.net/article/benesse-style-care_202608/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/breaking-americas-promise-to-pacific-island-veterans/",
+    "https://www.asahi.com/articles/ASV7G2TVSV7GUHBI019M.html?ref=rss",
+    "http://www3.nhk.or.jp/news/html/20260715/k10015178011000.html",
+    "https://www.mckinsey.com/features/mckinsey-center-for-future-mobility/our-insights/how-consumers-are-reshaping-the-future-of-mobility",
+    "https://www.theparisreview.org/blog/2026/07/15/a-city-bigger-than-a-bomb/",
+    "https://nautil.us/the-nautilus-guide-to-the-best-books-on-the-science-of-art-1282668/"
+  ],
+  "page4_urls": [
+    "https://www.themarginalian.org/2026/07/14/fernando-pessoa-disquiet-self/",
+    "https://3quarksdaily.com/3quarksdaily/2026/07/an-interview-with-susan-sontag-1975.html",
+    "https://3quarksdaily.com/3quarksdaily/2026/07/how-to-widen-access-to-the-critical-minerals-that-the-world-needs.html"
+  ],
+  "page5_url": "https://www.themarginalian.org/2026/07/14/love-chekhov-the-darling-saunders/",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-07/shouting-at-a-low-volume-a-conversation-with-e-m-palitha-edirisooriya-pathirage-porawagamage/",
+    "music": "https://stereogum.com/2505284/meshell-ndegeocello-announces-new-duet-covers-album-synonym-feat-cat-power-bill-callahan-anohni-more/music/",
+    "outdoor": "https://www.atlasobscura.com/places/lafcadio-hearn-japanese-gardens"
+  },
+  "headlines_urls": [
+    "https://que.dailyshincho.jp/node/19800/",
+    "https://www.economist.com/finance-and-economics/2026/07/15/chinas-trade-gap-is-narrowing-and-other-surprises",
+    "https://que.dailyshincho.jp/node/19839/"
+  ]
+}
