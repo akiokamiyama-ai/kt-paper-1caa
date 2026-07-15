@@ -94,6 +94,57 @@ Tribune の運用中に神山さんが発見した改善点・違和感・将来
 
 ## 完了
 
+### Phase B 完了 → $96/月 → $41/月 (-57%)、target $30-50 内で確定
+
+- **判定日**: 2026-07-15（C145 5 日実測レビュー）
+- **判定根拠**:
+  - **7/11-15 の 5 日平均 $41.24/月** ← Phase B target $30-50 内
+  - 中央値 $42.03/月
+  - **cache 成熟後 4 日平均 (7/12-15): $37.59/月** ← 更に良好
+  - 5 日全 success、no abort / no error、Deploy Hook 全日発火
+- **推移サマリ**:
+
+  | 段階 | 実測 or 想定 | vs baseline | 主な対応 |
+  |---|---:|:---:|---|
+  | **C126 baseline** | $96/月 | — | C119 全 caller layered 化完了 |
+  | C132 集計 | $80.96/月 | -16% | C131 Stereogum medium 昇格 |
+  | C133 降格 | $75/月 想定 | -22% | LAYER_3_SOURCES 39 → 17 件 |
+  | C133 実測 (7/10) | $80.96/月 | -16% | (想定 +$6 誤差内、1 サンプル) |
+  | C134 発見 | — | — | 50.3% 再評価 = $47/月 waste 判明 |
+  | C137 実装 | 想定 $37-45/月 | — | cross-day score cache + bootstrap |
+  | **C145 実測 5 日平均** | **$41.24/月** | **-57%** | **Phase B target $30-50 内** ✓ |
+  | C145 実測 4 日平均 (mature) | $37.59/月 | -61% | |
+
+- **週次サイクル観察（週明け dip 仮説の実証）**:
+  - 週末 (7/12 日 / 7/13 月): cache_hit% 33-37% → cost $30-32/月
+  - **週明け (7/14 月): cache_hit% 25.1% (-12 pts) → cost $46/月** (神山さん仮説 実証)
+  - 火曜 (7/15): cache_hit% 26.2% 回復途上 → $42/月
+  - **要因**: 週明けは新記事が大量に流入し、既知 URL 比率が低下する構造
+  - **判定への影響**: 週明け dip 込みでも 5 日平均は target 内で安定
+- **残ギャップ内訳（5 日平均 $41.24/月）**:
+  - Stage 2 Sonnet: $21.90/月 (cache miss で残る評価分)
+  - Stage 2 Haiku: $3.31/月 (cache 対象外、layer 1/2 prefilter、安価)
+  - editorial / page1_v3.essay / page2.step1 / page6.leisure 等:
+    約 $16/月 (Sprint 12 スコープ外)
+- **副次成果**:
+  - C127 JFA scraper 稼働（7/11 と 7/14 の Page II Web-Repo で採用）
+  - C142 PPC scraper 稼働（7/14 の Page II Cocolomi で採用、URL エンコード対応 `26%20622` も正常動作）
+  - C131 Stereogum 5 日で 6 採用 (Page V/VI music 経路)
+- **Sprint 13 引き継ぎ**:
+  1. **採用ゼロ 6 ソースの扱い**（Psyche / BE-PAL / Fitness Business /
+     リユース経済新聞 / 食品新聞 / JFTC）: 5 日実測でゼロ。dead weight
+     除外の対象拡張 or fetch 復旧 or 降格の三択
+  2. **JFTC 403 代替案**: Akamai IP block が C130 A UA 変更でも突破できず。
+     C138 で提示した代替案（PR TIMES 「公正取引委員会」タグ経由 or
+     Priority Reference 降格）を Sprint 13 で決定
+  3. **全体再構想（C144）実施時の追加削減余地**: 2 面下段 + 5 面削除で
+     $3-5/月 追加削減見込み。削除後推定 $36-38/月 で target 内余裕確保
+- **関連 commit**: C119 / C126 / C130 / C131 / C132 / C133 / C134 / C135 /
+  C137 / C142 / C145（累積 15 commits で Phase B を完了）
+- **状態**: 完了
+
+---
+
 ### QUE 採用ゼロ継続 → 誤認識訂正で完結
 
 - **発見日**: 2026-06-29
