@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-17",
+  "page1_urls": [
+    "https://www.economist.com/finance-and-economics/2026/07/16/how-to-shrink-the-feds-7trn-balance-sheet",
+    "https://www.economist.com/finance-and-economics/2026/07/15/chinas-trade-gap-is-narrowing-and-other-surprises",
+    "https://www.bbc.co.uk/news/articles/cjrvdqyr5d5o?at_medium=RSS&at_campaign=rss",
+    "https://que.dailyshincho.jp/node/19908/"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2607/16/2000000199/",
+    "human_energy": "https://sloanreview.mit.edu/article/leaderships-blind-spot-in-the-age-of-ai/",
+    "web_repo": "https://www.bc01.net/article/up-bear_202608/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/iran-war-uneven-economic-fallout-by-jayati-ghosh-2026-07",
+    "https://que.dailyshincho.jp/node/19836/",
+    "https://toyokeizai.net/articles/-/951830?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://www.mckinsey.com/institute-for-economic-mobility/our-insights/what-the-2026-world-cup-reveals-about-the-next-generation-of-sports-fans",
+    "https://www.theparisreview.org/blog/2026/07/06/helene-bessettes-novel-as-arc-lamp/",
+    "https://nautil.us/what-a-picture-of-a-dog-has-to-do-with-reason-and-logic-1282727/"
+  ],
+  "page4_urls": [
+    "https://3quarksdaily.com/3quarksdaily/2026/07/inger-n-i-kuins-diogenes.html",
+    "https://3quarksdaily.com/3quarksdaily/2026/07/nick-cave-on-integrating-the-darkness-of-loss-with-the-bright-ongoingness-of-life.html",
+    "https://www.themarginalian.org/2026/07/15/nick-cave-loss/"
+  ],
+  "page5_url": "https://thepointmag.com/criticism/common-readers-booktok/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/07/15/a-city-bigger-than-a-bomb/",
+    "music": "https://stereogum.com/2505484/robert-smith-does-not-have-world-cup-halftime-show-fever/news/",
+    "outdoor": "https://www.atlasobscura.com/places/celestia"
+  },
+  "headlines_urls": [
+    "https://www.economist.com/finance-and-economics/2026/07/16/can-kevin-warshs-fed-force-5-reimagine-monetary-policymaking",
+    "https://www.bbc.co.uk/news/articles/cnvnyr75r48o?at_medium=RSS&at_campaign=rss",
+    "https://www.ft.com/content/7c315b15-1575-4a1b-aead-4d997a449940?syn-25a6b1a6=1"
+  ]
+}

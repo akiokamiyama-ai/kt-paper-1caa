@@ -875,6 +875,23 @@
           "cost_usd": 0.059328,
           "is_fallback": false
         }
+      },
+      {
+        "date": "2026-07-17",
+        "day_label": "金",
+        "angle_key": "integration",
+        "angle_label_jp": "統合＋問い",
+        "essay": {
+          "angle_label": "金曜 - 統合＋問い",
+          "daily_question": "失われてよい身体知と、失ってはならない身体知を、誰が選別するのか",
+          "essay_title": "「何を残すか」を問う前に問うべきこと",
+          "body": "月曜日、我々編集部はこう問うた——言葉にできない知は、AI時代にどこへ宿るのか。火曜日には、Mitonの「ビットのネットワーク論」が三つの死角を孕むことを指摘した。水曜日には、その洞察を組織設計の言葉に翻訳し、鍵となるビットを見極めることこそ経営者の仕事であると論じた。木曜日には、ポランニーからメルロ＝ポンティ、野中郁次郎へと続く知の系譜を辿った。金曜日の今日、歴史の地層——ギルドから近代工場制、そして知識経営の誕生まで——を掘り下げた。\n\nこの五日間を一本の問いに収束させるとすれば、それは「どう伝えるか」ではない。我々が辿り着いたのは、もう一段深い問いである。\n\n身体知の伝承を語るとき、暗黙の前提として置かれてきたものがある。「残すべき知」はあらかじめ存在しており、問題はその伝達方法だ——という前提である。Mitonの論考も、歴史の制度も、経営の組織設計論も、すべてこの前提の上に立って議論を組み立てていた。しかし本当にそうか。\n\n何かを「残す」と決めることは、同時に何かを「捨てる」と決めることでもある。ギルドの親方が徒弟に伝えた技法の中には、後世から見れば時代遅れとなったものも多い。近代工場制が解体したのは、確かに身体知の伝承回路だった。だが同時にそれは、特定の身体的規律や閉鎖的な権力構造をも解体した。失われた暗黙知のすべてが「守られるべきもの」だったとは、必ずしも言えない。\n\nAI時代における問いの核心はここにある。形式知の処理をAIが担うにつれ、残るべき身体知の価値が相対的に高まる——週の前半でそう論じた。しかしその議論は、「何が残るべき身体知か」という選別の問いを素通りしていた。\n\n選別は、すでに起きている。デジタルアーカイブに記録されるものと記録されないもの。ユネスコの無形文化遺産に指定されるものとされないもの。企業の知識管理システムに組み込まれる暗黙知と、そもそも可視化すら試みられない暗黙知。これらの選別は、多くの場合、言語化・記録化のしやすさ、あるいは経済的な有用性という基準で行われている。\n\nつまり、AIが「言葉にできる知」の処理を加速することで、皮肉にも「言葉にしやすい身体知」の保存も加速される。一方で、言語化も可視化もしづらい身体知——ある土地の土の感触、特定の共同体のなかでしか意味を持たない所作、利益を生まない文化的実践——は、いっそう速く消えていく可能性がある。\n\nMitonが論考の末尾に置いた一文を思い出したい。「暗黙知は身体から身体へ、物理的制約を足がかりとして伝わっていく」。その伝達が可能であるためには、伝える側と受け取る側が同じ場と時間を共有しなければならない。選別の問いとは、つまりこうなる——誰が、どの身体と、どの場に、資源を配分するのか。\n\n経営者にとってこれは抽象論ではない。採用する人材、育成に投じる時間、設計するOJTの密度、配置する場の質——すべての経営判断は、組織の中で「何の身体知を選んで残すか」という選別行為に他ならない。そして組織を超えた視点で言えば、産業構造や教育政策もまた、社会的な選別の装置として機能している。\n\n一週間の問いを一文に圧縮するならこうなる。我々は「どう伝えるか」を問い続けてきた。しかし今週の議論の重心は静かに移動した。問うべきは「何を伝えるか」であり、さらにその手前に「誰が何を残すと決めるのか」という問いが控えている。\n\n神山氏に問いたい。あなたの組織が今年「消えていく」身体知の中に、本当は次の事業の核心が宿っていないだろうか。",
+          "annotation_label": "1週間の論点総括",
+          "annotation_body": "月曜：身体知とAI時代の構造的緊張を概観。火曜：Mitonのネットワーク論に潜む三つの死角を批判的に検証。水曜：「鍵ビットの特定」を組織設計の実践言語へ翻訳。木曜：ポランニーからメルロ＝ポンティ・野中へと続く思想史の系譜を辿る。金曜：ギルドから近代工場制・知識経営誕生に至る制度史を俯瞰。五日間を通じ、「どう伝えるか」の問いが「何を・誰が選んで残すか」へと深化した。",
+          "quote_excerpt": "Much of our cultural knowledge simply can't be put into words or recorded. It can, however, be stored in the constrained movements of our bodies. Optimising the transmission of a cultural practice doesn't always require a larger amount of information. It can be achieved by leveraging how some bits influence others in a network, by learning how some objects and materials exploit those networks, and by understanding how teachers use pedagogical techniques.\n\nIt is hard to say what forms of culture will exist in another 1,000 or 10,000 years. But if tacit knowledge is still around, then it will likely have been transmitted from body to body, by exploiting our physical constraints. This is how 'what we know but cannot say' might someday link our age with the cultures of the deep future.",
+          "cost_usd": 0.060306,
+          "is_fallback": false
+        }
       }
     ]
   }

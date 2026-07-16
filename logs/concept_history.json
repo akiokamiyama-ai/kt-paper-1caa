@@ -399,6 +399,11 @@
       "concept_id": "conceptual_metaphor",
       "name_ja": "概念メタファー",
       "displayed_on": "2026-07-16"
+    },
+    {
+      "concept_id": "emergent_abilities",
+      "name_ja": "創発能力",
+      "displayed_on": "2026-07-17"
     }
   ]
 }
