@@ -404,6 +404,11 @@
       "concept_id": "emergent_abilities",
       "name_ja": "創発能力",
       "displayed_on": "2026-07-17"
+    },
+    {
+      "concept_id": "feedback_loop",
+      "name_ja": "フィードバックループ",
+      "displayed_on": "2026-07-18"
     }
   ]
 }

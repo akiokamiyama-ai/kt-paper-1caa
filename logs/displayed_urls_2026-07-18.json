@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-18",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/19911/",
+    "https://que.dailyshincho.jp/node/19593/",
+    "https://www.ft.com/content/55f5860b-6ef0-42ed-a87f-c49af6ef9d29",
+    "https://que.dailyshincho.jp/node/19857/"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://japan.zdnet.com/article/35250726/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2607/17/news026.html",
+    "web_repo": "https://www.jfa-fc.or.jp/particle/320.html"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/the-peace-that-redistributes-war-what-camp-david-reveals-about-lebanon-and-iran/",
+    "https://news.yahoo.co.jp/pickup/6588314?source=rss",
+    "https://www.bloomberg.com/news/articles/2026-07-17/us-stock-index-futures-slide-as-jitters-grow-on-chip-selloff",
+    "https://www.mckinsey.com/industries/private-capital/our-insights/will-you-fly-or-freeze-how-founders-can-build-enduring-companies-beyond-10-billion-dollars",
+    "https://www.theparisreview.org/blog/2026/07/08/clearly-fake-zurbarans-uncanny-realism/",
+    "https://3quarksdaily.com/3quarksdaily/2026/07/belgrade-vs-vienna.html"
+  ],
+  "page4_urls": [
+    "https://www.nplusonemag.com/online-only/gooooaaal/seeing-like-a-referee/",
+    "https://www.publicbooks.org/heated-rivalry-is-the-moby-dick-of-canadian-gay-hockey-shows/",
+    "https://www.publicbooks.org/is-kahane-becoming-normalized-shaul-magid-on-meri-kahanes-zionist-radicalism/"
+  ],
+  "page5_url": "https://stereogum.com/2505608/hear-bright-eyes-the-lumineers-tracks-from-a-new-felice-brothers-tribute-album/music/",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-07/the-believer-sakthi-sivamohan/",
+    "music": "https://stereogum.com/2505618/fenne-lily-thank-you-sorry/news/",
+    "outdoor": "https://www.outsideonline.com/outdoor-adventure/exploration-survival/veterans-off-grid/"
+  },
+  "headlines_urls": [
+    "https://www.ft.com/content/ce345155-d897-4f49-b7c8-13680e3b5434",
+    "https://www.bbc.co.uk/news/articles/c5yz4wnz6jdo?at_medium=RSS&at_campaign=rss",
+    "http://www3.nhk.or.jp/news/html/20260717/k10015179491000.html"
+  ]
+}
