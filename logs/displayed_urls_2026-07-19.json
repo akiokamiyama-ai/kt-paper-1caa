@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-19",
+  "page1_urls": [
+    "http://www3.nhk.or.jp/news/html/20260718/k10015179771000.html",
+    "https://www.bbc.co.uk/news/articles/c5yz4wnz6jdo?at_medium=RSS&at_campaign=rss",
+    "https://que.dailyshincho.jp/node/19767/",
+    "http://www3.nhk.or.jp/news/html/20260718/k10015180071000.html"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://atmarkit.itmedia.co.jp/ait/articles/2607/17/news053.html",
+    "human_energy": "https://jinjibu.jp/news/detl/26653/",
+    "web_repo": "https://www.bc01.net/article/stayand_202608/"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/07/17/world-cup-us-surveillance-ice-trump-infantino/",
+    null,
+    "https://que.dailyshincho.jp/node/19857/",
+    "https://www.mckinsey.com/au/our-insights/ai-in-the-australian-for-purpose-sector-laying-a-strong-foundation",
+    "https://wordswithoutborders.org/read/article/2026-07/the-city-and-the-writer-in-dubai-with-danabelle-gutierrez-nathalie-handal/",
+    "https://thepointmag.com/dialogue/searching-for-the-unexpected/"
+  ],
+  "page4_urls": [
+    "https://3quarksdaily.com/3quarksdaily/2026/07/belgrade-vs-vienna.html",
+    "https://3quarksdaily.com/3quarksdaily/2026/07/what-was-sewer-socialism.html",
+    "https://aeon.co/essays/viennas-cafes-inspired-poets-belgrades-bred-dissent"
+  ],
+  "page5_url": "https://www.axismag.jp/posts/2026/07/717393.html",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/07/17/in-paris-in-tokyo-in-singapore-in-prague-i-stumble-out-insane-with-coffee/",
+    "music": "https://stereogum.com/2505597/jay-z-yankee-stadium-and-how-new-york-grew-up-with-the-blueprint/columns/say-whats-real-the-month-in-rap/",
+    "outdoor": "https://www.atlasobscura.com/places/the-tax-screw"
+  },
+  "headlines_urls": [
+    "https://www.ft.com/content/2b96703d-440b-46db-8d86-9fff9ecc59d5?syn-25a6b1a6=1",
+    "https://www.ft.com/content/784a7d34-e005-4266-8bd4-82f26298b3e4?syn-25a6b1a6=1",
+    "https://www.ft.com/content/d10e846e-5615-4cb5-bd4f-b159423d4f75"
+  ]
+}

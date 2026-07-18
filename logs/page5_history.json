@@ -1418,6 +1418,24 @@
       "ai_kamiyama_title": "The Peace That Redistributes War: What Camp David Reveals About Lebanon and Iran",
       "ai_kamiyama_category": "geopolitics",
       "ai_kamiyama_source_name": "War on the Rocks"
+    },
+    {
+      "displayed_on": "2026-07-19",
+      "article_url": "https://www.axismag.jp/posts/2026/07/717393.html",
+      "article_title": "産後の母親の心身をサポートする産後ケアホテル「Villa Mom」 乃村工藝社がデザインする“心に寄り添う空間”とは",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://foreignpolicy.com/2026/07/17/world-cup-us-surveillance-ice-trump-infantino/",
+      "ai_kamiyama_title": "The Soccer Surveillance State",
+      "ai_kamiyama_category": "geopolitics",
+      "ai_kamiyama_source_name": "Foreign Policy"
     }
   ]
 }

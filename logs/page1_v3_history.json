@@ -894,5 +894,32 @@
         }
       }
     ]
+  },
+  "W9_2026-07-19": {
+    "week_label": "W9",
+    "theme": "身体性の価値の変化",
+    "period": [
+      "2026-07-19",
+      "2026-07-25"
+    ],
+    "entries": [
+      {
+        "date": "2026-07-19",
+        "day_label": "日",
+        "angle_key": "overview",
+        "angle_label_jp": "全体像",
+        "essay": {
+          "angle_label": "日曜 - 全体像",
+          "daily_question": "身体の内側から感じる能力が、自己の本質と言えるのはなぜか",
+          "essay_title": "「肌感覚」に科学が追いついた朝",
+          "body": "経営者が会議室で感じる「何かがおかしい」という胸の引っかかり。数字では測れない、しかし確かに存在するあの感覚に、いま神経科学が正面から向き合い始めている。内受容感覚（interoception）——心拍、呼吸、内臓からの信号——が自己の核心を形成するという研究が、この十年で六倍以上の勢いで蓄積されてきた。Kamiyama Tribune はこの一週間、その転換点を多角的に読み解く。\n\nここで言う「転換」とは、単なる研究トレンドの話ではない。人間の自己とは何かという問いへの答えが、根本から書き換えられようとしているのだ。長らく西洋の知的伝統を支配してきたのは、デカルト以来の図式——思考する自己は身体から独立した「考える物」であり、感情や身体感覚は理性の補助にすぎないという世界観——だった。神経科学者アントニオ・ダマシオが1994年の著書でこの前提に最初の楔を打ち込み、以来、脳は身体に奉仕するのであってその逆ではないという考えが実証の裏付けを積み重ねてきた。すでに、その世界観は反転した。\n\n内受容感覚の研究が明らかにしたのは、自己と他者の境界線が「身体の内側から感じる能力」によって引かれているという事実だ。哲学者・歴史家のノガ・アリカが論じるように、この発見は現象学（メルロ＝ポンティ）、仏教の身体観、計算神経科学という異なる知的伝統が一点で合流する場所に立っている。予測符号化（Predictive Coding）の枠組みでは、脳は過去の身体経験から未来の感覚状態を絶えず予測する「統計的器官」として描かれる。「今この瞬間の自己」とは、そのような絶え間ない予測と修正の産物にほかならない。\n\nこの転換が今週のTribune の問いにとって重要なのは、経営者の感覚知をめぐる議論に確固たる科学的基盤を与えるからだ。「肌感覚」「胸騒ぎ」「言葉になる前の判断」——こうした表現は、これまで直感や経験則という曖昧なカテゴリーに押し込まれてきた。しかし内受容感覚の科学はそれを、身体が環境の変化を先取りして調整するアロスタシス（allostasis）という生物学的過程として記述できるようになっている。感じることは、すでに認識の一形態なのだ。\n\nもう一つ見落とせない文脈がある。AIが「身体を持たない知能」として急速に実装される時代、人間の自己を定義する根拠は何かという問いが切迫している。内受容感覚の研究は、この問いに対する一つの答えを示唆している——人間の判断は、身体の内側からの信号と外界への予測が絶えず交差する動的な過程であり、それは身体を持たないシステムには原理的に欠けている何かだという答えだ。これは人間優位論ではなく、知能の質的差異を問う哲学的問いである。\n\n今週の論考はこの問いをめぐって五つの角度から掘り下げていく。内受容感覚の科学を批判的に検証し、実践者の視座から経営現場との接点を問い、思想的系譜を辿り、歴史的文脈に置き直す。きょうの役割はその地図を描くことにある。答えを急ぐより、問いの地形を正確に把握することが、ディープリスニング経営の起点となる。身体が何を告げているかに耳を澄ませる習慣は、その地形を歩く上での最初の一歩だ。",
+          "annotation_label": "主要キーワード",
+          "annotation_body": "【内受容感覚（interoception）】心拍・呼吸・内臓からの身体内部信号の知覚。自己感覚の基盤とされる。【アロスタシス（allostasis）】安定を保つため有機体が将来の変化を予測して先回り調整するプロセス。ホメオスタシスの動的版。【予測符号化（Predictive Coding）】脳が過去経験をもとに感覚入力を予測し誤差を最小化するという神経科学モデル。カール・フリストンらが発展させた。【反認知主義的神経哲学】脳を身体から切り離して研究できるという前提を否定し、身体・環境との相互作用を自己と知性の核心とみなす立場。",
+          "quote_excerpt": "Our ability to form a boundary between self and other is a function of our ability to feel our embodied selves from within. ... Over the past few years, scientists working in neuroscience and psychology have been listening in on these brain-body interactions – in health and illness – and analysing how they constitute the always embodied self. They have been studying the sense of the body from within, which is called interoception. It is a term you will be hearing increasingly. This research is dismantling the pillars of a belief system that has long endured within those fields – as well as in the popular imagination – that the brain is an information-processing machine that can be understood apart from the rest of the body, as if our conscious, reasoning self were the output of a disembodied brain, and as if we were not fully biological creatures. This shift within the mind sciences is game-changing, and merits attention.",
+          "cost_usd": 0.056637,
+          "is_fallback": false
+        }
+      }
+    ]
   }
 }

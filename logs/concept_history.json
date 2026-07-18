@@ -409,6 +409,11 @@
       "concept_id": "feedback_loop",
       "name_ja": "フィードバックループ",
       "displayed_on": "2026-07-18"
+    },
+    {
+      "concept_id": "entropy",
+      "name_ja": "エントロピー",
+      "displayed_on": "2026-07-19"
     }
   ]
 }
