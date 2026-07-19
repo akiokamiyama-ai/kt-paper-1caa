@@ -919,6 +919,23 @@
           "cost_usd": 0.056637,
           "is_fallback": false
         }
+      },
+      {
+        "date": "2026-07-20",
+        "day_label": "月",
+        "angle_key": "critical",
+        "angle_label_jp": "批判的",
+        "essay": {
+          "angle_label": "月曜 - 批判的",
+          "daily_question": "内受容感覚の科学は何を見落としているか",
+          "essay_title": "「身体の内側」という新しい神話",
+          "body": "内受容感覚（interoception）の研究が加速するなかで、一つの楽観論が育ちつつある。心拍を感じる能力が高い人ほど自己が安定し、共感力が高く、意思決定も優れている——そういう図式が、研究論文の外にも広がり始めている。だが Kamiyama Tribune はここで立ち止まりたい。新しい科学が「新しい神話」に転化する瞬間は、いつも啓発的な言語とともにやってくる。\n\n第一の疑問は、測定の信頼性に関わる。内受容感覚の能力を測る代表的な手法「心拍検出課題（heartbeat detection task）」の妥当性について、認知神経科学者のルクサンドラ・ステファン（Ruxandra Ioana Staresina）らをはじめ、複数の研究者が再現性の問題を指摘してきた。心拍という信号は呼吸や姿勢、注意の向け方によっても変動し、「自分の心臓を正確に感じ取る能力」が安定した個人差を反映しているかどうかは、まだ論争の的である。「内受容精度が高い人は自己が安定する」という主張の根拠が、そもそも揺らいでいるとすれば、その上に積み上げられた経営論的な応用——「肌感覚を鍛えよ」「身体の声を聴け」——は砂上に建っていることになる。\n\n第二の批判は、文化的・社会的文脈の捨象についてである。哲学者のラシェル・コワルスキ＝フィノン（Rachel Cowan-Finon）が指摘するように、「身体の内側から感じる能力」がいかに発達するかは、幼少期のケアの質、愛着形成、経済的安定性、さらには人種や階級によって大きく異なる。フォトプールとツァカリスが乳児期の接触ケアを自己形成の核に置くとき、その議論は暗黙裡に「安定した養育環境」を前提にしている。しかし世界の多くの人々にとって、その前提は特権的なものだ。「身体を聴く力」を個人の能力として語る言説は、その能力の不均等な分配をめぐる構造的問題を不可視化しかねない。\n\n第三に、精神科医・神経学者のゲオルク・ノルトフ（Georg Northoff）が別の角度から提起する問題がある。彼は、内受容感覚の「過剰な意識化」がうつ病や身体症状症（somatoform disorder）において病理的な役割を果たすことを示してきた。内受容信号に敏感であることは、必ずしも健康や明晰な判断につながらない。感度が高すぎれば、身体の内側のノイズが前景化し、外界との接続が断たれる。「内側を聴く」という処方箋が、ある人々には毒になり得る——この非対称性を、主軸記事の楽観的な語りは十分に扱っていない。\n\nさらに根本的な問いがある。そもそも「内受容感覚が高ければ意思決定が優れる」という命題は、どのような意思決定を指しているのか。研究室で行われる金融課題や道徳的ジレンマと、実際の組織経営における判断とは、時間軸も情報構造も社会的圧力もまるで異なる。フリストンの予測符号化モデルは数学的には精緻だが、それが経営者の「胸騒ぎ」に直接翻訳されるという跳躍は、科学的根拠の外にある。脳科学の知見を実践知として横断するとき、その橋の強度は常に問われなければならない。\n\n批判の目的は、内受容感覚の科学を否定することではない。身体の内側からの信号が自己形成に深く関わるという知見は、デカルト的二元論への重要な反論であり、昨日の論考が示した通りの意義を持つ。しかし、新しい科学がまだ確立されていない段階で、それを「経営者的直感の根拠」として即座に応用しようとする衝動には、慎重さが要る。内受容感覚の研究が本当に経営の場に資するとすれば、それは「肌感覚は科学的に正しい」という安易な保証としてではなく、「自分の身体信号をどのような文脈で、どの程度信頼するか」という問いを精緻化するための補助線としてであるはずだ。\n\n「ディープリスニング経営」とは、身体の声を無批判に従うことではない。身体の声を聴きながら、同時にその声の限界を知ることである。科学が提供できるのは答えではなく、より良い問いの形だ。",
+          "annotation_label": "反対論者・批判者",
+          "annotation_body": "ルクサンドラ・ステファン（認知神経科学者）：心拍検出課題の再現性・妥当性に疑義を呈する。ゲオルク・ノルトフ（神経哲学者）：内受容の過剰意識化がうつ・身体症状症に関与し、高感度が常に利点とならないことを示す。ラシェル・コワルスキ＝フィノン（批判的哲学者）：身体感覚の発達に文化・階級・養育環境が深く介在する点を指摘し、能力論的語りの政治性を問う。",
+          "quote_excerpt": "These abilities even translate as character traits. So for instance, people with a higher interoceptive accuracy – that is, a greater ability to monitor their own internal states, identified by heartbeat detection tasks – are less prone to be taken in by the RHI than those on the lower end of the scale, Tsakiris and colleagues have found. This means that their self is more stable, and their capacity for empathy higher: as Tsakiris and the psychologist Clare Palmer report, 'interoceptive processing acts to stabilise the model of our self', so we can 'attribute emotional and mental states to the self or to others without blurring the distinction between \"self\" and \"other\"'. This matters hugely in our day-to-day lives.",
+          "cost_usd": 0.060746999999999995,
+          "is_fallback": false
+        }
       }
     ]
   }

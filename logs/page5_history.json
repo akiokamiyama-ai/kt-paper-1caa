@@ -1436,6 +1436,24 @@
       "ai_kamiyama_title": "The Soccer Surveillance State",
       "ai_kamiyama_category": "geopolitics",
       "ai_kamiyama_source_name": "Foreign Policy"
+    },
+    {
+      "displayed_on": "2026-07-20",
+      "article_url": "https://www.atlasobscura.com/places/old-jail-art-center",
+      "article_title": "Old Jail Art Center in Albany, Texas",
+      "article_category": "outdoor",
+      "tie_candidates": [
+        "outdoor"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.publicbooks.org/the-ableism-of-kings-the-fury-of-trump/",
+      "ai_kamiyama_title": "The Ableism of Kings, the Fury of Trump",
+      "ai_kamiyama_category": "academic",
+      "ai_kamiyama_source_name": "Public Books"
     }
   ]
 }

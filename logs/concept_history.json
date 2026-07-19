@@ -414,6 +414,11 @@
       "concept_id": "entropy",
       "name_ja": "エントロピー",
       "displayed_on": "2026-07-19"
+    },
+    {
+      "concept_id": "actor_network_theory",
+      "name_ja": "アクターネットワーク理論",
+      "displayed_on": "2026-07-20"
     }
   ]
 }

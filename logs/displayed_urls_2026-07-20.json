@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-20",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/19983/",
+    "https://que.dailyshincho.jp/node/19788/",
+    "https://www.ft.com/content/79160822-5eb7-41c1-b9f7-a2a447ecb378?syn-25a6b1a6=1",
+    "https://www.ft.com/content/29985fc4-db18-4799-ae3c-59877a6c5bc9"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://monoist.itmedia.co.jp/mn/articles/2607/17/news059.html",
+    "human_energy": "https://jinjibu.jp/news/detl/26622/",
+    "web_repo": "https://www.jfa-fc.or.jp/particle/5208.html"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/07/17/china-taiwan-mazu-matsu-goddess-pilgrimage/",
+    "https://toyokeizai.net/articles/-/951881?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://www.asahi.com/articles/ASV7J2CJBV7JULZU004M.html?ref=rss",
+    "https://www.mckinsey.com/capabilities/growth-marketing-and-sales/our-insights/the-future-of-b2b-sales-how-growth-champions-rewire-their-playbooks-with-ai",
+    "https://www.theparisreview.org/blog/2026/07/09/cesar-airas-art-of-not-editing/",
+    "https://www.publicbooks.org/a-tale-of-two-families-birthright-citizenship-and-family-reunification-for-chinese-migrants-in-1925/"
+  ],
+  "page4_urls": [
+    "https://www.themarginalian.org/2026/07/18/lichen/",
+    "https://www.nplusonemag.com/online-only/online-only/disaster-rehearsal/",
+    "https://www.publicbooks.org/the-ableism-of-kings-the-fury-of-trump/"
+  ],
+  "page5_url": "https://www.atlasobscura.com/places/old-jail-art-center",
+  "page6_urls": {
+    "books": "https://locusmag.com/2026/07/utah-bans-stephen-king-collection-from-public-schools/",
+    "music": "https://stereogum.com/2505733/festival-dete-de-quebec/reviews/concert-review/",
+    "outdoor": "https://www.cleverhiker.com/backpacking/evolved-supply-co-ranger-review/"
+  },
+  "headlines_urls": [
+    "https://www.ft.com/content/eb0cd740-e45d-4dd7-ab9a-6f6643bb32ee?syn-25a6b1a6=1",
+    "https://www.bbc.co.uk/news/articles/cp9errxl97go?at_medium=RSS&at_campaign=rss",
+    "https://que.dailyshincho.jp/node/19311/"
+  ]
+}
