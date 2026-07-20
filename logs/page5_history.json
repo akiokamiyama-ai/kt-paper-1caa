@@ -1454,6 +1454,24 @@
       "ai_kamiyama_title": "The Ableism of Kings, the Fury of Trump",
       "ai_kamiyama_category": "academic",
       "ai_kamiyama_source_name": "Public Books"
+    },
+    {
+      "displayed_on": "2026-07-21",
+      "article_url": "https://www.axismag.jp/posts/2026/07/714951.html",
+      "article_title": "ホーロー製品の野田琺瑯、初のフラッグシップショップを清澄白河にオープン。",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.nplusonemag.com/online-only/online-only/disaster-rehearsal/",
+      "ai_kamiyama_title": "Disaster Rehearsal",
+      "ai_kamiyama_category": "academic",
+      "ai_kamiyama_source_name": "n+1"
     }
   ]
 }

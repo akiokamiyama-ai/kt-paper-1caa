@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-21",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/19689/",
+    "https://www.ft.com/content/e9563a0f-0a93-4a38-87e1-32b7898522d8?syn-25a6b1a6=1",
+    "https://que.dailyshincho.jp/node/19932/",
+    "https://que.dailyshincho.jp/node/19647/"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.ppc.go.jp/news/press/2026/260717",
+    "human_energy": "https://sloanreview.mit.edu/article/the-hidden-cost-of-ai-assisted-creativity/",
+    "web_repo": "https://www.bc01.net/article/benesse-style-care_202608/"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/07/20/albania-flamingo-revolution-jared-kushner-sazan-island-resort/",
+    "http://www3.nhk.or.jp/news/html/20260720/k10015181071000.html",
+    "https://www.bloomberg.com/news/articles/2026-07-20/goldman-offers-preferred-stock-days-after-post-crisis-spread-low",
+    "https://www.mckinsey.com/featured-insights/mckinsey-on-books/author-talks-how-a-ceo-got-faster-in-his-40s",
+    "https://www.theparisreview.org/blog/2026/07/10/the-hydration-break-world-cup/",
+    "https://www.nplusonemag.com/online-only/online-only/getting-off-with-the-luddites/"
+  ],
+  "page4_urls": [
+    "https://www.themarginalian.org/2026/07/18/lichen/",
+    "https://www.nplusonemag.com/online-only/online-only/disaster-rehearsal/",
+    "https://www.publicbooks.org/the-ableism-of-kings-the-fury-of-trump/"
+  ],
+  "page5_url": "https://www.axismag.jp/posts/2026/07/714951.html",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-07/wonderful-stubbornness-an-encomium-for-laurence-laluyaux-valeria-luiselli/",
+    "music": "https://stereogum.com/2505855/john-glacier-bond-girl/music/",
+    "outdoor": "https://www.atlasobscura.com/places/saiho-ji"
+  },
+  "headlines_urls": [
+    "https://www.ft.com/content/948861e2-3064-47b7-848b-0bdd633a6c00?syn-25a6b1a6=1",
+    "https://www.bbc.co.uk/news/articles/c0kyml1zxz4o?at_medium=RSS&at_campaign=rss",
+    "https://www.ft.com/content/b7cc3ea9-c89c-4f94-8ce0-3786034a6ddc?syn-25a6b1a6=1"
+  ]
+}

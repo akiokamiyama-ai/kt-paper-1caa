@@ -419,6 +419,11 @@
       "concept_id": "actor_network_theory",
       "name_ja": "アクターネットワーク理論",
       "displayed_on": "2026-07-20"
+    },
+    {
+      "concept_id": "ooda_loop",
+      "name_ja": "OODAループ",
+      "displayed_on": "2026-07-21"
     }
   ]
 }

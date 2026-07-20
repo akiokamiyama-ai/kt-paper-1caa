@@ -936,6 +936,23 @@
           "cost_usd": 0.060746999999999995,
           "is_fallback": false
         }
+      },
+      {
+        "date": "2026-07-21",
+        "day_label": "火",
+        "angle_key": "practitioner",
+        "angle_label_jp": "実践者",
+        "essay": {
+          "angle_label": "火曜 - 実践者",
+          "daily_question": "内受容感覚の知見を、経営の設計に落とし込めるか",
+          "essay_title": "「胸騒ぎ」を組織に実装する三つの選択肢",
+          "body": "月曜に概念を知り、火曜に批判的距離を置いたなら、水曜の朝は現場の問いに向き合う番だ。内受容感覚（interoception）が自己の核心を形成するという科学的知見は、経営者にとって何を変えうるのか。「面白い話だった」で終わるか、具体的な設計変更につながるかで、この一週間の価値が決まる。\n\n第一の選択肢は、採用・人材評価における「身体的判断」の復権である。多くの組織では、面接後の合否判断を「なぜこの人か」と言語化する文化がある。言語化は再現性と公平性に資するが、同時に、言語化される以前の判断情報を切り捨てるリスクもある。神経科学者ガーフィンクルらの研究が示すように、心拍感知精度の高い人は感情の自己調節が安定しており、他者との境界を明確に保てる。これは採用面接において、面接官の「なんとなく気になる」という感覚を単なるバイアスと切り捨てるのではなく、構造化された振り返りのなかに位置づけ直す余地があることを意味する。具体的には、面接後に「数字ではなく身体感覚として何を感じたか」を言語化する欄を評価シートに加えるという選択肢が、すでに成立する。こころみやHuman Energyのような経営者支援・人材紹介の現場では、候補者との短時間の接触で判断する場面が多い。その判断の質を高めるのは、ロジックの精度よりも、面接官自身の内受容感覚の精度かもしれない。\n\n第二の選択肢は、会議設計の見直しである。予測的符号化（Predictive Coding）の観点に立てば、人間の脳はつねに過去の経験から未来を予測しながら意思決定を行っている。会議室の環境——温度、椅子の硬さ、発言の順番、時間帯——はすべて参加者の身体状態を変え、その判断に影響を与える。Pixarがクリエイティブレビューを必ず午前中に設定し、疲労による身体的ノイズを排除しようとしていることは広く知られているが、これはまさに身体的コンディションを意思決定の変数として扱った設計である。神山氏の事業ドメインで応用するなら、経営チームとの重要な議論を「昼食後の眠気が残る14時」から「身体が覚醒している午前中」に移すだけでも、判断の質は変わりうる。より踏み込めば、重要な人事判断の前に5分間の静寂と呼吸を置くプロトコルを設けるという選択肢も現に成立する。\n\n第三の選択肢は、組織開発における「アレキシサイミア（失感情症）」への対処である。内受容感覚研究が臨床的に注目するアレキシサイミア——感じた感情を認識し言語化する能力の欠如——は、組織においても機能的に発生しうる。高度に言語化・数値化された会議文化のなかで、メンバーが「感じていることを感じていないふりをする」状態が常態化すると、チームの集合的な判断精度は下がる。Aetnaがマインドフルネスプログラムを全社導入した際に医療費削減より先に「意思決定の体感速度」が改善したと報告したことは、組織的な内受容感覚のトレーニングが現実のビジネス指標に接続できることを示唆する。ウェブリポのような組織診断ツールを設計・提供する立場であれば、従業員サーベイに「今この瞬間、身体で何を感じているか」という問いを加えるだけで、既存の認知的回答とは異なる層のデータが取得できる可能性がある。\n\n三つの選択肢に共通するのは、「主観的な感覚を排除する」という20世紀的な組織合理性の反転である。内受容感覚の科学が示すのは、身体の内側からの信号こそが判断の土台であり、それを排除した「客観的意思決定」は実は身体的ノイズを無自覚に取り込んだ判断にすぎないという事実だ。経営者が今すぐできることは、身体感覚を「非科学的なもの」として括り出すのをやめ、設計可能な変数として組織の仕組みに組み込み直すことである。",
+          "annotation_label": "関連企業・事例",
+          "annotation_body": "Pixar は重要なクリエイティブレビューを午前中に固定し、身体的疲労による判断劣化を設計で排除している。Aetna（米保険大手）は全社マインドフルネス導入で医療費削減と意思決定の改善を同時に報告。Google の「Search Inside Yourself」プログラムも、内受容感覚トレーニングを組織パフォーマンスと接続した先行事例として参照できる。",
+          "quote_excerpt": "Interoception consists in the perception and integration of all signals from within our body, whether we attend to them or not. These include autonomic, hormonal, visceral and immunological functions: breathing, blood pressure, cardiac signals, temperature, digestion and elimination, thirst and hunger, sexual arousal, affective touch, itches, pleasure and pain. Interoception therefore lies at the core of our very sense of self: physiology and mental life are dynamically coupled. The central and autonomic nervous systems act on each other, higher cognition and emotional states interacting constantly. We sense, monitor and adapt ourselves to the situations we find ourselves in, often without our realising it – homeostatic processes thanks to which we physiologically adjust to the changing environment, and to which interoception corresponds.",
+          "cost_usd": 0.060012,
+          "is_fallback": false
+        }
       }
     ]
   }
