@@ -2653,7 +2653,7 @@
     キャノンが命名、体温・血糖・pH など内部環境を一定範囲に
     保つ生体の自己調節機構。ベルナールの内部環境概念を継承し、
     生理学・医学の基本原理となる。
-  related: [feedback_loop, allostasis, autopoiesis]
+  related: [feedback_loop, allostasis, autopoiesis, milieu_interieur]
   difficulty: 1
 
 - id: allostasis
@@ -2797,4 +2797,56 @@
     ホルダー関係を「同盟 vs 敵」の二項で捉えず、関係の編み目として
     設計する視座。
   related: [advaita_vedanta, blue_ocean_strategy, ess]
+  difficulty: 2
+
+# ============================================================
+# C148 (Sprint 12, 2026-07-22): W9 Day 4「内受容感覚思想史」論考で
+# 出現した重要概念のうち concepts.yaml 未登録のものを追加。
+#
+# 追加候補 5 件のうち、以下は既存で重複回避：
+#   - デカルト / 心身二元論     → 既存 id=descartes, id=cogito
+#   - エナクティヴィズム         → 既存 id=enactive_cognition,
+#                                  id=maturana_varela
+#   - 唯識 (vijñānavāda)         → 既存 id=yogachara
+# 本コミットでは残り 2 件を追加、双方向リンクを既存
+# id=homeostasis の related にも追記済 (milieu_interieur)。
+# ============================================================
+
+- id: milieu_interieur
+  name_ja: 内的環境
+  name_en: Milieu Intérieur
+  domain: 生理学史・生気論と機械論の交点
+  thinkers: [クロード・ベルナール]
+  seed: |
+    フランスの生理学者クロード・ベルナールが 19 世紀中葉に提示した
+    概念。多細胞生物の細胞は「外部環境」に直接晒されるのではなく、
+    体液（血液・リンパ液・組織液）が構成する内部の恒常環境の中で
+    生きている。この内部環境を安定に保つ働きが、後にキャノンの
+    ホメオスタシス概念、さらに allostasis / interoception へと
+    継承される系譜の起点となる。第一次世界大戦後の生理学者が
+    「自己を組織化する有機体」として身体を再構想した思想的枠組み
+    でもあり、Damasio が『Self Comes to Mind』で強調する
+    「生命は神経系なしに始まった、脳は身体に仕える」という視座の
+    歴史的根拠。W9 Arikha の interoceptive turn 論考の思想史軸で
+    要となる概念。
+  related: [homeostasis, allostasis, interoception, vitalism]
+  difficulty: 2
+
+- id: vitalism
+  name_ja: 生気論
+  name_en: Vitalism
+  domain: 哲学・生物学史
+  thinkers: [ゲオルク・エルンスト・シュタール, グザヴィエ・ビシャ, アンリ・ベルクソン, ハンス・ドリーシュ]
+  seed: |
+    生命現象は物理・化学法則だけでは説明できず、生命に固有の
+    「生気（vital force / élan vital）」の介在を要するとする立場。
+    18-19 世紀にデカルト機械論への対抗として台頭し、身体を機械の
+    アナロジーで捉える還元主義を批判した。20 世紀初頭にドリーシュ、
+    ベルクソンによる再構築（entelechy / élan vital）を経て、現代
+    生物学では否定される一方、身体を全体性のもとに捉える視座は
+    ホメオスタシス / autopoiesis / enactivism / interoception の
+    系譜に間接的に継承されている。心身二元論と機械論の狭間で
+    「生きた身体」をどう捉えるかという問いの原型を示す概念で、
+    Arikha が interoceptive turn の哲学的前史として言及する。
+  related: [descartes, embodiment, autopoiesis, milieu_interieur, maturana_varela]
   difficulty: 2
