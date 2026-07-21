@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-22",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/19938/",
+    "https://www.economist.com/finance-and-economics/2026/07/21/how-investors-learned-to-live-with-inflation",
+    "https://que.dailyshincho.jp/node/19917/",
+    "https://que.dailyshincho.jp/node/19926/"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2607/21/2000000210/",
+    "human_energy": "https://jinjibu.jp/news/detl/26589/",
+    "web_repo": "https://www.bc01.net/topinterview/ecolife-coco_202608/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/eu-social-media-regulation-must-focus-on-design-not-age-ban-by-kelly-stonelake-2026-07",
+    "https://toyokeizai.net/articles/-/952156?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://www.ft.com/content/90facd68-4df7-40c2-9383-e989a02fbe51?syn-25a6b1a6=1",
+    "https://www.mckinsey.com/capabilities/mckinsey-technology/overview/from-instinct-to-real-time-insight-transforming-steel-sales-with-ai",
+    "https://www.theparisreview.org/blog/2026/07/21/the-paris-review-redux-how-could-i-forget-odysseus/",
+    "https://3quarksdaily.com/3quarksdaily/2026/07/the-inhumanly-human-where-claude-and-aristotle-meet.html"
+  ],
+  "page4_urls": [
+    "https://www.themarginalian.org/2026/07/18/lichen/",
+    "https://www.nplusonemag.com/online-only/online-only/disaster-rehearsal/",
+    "https://www.publicbooks.org/the-ableism-of-kings-the-fury-of-trump/"
+  ],
+  "page5_url": "https://stereogum.com/2505772/boy-harsher-announce-new-album-get-mean-hear-hard-beat/music/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/07/21/the-paris-review-redux-how-could-i-forget-odysseus/",
+    "music": "https://stereogum.com/2505883/colin-stetson-brighde-chaimbeul-announce-new-album-all-the-light-in-the-world-hear-dirt-dance/music/",
+    "outdoor": "https://www.atlasobscura.com/places/museo-casa-del-mendrugo"
+  },
+  "headlines_urls": [
+    "https://www.bbc.co.uk/news/articles/c20yz9v1llro?at_medium=RSS&at_campaign=rss",
+    "https://que.dailyshincho.jp/node/19881/",
+    "https://www.bbc.co.uk/news/articles/c74gxj937mmo?at_medium=RSS&at_campaign=rss"
+  ]
+}

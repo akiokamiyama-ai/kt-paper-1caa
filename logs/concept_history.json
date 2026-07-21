@@ -424,6 +424,11 @@
       "concept_id": "ooda_loop",
       "name_ja": "OODAループ",
       "displayed_on": "2026-07-21"
+    },
+    {
+      "concept_id": "collaborative_abduction",
+      "name_ja": "協働アブダクション",
+      "displayed_on": "2026-07-22"
     }
   ]
 }

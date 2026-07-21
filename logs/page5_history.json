@@ -1472,6 +1472,24 @@
       "ai_kamiyama_title": "Disaster Rehearsal",
       "ai_kamiyama_category": "academic",
       "ai_kamiyama_source_name": "n+1"
+    },
+    {
+      "displayed_on": "2026-07-22",
+      "article_url": "https://stereogum.com/2505772/boy-harsher-announce-new-album-get-mean-hear-hard-beat/music/",
+      "article_title": "Boy Harsher Announce New Album Get Mean: Hear “Hard Beat”",
+      "article_category": "music",
+      "tie_candidates": [
+        "music"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.themarginalian.org/2026/07/18/lichen/",
+      "ai_kamiyama_title": "How to Be a Lichen: Adaptive Strategies for the Vulnerabilities of Being Human from Nature’s Tiny Titans of Tenacity",
+      "ai_kamiyama_category": "books:自然科学ノンフィクション",
+      "ai_kamiyama_source_name": "The Marginalian（旧 Brain Pickings）"
     }
   ]
 }
