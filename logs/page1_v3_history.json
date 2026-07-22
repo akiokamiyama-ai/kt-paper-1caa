@@ -970,6 +970,23 @@
           "cost_usd": 0.06986400000000001,
           "is_fallback": false
         }
+      },
+      {
+        "date": "2026-07-23",
+        "day_label": "木",
+        "angle_key": "history",
+        "angle_label_jp": "歴史",
+        "essay": {
+          "angle_label": "木曜 - 歴史",
+          "daily_question": "内受容感覚という概念は、いかなる歴史的経緯で成立したか",
+          "essay_title": "「内側から感じる」科学の三百年史",
+          "body": "概念には必ず誕生の瞬間がある。内受容感覚（interoception）という言葉が初めて学術的に記述されたのは1906年、神経生理学者チャールズ・シェリントン（Charles Sherrington）の手によってだった。彼は感覚を三つに分類した——外界を知覚する「外受容感覚（exteroception）」、筋肉と関節の位置を感知する「固有受容感覚（proprioception）」、そして内臓の状態を読む「内受容感覚（interoception）」の三つである。だが当時、この三番目の概念は、他の二つに比べてはるかに軽い扱いを受けた。内臓の声は、科学的探究の対象というよりも、制御されるべき生理的ノイズと見なされていたからだ。\n\nシェリントンと同じ1926年、二つの出来事が同時に起きた。生理学者ウォルター・キャノン（Walter Cannon）が「恒常性（homeostasis）」という言葉を鋳造し、ヴァージニア・ウルフが病床における身体の介入を描いたエッセイを発表した。キャノンの恒常性概念は、19世紀半ばにクロード・ベルナール（Claude Bernard）が示した「内部環境（milieu intérieur）」の思想を継承するものだった。有機体が内部の安定を維持しようとする動態——この発想は、第一次世界大戦の惨禍を経た生理学者たちが「自己組織化する全体」として身体を再定義しようとした知的文脈のなかで結実した。戦場における大量の身体的損傷は、脳と身体を切り離した機械論的理解の限界を、医師たちに実感させたのである。\n\nしかし内受容感覚研究の系譜は、その後しばらく停滞する。20世紀中盤、認知科学の勃興が知的空気を一変させた。1950年代以降、脳はコンピュータに、認知はアルゴリズムに譬えられ、「身体から切り離された情報処理機械」という像が支配的になった。内臓の信号など、この枠組みには入り込む余地がなかった。行動主義心理学もまた、内的状態への関心を脇に置いた。内受容感覚という概念は、シェリントンが定義してから半世紀以上、研究の主流からほぼ忘却されたまま推移した。\n\n転機は1990年代に訪れる。神経科学者アントニオ・ダマシオ（Antonio Damasio）が1994年に『デカルトの誤り（Descartes' Error）』を発表し、感情と身体的プロセスが合理的判断に統合されているという「ソマティック・マーカー仮説」を提唱した。これは、経営の意思決定論にとっても射程を持つ転換だった。同時期にウィリアム・ジェームズの1890年代の情動論が再評価され、「身体の自律反応が情動に先行する」という考えが復権した。脳-身体の双方向ループが、再び科学の中心課題として浮上した瞬間だった。\n\n内受容感覚の概念が抜本的に再定義されたのは2002年前後である。神経科学者A・D・クレイグ（A.D. Craig）が、内受容感覚を「全身の生理的状態の感覚」として再概念化した。脊髄の板層I（lamina I）ニューロンから脳幹、視床、そして島皮質（insula）へと至る経路を特定することで、内側から感じる能力の神経回路が初めて地図として描かれた。この発見は、シェリントンの1906年の分類から約100年後の達成だった。さらに同時期のカール・フリストン（Karl Friston）による「予測符号化（Predictive Coding）」理論が、脳を「予測を絶えず更新する統計器官」として再記述し、内受容感覚を恒常性維持の中核機構として位置づけた。概念の成熟に百年を要したことになる。\n\nこの三百年の経緯から、神山氏に届けたい洞察がある。内受容感覚という科学は、一人の天才の発明ではなく、戦争・哲学論争・技術パラダイムの変転という外圧のなかで、忘却と復権を繰り返しながら成立してきた。シェリントンの1906年の命名は、当時の行動主義的・機械論的な知的気候に埋もれた。ダマシオの1994年の再点火は、強いAI論の隆盛という対抗力を跳ね返した。クレイグとフリストンの2000年代の地図は、神経科学と計算論と哲学が交差する地点でしか生まれ得なかった。\n\n経営における「肌感覚」「胸騒ぎ」が長らく非合理として排除されてきた歴史も、この知的気候と連動している。デカルト的合理主義が経営科学に浸透したのが20世紀前半、MBAカリキュラムが「計量化できる判断」を正統化したのが1960-70年代——その潮流は内受容感覚の研究停滞期と見事に重なる。今、神経科学が身体の内側へと回帰した事実は、経営の判断論にとっても歴史的なリハビリテーションを意味する。百年の迂回を経て、「感じる能力」が知の核心に戻ってきた。",
+          "annotation_label": "歴史的事象・年表",
+          "annotation_body": "1906年：シェリントンが「内受容感覚（interoception）」を命名／1926年：キャノンが「恒常性（homeostasis）」を定義（ベルナールの内部環境論を継承）／1994年：ダマシオ『デカルトの誤り』で身体-感情-理性の統合を提唱、研究の再点火へ／2002年前後：クレイグが島皮質への経路を特定し内受容感覚の神経回路地図を完成、フリストンの予測符号化理論と合流して現代的な内受容感覚科学が成熟期に入る。",
+          "quote_excerpt": "Over the past few years, scientists working in neuroscience and psychology have been listening in on these brain-body interactions – in health and illness – and analysing how they constitute the always embodied self. They have been studying the sense of the body from within, which is called interoception. It is a term you will be hearing increasingly. This research is dismantling the pillars of a belief system that has long endured within those fields – as well as in the popular imagination – that the brain is an information-processing machine that can be understood apart from the rest of the body, as if our conscious, reasoning self were the output of a disembodied brain, and as if we were not fully biological creatures. This shift within the mind sciences is game-changing, and merits attention. Yet perhaps because we are in its midst, even its actors might not be fully aware of its historical and philosophical significance – and of its potential cultural and clinical implications. The time has come to take stock of the revolution under way.",
+          "cost_usd": 0.069036,
+          "is_fallback": false
+        }
       }
     ]
   }

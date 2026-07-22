@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-23",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/19947/",
+    "https://www.economist.com/finance-and-economics/2026/07/14/what-investment-gurus-get-wrong",
+    "https://que.dailyshincho.jp/node/19920/",
+    "https://www.economist.com/finance-and-economics/2026/07/13/the-stubborn-scarcity-of-female-breadwinners"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2607/22/2000000214/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2607/22/news019.html",
+    "web_repo": "https://www.jfa-fc.or.jp/particle/320.html"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/mobile-network-operators-can-help-build-llms-agentic-ai-for-minority-languages-by-vivek-badrinath-2026-07",
+    "http://www3.nhk.or.jp/news/html/20260722/k10015182621000.html",
+    null,
+    "https://www.mckinsey.com/capabilities/sustainability/our-insights/cbam-how-companies-can-build-from-compliance-to-value-creation",
+    "https://wordswithoutborders.org/read/article/2026-07/shouting-at-a-low-volume-a-conversation-with-e-m-palitha-edirisooriya-pathirage-porawagamage/",
+    "https://nautil.us/why-are-we-using-machines-to-study-our-inner-lives-1282870/"
+  ],
+  "page4_urls": [
+    "https://www.themarginalian.org/2026/07/19/the-forgotten-teachers/",
+    "https://3quarksdaily.com/3quarksdaily/2026/07/a-philosophers-one-word-theory-to-explain-why-the-world-feels-so-weird.html",
+    "https://3quarksdaily.com/3quarksdaily/2026/07/could-ai-be-conscious-experts-believe-its-at-least-possible-we-urgently-need-a-plan-to-navigate-the-ethical-implications.html"
+  ],
+  "page5_url": "https://sectionhiker.com/wilderness-first-aid-safety-tips-for-hikers-over-60/",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-07/in-the-right-place-fighting-for-the-right-things-revolutionary-writing-from-the-philippines-david/",
+    "music": "https://stereogum.com/2506014/nigel-godrich-dhani-harrison-announce-debut-album-as-dragonflies-hear-slower/music/",
+    "outdoor": "https://www.atlasobscura.com/places/ike-towell-grave"
+  },
+  "headlines_urls": [
+    "https://que.dailyshincho.jp/node/20004/",
+    "https://www.ft.com/content/8e33fb1d-cce3-4b56-9546-260f3f918c2d",
+    "https://que.dailyshincho.jp/node/19317/"
+  ]
+}

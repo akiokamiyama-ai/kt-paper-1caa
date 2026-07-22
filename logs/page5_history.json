@@ -1490,6 +1490,24 @@
       "ai_kamiyama_title": "How to Be a Lichen: Adaptive Strategies for the Vulnerabilities of Being Human from Nature’s Tiny Titans of Tenacity",
       "ai_kamiyama_category": "books:自然科学ノンフィクション",
       "ai_kamiyama_source_name": "The Marginalian（旧 Brain Pickings）"
+    },
+    {
+      "displayed_on": "2026-07-23",
+      "article_url": "https://sectionhiker.com/wilderness-first-aid-safety-tips-for-hikers-over-60/",
+      "article_title": "Wilderness First Aid Safety Tips for Hikers Over 60",
+      "article_category": "outdoor",
+      "tie_candidates": [
+        "outdoor"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.themarginalian.org/2026/07/19/the-forgotten-teachers/",
+      "ai_kamiyama_title": "From Mitochondria to Minds: The Illustrated Science of the Psychedelic Dream Called Life",
+      "ai_kamiyama_category": "books:自然科学ノンフィクション",
+      "ai_kamiyama_source_name": "The Marginalian（旧 Brain Pickings）"
     }
   ]
 }

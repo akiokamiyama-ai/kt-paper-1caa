@@ -429,6 +429,11 @@
       "concept_id": "collaborative_abduction",
       "name_ja": "協働アブダクション",
       "displayed_on": "2026-07-22"
+    },
+    {
+      "concept_id": "hallucination",
+      "name_ja": "ハルシネーション",
+      "displayed_on": "2026-07-23"
     }
   ]
 }
