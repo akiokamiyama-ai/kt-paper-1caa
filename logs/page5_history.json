@@ -1508,6 +1508,24 @@
       "ai_kamiyama_title": "From Mitochondria to Minds: The Illustrated Science of the Psychedelic Dream Called Life",
       "ai_kamiyama_category": "books:自然科学ノンフィクション",
       "ai_kamiyama_source_name": "The Marginalian（旧 Brain Pickings）"
+    },
+    {
+      "displayed_on": "2026-07-24",
+      "article_url": "https://www.themarginalian.org/2026/07/22/carl-jung-creativity/",
+      "article_title": "Carl Jung on Creativity",
+      "article_category": "books",
+      "tie_candidates": [
+        "books"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://warontherocks.com/total-war-on-taipei-china-explores-elevating-cognitive-effects-into-its-vision-of-warfare/",
+      "ai_kamiyama_title": "Total War on Taipei: China Explores Elevating Cognitive Effects into Its Vision of Warfare",
+      "ai_kamiyama_category": "geopolitics",
+      "ai_kamiyama_source_name": "War on the Rocks"
     }
   ]
 }

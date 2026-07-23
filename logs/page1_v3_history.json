@@ -987,6 +987,23 @@
           "cost_usd": 0.069036,
           "is_fallback": false
         }
+      },
+      {
+        "date": "2026-07-24",
+        "day_label": "金",
+        "angle_key": "integration",
+        "angle_label_jp": "統合＋問い",
+        "essay": {
+          "angle_label": "金曜 - 統合＋問い",
+          "daily_question": "「身体の声を聞く経営者」は、聞けない組織をどう変えるか",
+          "essay_title": "自己と組織のあいだ——一週間の問いが残したもの",
+          "body": "月曜日、編集部は「肌感覚に科学が追いついた」と書いた。内受容感覚（interoception）という概念が、経営者が日々感じてきた「言葉になる前の判断」に、神経科学という正当性の鎧を与えつつあるという話だった。火曜日は楽観論へのブレーキをかけた。測定の信頼性、文化的偏差、「内受容感覚の高さ」が一種のエリート資格に転化する危険——新しい科学が新しい神話になるとき、最初に失われるのは批判的距離だという指摘だった。水曜日は現場に降りた。採用判断における身体的情報の復権、会議設計、マインドフルネス実践の組織的埋め込み——「胸騒ぎを実装する」という問いを三つの選択肢に分けて検討した。木曜日と金曜日は思想史と概念史を辿り、デカルト批判の地下水脈が17世紀の生気論者から始まり、ウィリアム・ジェームズ、メルロ＝ポンティ、ヴァレラを経て現代の計算神経科学に接続するまでの三百年を俯瞰した。\n\n五日間を貫く問いは、結局ひとつに収束する。自己の境界は、身体の内側から感じる能力によって形成される——Arikha の論文が引くFotopoulou とTsakirisの結論だ。自己と他者を区別する能力は、内受容感覚の精度と連動する。これを経営に移植すれば、意思決定の質は「感じる能力の設計」にかかっていると言えなくもない。\n\nしかしここで編集部は、一週間を通じて触れてこなかった問いを立てたい。内受容感覚の科学が描くのは、あくまで「個体」の自己形成モデルだ。心拍を感じ、内臓の声を聞き、境界を安定させる——これはすべて一人の身体の中で完結する話として語られてきた。だが経営者が率いる組織は、複数の身体が時間と空間を共有する場だ。一人の経営者の内受容感覚が研ぎ澄まされたとして、それは組織全体の判断精度にどう伝播するのか。あるいは、まったく伝播しないのか。\n\n月曜の論考で触れたように、Antonio Damasio は「脳は身体に仕える」と書いた。脳が身体の信号を統合し、恒常性を維持するための予測機械として機能するという図式だ。これをそのまま組織に比喩的に適用すれば、経営者は組織の「脳」であり、現場の身体信号を受け取って統合する役割を担う——という解釈が生まれる。だが比喩は危うい。組織には経営者という単一の「脳」以外に、複数の判断主体が存在する。各人が異なる内受容感覚の精度を持ち、異なる予測モデルを抱えている。\n\nここに一週間の問いが残した核心がある。内受容感覚の科学は「感じる個人」の解像度を上げた。だがその個人が集まる場——会議室、組織、関係性——の内受容感覚に相当するものは、まだ科学的には名前すら持っていない。組織が「おかしい」と感じるとき、その信号はどこから来てどこへ向かうのか。経営者一人が感じ取れても、組織の身体が反応しなければ、その感覚はどこへ消えるのか。\n\n火曜日の批判的論考は、内受容感覚を「個人の資質」に還元することへの警戒を促した。水曜日の実践論考は、組織設計の問題として捉え直す試みだった。しかし設計できるのはあくまで「条件」であって、「感じる能力」そのものではない。ここに限界がある。\n\n最後に、神山氏への問いを一つ置く。\n\nあなたが身体の内側から受け取った信号を、組織に伝えようとした瞬間——その信号は言語になった時点で、すでに別の何かに変わってしまっていなかったか。",
+          "annotation_label": "1 週間の論点総括",
+          "annotation_body": "月曜に内受容感覚の科学的正当性を概観し、火曜に「新しい神話化」への批判的距離を取った。水曜は採用・会議・実践への応用を検討し、木曜は思想史的地下水脈（デカルト批判の系譜）、金曜は概念誕生の三百年史を辿った。五日間を貫く問いは「身体の内側から感じる能力が自己を形成する」という命題が、経営という集合的実践にどこまで射程を持つか、だった。",
+          "quote_excerpt": "Our ability to form a boundary between self and other is a function of our ability to feel our embodied selves from within. [...] the self is shaped from early infancy – when one is entirely dependent on the carer for homeostatic regulation and hence survival – by embodied interactions with carers that centrally include affective touch. [...] It is necessarily in relation to others that we acquire a sense of self, which develops in this embodied interoceptive way from infancy on. We sustain a constant sense of selfhood in dynamic relation to and distinction from others, and, in turn, our ability to form a boundary between self and other is a function of our ability to feel our embodied selves from within – this is the important novelty of their claim.",
+          "cost_usd": 0.063285,
+          "is_fallback": false
+        }
       }
     ]
   }

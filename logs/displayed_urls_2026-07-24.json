@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-24",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/19950/",
+    "https://www.economist.com/finance-and-economics/2026/07/23/a-brief-history-of-luddism",
+    "https://que.dailyshincho.jp/node/19860/",
+    "https://que.dailyshincho.jp/node/20004/"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/enterprise/articles/2607/15/news001.html",
+    "human_energy": "https://jinjibu.jp/news/detl/26622/",
+    "web_repo": "https://www.bc01.net/article/stayand_202608/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/us-russia-discredited-by-smaller-powers-by-harold-james-2026-07",
+    "http://www3.nhk.or.jp/news/html/20260723/k10015184591000.html",
+    "https://toyokeizai.net/articles/-/952519?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://www.mckinsey.com/capabilities/geopolitics/our-insights/chokepoints-how-to-respond-when-the-global-economy-gets-squeezed",
+    "https://www.theparisreview.org/blog/2026/07/23/what-we-talk-about-when-we-talk-about-the-interstitium/",
+    "https://warontherocks.com/total-war-on-taipei-china-explores-elevating-cognitive-effects-into-its-vision-of-warfare/"
+  ],
+  "page4_urls": [
+    "https://3quarksdaily.com/3quarksdaily/2026/07/beyond-greece-and-rome.html",
+    "https://thepointmag.com/dialogue/searching-for-the-unexpected/",
+    "https://aeon.co/essays/anthropophagy-art-flips-the-cannibal-worries-of-colonialism"
+  ],
+  "page5_url": "https://www.themarginalian.org/2026/07/22/carl-jung-creativity/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/07/23/what-we-talk-about-when-we-talk-about-the-interstitium/",
+    "music": "https://stereogum.com/2506114/conor-oberst-opens-up-about-personal-struggles-i-was-really-close-to-the-edge/news/",
+    "outdoor": "https://sectionhiker.com/wilderness-first-aid-safety-tips-for-hikers-over-60/"
+  },
+  "headlines_urls": [
+    "https://www.economist.com/finance-and-economics/2026/07/23/can-prediction-markets-win-over-wall-street",
+    "https://www.ft.com/content/55b3b434-9965-4046-b239-43443db3e54a",
+    "https://www.economist.com/finance-and-economics/2026/07/23/the-worlds-balance-sheet-is-out-of-kilter-with-its-economy"
+  ]
+}
