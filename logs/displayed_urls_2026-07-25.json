@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-25",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/19851/",
+    "https://www.bbc.co.uk/news/articles/cz05rdn1n80o?at_medium=RSS&at_campaign=rss",
+    "https://que.dailyshincho.jp/node/20010/",
+    "https://www.economist.com/finance-and-economics/2026/07/23/the-worlds-balance-sheet-is-out-of-kilter-with-its-economy"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://atmarkit.itmedia.co.jp/ait/articles/2607/24/news054.html",
+    "human_energy": "https://jinjibu.jp/news/detl/26676/",
+    "web_repo": "https://www.bc01.net/serialize/kanda_019/"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/07/24/nepal-kinnar-lgbtq-cinema/",
+    "https://toyokeizai.net/articles/-/952422?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    null,
+    "https://www.mckinsey.com/featured-insights/mckinsey-on-books/author-talks-why-founders-misunderstand-customer-demand",
+    "https://www.theparisreview.org/blog/2026/07/15/a-city-bigger-than-a-bomb/",
+    "https://nautil.us/when-stupid-was-a-diagnosis-1282984/"
+  ],
+  "page4_urls": [
+    "https://3quarksdaily.com/3quarksdaily/2026/07/chinas-jagged-modernization-and-what-it-could-suggest-for-societal-ai-adoption.html",
+    "https://3quarksdaily.com/3quarksdaily/2026/07/young-adults-in-real-life-romantic-relationships-are-simultaneously-maintaining-secret-romantic-interactions-with-ai-chatbot-companions.html",
+    "https://www.themarginalian.org/2026/07/22/carl-jung-creativity/"
+  ],
+  "page5_url": "https://3quarksdaily.com/3quarksdaily/2026/07/young-adults-in-real-life-romantic-relationships-are-simultaneously-maintaining-secret-romantic-interactions-with-ai-chatbot-companions.html",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/07/20/charles-brockden-brown-declares-independence/",
+    "music": "https://stereogum.com/2506215/ministry-announce-final-album-hate-to-go-take-out-or-delivery-hear-burned-out/music/",
+    "outdoor": "https://sectionhiker.com/onx-hunt-navigation-app/"
+  },
+  "headlines_urls": [
+    "https://que.dailyshincho.jp/node/19998/",
+    "https://www.ft.com/content/6633c407-46dc-4c33-9c66-f912b9f9f5dc",
+    "https://www.economist.com/finance-and-economics/2026/07/16/can-kevin-warshs-fed-force-5-reimagine-monetary-policymaking"
+  ]
+}

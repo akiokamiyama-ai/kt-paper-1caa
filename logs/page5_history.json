@@ -1526,6 +1526,24 @@
       "ai_kamiyama_title": "Total War on Taipei: China Explores Elevating Cognitive Effects into Its Vision of Warfare",
       "ai_kamiyama_category": "geopolitics",
       "ai_kamiyama_source_name": "War on the Rocks"
+    },
+    {
+      "displayed_on": "2026-07-25",
+      "article_url": "https://3quarksdaily.com/3quarksdaily/2026/07/young-adults-in-real-life-romantic-relationships-are-simultaneously-maintaining-secret-romantic-interactions-with-ai-chatbot-companions.html",
+      "article_title": "Young adults in real-life romantic relationships are simultaneously maintaining secret romantic interactions with AI chatbot companions",
+      "article_category": "academic",
+      "tie_candidates": [
+        "academic"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://3quarksdaily.com/3quarksdaily/2026/07/chinas-jagged-modernization-and-what-it-could-suggest-for-societal-ai-adoption.html",
+      "ai_kamiyama_title": "China’s jagged modernization and what it could suggest for societal AI adoption",
+      "ai_kamiyama_category": "academic",
+      "ai_kamiyama_source_name": "3 Quarks Daily"
     }
   ]
 }
