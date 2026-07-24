@@ -114,7 +114,73 @@ W7: 8,440 chars / W8: 20,658 chars。Sonnet 4.6 の context window は十分
 
 現状は本ドキュメント自体が checklist の役割を担う。
 
-## §5. 関連ファイル
+## §5. 月次選定における本文取得不可ソースの扱い
+
+**方針**: bot 保護 / Vercel Security Checkpoint / HTTP 429 等により WebFetch
+できないソースも、月次選定（4 記事 / 月）の候補として提示すること。fetch 不可を
+理由に候補から除外してはならない。
+
+### 5.1 なぜ除外しないか
+
+Aeon / Psyche 等は本 profile（`news_profile.md`）の思想週に強く整合する主要
+ソースであり、Sprint 11-12 の実績で継続的に主軸を供給している：
+
+- **W5 (2026-06-21〜27)**: Aeon Essays / Katherine May 論考
+- **W7 (2026-07-05〜11)**: Aeon Essays / Nicolas Berggruen 論考（15 名共同執筆）
+- **W8 (2026-07-12〜18)**: Aeon Essays / Helena Miton 論考
+- **W9 (2026-07-19〜25)**: Aeon Essays / Noga Arikha 論考（内受容感覚）
+
+これらを WebFetch できないという技術的制約だけで候補から落とすと、月 4 記事の
+選定プールが痩せ細り、profile 適合度の低い記事に流れざるを得なくなる。
+
+具体的な被害事例：2026-07-24 の C150 月次選定セッションでは、Aeon / Psyche が
+Vercel Security Checkpoint により全滅。W12 / W13 の候補探索が The Atlantic
+と合わせて 3 サイト同時に閉じ、代替探索に時間を要した。
+
+### 5.2 「本文 fetch 済み」と「search-only confirmed」を明示的に区別
+
+Claude Code が主軸候補をリストアップする際、各候補に **fetch ステータス**を
+必ず明記する：
+
+| ステータス | 意味 | 神山さん側の対応 |
+|---|---|---|
+| **本文 fetch 済み** | WebFetch で全文取得できた候補 | そのまま選択可 |
+| **search-only confirmed** | 検索結果 / 公開 metadata で存在は確認済、本文は fetch 不可 | 選択した場合は §5.3 の手動投入運用へ |
+
+WebSearch の snippet / タイトル / 著者 / 公開日 / URL は多くの場合取得可能で、
+「その記事が実在し、テーマ適合度を評価するに足る材料はある」と判断できる。
+本文全文が LLM に届かないだけで、候補として提示する価値は減じない。
+
+### 5.3 神山さんによる手動投入運用
+
+`search-only confirmed` の候補を神山さんが選択した場合、以下のフローで
+`full_text_excerpt` を投入する：
+
+1. 神山さんがブラウザ（Chrome 等）で該当 URL を開く
+   - Vercel Security Checkpoint / Cloudflare の human-verification は
+     ブラウザからは通過できる（bot ではない）
+2. 本文全文をコピー
+3. §3.2 のクリーンアップ指針に従い、newsletter UI / 広告 / footer を除去
+4. `data/monthly_pivotal.json` の該当 W エントリの `full_text_excerpt` に
+   貼り付け、コミット
+
+**実施済例**: 2026-07-19 の C147 で W9 Noga Arikha（Aeon）を神山さんが
+Chrome から手動取得し、28,160 chars を投入
+（[commit ad3ab2b](https://github.com/akiokamiyama-ai/kt-paper-1caa/commit/ad3ab2b)）。
+
+### 5.4 Claude Code 側の候補提示ルール
+
+月次選定セッション時、Claude Code は以下を遵守：
+
+- 各候補に `[fetch: 本文取得済 / search-only]` タグを明示
+- `search-only` の候補も **同格で** 提示する（末尾のおまけ扱いにしない）
+- fetch 不可を理由にした暗黙の候補削除を行わない
+- 各候補の fetch エラーの理由（HTTP 429 / Vercel checkpoint 等）を短く記録
+
+これにより、「AI が fetch できない記事は選ばれない」という選定バイアスを
+避け、profile 適合度を最優先の判断基準に保つ。
+
+## §6. 関連ファイル
 
 - 実装:
   - [`scripts/page1_v3/essay_generator.py`](../scripts/page1_v3/essay_generator.py) — essay 生成本体
