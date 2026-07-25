@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-26",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/20040/",
+    "https://que.dailyshincho.jp/node/20013/",
+    "https://www.bbc.co.uk/news/articles/c70gq125xweo?at_medium=RSS&at_campaign=rss",
+    "https://que.dailyshincho.jp/node/19854/"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/news/articles/2607/25/news016.html",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2607/24/news029.html",
+    "web_repo": "https://www.bc01.net/serialize/sasaki_026/"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/07/24/riding-the-greenland-ferry/",
+    "http://www3.nhk.or.jp/news/html/20260725/k10015185721000.html",
+    "https://toyokeizai.net/articles/-/952566?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://www.mckinsey.com/industries/healthcare/how-we-help-clients/how-montefiore-einstein-turned-technology-into-enterprise-value",
+    "https://www.theparisreview.org/blog/2026/07/14/zain-baweja-on-gloss/",
+    "https://nautil.us/psychedelics-might-not-have-evolved-to-get-humans-high-1283013/"
+  ],
+  "page4_urls": [
+    "https://3quarksdaily.com/3quarksdaily/2026/07/charles-brockden-brown-declares-independence.html",
+    "https://www.themarginalian.org/2026/07/24/robert-louis-stevenson-writing/",
+    "https://thepointmag.com/examined-life/superhuman-fantasies/"
+  ],
+  "page5_url": "https://stereogum.com/2506248/j-mascis-makes-opry-debut/news/",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-07/the-giant-mausoleum-yapan-benitez/",
+    "music": "https://stereogum.com/2506269/hayley-williams-brings-out-wednesday-this-is-lorelei-jack-antonoff-more-at-newport-folk-festival/news/",
+    "outdoor": "https://www.cleverhiker.com/backpacking/gsi-bugaboo-camper-ceramic-review/"
+  },
+  "headlines_urls": [
+    "https://que.dailyshincho.jp/node/19320/",
+    "https://www.ft.com/content/1a7cdff0-5e52-4fa1-8b21-978e501eb791?syn-25a6b1a6=1",
+    "https://www.ft.com/content/38a18d43-5b01-4c08-ab85-c1695f10c1e3?syn-25a6b1a6=1"
+  ]
+}

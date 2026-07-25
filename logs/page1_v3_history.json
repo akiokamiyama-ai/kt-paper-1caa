@@ -1006,5 +1006,32 @@
         }
       }
     ]
+  },
+  "W10_2026-07-26": {
+    "week_label": "W10",
+    "theme": "所有からアクセスへ",
+    "period": [
+      "2026-07-26",
+      "2026-08-01"
+    ],
+    "entries": [
+      {
+        "date": "2026-07-26",
+        "day_label": "日",
+        "angle_key": "overview",
+        "angle_label_jp": "全体像",
+        "essay": {
+          "angle_label": "日曜 - 全体像",
+          "daily_question": "音楽はいつ「資産クラス」へと変容したのか",
+          "essay_title": "摩擦なき音楽が映す金融化の全景",
+          "body": "ストリーミングが日常に溶け込んだとき、人々は音楽の聴き方が変わったと感じた。だが今週の主軸記事『The Same Stream Twice』が静かに告げるのは、それより根深い事態です。音楽産業はすでに「文化の産業」ではなく「金融資産の生産装置」へと再編されており、我々が耳にするメロディーの背後には、BlackRock や Vanguard の持分比率が影を落としている。\n\nRob Arcand が参照する Liz Pelly の『Mood Machine』と Andrew deWaard の『Derivative Media』は、それぞれ異なる切り口から同一の構造を照らしています。Pelly は Spotify の playlist 経済を解剖し、mood 別に整備されたインターフェースが「Spotifycore」という音の質感を産業ぐるみで生み出す様を描きます。Epidemic Sound のような会社が低コストの楽曲を大量供給し、アーティストの創造的実験よりも「摩擦のなさ」が優先された結果、プラットフォームへの適応そのものが美学を書き換えた。一方 deWaard は、金融デリバティブの論理が映画・テレビ・音楽に移植され、IP という資産クラスを再生産し続ける仕組みを解明します。Neil Young が自らの楽曲カタログの半分を 1 億 5000 万ドルで売却したという事実は、象徴的な一場面に過ぎず、Recognition Music Group（旧 Hipgnosis）を筆頭に、過去の創造物が定期的なキャッシュフローを生む「金融商品」として流通する市場はすでに確立されています。\n\n二冊に通底するのは、プラットフォーム資本主義が「見えなくする」ものへの着目です。Spotify のダッシュボードはシームレスな体験を前面に出しながら、楽曲供給網における労働の搾取、Big Three レーベルとアセットマネジャーによる寡占支配、そして課金収益の分配構造を巧妙に後景へ退かせます。便益を享受するユーザーは、自分が何に対価を払い、何が見えなくなっているかを問われることなく消費し続ける。この構造は、サブスクリプション経営や IP 事業を営む読者にとって、まさしく自社の事業モデルを映す鏡となります。\n\n論考は対抗運動の芽にも目を向けます。UMAW（United Musicians and Allied Workers）の「Justice at Spotify」キャンペーン、SAG-AFTRA の 2023 年ストライキ、Lina Khan 体制下の FTC による独禁法運用。しかしいずれも、金融化の速度に追いつくには構造的な非対称が大きすぎるという限界が正直に語られています。\n\n今週の論考は、この全体構造を日毎に異なる角度から読み解いていきます。月曜日には playlist 経済が音そのものをいかに変容させたかを、火曜日には IP 金融化の連鎖を、水曜日には労働の不可視化というメカニズムを、木曜日には対抗運動の可能性と限界を、金曜日には「批評と実践」の交差点を問います。今日は入口に立つ日です。問いはひとつに収束しません。文化産業の金融化は、音楽だけの問題ではなく、価値をどこに帰属させるかという経営の根幹に触れる問いだからです。その問いを携えて、今週の紙面を読み進めていただければと思います。",
+          "annotation_label": "主要キーワード",
+          "annotation_body": "【Spotifycore】playlist の mood 編成が収れんさせた音の質感——ささやき系ボーカル、チルビート等。【streambait】playlist 掲載を狙って制作される低コスト楽曲群。clickbait の音楽版。【derivative media】金融デリバティブの論理を援用し、IP の再利用（続編・リブート）を資産運用として捉える概念（deWaard）。【プラットフォーム資本主義】流通基盤を握るプラットフォームが文化・労働・収益の配分を決定する経済様式。",
+          "quote_excerpt": "Over time, though, the quest for a frictionless user experience resulted in a deluge of frictionless music: an ease of use that, in turn, facilitated easy listening.\n\nThe same forces of financialization and monopoly power that drove Spotify's success have been no less transformative in film, television, and video games.\n\nA similar claim could be made of the culture industries in their current state. The growing entrenchment of hedge funds, asset management firms, and private equity groups has put overwhelming pressure on media companies to slash costs to an absolute minimum while doing everything possible to ensure reliable returns.",
+          "cost_usd": 0.054039000000000004,
+          "is_fallback": false
+        }
+      }
+    ]
   }
 }
