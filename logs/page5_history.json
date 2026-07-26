@@ -1562,6 +1562,24 @@
       "ai_kamiyama_title": "Superhuman Fantasies",
       "ai_kamiyama_category": "academic",
       "ai_kamiyama_source_name": "The Point Magazine"
+    },
+    {
+      "displayed_on": "2026-07-27",
+      "article_url": "https://www.axismag.jp/posts/2026/07/717493.html",
+      "article_title": "遠野市立博物館で夏季特別展「遠野物語とオシラサマ」開催。初公開資料を含む100体以上のオシラサマが集結",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://3quarksdaily.com/3quarksdaily/2026/07/froth-fury-and-the-rise-of-the-new-right.html",
+      "ai_kamiyama_title": "Froth, Fury, and the Rise of the New Right",
+      "ai_kamiyama_category": "academic",
+      "ai_kamiyama_source_name": "3 Quarks Daily"
     }
   ]
 }

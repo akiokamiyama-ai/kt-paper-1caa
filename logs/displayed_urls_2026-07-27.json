@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-27",
+  "page1_urls": [
+    "https://www.economist.com/finance-and-economics/2026/07/23/can-prediction-markets-win-over-wall-street",
+    "https://www.ft.com/content/9741206d-b53f-4149-8cab-5203dd4b70fb?syn-25a6b1a6=1",
+    "https://www.ft.com/content/aa856a9d-b57c-4adf-b5aa-d1b22f9be3b2",
+    "https://que.dailyshincho.jp/node/19878/"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/news/articles/2607/26/news014.html",
+    "human_energy": "https://sloanreview.mit.edu/article/the-hidden-cost-of-ai-assisted-creativity/",
+    "web_repo": "https://www.bc01.net/topinterview/ecolife-coco_202608/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/cogs-of-war/america-needs-an-off-ramp-between-doing-nothing-and-shutting-ai-down/",
+    "https://que.dailyshincho.jp/node/20127/",
+    "http://www3.nhk.or.jp/news/html/20260725/k10015186141000.html",
+    "https://www.mckinsey.com/industries/financial-services/our-insights/how-ai-will-reshape-the-economics-of-insurance-a-ceos-guide-to-strategy",
+    "https://wordswithoutborders.org/read/article/2026-07/wonderful-stubbornness-an-encomium-for-laurence-laluyaux-valeria-luiselli/",
+    "https://3quarksdaily.com/3quarksdaily/2026/07/the-gods-are-still-crazy.html"
+  ],
+  "page4_urls": [
+    "https://www.themarginalian.org/2026/07/25/oliver-sacks-perception/",
+    "https://www.themarginalian.org/2026/07/25/simone-de-beauvoir-love-friendship/",
+    "https://3quarksdaily.com/3quarksdaily/2026/07/froth-fury-and-the-rise-of-the-new-right.html"
+  ],
+  "page5_url": "https://www.axismag.jp/posts/2026/07/717493.html",
+  "page6_urls": {
+    "books": "https://locusmag.com/2026/07/new-notable-july-2026/",
+    "music": "https://stereogum.com/2506327/neurosis-play-first-show-with-new-vocalist-aaron-turner-at-fire-in-the-mountains/music/",
+    "outdoor": "https://sectionhiker.com/backpacking-gear-hall-of-fame/"
+  },
+  "headlines_urls": [
+    "http://www3.nhk.or.jp/news/html/20260725/k10015185721000.html",
+    "https://www.economist.com/finance-and-economics/2026/07/23/the-rise-of-the-deserving-rich",
+    "https://www.ft.com/content/4f88ed2b-41de-4d8e-930f-92b8261f49c2?syn-25a6b1a6=1"
+  ]
+}

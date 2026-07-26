@@ -1031,6 +1031,23 @@
           "cost_usd": 0.054039000000000004,
           "is_fallback": false
         }
+      },
+      {
+        "date": "2026-07-27",
+        "day_label": "月",
+        "angle_key": "critical",
+        "angle_label_jp": "批判的",
+        "essay": {
+          "angle_label": "月曜 - 批判的",
+          "daily_question": "金融化批判は、誰のための批判として機能しているか",
+          "essay_title": "批判の死角——告発は誰を救うのか",
+          "body": "Rob Arcand の論考は、Liz Pelly と Andrew deWaard という二人の書き手を軸に、音楽産業の金融化を鋭く告発する。Spotifycore という音の標準化、Epidemic Sound による搾取的な楽曲供給、BlackRock による産業横断的支配——その診断は精密であり、問題の輪郭は明快に描かれている。しかし論考に向き合うほど、編集部には一つの疑念が浮かぶ。この批判は、本当に変革の道を照らしているのか。あるいは告発の語り口そのものが、構造を温存する回路の一部になっていないか。\n\n第一に疑うべきは、「プラットフォーム資本主義が文化を劣化させた」という因果の方向です。経済学者のWill Page（元Spotify主任エコノミスト）は、ストリーミング以前の音楽産業こそが高い参入障壁と流通寡占によって多様性を抑圧していたと論じ、Spotifyの台頭が中小アーティストへの接触機会を実質的に広げた側面を強調します。Pageの立場からすれば、Pelly の分析は旧来の「レコード会社による良き時代」を無批判に前提としており、それ自体が選択的な歴史記述だということになります。Arcand の論考はこの反論にほとんど正面から向き合っていません。\n\n第二に、労働運動への評価です。論考はUMAW（United Musicians and Allied Workers）のJustice at Spotifyキャンペーンや、SAG-AFTRAのストライキを「対抗運動の希望」として位置づけます。しかし社会学者のDave O'Brien（エディンバラ大学、文化労働研究）は、クリエイティブ産業における労組運動が「組織化できる者」のみを救う傾向にあると警告します。ストリーミングで最も損害を受けているのは、組合費を払えない無名のインディ・ミュージシャンや、グローバルサウスの楽曲制作者です。彼らはUMAWの傘にも、SAG-AFTRAの交渉テーブルにも座っていない。告発の語りが「組織化された文化的先進国の労働者」の声を代表するものになるとき、それは別の排除を生んでいます。\n\n第三の盲点は、技術決定論への傾斜です。Spotifycoreという音の平準化を論じるとき、Arcandの論考は「プラットフォームの構造が音楽の音を決定した」という単線的な説明に依存します。しかし音楽社会学者のSimon Frith（エディンバラ大学、音楽産業研究の泰斗）が繰り返し指摘してきたのは、音楽の商業化と芸術的自律性は常に複雑な相互浸透の中にあり、「資本に従属した音楽」と「真正な表現」を二項に分けること自体が幻想だという点です。Billie EilishはSpotifycoreの申し子か、あるいはSpotifycoreを利用しながら独自の声を確立したアーティストか。その判断は、外側からの構造分析だけでは下せません。\n\nこれらの批判を並べると、一つの構図が見えてきます。金融化批判の多くは、告発の精度において卓越している一方、「誰が語り、誰の利益のために語るか」という問いに無自覚です。Arcandの論考が参照する批評的伝統——フレドリック・ジェイムソンの政治的無意識の概念——は、文化的テクストが経済的条件の「歪んだ形の表現」であると論じます。だとすれば、批評テクスト自体もまた、それが生まれる経済的・文化的文脈から自由ではありえない。n+1に掲載される長文批評、それを購読する知識人読者、そして「問題意識ある消費者」としての自己確認——この回路もまた、批判される側の構造と地続きの場所に立っています。\n\n神山氏が率いるような経営の現場では、「告発の語り口に乗ること」と「構造を変えること」を混同しないことが肝要です。批判的な論考を読んで「問題が見えた」と感じた瞬間に思考が止まるなら、それは知的消費の快楽を得ただけです。音楽産業の金融化という構造に向き合うとは、複雑な利害関係者の声を等しく聴き取り、告発が救えない当事者を可視化し続ける作業です。ディープリスニング経営の問いは、ここでも生きています。誰の声が聴こえているか——それと同じくらい、誰の声が聴こえていないかを問い続けること。批判の刃は、批判者自身にも向けられなければなりません。",
+          "annotation_label": "反対論者・批判者",
+          "annotation_body": "Will Page（元Spotify主任エコノミスト）はストリーミング以前の産業寡占こそ多様性を抑圧したと主張。Dave O'Brien（エディンバラ大学）は労組運動が組織化できる者のみを救う構造的偏りを指摘。Simon Frith（同大学）は「資本に従属した音楽」と「真正な表現」の二項対立を幻想と論じ、商業化と芸術的自律性の複雑な相互浸透を強調する。",
+          "quote_excerpt": "Over time, though, the quest for a frictionless user experience resulted in a deluge of frictionless music: an ease of use that, in turn, facilitated easy listening.\n\nSome of the most profitable music on Spotify, it turned out, was highly compatible with the platform's increasingly popular playlists. This in turn drove musicians to produce new recordings specifically composed for playlist placement.\n\n\"Companies like Epidemic present themselves as disruptors, as new and exciting, when actually they're just taking advantage of people's ignorance and desperation. All they're doing is building up an asset class to sell on.\"\n\nBoth Pelly and deWaard imagine alternatives to the systems they critique. As Pelly notes, labor organizing has a long history in the music industry... Yet the basic inequality of streaming remains. \"Rather than seek out another fix-all app, we should [acknowledge] that this very model fails to meet the needs of most independent artists and listeners.\"",
+          "cost_usd": 0.061806,
+          "is_fallback": false
+        }
       }
     ]
   }
