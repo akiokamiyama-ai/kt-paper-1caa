@@ -1048,6 +1048,23 @@
           "cost_usd": 0.061806,
           "is_fallback": false
         }
+      },
+      {
+        "date": "2026-07-28",
+        "day_label": "火",
+        "angle_key": "practitioner",
+        "angle_label_jp": "実践者",
+        "essay": {
+          "angle_label": "火曜 - 実践者",
+          "daily_question": "金融化された産業構造を、経営者は自社設計にどう活かすか",
+          "essay_title": "見えない労働を可視化する組織設計の選択肢",
+          "body": "音楽産業の金融化が示す最も実践的な教訓は、「便益の見返りに何が見えなくなるか」という問いである。Spotify が摩擦なき体験を追求した結果、楽曲制作者の労働が構造的に不可視化されたように、経営の現場でも同じ力学は静かに作動している。人材紹介・組織開発を事業ドメインとする神山氏にとって、この問いは抽象論ではない。\n\n第一の実装ポイントは、「貢献の可視化設計」を報酬体系の前段に置くことである。Epidemic Sound が作曲家に一括買い取りを行い、以後の収益を遮断したように、多くの組織では成果の帰属先が設計段階で固定されている。コンサルティング会社 Mercer が近年推進する「スキルベース報酬モデル」は、職位ではなく発揮されたケイパビリティ単位で報酬を連動させる仕組みであり、貢献の不可視化を構造的に防ぐ設計として現に成立している。神山氏が手がける Human Energy のような経営者支援の文脈では、「誰の判断がどの成果に紐づいているか」を経営者自身が言語化できているかどうかを診断の入口にするという選択肢がある。\n\n第二は、「プラットフォーム依存度の測定」を定期経営課題に組み込むことである。Arcand の論考が描く音楽産業では、アーティストの収益がSpotify のアルゴリズム変更一つで激変する構造が定着した。同じ脆弱性は、特定の採用媒体・評価ツール・研修プラットフォームへの依存度が高い人材事業にも潜在する。Workday が「スキルグラフ」の自社保有を企業に促す戦略を採るのは、依存構造を内製化することでスイッチングコストを下げ、交渉力を保つためである。ウェブリポのようなデータ収集基盤を持つ事業であれば、「このデータが特定ベンダーのフォーマットに縛られていないか」を四半期ごとに確認する習慣を設けるだけで、交渉の自由度は変わる。\n\n第三は、「対抗力の制度化」——すなわち、組織内に異議申し立ての回路を意図的に設計することである。UMAW（United Musicians and Allied Workers）が Spotify に対して行った Justice at Spotify キャンペーンは、労働者が集合的に声を上げることで初めてプラットフォームの慣行を部分的に改変させた事例である。企業規模では労組の設立を想定しなくても、サーベイツールの導入や心理的安全性の測定といった手法が、同等の機能を果たしうる。Googleが採用した「プロジェクト・アリストテレス」の知見——高業績チームに共通するのは心理的安全性である——は、この設計が投資対効果として成立することを示している。こころみの組織開発支援において、「異議が通る回路があるか」を組織診断の評価軸に加えることは、今すぐ実行可能な選択肢である。\n\n三つの実装ポイントに共通するのは、「見えなくなったものを、設計によって見えるようにする」という発想である。Spotifycore という音の均質化は、アルゴリズムと金融論理が掛け合わさった「見えない設計」の産物だった。経営者支援の文脈で言えば、組織の中で何が不可視化されているかを問う問いそのものが、ディープリスニング経営の起点になる。告発でも批判でもなく、設計の問題として捉え直すこと——それが、音楽産業の教訓を経営現場に着地させる最も実践的な読み方である。",
+          "annotation_label": "関連企業・事例",
+          "annotation_body": "Mercer（スキルベース報酬）：職位ではなく発揮ケイパビリティ単位で報酬を設計するモデルを大手企業に展開。Workday（スキルグラフ内製化）：人材データを自社保有する設計でベンダー依存を低減。Google「プロジェクト・アリストテレス」：高業績チームの共通因子として心理的安全性を特定、異議申し立て回路の有効性を実証した組織研究。",
+          "quote_excerpt": "Over time, though, the quest for a frictionless user experience resulted in a deluge of frictionless music: an ease of use that, in turn, facilitated easy listening.\n\nPelly uncovers a shadowy network of companies that began to commission nearly anonymous ambient and instrumental recordings for \"prime placement across [Spotify's] mood playlist ecosystem.\" Firms like the Stockholm-based Epidemic Sound could produce these recordings for far less than the cost of licensing tracks by original artists, paying a flat fee to each producer for their master recordings.\n\n\"Companies like Epidemic present themselves as disruptors, as new and exciting, when actually they're just taking advantage of people's ignorance and desperation,\" one Epidemic composer tells Pelly. \"All they're doing is building up an asset class to sell on.\"\n\nIn 2021, the organization led a series of protests at Spotify's New York offices. The UMAW's Justice at Spotify campaign pushed for an end to deceptive playlisting practices, and for a Living Wage for Musicians Act that would guarantee payments of at least one penny per stream.",
+          "cost_usd": 0.058691999999999994,
+          "is_fallback": false
+        }
       }
     ]
   }

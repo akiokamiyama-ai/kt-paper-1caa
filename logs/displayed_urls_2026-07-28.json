@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-28",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/20148/",
+    "https://que.dailyshincho.jp/node/20070/",
+    "https://que.dailyshincho.jp/node/20061/",
+    "https://que.dailyshincho.jp/node/20058/"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/enterprise/articles/2607/27/news049.html",
+    "human_energy": "https://jinjibu.jp/news/detl/26589/",
+    "web_repo": "https://www.jfa-fc.or.jp/particle/5263.html"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/india-student-education-protests-reflect-collapse-of-longstanding-socioeconomic-compact-by-rohan-sandhu-1-2026-07",
+    "https://toyokeizai.net/articles/-/952782?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://warontherocks.com/cogs-of-war/taiwans-tech-hurdles-threaten-military-capability-and-potential-coalition-defense/",
+    "https://www.mckinsey.com/industries/public-sector/our-insights/lessons-in-resilience-leadership-and-trust-an-interview-with-kathy-roth-douquet",
+    "https://locusmag.com/2026/07/new-notable-july-2026/",
+    "https://nautil.us/why-do-psychiatric-disorders-persist-in-humans-1283057/"
+  ],
+  "page4_urls": [
+    "https://www.nplusonemag.com/online-only/online-only/getting-off-with-the-luddites/",
+    "https://www.publicbooks.org/you-have-nothing-to-lose-but-your-supply-chains/",
+    "https://3quarksdaily.com/3quarksdaily/2026/07/this-19th-century-diary-written-by-an-enslaved-maryland-man-is-a-crucial-record-of-his-life-and-family-history-and-the-only-one-of-its-kind-found-in-the-united-states.html"
+  ],
+  "page5_url": "https://thetrek.co/northville-placid-trail-thru-hike-preparation-itinerary-gear-and-art/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/07/27/the-bit-player-my-father-with-steve-zissou/",
+    "music": "https://stereogum.com/2506391/denzel-curry-joins-pain-of-truth-shows-may-pivot-to-hardcore/news/",
+    "outdoor": "https://www.atlasobscura.com/places/yi-sun-shin-monument"
+  },
+  "headlines_urls": [
+    "https://news.yahoo.co.jp/pickup/6589515?source=rss",
+    "https://que.dailyshincho.jp/node/20037/",
+    "https://www.ft.com/content/4a0eeaf8-90b6-4053-a53c-b285d56f4dfe?syn-25a6b1a6=1"
+  ]
+}

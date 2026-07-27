@@ -1580,6 +1580,24 @@
       "ai_kamiyama_title": "Froth, Fury, and the Rise of the New Right",
       "ai_kamiyama_category": "academic",
       "ai_kamiyama_source_name": "3 Quarks Daily"
+    },
+    {
+      "displayed_on": "2026-07-28",
+      "article_url": "https://thetrek.co/northville-placid-trail-thru-hike-preparation-itinerary-gear-and-art/",
+      "article_title": "Northville-Placid Trail Thru-Hike – Preparation, Itinerary, Gear, and Art",
+      "article_category": "outdoor",
+      "tie_candidates": [
+        "outdoor"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://3quarksdaily.com/3quarksdaily/2026/07/this-19th-century-diary-written-by-an-enslaved-maryland-man-is-a-crucial-record-of-his-life-and-family-history-and-the-only-one-of-its-kind-found-in-the-united-states.html",
+      "ai_kamiyama_title": "This 19th-Century Diary Written by an Enslaved Maryland Man Is a Crucial Record of His Life and Family History—and the Only One of Its Kind Found in the United States",
+      "ai_kamiyama_category": "academic",
+      "ai_kamiyama_source_name": "3 Quarks Daily"
     }
   ]
 }

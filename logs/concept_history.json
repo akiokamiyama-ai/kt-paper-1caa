@@ -454,6 +454,11 @@
       "concept_id": "aura",
       "name_ja": "アウラ",
       "displayed_on": "2026-07-27"
+    },
+    {
+      "concept_id": "lifeworld",
+      "name_ja": "生活世界",
+      "displayed_on": "2026-07-28"
     }
   ]
 }
