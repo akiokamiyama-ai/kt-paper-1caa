@@ -459,6 +459,11 @@
       "concept_id": "lifeworld",
       "name_ja": "生活世界",
       "displayed_on": "2026-07-28"
+    },
+    {
+      "concept_id": "systems_thinking",
+      "name_ja": "システム思考",
+      "displayed_on": "2026-07-29"
     }
   ]
 }

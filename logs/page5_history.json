@@ -1598,6 +1598,24 @@
       "ai_kamiyama_title": "This 19th-Century Diary Written by an Enslaved Maryland Man Is a Crucial Record of His Life and Family History—and the Only One of Its Kind Found in the United States",
       "ai_kamiyama_category": "academic",
       "ai_kamiyama_source_name": "3 Quarks Daily"
+    },
+    {
+      "displayed_on": "2026-07-29",
+      "article_url": "https://tabi-labo.com/312798/china-virtual-parents",
+      "article_title": "親ガチャの次は“親を選ぶ”時代？ 中国で広がる「バーチャル親」現象",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://warontherocks.com/how-orbans-fall-changed-serbias-political-future/",
+      "ai_kamiyama_title": "How Orbán’s Fall Changed Serbia’s Political Future",
+      "ai_kamiyama_category": "geopolitics",
+      "ai_kamiyama_source_name": "War on the Rocks"
     }
   ]
 }

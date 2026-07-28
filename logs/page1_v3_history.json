@@ -1065,6 +1065,23 @@
           "cost_usd": 0.058691999999999994,
           "is_fallback": false
         }
+      },
+      {
+        "date": "2026-07-29",
+        "day_label": "水",
+        "angle_key": "thinker",
+        "angle_label_jp": "思想家",
+        "essay": {
+          "angle_label": "水曜 - 思想家",
+          "daily_question": "金融化は思想史のどの系譜に連なるのか",
+          "essay_title": "道具的理性の亡霊——音楽金融化の思想史的座標",
+          "body": "フランクフルト学派の二人が1944年に書いた一節を、Rob Arcandの論考は引用する。「映画もラジオも、もはや芸術のふりをしない。それが単なるビジネスであるという真実は、彼らが意図的に生産するガラクタを正当化するイデオロギーとして機能している」。ホルクハイマーとアドルノの『啓蒙の弁証法』から80年余り、この観察はいまや予言の体裁をまとって屹立する。しかし編集部が問いたいのは、この診断の精度ではなく、その思想史的な立ち位置である。金融化とは、いつ始まり、どこから来た概念なのか。\n\nアドルノが「文化産業」と呼んだものの核心は、道具的理性（instrumentelle Vernunft）の文化領域への侵入だった。理性が「何かのための手段」としてのみ機能し始めるとき、目的は問われなくなる。Spotifyの「フリクションレスな体験」もまた、このロジックの正確な後継である。ユーザー体験を最適化するアルゴリズムは、音楽が何のために存在するかを問わない。ただ滞在時間とエンゲージメントという指標に奉仕するよう設計されている。Pelly が「mood stabilizationを制御可能なものとして売る」と指摘するとき、そこにはアドルノが診断したのと同型の構造が息づいている。\n\nだが思想史の地層はさらに深い。アドルノより半世紀さかのぼれば、マックス・ウェーバーの「合理化」概念に行き着く。1905年の『プロテスタントの倫理と資本主義の精神』でウェーバーが描いたのは、宗教的救済の動機が剥落した後もカルヴァン的な労働倫理の形式だけが自走し続ける、いわゆる「鉄の檻（stahlhartes Gehäuse）」だった。Spotifyの playlist 経済はこの比喩を精密に実装している。音楽が何を意味するかという問いは檻の外に置き去りにされ、再生回数・ロイヤルティ計算・カタログ資産評価という合理的手続きだけが檻の内側で廻転し続ける。Recognition Music GroupがNeil Youngの楽曲を1億5000万ドルで買い取るとき、誰もその音楽が50年にわたり何を語ってきたかを計算式に入力しない。\n\nここで非西洋の視座を重ねると、別の地層が現れる。柄谷行人は1980年代の『日本近代文学の起源』および後年の『世界史の構造』（2010年）において、価値形態と「交換様式」の分析を通じ、資本主義を交換の一形態として相対化した。柄谷の枠組みに引き付けるならば、音楽カタログの金融資産化は「商品交換（交換様式C）」の極限形態であり、そこでは使用価値（聴かれることで生まれる体験）が完全に交換価値の影に隠れる。しかし柄谷が同時に指摘するのは、この形態がつねに「互酬（交換様式A）」の回路を完全には消滅させられないという事実だ。UMAWの労働運動や、公共図書館主導のストリーミングサービスが命脈を保つのは、柄谷的に言えば互酬的な交換様式が資本の論理に対して潜在的な抵抗拠点を持ち続けるからである。\n\nArcandの論考はジェイムソンの「政治的無意識」（1981年）にも言及する。ジェイムソンが求めたのは、芸術作品の形式的特徴と経済的生産条件のあいだを媒介する解釈の様式——どちらにも還元されない「アレゴリー的批評」だった。Spotifycore という音のテクスチャーが、アルゴリズム編成と広告収益モデルの産物であると同時に、それ自体として聴取体験を構成するという重層性。その両面を手放さないことが、ジェイムソンが要求した批評的作業だった。\n\n思想史的に整理すれば、音楽産業の金融化は「道具的理性の進行」（アドルノ）→「合理化の自走」（ウェーバー）→「交換様式Cの支配」（柄谷）という三層の地平で理解できる。そしてこの系譜が示すのは、金融化が技術や政策の問題である以前に、近代合理性の内在的な運動として展開してきたという事実だ。経営者にとってこの認識が持つ意味は実践的である。構造を外から批判するだけでは、その構造を再生産する言説の内側に留まり続ける。道具的理性の論理に対峙するには、「何のために」という目的の問いを組織設計の起点に据え直し、使用価値の回路——人が音楽を、仕事を、関係を「体験する」次元——を意思決定の中に制度的に組み込むことが求められる。思想の系譜が示すのは警告であると同時に、設計原理の素材でもある。",
+          "annotation_label": "中心思想家と主著",
+          "annotation_body": "ホルクハイマー＆アドルノ『啓蒙の弁証法』（1944年）：道具的理性による文化の商品化を批判。ウェーバー『プロテスタントの倫理と資本主義の精神』（1905年）：目的なき合理化の「鉄の檻」を提示。柄谷行人『世界史の構造』（2010年）：交換様式の類型論で資本制を相対化し、互酬的回路の潜在的抵抗力を論じた。",
+          "quote_excerpt": "Over time, though, the quest for a frictionless user experience resulted in a deluge of frictionless music: an ease of use that, in turn, facilitated easy listening.\n\nMovies and radio no longer pretend to be art. The truth that they are just business is made into an ideology in order to justify the rubbish they deliberately produce.\n\nThe spirit of Fredric Jameson looms over such work. Knowingly or not, both Pelly and deWaard engage questions that the late Marxist critic put forward decades ago. In The Political Unconscious (1981), Jameson suggests that Marxist literary criticism needs modes of interpretation that are able to mediate between the formal features of artistic works and the economic conditions of their production, without reducing them to simplistic economic narratives or descriptions of aesthetic inspiration uncoupled from material conditions.",
+          "cost_usd": 0.065667,
+          "is_fallback": false
+        }
       }
     ]
   }

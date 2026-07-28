@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-29",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/20136/",
+    "https://que.dailyshincho.jp/node/20133/",
+    "https://que.dailyshincho.jp/node/20064/",
+    "https://que.dailyshincho.jp/node/20145/"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/business/articles/2607/28/news089.html",
+    "human_energy": "https://jinjibu.jp/news/detl/26676/",
+    "web_repo": "https://www.bc01.net/serialize/kanda_019/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/how-orbans-fall-changed-serbias-political-future/",
+    "https://toyokeizai.net/articles/-/952996?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://toyokeizai.net/articles/-/952985?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://www.mckinsey.com/capabilities/tech-and-ai/our-insights/rewired-takes-how-ai-is-unlocking-creativity-and-heralding-the-rise-of-the-agent-manager",
+    "https://www.theparisreview.org/blog/2026/07/10/the-hydration-break-world-cup/",
+    "https://www.nplusonemag.com/online-only/online-only/getting-off-with-the-luddites/"
+  ],
+  "page4_urls": [
+    "https://3quarksdaily.com/3quarksdaily/2026/07/why-we-demand-perfect-machines-yet-tolerate-human-carnage.html",
+    "https://www.nplusonemag.com/online-only/online-only/when-the-earth-gives-way/",
+    "https://www.nplusonemag.com/online-only/online-only/in-the-grip-of-politics/"
+  ],
+  "page5_url": "https://tabi-labo.com/312798/china-virtual-parents",
+  "page6_urls": {
+    "books": "https://lithub.com/how-translating-korean-literature-made-me-a-better-fiction-writer/",
+    "music": "https://stereogum.com/2506542/bruise-bath-announce-new-self-titled-album-hear-blood-on-my-tongue/music/",
+    "outdoor": "https://www.atlasobscura.com/places/the-living-history-museum-of-camping"
+  },
+  "headlines_urls": [
+    "https://que.dailyshincho.jp/node/20163/",
+    "https://que.dailyshincho.jp/node/20109/",
+    "https://www.economist.com/finance-and-economics/2026/07/28/ai-revenues-are-growing-fast-but-not-fast-enough"
+  ]
+}
