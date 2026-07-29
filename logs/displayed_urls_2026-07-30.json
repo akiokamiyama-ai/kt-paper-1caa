@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-30",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/20196/",
+    "https://que.dailyshincho.jp/node/20166/",
+    "https://que.dailyshincho.jp/node/20139/",
+    "https://que.dailyshincho.jp/node/20067/"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2607/29/2000000268/",
+    "human_energy": "https://jinjibu.jp/news/detl/26662/",
+    "web_repo": "https://www.bc01.net/serialize/sasaki_026/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/key-areas-where-water-scarcity-intensifies-risks-of-conflict/",
+    "http://www3.nhk.or.jp/news/html/20260730/k10015190151000.html",
+    "https://warontherocks.com/cogs-of-war/asmls-extreme-ultraviolet-lithography-and-the-limits-of-reverse-engineering-in-china/",
+    "https://www.mckinsey.com/industries/chemicals/how-we-help-clients/how-socar-transformed-a-fertilizer-leader-in-azerbaijan-with-industrial-ai",
+    "https://www.theparisreview.org/blog/2026/07/29/the-theater-of-sport-bill-buford-revisits-among-the-thugs/",
+    "https://www.publicbooks.org/the-wonderful-capacities-of-other-animals/"
+  ],
+  "page4_urls": [
+    "https://3quarksdaily.com/3quarksdaily/2026/07/understanding-natural-selection-can-improve-medical-treatments-social-policies-and-crop-yields.html",
+    "https://3quarksdaily.com/3quarksdaily/2026/07/wednesday-poem-508.html",
+    "https://www.publicbooks.org/toward-the-next-century-of-carmen-martin-gaite/"
+  ],
+  "page5_url": "https://stereogum.com/2506667/blonde-redhead-blood-spilled/music/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/07/29/the-theater-of-sport-bill-buford-revisits-among-the-thugs/",
+    "music": "https://stereogum.com/2506682/afroman-sues-deputy-after-winning-lemon-pound-cake-case/news/",
+    "outdoor": "https://www.cleverhiker.com/backpacking/bearvault-bv-one-review/"
+  },
+  "headlines_urls": [
+    "https://www.bbc.co.uk/news/articles/cgmkgvy3lv4o?at_medium=RSS&at_campaign=rss",
+    "https://www.economist.com/finance-and-economics/2026/07/28/retail-investors-should-beware-perpetual-futures",
+    "https://www.ft.com/content/730ebfb9-cec0-4cb6-947a-598d64518dad?syn-25a6b1a6=1"
+  ]
+}

@@ -1082,6 +1082,23 @@
           "cost_usd": 0.065667,
           "is_fallback": false
         }
+      },
+      {
+        "date": "2026-07-30",
+        "day_label": "木",
+        "angle_key": "history",
+        "angle_label_jp": "歴史",
+        "essay": {
+          "angle_label": "木曜 - 歴史",
+          "daily_question": "音楽産業の金融化は、いつ・いかなる転換点を経て現在に至ったか",
+          "essay_title": "一二五年の変容——音楽産業金融化の内的発展史",
+          "body": "音楽産業が「一二五年の歴史を持つ産業」であることを、Rob Arcandは記事の中でさりげなく記す。だが、その一二五年を単一の連続した流れとして読むことは誤りである。そこには少なくとも三つの断絶があり、それぞれが現在の金融化構造を準備してきた。歴史の内的発展を辿ることは、「プラットフォーム資本主義が突然変異的に現れた」という誤解を解き、経営者が構造変化を先読みするための眼差しを砥ぐ作業でもある。\n\n第一の断絶は、一九〇〇年代初頭に始まる「複製技術による労働の周縁化」である。エジソンの蓄音機が商業化された一八九〇年代から、音楽は生演奏の場から切り離され、複製可能な商品へと変貌した。一八九六年に創設された全米音楽家連盟（American Federation of Musicians）が蓄音機・ラジオ・ジュークボックスに相次いで異議を唱えたのは、技術が生演奏者の労働を不可視化する最初の波を感知したからである。Arcandが「音楽産業の労働運動には長い歴史がある」と指摘するとき、その起点はここに求められる。同時期、Muzakが「背景音楽」という概念を産業化し、一九三四年に有線配信サービスを開始した。音楽が「場所の装飾」として売買される発想は、Spotifyの「mood playlist」経済の遠い先祖である。\n\n第二の断絶は、一九九九年を頂点とする「アルバム経済の崩壊と再統合」だ。録音音楽の売上高が一四七億ドルのピークを記録した一九九九年、Napsterが登場して既存の流通秩序を瓦解させた。レーベル各社はP2Pを訴訟で潰すことに執心し、MP3という新しい流通の現実を直視しなかった。その結果、二〇〇〇年代を通じて売上は半減以下へと沈んだ。この「危機の一〇年」が二〇〇八年のSpotify創業を用意した文脈として不可欠である。注目すべきは、この時期に大手レーベルの寡占が逆説的に強化されたことだ。SME・UMG・WMGの「ビッグスリー」は、ストリーミング交渉において個別アーティストには持ちえないカタログを武器にライセンス料の主導権を確保し、Spotify株式の取得すら実現した。危機は解体ではなく再編合を招いた。\n\n第三の断絶は、二〇一〇年代以降に進行した「IP資産化と機関投資家の流入」である。Spotifyが二〇一三年にTunigoを買収してplaylisting事業を本格化させた時期と並走するように、音楽の著作権カタログへの投資が加速し始めた。その象徴が二〇一七年に設立されたHipgnosis（現Recognition Music Group）である。同社はアーティストのカタログを一括購入してファンドに組み込み、機関投資家に定期的なキャッシュフローを提供するモデルを確立した。二〇二一年、Neil Youngが作詞作曲カタログの五〇%を約一億五〇〇〇万ドルで売却した事実は象徴的である。長年ストリーミングに抵抗し続けてきた反骨のミュージシャンが、ストリーミング収益の現在価値を裏打ちとする金融商品の売り手となった瞬間、「音楽=金融資産」という命題は完成した。BlackRock・Vanguard・State StreetがSpotify・Live Nation・主要レーベルすべてに横断的に株式を保有する現在の構造は、この第三の断絶の帰結である。\n\n三つの断絶を並べると、一つの内的論理が浮かぶ。各転換期において、旧来の労働（生演奏者、作曲家、楽団員）の価値は不可視化され、代わりに新しい「資産」（カタログ、プレイリスト、ストリーミング権利）が可視化された。Liz Pellyが描くEpidemic Soundの作曲家たちは、この百年来の力学の最新形にすぎない。「資産を積み上げて売り抜けるだけだ」という内部告発者の言葉は、Muzak時代の匿名作曲家も、Napster以前のセッションミュージシャンも、異なる言葉で語ってきたことと本質的に重なる。\n\n経営者にとってこの歴史が示すのは、「技術的転換点」と「金融化の波」は常に連動して訪れるという認識である。一九九〇年代のMP3普及が二〇〇〇年代の危機を生み、その危機がストリーミングを誕生させ、ストリーミングがカタログ金融化を加速させた。現在、生成AIが「最終的な派生メディア」として台頭しつつある段階に、我々は立っている。歴史の内的論理に照らせば、次に不可視化されるのはどの労働であり、次に金融化されるのはどの「資産」であるかを問う眼差しが、ディープリスニング経営の実践的起点となる。摩擦なき音楽の氾濫は、突然変異ではなく、一二五年かけて積み上げられた構造の必然的な到達点なのだ。",
+          "annotation_label": "歴史的事象・年表",
+          "annotation_body": "1896年：全米音楽家連盟創設（複製技術への最初の組織的抵抗）。1934年：Muzakが有線背景音楽サービス開始（mood音楽の産業化）。1999年：録音音楽売上高14.7億ドルでピーク、同年Napster登場。2008年：Spotify創業（スウェーデン）。2017年：Hipgnosis（現Recognition Music Group）設立、カタログ金融化が本格化。2021年：Neil YoungがHipgnosisにカタログ50%を約150Mドルで売却。",
+          "quote_excerpt": "Over time, though, the quest for a frictionless user experience resulted in a deluge of frictionless music: an ease of use that, in turn, facilitated easy listening.\n\nThe history of the music industry is a history of conglomeration. For decades, the business has been ruled by a dwindling number of corporations, each controlling an enormous market share that grows larger with every new merger or acquisition. Today just three record companies—Universal Music Group, Sony Music Entertainment, and Warner Music Group—control more than 80 percent of all recorded music released through a recognized label.\n\nSong catalogs themselves have become a lucrative asset class. Companies like Recognition Music Group (formerly Hipgnosis) have developed strategies for buying up the collected recordings of artists including Justin Bieber, Pusha T, Shakira, and the Red Hot Chili Peppers, along with their publishing rights and other licensing options. Once an investment backwater, song rights saw a boom during the Covid pandemic, when artists' income from touring had all but dried up. When Neil Young—an anti-streaming holdout who famously maintains an eccentric archive of obscure recordings on his website—sold a 50 percent stake in his songwriting catalog to Recognition for an estimated $150 million in 2021, it seemed to signal new faith in investors' ability to recoup returns in legacy catalogs over time.",
+          "cost_usd": 0.071175,
+          "is_fallback": false
+        }
       }
     ]
   }

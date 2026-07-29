@@ -1616,6 +1616,24 @@
       "ai_kamiyama_title": "How Orbán’s Fall Changed Serbia’s Political Future",
       "ai_kamiyama_category": "geopolitics",
       "ai_kamiyama_source_name": "War on the Rocks"
+    },
+    {
+      "displayed_on": "2026-07-30",
+      "article_url": "https://stereogum.com/2506667/blonde-redhead-blood-spilled/music/",
+      "article_title": "Blonde Redhead – “Blood Spilled”",
+      "article_category": "music",
+      "tie_candidates": [
+        "music"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://3quarksdaily.com/3quarksdaily/2026/07/understanding-natural-selection-can-improve-medical-treatments-social-policies-and-crop-yields.html",
+      "ai_kamiyama_title": "Understanding natural selection can improve medical treatments, social policies and crop yields",
+      "ai_kamiyama_category": "academic",
+      "ai_kamiyama_source_name": "3 Quarks Daily"
     }
   ]
 }
