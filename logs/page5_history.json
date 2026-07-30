@@ -1634,6 +1634,24 @@
       "ai_kamiyama_title": "Understanding natural selection can improve medical treatments, social policies and crop yields",
       "ai_kamiyama_category": "academic",
       "ai_kamiyama_source_name": "3 Quarks Daily"
+    },
+    {
+      "displayed_on": "2026-07-31",
+      "article_url": "https://thetrek.co/hexishtrek-day-13-refuge-de-la-balme-to-chapieux-e0/",
+      "article_title": "Hexishtrek Day 13 Refuge de la Balme to Chapieux €0",
+      "article_category": "outdoor",
+      "tie_candidates": [
+        "outdoor"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.themarginalian.org/2026/07/29/eric-berne-games-people-play/",
+      "ai_kamiyama_title": "Games People Play: The Revolutionary 1964 Model of Human Relationships That Changed How We (Mis)Understand Ourselves and Each Other",
+      "ai_kamiyama_category": "books:自然科学ノンフィクション",
+      "ai_kamiyama_source_name": "The Marginalian（旧 Brain Pickings）"
     }
   ]
 }

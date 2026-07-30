@@ -1,0 +1,38 @@
+{
+  "date": "2026-07-31",
+  "page1_urls": [
+    "https://www.ft.com/content/6d206b85-bc50-4c89-973b-f18cd84e2a15?syn-25a6b1a6=1",
+    "https://www.economist.com/finance-and-economics/2026/07/28/retail-investors-should-beware-perpetual-futures",
+    "https://que.dailyshincho.jp/node/20181/",
+    "https://www.economist.com/finance-and-economics/2026/07/28/ai-revenues-are-growing-fast-but-not-fast-enough"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/enterprise/articles/2607/31/news023.html",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2607/30/news007.html",
+    "web_repo": "https://www.bc01.net/topinterview/ecolife-coco_202608/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/can-cyber-operations-be-deterred-what-wargames-reveal/",
+    "http://www3.nhk.or.jp/news/html/20260730/k10015191381000.html",
+    "https://que.dailyshincho.jp/node/20160/",
+    "https://www.mckinsey.com/industries/real-estate/our-insights/the-new-advantage-in-the-age-of-ai-building-in-the-real-world",
+    "https://wordswithoutborders.org/read/article/2026-07/shouting-at-a-low-volume-a-conversation-with-e-m-palitha-edirisooriya-pathirage-porawagamage/",
+    "https://3quarksdaily.com/3quarksdaily/2026/07/how-art-invented-humanity.html"
+  ],
+  "page4_urls": [
+    "https://www.publicbooks.org/the-wonderful-capacities-of-other-animals/",
+    "https://www.nplusonemag.com/online-only/gooooaaal/the-fan-zone/",
+    "https://www.themarginalian.org/2026/07/29/eric-berne-games-people-play/"
+  ],
+  "page5_url": "https://thetrek.co/hexishtrek-day-13-refuge-de-la-balme-to-chapieux-e0/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/07/30/the-soothing-unsubtlety-of-unbroken-the-untold-story-of-shen-yun/",
+    "music": "https://stereogum.com/2506817/john-legend-cast-as-harry-belafonte-in-new-movie-about-paul-simons-graceland-era/news/",
+    "outdoor": "https://www.atlasobscura.com/places/roman-theatre-of-catania"
+  },
+  "headlines_urls": [
+    "https://www.economist.com/finance-and-economics/2026/07/30/how-many-people-are-dying-as-a-result-of-usaids-demise",
+    "https://www.ft.com/content/d6df67d4-b8be-4e14-b856-29852e249577",
+    "https://www.ft.com/content/5fb44089-ecdf-4b48-bc14-1e8b4682b142?syn-25a6b1a6=1"
+  ]
+}
