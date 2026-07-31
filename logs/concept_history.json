@@ -474,6 +474,11 @@
       "concept_id": "seci_model",
       "name_ja": "SECIモデル",
       "displayed_on": "2026-07-31"
+    },
+    {
+      "concept_id": "blue_ocean_strategy",
+      "name_ja": "ブルーオーシャン戦略",
+      "displayed_on": "2026-08-01"
     }
   ]
 }

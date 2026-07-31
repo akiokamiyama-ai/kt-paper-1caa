@@ -1,0 +1,38 @@
+{
+  "date": "2026-08-01",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/20106/",
+    "https://www.fsight.jp/articles/-/52074",
+    "https://www.economist.com/finance-and-economics/2026/07/30/how-many-people-are-dying-as-a-result-of-usaids-demise",
+    "https://www.ft.com/content/a0a5e3a7-c4e6-42a6-9a7b-a780422bcd76?syn-25a6b1a6=1"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://japan.zdnet.com/article/35251172/",
+    "human_energy": "https://jinjibu.jp/news/detl/26715/",
+    "web_repo": "https://www.jfa-fc.or.jp/particle/5263.html"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/07/31/pure-men-senegal-mohamed-sarr-homophobia-queer-africa-islam-religion/",
+    "https://www.asahi.com/articles/ASV703F4NV70OXIE005M.html?ref=rss",
+    "https://www.project-syndicate.org/onpoint/ai-has-made-infrastructure-matter-again-by-antonin-bergeaud-and-robin-rivaton-2026-07",
+    "https://www.mckinsey.com/featured-insights/future-of-asia/from-drift-to-dynamism-reinventing-japan-to-compete-in-a-new-era",
+    "https://www.theparisreview.org/blog/2026/07/30/the-soothing-unsubtlety-of-unbroken-the-untold-story-of-shen-yun/",
+    "https://3quarksdaily.com/3quarksdaily/2026/07/the-obama-presidential-center-monumentalizes-a-liberalism-still-incapable-of-seeing-its-flaws.html"
+  ],
+  "page4_urls": [
+    "https://www.publicbooks.org/the-wonderful-capacities-of-other-animals/",
+    "https://www.nplusonemag.com/online-only/gooooaaal/the-fan-zone/",
+    "https://www.themarginalian.org/2026/07/29/eric-berne-games-people-play/"
+  ],
+  "page5_url": "https://www.themarginalian.org/2026/07/30/jane-kenyon-things-otherwise/",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-07/a-womans-presence-completes-the-existence-of-a-man-mohiuddin-khawaja/",
+    "music": "https://rockinon.com/news/detail/215591",
+    "outdoor": "https://www.atlasobscura.com/places/bray-road-2"
+  },
+  "headlines_urls": [
+    "http://www3.nhk.or.jp/news/html/20260731/k10015192671000.html",
+    "https://www.ft.com/content/c5d2f736-d640-4ae6-99e2-c4d2cae1e2ab?syn-25a6b1a6=1",
+    "https://que.dailyshincho.jp/node/20187/"
+  ]
+}

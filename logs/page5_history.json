@@ -1652,6 +1652,24 @@
       "ai_kamiyama_title": "Games People Play: The Revolutionary 1964 Model of Human Relationships That Changed How We (Mis)Understand Ourselves and Each Other",
       "ai_kamiyama_category": "books:自然科学ノンフィクション",
       "ai_kamiyama_source_name": "The Marginalian（旧 Brain Pickings）"
+    },
+    {
+      "displayed_on": "2026-08-01",
+      "article_url": "https://www.themarginalian.org/2026/07/30/jane-kenyon-things-otherwise/",
+      "article_title": "A Heron, a Red Leaf, and a Hole in a Blue Star: Poet Jane Kenyon on the Art of Letting Go",
+      "article_category": "books",
+      "tie_candidates": [
+        "books"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.nplusonemag.com/online-only/gooooaaal/the-fan-zone/",
+      "ai_kamiyama_title": "The Fan Zone",
+      "ai_kamiyama_category": "academic",
+      "ai_kamiyama_source_name": "n+1"
     }
   ]
 }
