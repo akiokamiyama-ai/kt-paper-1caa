@@ -479,6 +479,11 @@
       "concept_id": "blue_ocean_strategy",
       "name_ja": "ブルーオーシャン戦略",
       "displayed_on": "2026-08-01"
+    },
+    {
+      "concept_id": "mirror_neurons",
+      "name_ja": "ミラーニューロン",
+      "displayed_on": "2026-08-02"
     }
   ]
 }

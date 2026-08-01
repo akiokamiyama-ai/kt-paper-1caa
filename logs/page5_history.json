@@ -1670,6 +1670,24 @@
       "ai_kamiyama_title": "The Fan Zone",
       "ai_kamiyama_category": "academic",
       "ai_kamiyama_source_name": "n+1"
+    },
+    {
+      "displayed_on": "2026-08-02",
+      "article_url": "https://www.publicbooks.org/what-keeps-the-dutch-up-at-night/",
+      "article_title": "What Keeps the Dutch Up at Night?",
+      "article_category": "academic",
+      "tie_candidates": [
+        "academic"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.publicbooks.org/you-have-nothing-to-lose-but-your-supply-chains/",
+      "ai_kamiyama_title": "You Have Nothing to Lose But Your Supply Chains!",
+      "ai_kamiyama_category": "academic",
+      "ai_kamiyama_source_name": "Public Books"
     }
   ]
 }

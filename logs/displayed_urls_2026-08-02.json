@@ -1,0 +1,38 @@
+{
+  "date": "2026-08-02",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/19719/",
+    "https://www.ft.com/content/6abf82dc-6b66-4fc7-8bf7-aa196dbd8e97?syn-25a6b1a6=1",
+    "https://www.ft.com/content/0f9b2fe7-bde4-4f5f-b49e-93ccb5da9ea8?syn-25a6b1a6=1",
+    "https://que.dailyshincho.jp/node/20187/"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2607/31/2000000325/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2607/31/news100.html",
+    "web_repo": "https://www.bc01.net/serialize/kanda_019/"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/07/31/christopher-nolan-homer-odyssey-economics-bronze-age-adam-tooze/",
+    "https://que.dailyshincho.jp/node/20232/",
+    "https://toyokeizai.net/articles/-/953361?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://www.mckinsey.com/capabilities/people-and-organizational-performance/our-insights/is-the-ai-productivity-story-at-a-turning-point",
+    "https://www.theparisreview.org/blog/2026/07/23/what-we-talk-about-when-we-talk-about-the-interstitium/",
+    "https://www.publicbooks.org/you-have-nothing-to-lose-but-your-supply-chains/"
+  ],
+  "page4_urls": [
+    "https://www.publicbooks.org/the-wonderful-capacities-of-other-animals/",
+    "https://www.nplusonemag.com/online-only/gooooaaal/the-fan-zone/",
+    "https://www.themarginalian.org/2026/07/29/eric-berne-games-people-play/"
+  ],
+  "page5_url": "https://www.publicbooks.org/what-keeps-the-dutch-up-at-night/",
+  "page6_urls": {
+    "books": "https://www.nybooks.com/articles/2026/08/20/a-gust-from-another-world-the-search-for-bridey-murphy/",
+    "music": "https://rockinon.com/news/detail/215592",
+    "outdoor": "https://sectionhiker.com/pack-boating-for-backpackers/"
+  },
+  "headlines_urls": [
+    "https://www.economist.com/finance-and-economics/2026/07/30/a-common-european-safe-asset-is-still-unlikely",
+    "https://www.ft.com/content/dabd9888-b7ed-4c06-9986-e6705835ef31?syn-25a6b1a6=1",
+    "https://www.bbc.co.uk/news/articles/c8x274xxxpwo?at_medium=RSS&at_campaign=rss"
+  ]
+}
