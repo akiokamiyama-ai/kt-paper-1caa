@@ -484,6 +484,11 @@
       "concept_id": "mirror_neurons",
       "name_ja": "ミラーニューロン",
       "displayed_on": "2026-08-02"
+    },
+    {
+      "concept_id": "extended_phenotype",
+      "name_ja": "拡張表現型",
+      "displayed_on": "2026-08-03"
     }
   ]
 }

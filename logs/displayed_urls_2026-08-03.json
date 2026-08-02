@@ -1,0 +1,38 @@
+{
+  "date": "2026-08-03",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/20025/",
+    "https://www.economist.com/finance-and-economics/2026/08/02/what-will-kevin-warsh-do-if-americas-economy-breaks",
+    "https://que.dailyshincho.jp/node/19848/",
+    "https://que.dailyshincho.jp/node/20247/"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.ppc.go.jp/news/press/2026/260717",
+    "human_energy": "https://sloanreview.mit.edu/article/how-a-healthy-work-culture-helps-trauma-survivors/",
+    "web_repo": "https://www.bc01.net/serialize/sasaki_026/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/africa-energy-abundance-alongside-deprivation-is-a-choice-by-rabah-arezki-and-michael-l-ross-2026-07",
+    "https://toyokeizai.net/articles/-/952928?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://toyokeizai.net/articles/-/953054?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://www.mckinsey.com/capabilities/growth-marketing-and-sales/our-insights/ai-transformations-views-from-amd-dell-liquid-ai-and-mercedes-benz",
+    "https://www.theparisreview.org/blog/2026/07/15/a-city-bigger-than-a-bomb/",
+    "https://3quarksdaily.com/3quarksdaily/2026/08/after-nonviolence-the-end-of-peaceful-resistance-in-palestine.html"
+  ],
+  "page4_urls": [
+    "https://thepointmag.com/literature/the-fifth-syllable/",
+    "https://www.themarginalian.org/2026/08/02/francis-weller-ordinary/",
+    "https://www.themarginalian.org/2026/07/31/carl-jung-death-immortality/"
+  ],
+  "page5_url": "https://stereogum.com/2507092/new-radicals-quietly-release-first-new-song-in-28-years/music/",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-07/a-country-doctor-dumlao-capinpin/",
+    "music": "https://rockinon.com/news/detail/215590",
+    "outdoor": "https://sectionhiker.com/dispersed-stealth-camping-how-to/"
+  },
+  "headlines_urls": [
+    "http://www3.nhk.or.jp/news/html/20260801/k10015193341000.html",
+    "https://www.ft.com/content/a4539dc2-dcb0-4b57-9a78-c32cb1f9eda1?syn-25a6b1a6=1",
+    "https://que.dailyshincho.jp/node/20244/"
+  ]
+}

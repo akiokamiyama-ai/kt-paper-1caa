@@ -1688,6 +1688,24 @@
       "ai_kamiyama_title": "You Have Nothing to Lose But Your Supply Chains!",
       "ai_kamiyama_category": "academic",
       "ai_kamiyama_source_name": "Public Books"
+    },
+    {
+      "displayed_on": "2026-08-03",
+      "article_url": "https://stereogum.com/2507092/new-radicals-quietly-release-first-new-song-in-28-years/music/",
+      "article_title": "New Radicals Quietly Release First New Song In 28 Years",
+      "article_category": "music",
+      "tie_candidates": [
+        "music"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://thepointmag.com/literature/the-fifth-syllable/",
+      "ai_kamiyama_title": "The Fifth Syllable",
+      "ai_kamiyama_category": "academic",
+      "ai_kamiyama_source_name": "The Point Magazine"
     }
   ]
 }
