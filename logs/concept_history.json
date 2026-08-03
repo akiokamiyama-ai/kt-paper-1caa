@@ -489,6 +489,11 @@
       "concept_id": "extended_phenotype",
       "name_ja": "拡張表現型",
       "displayed_on": "2026-08-03"
+    },
+    {
+      "concept_id": "vygotsky",
+      "name_ja": "ヴィゴツキー",
+      "displayed_on": "2026-08-04"
     }
   ]
 }

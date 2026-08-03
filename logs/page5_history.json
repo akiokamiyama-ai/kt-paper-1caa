@@ -1706,6 +1706,24 @@
       "ai_kamiyama_title": "The Fifth Syllable",
       "ai_kamiyama_category": "academic",
       "ai_kamiyama_source_name": "The Point Magazine"
+    },
+    {
+      "displayed_on": "2026-08-04",
+      "article_url": "https://www.axismag.jp/posts/2026/07/718437.html",
+      "article_title": "アアルト作品群、ユネスコ世界遺産に登録。ヘルシンキの5建築を含む、フィンランド近代建築の遺産",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://thepointmag.com/literature/the-fifth-syllable/",
+      "ai_kamiyama_title": "The Fifth Syllable",
+      "ai_kamiyama_category": "academic",
+      "ai_kamiyama_source_name": "The Point Magazine"
     }
   ]
 }

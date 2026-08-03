@@ -1,0 +1,37 @@
+{
+  "date": "2026-08-04",
+  "page1_urls": [
+    "https://www.economist.com/finance-and-economics/2026/08/03/how-china-gets-better-bang-for-its-buck-than-america-in-ai",
+    "https://que.dailyshincho.jp/node/20214/",
+    "https://que.dailyshincho.jp/node/20193/",
+    "https://que.dailyshincho.jp/node/20241/"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://japan.zdnet.com/article/35251135/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2608/03/news050.html",
+    "web_repo": "https://www.bc01.net/topinterview/ecolife-coco_202608/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/structure-of-price-formation-prevents-global-capital-from-reaching-emde-climate-projects-by-jayant-sinha-2026-08",
+    "https://toyokeizai.net/articles/-/953504?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://www.ft.com/content/6d40c74b-ac40-42f1-9387-957925f48daa?syn-25a6b1a6=1",
+    "https://www.mckinsey.com/featured-insights/mckinsey-on-books/author-talks-the-daily-practices-that-lead-to-exceptional-performance",
+    "https://www.theparisreview.org/blog/2026/07/21/the-paris-review-redux-how-could-i-forget-odysseus/",
+    "https://3quarksdaily.com/3quarksdaily/2026/08/vali-nasr-iran-after-america.html"
+  ],
+  "page4_urls": [
+    "https://thepointmag.com/literature/the-fifth-syllable/",
+    "https://www.themarginalian.org/2026/08/02/francis-weller-ordinary/",
+    "https://www.themarginalian.org/2026/07/31/carl-jung-death-immortality/"
+  ],
+  "page5_url": "https://www.axismag.jp/posts/2026/07/718437.html",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-07/tim-tim-cheng-awarded-momentum-grant-for-early-career-translators/",
+    "music": "https://stereogum.com/2507165/james-ellis-ford-the-ever-after/music/",
+    "outdoor": "https://sectionhiker.com/backpacking-with-a-bivy-sack/"
+  },
+  "headlines_urls": [
+    "http://www3.nhk.or.jp/news/html/20260803/k10015194801000.html",
+    "https://www.bbc.co.uk/news/articles/clyvd8363wlo?at_medium=RSS&at_campaign=rss"
+  ]
+}
