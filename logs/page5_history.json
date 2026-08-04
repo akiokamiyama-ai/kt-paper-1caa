@@ -1724,6 +1724,24 @@
       "ai_kamiyama_title": "The Fifth Syllable",
       "ai_kamiyama_category": "academic",
       "ai_kamiyama_source_name": "The Point Magazine"
+    },
+    {
+      "displayed_on": "2026-08-05",
+      "article_url": "https://www.atlasobscura.com/articles/guide-to-romantic-getaways",
+      "article_title": "Atlas Obscura’s Guide to Unique Romantic Getaways",
+      "article_category": "outdoor",
+      "tie_candidates": [
+        "outdoor"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://3quarksdaily.com/3quarksdaily/2026/08/the-remarkable-story-behind-beethovens-ode-to-joy.html",
+      "ai_kamiyama_title": "The Remarkable Story Behind Beethoven’s “Ode to Joy”",
+      "ai_kamiyama_category": "academic",
+      "ai_kamiyama_source_name": "3 Quarks Daily"
     }
   ]
 }

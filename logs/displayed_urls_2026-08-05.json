@@ -1,0 +1,38 @@
+{
+  "date": "2026-08-05",
+  "page1_urls": [
+    "https://www.economist.com/finance-and-economics/2026/08/04/investors-in-situational-awareness-deserved-to-lose-their-shirts",
+    "https://www.ft.com/content/6183a03c-4766-43e7-9392-cacd9a6545f8?syn-25a6b1a6=1",
+    "https://que.dailyshincho.jp/node/20031/",
+    "https://www.ft.com/content/c56d21b4-1738-4b53-ad78-79f29b5de798"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/news/article/2608/04/2000000366/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2608/04/news027.html",
+    "web_repo": "https://www.jfa-fc.or.jp/particle/5263.html"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/08/04/gaza-palestinian-genocide-israel-book/",
+    "https://toyokeizai.net/articles/-/953770?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://www.project-syndicate.org/commentary/taiwan-can-deter-china-by-building-defense-software-for-democracies-by-todd-g-buchholz-2026-07",
+    "https://www.mckinsey.com/capabilities/people-and-organizational-performance/our-insights/escaping-the-pilot-trap-building-hr-for-the-agentic-era",
+    "https://www.theparisreview.org/blog/2026/08/04/last-days-at-the-aqueduct-new-yorks-rundown-racetrack/",
+    "https://nautil.us/the-virtue-of-being-simple-1283320/"
+  ],
+  "page4_urls": [
+    "https://www.themarginalian.org/2026/08/03/erwin-shcrodinger-my-view-of-the-world/",
+    "https://www.themarginalian.org/2026/08/02/suits-grasshopper/",
+    "https://3quarksdaily.com/3quarksdaily/2026/08/the-remarkable-story-behind-beethovens-ode-to-joy.html"
+  ],
+  "page5_url": "https://www.atlasobscura.com/articles/guide-to-romantic-getaways",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/08/04/last-days-at-the-aqueduct-new-yorks-rundown-racetrack/",
+    "music": "https://stereogum.com/2507305/june-mcdoom-announces-debut-album-follow-the-light-hear-without-you/music/",
+    "outdoor": "https://sectionhiker.com/review-tarptent-protrek-tent/"
+  },
+  "headlines_urls": [
+    "https://que.dailyshincho.jp/node/19608/",
+    "https://www.bbc.co.uk/news/articles/c4gdkl9zn8wo?at_medium=RSS&at_campaign=rss",
+    "https://www.economist.com/finance-and-economics/2026/07/30/japan-pursues-an-ill-timed-fiscal-stimulus"
+  ]
+}
