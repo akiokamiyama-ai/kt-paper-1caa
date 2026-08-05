@@ -1,0 +1,38 @@
+{
+  "date": "2026-08-06",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/19866/",
+    "https://que.dailyshincho.jp/node/19824/",
+    "http://www3.nhk.or.jp/news/html/20260805/k10015197651000.html",
+    "https://www.ft.com/content/41f7963b-dd50-4f27-a085-771ddec4a8ca?syn-25a6b1a6=1"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2608/05/2000000383/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2608/05/news057.html",
+    "web_repo": "https://www.bc01.net/seminar-report/megaji_session_report_2026/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/beyond-the-output-trap-haiti-and-the-future-of-international-stabilization/",
+    "http://www3.nhk.or.jp/news/html/20260805/k10015197391000.html",
+    "https://warontherocks.com/why-trumps-israel-normalization-demand-may-kill-the-saudi-nuclear-deal/",
+    "https://www.mckinsey.com/featured-insights/mckinsey-on-books/author-talks-one-size-does-not-fit-all",
+    "https://www.theparisreview.org/blog/2026/07/20/charles-brockden-brown-declares-independence/",
+    "https://wordswithoutborders.org/read/article/2026-07/the-giant-mausoleum-yapan-benitez/"
+  ],
+  "page4_urls": [
+    "https://www.themarginalian.org/2026/08/05/nathaniel-hawthorne-classification/",
+    "https://www.themarginalian.org/2026/08/04/roots/",
+    "https://3quarksdaily.com/3quarksdaily/2026/08/going-medieval.html"
+  ],
+  "page5_url": "https://wired.jp/article/james-bridle-ecosystem-of-intelligences/",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-08/i-study-the-breadth-of-the-lands-frets-two-poems-tariman-david/",
+    "music": "https://stereogum.com/2507199/the-worlds-now-listening-but-sam-and-louise-sullivan-were-going-to-keep-making-awesome-records-either-way/interviews/qa/",
+    "outdoor": "https://sectionhiker.com/hiking-in-georgia-the-country-not-the-state/"
+  },
+  "headlines_urls": [
+    "https://que.dailyshincho.jp/node/20295/",
+    "https://www.bbc.co.uk/news/articles/cgr7nxve05go?at_medium=RSS&at_campaign=rss",
+    "https://www.ft.com/content/258c5cba-e65a-4990-82b1-3c5e7fc2bb10?syn-25a6b1a6=1"
+  ]
+}
