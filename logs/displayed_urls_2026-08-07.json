@@ -1,0 +1,38 @@
+{
+  "date": "2026-08-07",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/20022/",
+    "https://que.dailyshincho.jp/node/20298/",
+    "https://que.dailyshincho.jp/node/20229/",
+    "http://www3.nhk.or.jp/news/html/20260806/k10015198141000.html"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://japan.zdnet.com/article/35251378/",
+    "human_energy": "https://sloanreview.mit.edu/article/the-elusiveness-of-merit-based-hiring/",
+    "web_repo": "https://www.bc01.net/serialize/yasuda_009/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/the-blood-price-in-israel-military-sacrifice-is-becoming-political-power/",
+    "http://www3.nhk.or.jp/news/html/20260806/k10015198631000.html",
+    "https://www.asahi.com/articles/ASV857T53V85UTIL00GM.html?ref=rss",
+    "https://www.mckinsey.com/institute-for-economic-mobility/our-insights/in-pursuit-of-progress-americans-aspirations-for-economic-mobility",
+    "https://www.theparisreview.org/blog/2026/07/29/the-theater-of-sport-bill-buford-revisits-among-the-thugs/",
+    "https://www.publicbooks.org/the-wonderful-capacities-of-other-animals/"
+  ],
+  "page4_urls": [
+    "https://3quarksdaily.com/3quarksdaily/2026/08/how-diplomats-see-the-world.html",
+    "https://3quarksdaily.com/3quarksdaily/2026/08/platonic-space-of-minds-bioelectricity-cell-intelligence-neurobots.html",
+    "https://www.themarginalian.org/2026/08/05/polyvagal-theory/"
+  ],
+  "page5_url": "https://stereogum.com/2507517/photay-land-of-make-believe-chuck-mangione-cover/music/",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-08/a-culmination-of-things-two-poems-notarte-balanquit/",
+    "music": "https://rockinon.com/news/detail/215586",
+    "outdoor": "https://www.outsideonline.com/outdoor-adventure/hiking-and-backpacking/western-states-ultrarunning/"
+  },
+  "headlines_urls": [
+    "https://que.dailyshincho.jp/node/20277/",
+    "https://que.dailyshincho.jp/node/20304/",
+    "https://que.dailyshincho.jp/node/19869/"
+  ]
+}

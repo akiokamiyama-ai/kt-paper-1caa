@@ -1760,6 +1760,24 @@
       "ai_kamiyama_title": "The Giant Mausoleum",
       "ai_kamiyama_category": "books:海外純文学",
       "ai_kamiyama_source_name": "Words Without Borders"
+    },
+    {
+      "displayed_on": "2026-08-07",
+      "article_url": "https://stereogum.com/2507517/photay-land-of-make-believe-chuck-mangione-cover/music/",
+      "article_title": "Photay – “Land Of Make Believe” (Chuck Mangione Cover)",
+      "article_category": "music",
+      "tie_candidates": [
+        "music"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://warontherocks.com/the-blood-price-in-israel-military-sacrifice-is-becoming-political-power/",
+      "ai_kamiyama_title": "The Blood Price: In Israel, Military Sacrifice Is Becoming Political Power",
+      "ai_kamiyama_category": "geopolitics",
+      "ai_kamiyama_source_name": "War on the Rocks"
     }
   ]
 }

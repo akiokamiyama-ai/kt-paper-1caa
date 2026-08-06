@@ -504,6 +504,11 @@
       "concept_id": "arendt",
       "name_ja": "アーレント",
       "displayed_on": "2026-08-06"
+    },
+    {
+      "concept_id": "allostasis",
+      "name_ja": "アロスタシス",
+      "displayed_on": "2026-08-07"
     }
   ]
 }
