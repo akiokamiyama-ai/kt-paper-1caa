@@ -509,6 +509,11 @@
       "concept_id": "allostasis",
       "name_ja": "アロスタシス",
       "displayed_on": "2026-08-07"
+    },
+    {
+      "concept_id": "metacommunication",
+      "name_ja": "メタコミュニケーション",
+      "displayed_on": "2026-08-08"
     }
   ]
 }

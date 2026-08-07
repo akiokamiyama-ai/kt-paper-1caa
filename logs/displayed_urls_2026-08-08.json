@@ -1,0 +1,38 @@
+{
+  "date": "2026-08-08",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/20340/",
+    "https://www.economist.com/finance-and-economics/2026/08/06/how-and-how-much-should-central-banks-talk",
+    "https://que.dailyshincho.jp/node/20076/",
+    "https://www.economist.com/finance-and-economics/2026/08/06/indias-it-sector-is-surviving-artificial-intelligence"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/news/article/2608/07/2000000454/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2608/07/news027.html",
+    "web_repo": "https://www.bc01.net/article/ah-inc_202608/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/warlords-of-greece-warfare-in-homers-world/",
+    "http://www3.nhk.or.jp/news/html/20260807/k10015199711000.html",
+    "http://www3.nhk.or.jp/news/html/20260807/k10015199591000.html",
+    "https://www.mckinsey.com/capabilities/growth-marketing-and-sales/our-insights/growth-favors-the-bold-ai-as-force-multiplier",
+    "https://www.theparisreview.org/blog/2026/08/06/no-more-missionaries-shiva-naipauls-jonestown/",
+    "https://nautil.us/how-much-do-we-really-want-to-know-about-ufos-1283450/"
+  ],
+  "page4_urls": [
+    "https://3quarksdaily.com/3quarksdaily/2026/08/thomas-paine-americas-leveller.html",
+    "https://aeon.co/essays/the-surprisingly-scientific-methods-of-bigfooters",
+    "https://thepointmag.com/politics/we-were-the-99-percent/"
+  ],
+  "page5_url": "https://www.atlasobscura.com/places/woolpit-village-sign",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/08/06/no-more-missionaries-shiva-naipauls-jonestown/",
+    "music": "https://stereogum.com/2507623/lindsey-buckingham-and-stevie-nicks-are-talking-all-the-time-now/news/",
+    "outdoor": "https://sectionhiker.com/hyperlite-mountain-gear-20-degree-sleeping-bag-review/"
+  },
+  "headlines_urls": [
+    "https://www.bbc.co.uk/news/articles/c2lqvwewgp2o?at_medium=RSS&at_campaign=rss",
+    "https://www.economist.com/finance-and-economics/2026/08/06/african-countries-are-souring-on-the-dollar",
+    "https://www.ft.com/content/d981326d-3d4c-4248-aed2-c5c1c0e8cab5?syn-25a6b1a6=1"
+  ]
+}

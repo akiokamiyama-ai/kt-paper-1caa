@@ -1778,6 +1778,24 @@
       "ai_kamiyama_title": "The Blood Price: In Israel, Military Sacrifice Is Becoming Political Power",
       "ai_kamiyama_category": "geopolitics",
       "ai_kamiyama_source_name": "War on the Rocks"
+    },
+    {
+      "displayed_on": "2026-08-08",
+      "article_url": "https://www.atlasobscura.com/places/woolpit-village-sign",
+      "article_title": "Woolpit Village Sign in Woolpit, England",
+      "article_category": "outdoor",
+      "tie_candidates": [
+        "outdoor"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://warontherocks.com/warlords-of-greece-warfare-in-homers-world/",
+      "ai_kamiyama_title": "Warlords of Greece: Warfare in Homer’s World",
+      "ai_kamiyama_category": "geopolitics",
+      "ai_kamiyama_source_name": "War on the Rocks"
     }
   ]
 }
