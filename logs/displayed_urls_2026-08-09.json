@@ -1,0 +1,38 @@
+{
+  "date": "2026-08-09",
+  "page1_urls": [
+    "https://www.economist.com/finance-and-economics/2026/07/30/how-many-people-are-dying-as-a-result-of-usaids-demise",
+    "https://que.dailyshincho.jp/node/20349/",
+    "https://que.dailyshincho.jp/node/20253/",
+    "http://www3.nhk.or.jp/news/html/20260808/k10015200151000.html"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2608/07/2000000452/",
+    "human_energy": "https://sloanreview.mit.edu/article/how-a-healthy-work-culture-helps-trauma-survivors/",
+    "web_repo": "https://www.jfa-fc.or.jp/particle/5263.html"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/does-latent-nuclear-deterrence-really-work/",
+    null,
+    "https://www.bloomberg.com/news/articles/2026-08-08/zelenskyy-makes-debut-trip-to-serbia-as-russian-influence-wanes",
+    "https://www.mckinsey.com/capabilities/people-and-organizational-performance/our-insights/how-to-close-the-agentic-adoption-gap",
+    "https://www.theparisreview.org/blog/2026/07/30/the-soothing-unsubtlety-of-unbroken-the-untold-story-of-shen-yun/",
+    "https://thepointmag.com/literature/the-fifth-syllable/"
+  ],
+  "page4_urls": [
+    "https://3quarksdaily.com/3quarksdaily/2026/08/thomas-paine-americas-leveller.html",
+    "https://aeon.co/essays/the-surprisingly-scientific-methods-of-bigfooters",
+    "https://thepointmag.com/politics/we-were-the-99-percent/"
+  ],
+  "page5_url": "https://www.themarginalian.org/2026/08/06/maggie-smith-harrowing/",
+  "page6_urls": {
+    "books": "https://lithub.com/an-ode-to-pro-wrestling-the-ultimate-underdog-story/",
+    "music": "https://stereogum.com/2507657/chicago-punks-daddys-boy-release-raw-intense-new-album-four-hombres/music/",
+    "outdoor": "https://www.atlasobscura.com/places/post-office-and-telecommunications-center"
+  },
+  "headlines_urls": [
+    "https://que.dailyshincho.jp/node/20301/",
+    "http://www3.nhk.or.jp/news/html/20260807/k10015199701000.html",
+    "https://que.dailyshincho.jp/node/20184/"
+  ]
+}

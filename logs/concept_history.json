@@ -514,6 +514,11 @@
       "concept_id": "metacommunication",
       "name_ja": "メタコミュニケーション",
       "displayed_on": "2026-08-08"
+    },
+    {
+      "concept_id": "mandelbrot",
+      "name_ja": "マンデルブロ",
+      "displayed_on": "2026-08-09"
     }
   ]
 }

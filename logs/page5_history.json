@@ -1796,6 +1796,24 @@
       "ai_kamiyama_title": "Warlords of Greece: Warfare in Homer’s World",
       "ai_kamiyama_category": "geopolitics",
       "ai_kamiyama_source_name": "War on the Rocks"
+    },
+    {
+      "displayed_on": "2026-08-09",
+      "article_url": "https://www.themarginalian.org/2026/08/06/maggie-smith-harrowing/",
+      "article_title": "How to Hold What Harrows You",
+      "article_category": "books",
+      "tie_candidates": [
+        "books"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.theparisreview.org/blog/2026/07/30/the-soothing-unsubtlety-of-unbroken-the-untold-story-of-shen-yun/",
+      "ai_kamiyama_title": "The Soothing Unsubtlety of  UNBROKEN: The Untold Story of Shen Yun",
+      "ai_kamiyama_category": "books:海外純文学",
+      "ai_kamiyama_source_name": "The Paris Review"
     }
   ]
 }

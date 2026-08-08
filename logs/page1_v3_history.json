@@ -1230,5 +1230,32 @@
         }
       }
     ]
+  },
+  "W12_2026-08-09": {
+    "week_label": "W12",
+    "theme": "老いと暗黙知",
+    "period": [
+      "2026-08-09",
+      "2026-08-15"
+    ],
+    "entries": [
+      {
+        "date": "2026-08-09",
+        "day_label": "日",
+        "angle_key": "overview",
+        "angle_label_jp": "全体像",
+        "essay": {
+          "angle_label": "日曜 - 全体像",
+          "daily_question": "「加齢で賢くなる」は本当に可能なのか",
+          "essay_title": "知恵は老いとともに来るのではなく、老いを通じて来る",
+          "body": "ウディ・アレンは問われた。老いることについて、どう思うかと。彼は即答した。「最悪の取引だ。年を取っても賢くはならない」と。この悲観論はあまりにも率直で、多くの人の内心を代弁しているように聞こえる。だが神経科学と知恵研究の40年は、この直感に静かに、しかし確実に反証を積み上げてきた。\n\n今週、編集部が届けるのは、その40年史の射程とそこから導かれる問いである。\n\n出発点は1970年代にさかのぼる。老年神経心理学者のヴィヴィアン・クレイトンは、古今東西の文献を渉猟しながら「知恵」を実証的に定義しようとした最初期の研究者の一人だ。彼女が導いた定義は簡潔だった——知恵とは、思慮、内省、共感に根ざした判断力であると。続く1980年代には、ポール・バルテスとウルズラ・シュタウディンガーによるベルリン知恵プロジェクトが始動し、「人間の条件の本質と、よき人生の設計・管理・理解についての深い洞察と健全な判断力を伴う専門知識」という操作的定義が生まれた。\n\n重要なのは、この研究が「老いれば自動的に賢くなる」という俗説をただちに棄却した点である。脳の「機能的力学」——ニューロン数、接続性、処理速度——は25歳から30歳をピークに着実に低下する。老いは確かに何かを奪う。しかしシュタウディンガーが指摘するように「経験と知識に基づく推論と認知は低下しない」。その能力は40代から50代にピークを迎え、人生の終盤まで比較的安定する。老いが奪うものと、老いを経てこそ熟すものは、別の回路で動いているのだ。\n\nジェスティの神経回路仮説はこの分離をさらに解剖する。背外側前頭前野（合理性・自制）と腹内側前頭前野（共感・社会的行動）、前帯状皮質（両者の調停）、扁桃体（報酬）——これらのバランスこそが知恵の神経基盤だという仮説は、前頭側頭型認知症（bvFTD）の患者が示す「知恵の正反対」の症状によって逆側から支持される。前頭前野の損傷は、衝動性と反社会性という知恵の対極へ人を引き寄せる。知恵は特定の脳領域の強さではなく、複数領域の均衡として立ち現れる、というこの洞察は、経営的判断の本質に深く響く。\n\nさらに示唆的なのが、イゴール・グロスマンの「脱中心化」研究だ。ソロモン王の逸話が象徴するように、他者については賢明な判断を下せる人間が、自己に関わる局面では驚くほど愚かになる。「一般的な知恵」と「個人的な知恵」の乖離は、自己が脅かされたとき人は賢明な推論を働かせられなくなるという事実に由来する。文化的に自己を関係性の中に位置づける社会、あるいはメディテーションによって自己との距離を学んだ個人は、この脆弱性を下げることができる。知恵は性格特性である以上に、訓練可能な認知の姿勢でもある。\n\nこの一週間、編集部はこの主軸記事を五つの角度から読み解いていく。批判的考察として「知恵の定義は本当に普遍か」を問い、実践的視点として「経営判断における脱中心化の技法」を探り、思想的文脈として「フロネシスの系譜と現代神経科学の接続」を辿り、歴史的視座として「知恵の実証研究40年が書き換えたもの」を確認する。\n\n今週を通じて浮かび上がるのは、一つの根本的な問いである。神山氏が日々の経営判断の中で「老いを通じた知恵」を意図的に育てるとすれば、それはどのような習慣と構造のなかで可能になるのか。知恵は待つものではない。だが、老いなければ辿り着けない領域が確かに存在する——今週はその地図を描く試みである。",
+          "annotation_label": "主要キーワード",
+          "annotation_body": "【フロネシス】アリストテレスが提唱した「実践的知恵」。普遍的真理の探求ではなく、具体的状況で何をなすべきかを見極める能力。【脱中心化（decentering）】自己を観察者の視点から眺める認知的技法。臨床心理学由来で、マインドフルネス実践とも重なる。【背外側前頭前野】合理的判断・自制に関わる前頭前野の外側部位。【腹内側前頭前野】共感・社会的判断に関わる前頭前野の内側部位。両者の均衡が知恵の神経基盤と仮説される。",
+          "quote_excerpt": "Wisdom and aging are not synonymous. You see young people who are very wise for their age and you see old people who are very unwise. Having said that, it's more likely that with aging you can become wiser.\n\nWhile aging diminishes activity in certain brain regions, there's tantalizing evidence this may be compensated by changes in brain regions associated with supportive and social behavior. This shift in brain activity may foster wisdom in some people, a way of being that moves one away from self-centeredness toward emotional equanimity and wider social consciousness.\n\n\"What doesn't go down is reasoning and cognition that is based on knowledge and experience,\" says Staudinger. This ability, which reaches its peak between the ages of 40 and 50, and then stays stable and declines only during the final years of one's life, could contribute to wisdom, as long as we stay mentally active and engaged.",
+          "cost_usd": 0.0531,
+          "is_fallback": false
+        }
+      }
+    ]
   }
 }
