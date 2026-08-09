@@ -519,6 +519,11 @@
       "concept_id": "mandelbrot",
       "name_ja": "マンデルブロ",
       "displayed_on": "2026-08-09"
+    },
+    {
+      "concept_id": "quantum_computation",
+      "name_ja": "量子計算",
+      "displayed_on": "2026-08-10"
     }
   ]
 }

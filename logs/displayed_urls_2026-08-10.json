@@ -1,0 +1,38 @@
+{
+  "date": "2026-08-10",
+  "page1_urls": [
+    "https://que.dailyshincho.jp/node/20355/",
+    "https://que.dailyshincho.jp/node/20325/",
+    "https://www.economist.com/finance-and-economics/2026/08/09/how-china-became-the-worlds-great-oil-power",
+    "https://www.ft.com/content/ddf44cf7-0ab5-4e7e-9b1f-e5e8e34181e6?syn-25a6b1a6=1"
+  ],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/news/article/2608/09/2000000463/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2608/09/news003.html",
+    "web_repo": "https://www.bc01.net/seminar-report/megaji_session_report_2026/"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/08/06/ceuta-spain-morocco-migrants-history-africa-europe/",
+    null,
+    "https://toyokeizai.net/articles/-/953836?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://www.mckinsey.com/capabilities/people-and-organizational-performance/our-insights/ai-fluency-the-next-foundation-of-us-economic-competitiveness",
+    "https://www.theparisreview.org/blog/2026/07/23/what-we-talk-about-when-we-talk-about-the-interstitium/",
+    "https://3quarksdaily.com/3quarksdaily/2026/08/will-ai-replace-wine-criticism.html"
+  ],
+  "page4_urls": [
+    "https://www.themarginalian.org/2026/08/06/maggie-smith-harrowing/",
+    "https://3quarksdaily.com/3quarksdaily/2026/08/did-medieval-people-love-their-children.html",
+    "https://www.themarginalian.org/2026/08/07/yes-to-life-in-spite-of-everything-viktor-frankl/"
+  ],
+  "page5_url": "https://3quarksdaily.com/3quarksdaily/2026/08/did-medieval-people-love-their-children.html",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/08/03/my-year-of-tests-and-arbitration/",
+    "music": "https://stereogum.com/2507717/martha-reeves-blames-backup-singers-for-botched-national-anthem-attempts-solo-version-on-detroit-tv-news/news/",
+    "outdoor": "https://www.atlasobscura.com/places/kongo-gumi"
+  },
+  "headlines_urls": [
+    "https://www.ft.com/content/3dd0cbcb-26e0-4eef-af1f-b16812cae6ac?syn-25a6b1a6=1",
+    "https://www.bbc.co.uk/news/articles/c1e1vg0gjl5o?at_medium=RSS&at_campaign=rss",
+    "https://www.ft.com/content/03736b77-347b-4e07-bcb2-ced2d36737dc"
+  ]
+}

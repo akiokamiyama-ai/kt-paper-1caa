@@ -1814,6 +1814,24 @@
       "ai_kamiyama_title": "The Soothing Unsubtlety of  UNBROKEN: The Untold Story of Shen Yun",
       "ai_kamiyama_category": "books:海外純文学",
       "ai_kamiyama_source_name": "The Paris Review"
+    },
+    {
+      "displayed_on": "2026-08-10",
+      "article_url": "https://3quarksdaily.com/3quarksdaily/2026/08/did-medieval-people-love-their-children.html",
+      "article_title": "Did medieval people love their children?",
+      "article_category": "academic",
+      "tie_candidates": [
+        "academic"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": true,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false,
+      "ai_kamiyama_url": "https://www.theparisreview.org/blog/2026/07/23/what-we-talk-about-when-we-talk-about-the-interstitium/",
+      "ai_kamiyama_title": "What We Talk About When We Talk About the Interstitium",
+      "ai_kamiyama_category": "books:海外純文学",
+      "ai_kamiyama_source_name": "The Paris Review"
     }
   ]
 }
