@@ -113,31 +113,14 @@ def test_source_name_filters_hit_at_least_one_source():
 
 
 # ---------------------------------------------------------------------------
-# (c) backward compat re-export from old modules
+# (c) C155 (Sprint 13, 2026-08-10): 旧 re-export テストは削除
+#
+# ``regen_front_page_v2.SOURCE_NAME_FILTERS`` と
+# ``selector.todays_headlines.HEADLINES_*`` の re-export を検証していたが、
+# C155 で v2 Page I パイプラインと Today's Headlines を廃止したため
+# 両 re-export 元が消滅した。allowlist の定義自体は source_allowlist.py に
+# 残り、``scripts/source_layers.py`` の層 1 定義から参照され続ける。
 # ---------------------------------------------------------------------------
-
-def test_regen_front_page_v2_reexports_source_name_filters():
-    """旧 import path 維持: from scripts.regen_front_page_v2 import SOURCE_NAME_FILTERS."""
-    from scripts.regen_front_page_v2 import SOURCE_NAME_FILTERS as snf
-    _check(
-        "c1 regen_front_page_v2.SOURCE_NAME_FILTERS は source_allowlist と同一 object",
-        snf is al.SOURCE_NAME_FILTERS,
-    )
-
-
-def test_todays_headlines_reexports_allowlists():
-    from scripts.selector.todays_headlines import (
-        HEADLINES_ALLOWED_SOURCES as has,
-        HEADLINES_SOURCE_CATEGORY_RESTRICT as hsr,
-    )
-    _check(
-        "c2 todays_headlines.HEADLINES_ALLOWED_SOURCES re-export 一致",
-        has is al.HEADLINES_ALLOWED_SOURCES,
-    )
-    _check(
-        "c3 todays_headlines.HEADLINES_SOURCE_CATEGORY_RESTRICT re-export 一致",
-        hsr is al.HEADLINES_SOURCE_CATEGORY_RESTRICT,
-    )
 
 
 def main() -> int:
@@ -151,10 +134,6 @@ def main() -> int:
     print("(b) registry-level reachability:")
     test_headlines_sources_resolve_in_registry()
     test_source_name_filters_hit_at_least_one_source()
-    print()
-    print("(c) backward-compat re-export:")
-    test_regen_front_page_v2_reexports_source_name_filters()
-    test_todays_headlines_reexports_allowlists()
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")
     return 0 if FAIL == 0 else 1

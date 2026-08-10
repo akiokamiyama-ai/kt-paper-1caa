@@ -80,57 +80,12 @@ def test_inject_link_style_no_style_tag():
 
 
 # ---------------------------------------------------------------------------
-# (c) Page I: h2/h3 wrapped in <a>
+# (c) C155 (Sprint 13, 2026-08-10): Page I の h2/h3 リンク検証は削除
+#
+# v2 Page I（トップ1本 + セカンド3本）の廃止により
+# ``build_page_one_v2`` / ``_build_sidebar`` が消滅した。Page I の
+# リンク挙動は v3 renderer 側 (tests/page1_v3/test_renderer.py) が担当する。
 # ---------------------------------------------------------------------------
-
-def test_page_one_h2_h3_wrapped_in_a():
-    original_sidebar = regen._build_sidebar
-    regen._build_sidebar = lambda top: '<aside>[mock]</aside>'
-    try:
-        articles = [
-            {
-                "title": "Top Story", "title_ja": "トップ記事",
-                "description": "...", "desc_ja": "...",
-                "source_name": "The Economist", "source_language": "en",
-                "url": "https://example.test/top", "pub_date": "2026-05-03",
-            },
-            {
-                "title": "Sec1", "title_ja": "セク1",
-                "description": ".", "desc_ja": ".",
-                "source_name": "BBC Business", "source_language": "en",
-                "url": "https://example.test/s1", "pub_date": "2026-05-03",
-            },
-            {
-                "title": "Sec2", "title_ja": "セク2",
-                "description": ".", "desc_ja": ".",
-                "source_name": "Reuters Business", "source_language": "en",
-                "url": "https://example.test/s2", "pub_date": "2026-05-03",
-            },
-            {
-                "title": "Sec3", "title_ja": "セク3",
-                "description": ".", "desc_ja": ".",
-                "source_name": "BBC Business", "source_language": "en",
-                "url": "https://example.test/s3", "pub_date": "2026-05-03",
-            },
-        ]
-        html = regen.build_page_one_v2(articles)
-    finally:
-        regen._build_sidebar = original_sidebar
-    top_a = (
-        '<h2 class="headline-xl article-title-original">'
-        '<a href="https://example.test/top"' in html
-    )
-    sec1_a = (
-        '<h3 class="headline-l article-title-original">'
-        '<a href="https://example.test/s1"' in html
-    )
-    sec2_a = (
-        '<h3 class="headline-l article-title-original">'
-        '<a href="https://example.test/s2"' in html
-    )
-    _check("c1 top h2 wraps title in <a href>", top_a)
-    _check("c2 secondary 1 h3 wraps title in <a href>", sec1_a)
-    _check("c3 secondary 2 h3 wraps title in <a href>", sec2_a)
 
 
 # ---------------------------------------------------------------------------
@@ -272,9 +227,6 @@ def main() -> int:
     print("(b) inject_link_style_css idempotency:")
     test_inject_link_style_idempotent()
     test_inject_link_style_no_style_tag()
-    print()
-    print("(c) Page I h2/h3 wrap title in <a>:")
-    test_page_one_h2_h3_wrapped_in_a()
     print()
     print("(d) Page III _render_page3_item:")
     test_page_three_item_with_url_has_link()

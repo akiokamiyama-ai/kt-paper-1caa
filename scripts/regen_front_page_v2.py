@@ -32,20 +32,10 @@ import argparse
 import html
 import re
 import sys
-import time
-from collections import Counter
-from dataclasses import dataclass
 from datetime import date, datetime, timezone, timedelta
 from pathlib import Path
-from typing import Iterable
 
-from .fetch import run as fetch_run
-from .lib.source import Article
 from .render import replace_page_one
-from .selector.stage1 import run_stage1
-from .selector.stage2 import run_stage2  # noqa: F401  re-export 互換
-from .selector.stage2_shadow import run_stage2_with_mode
-from .selector.stage3 import integrate_scores
 from .selector.dedup_filter import (
     filter_recently_displayed,
     load_recently_displayed_urls,
@@ -58,7 +48,6 @@ from .selector.page2 import (
     prepare_shared_cross_industry_pool,
     run_page2_pipeline,
 )
-from .selector import todays_headlines
 from .selector.page3 import (
     REGIONS as PAGE3_REGIONS,
     REGION_DISPLAY_NAMES as PAGE3_REGION_DISPLAY_NAMES,
@@ -66,21 +55,9 @@ from .selector.page3 import (
     _is_japanese_source as _page3_is_japanese_source,
     run_page3_pipeline,
 )
-from .selector.why_important import (
-    LLMError as WhyImportantLLMError,
-    ValidationError as WhyImportantValidationError,
-    generate_why_important,
-    static_why_important,
-)
 from .editorial import context_builder as editorial_context
 from .editorial import editorial_writer
 from .header import header_builder as header_module
-from .page1_v3.monthly_pivotal import (
-    DEFAULT_PIVOTAL_PATH,
-    find_week_for_date,
-    load_monthly_pivotal,
-)
-from .page1 import lead_deck_writer as page1_lead_deck
 from .page4 import article_rotator as page4_rotator
 from .page4 import concept_selector as page4_concept_selector
 from .page4 import concept_writer as page4_concept_writer
@@ -88,8 +65,6 @@ from .page5 import ai_kamiyama_writer as page5_ai_kamiyama
 from .page5 import serendipity_selector as page5_serendipity
 from .page6 import cooking_generator as page6_cooking
 from .page6 import leisure_recommender as page6_leisure
-from .lib.llm import CapExceededError
-from .translate import translate
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -100,20 +75,15 @@ ARCHIVE_DIR = PROJECT_ROOT / "archive"
 TEMPLATE_PATH = ARCHIVE_DIR / "2026-04-25.html"
 INDEX_HTML = PROJECT_ROOT / "index.html"
 
-# C81 段階 1 (Sprint 9, 2026-06-13, Fable review M6): SOURCE_NAME_FILTERS は
-# ``scripts/source_allowlist.py`` に移動。todays_headlines.HEADLINES_ALLOWED_SOURCES
-# と単一 module で同期管理することで C78 真因（片側更新漏れ）を構造的に予防。
-# 旧名で本 module から import している外部コードのため re-export を残す。
-from .source_allowlist import SOURCE_NAME_FILTERS  # noqa: F401  re-export
+# C155 (Sprint 13, 2026-08-10): SOURCE_NAME_FILTERS の re-export を廃止。
+# v2 の Page I fetch（唯一の利用者）が消えたため。定義自体は
+# ``scripts/source_allowlist.py`` に残り、``scripts/source_layers.py`` の
+# 層 1 定義から参照され続ける。
 
 # C81 段階 4 (Sprint 9, 2026-06-13, Fable review M6): 翻訳判定・ヘルパーは
 # ``scripts/translation_helpers.py`` に移動。旧 import 互換のため re-export を残す。
 from .translation_helpers import (  # noqa: F401  re-export
-    JAPANESE_SOURCE_PATTERNS,
-    TRANSLATE_DELAY,
     is_japanese_article as _is_japanese_article,
-    is_japanese_source as _is_japanese_source,
-    translate_article as _translate_article,
     translate_for_render,
 )
 
@@ -140,22 +110,11 @@ COMPANY_DISPLAY_META: dict[str, tuple[str, str]] = {
     "web_repo":     ("Web-Repo",     "フランチャイズ業界"),
 }
 
-# Front page composition.
-N_TOP = 1
-N_SECONDARIES = 3
-PER_SOURCE_LIMIT = 8  # cap per source so a chatty feed cannot dominate Stage 2
-
-
-# C81 段階 2 (Sprint 9, 2026-06-13, Fable review M6): Page I 限定 penalty 機構は
-# ``scripts/page1_penalty.py`` に移動。旧名で本 module から import している
-# 外部コード（テスト含む）のため re-export を残す。
-from .page1_penalty import (  # noqa: F401  re-export
-    FORESIGHT_PATTERNS,
-    FORESIGHT_PENALTY,
-    SHINCHO_QUE_PATTERNS,
-    SHINCHO_QUE_PENALTY,
-    apply_page1_source_penalty as _apply_page1_source_penalty,
-)
+# C155 (Sprint 13, 2026-08-10): 以下は v2 Page I パイプラインと共に廃止。
+#   * N_TOP / N_SECONDARIES / PER_SOURCE_LIMIT — トップ1+セカンド3 の紙面構成
+#   * scripts/page1_penalty.py — Page I 限定の source soft penalty
+#     (Foresight / 新潮 QUE の頻出抑制)。Page I が週次 essay になり
+#     日次のソース選定自体が無くなったため機構ごと不要になった。
 
 # C81 段階 3 (Sprint 9, 2026-06-13, Fable review M6): CSS 定数 (MARKER + CSS)
 # は ``scripts/page_styles.py`` に集約。inject_*_css 関数は本 module に残り、
@@ -171,8 +130,6 @@ from .page_styles import (  # noqa: F401  re-export
     PAGE_FIVE_CSS_MARKER,
     PAGE_FOUR_CSS,
     PAGE_FOUR_CSS_MARKER,
-    PAGE_ONE_CSS,
-    PAGE_ONE_CSS_MARKER,
     PAGE_SIX_CSS,
     PAGE_SIX_CSS_MARKER,
     PAGE_TWO_CSS,
@@ -200,52 +157,9 @@ _WHITESPACE_RE = re.compile(r"\s+")
 
 
 # ---------------------------------------------------------------------------
-# Result type
-# ---------------------------------------------------------------------------
-
-@dataclass
-class PipelineResult:
-    fetched_by_source: dict[str, int]
-    fetched_total: int
-    stage1_passed: int
-    stage1_excluded: int
-    stage2_evaluated: int
-    stage2_errors: int
-    stage2_cost_usd: float
-    selected: list[dict]
-    candidates_scored: list[dict]
-
-
-# ---------------------------------------------------------------------------
 # Article preparation
 # ---------------------------------------------------------------------------
 
-def _strip_html(text: str | None) -> str:
-    """Remove HTML tags and collapse whitespace. Keeps Japanese punctuation."""
-    if not text:
-        return ""
-    no_tags = _HTML_TAG_RE.sub(" ", text)
-    no_entities = (
-        no_tags
-        .replace("&nbsp;", " ")
-        .replace("&amp;", "&")
-        .replace("&lt;", "<")
-        .replace("&gt;", ">")
-        .replace("&quot;", '"')
-    )
-    return _WHITESPACE_RE.sub(" ", no_entities).strip()
-
-
-def _kicker_for(source_name: str | None, *, is_top: bool) -> str:
-    if not source_name:
-        return DEFAULT_KICKER
-    for prefix, kicker in KICKER_PREFIXES:
-        if prefix in source_name:
-            return f"{kicker}・トップ" if is_top else kicker
-    return DEFAULT_KICKER
-
-
-# Sprint 2 Step E: 記事の発行日表示。byline に「· 2026年4月28日」を追記する。
 # pub_date は ISO 8601 文字列（Stage 1 / page2 が Article.pub_date.isoformat()
 # として article dict に乗せる）。タイムゾーンは JST 換算してから日付部分を
 # 取り出す（UTC で 22:00 の記事は JST で翌日 7:00 になり、表示日付が翌日に
@@ -279,156 +193,6 @@ def _format_publish_date_ja(iso_date_str: str | None) -> str:
         dt = dt.replace(tzinfo=timezone.utc)
     dt_jst = dt.astimezone(_JST)
     return f"{dt_jst.year}年{dt_jst.month}月{dt_jst.day}日"
-
-
-def _byline_for(source_name: str | None) -> str:
-    if not source_name:
-        return "本紙編集部"
-    label = "外部ソース"
-    for prefix, kicker in KICKER_PREFIXES:
-        if prefix in source_name:
-            label = kicker.split("・")[0]  # strip "・国際情勢" subtitle if present
-            break
-    return f"本紙編集部　{label}より構成"
-
-
-def _article_to_pipeline_dict(article: Article) -> dict:
-    """Convert a fetched Article into the dict shape Stage 1+2+rendering expect.
-
-    C80c (Sprint 9, 2026-06-12, Fable review M1): pipeline_dict 構築は
-    ``Article.to_pipeline_dict()`` に一本化（page1 / page3 / stage1 で同一実装
-    を共有、tribune_category 伝播も一括）。本関数は page1 固有の
-    ``_strip_html`` 適用のみ担当する薄いラッパー。
-    """
-    desc_clean = _strip_html(article.description)
-    body_clean = _strip_html(
-        "\n".join(article.body_paragraphs) if article.body_paragraphs else ""
-    )
-    return article.to_pipeline_dict(description=desc_clean, body=body_clean)
-
-
-# ---------------------------------------------------------------------------
-# Pipeline
-# ---------------------------------------------------------------------------
-
-def fetch_candidates(
-    *,
-    per_source_limit: int = PER_SOURCE_LIMIT,
-    no_dedupe: bool = True,
-) -> tuple[list[Article], dict[str, int]]:
-    """Fetch articles from each configured source.
-
-    Returns (articles, per_source_counts). per_source_counts uses the
-    user-friendly source-filter token (e.g. ``"BBC Business"``) as key.
-    """
-    all_articles: list[Article] = []
-    per_source: dict[str, int] = {}
-    for filt in SOURCE_NAME_FILTERS:
-        summary = fetch_run(
-            name_substring=filt,
-            limit=per_source_limit,
-            no_dedupe=no_dedupe,
-            write_log=False,
-            # C42 fix (Sprint 9, 2026-06-08): fetch.py:run のデフォルトは
-            # include_html=False で fetch_method=HTML の source を全部除外する
-            # ため、新潮 QUE のような HTML scraper source が候補プールに
-            # 一切到達できない。Page I は name_substring filter で動くので
-            # 本配列 (SOURCE_NAME_FILTERS) に該当する HTML scraper source の
-            # 場合のみ効果を持つ（現状は無いが将来の整合性のため有効化）。
-            include_html=True,
-        )
-        articles = summary.get("articles", [])
-        per_source[filt] = len(articles)
-        all_articles.extend(articles)
-    return all_articles, per_source
-
-
-def run_pipeline(
-    articles: Iterable[Article],
-) -> PipelineResult:
-    """Run Stage 1 → 2 → 3 over fetched articles. Returns a PipelineResult.
-
-    No I/O side effects beyond the Stage 2 LLM call and its log writes
-    (logs/scores_*.json, logs/llm_usage_*.json).
-    """
-    articles = list(articles)
-    pipeline_dicts = [_article_to_pipeline_dict(a) for a in articles]
-
-    s1_out = run_stage1(pipeline_dicts)
-    surviving = [a for a in s1_out if not a.get("is_excluded")]
-    excluded_count = len(s1_out) - len(surviving)
-
-    if not surviving:
-        return PipelineResult(
-            fetched_by_source={},
-            fetched_total=len(articles),
-            stage1_passed=0,
-            stage1_excluded=excluded_count,
-            stage2_evaluated=0,
-            stage2_errors=0,
-            stage2_cost_usd=0.0,
-            selected=[],
-            candidates_scored=[],
-        )
-
-    # C85 Sub-Step 6 (2026-06-15, Phase B Step 4): TRIBUNE_STAGE2_MODE 環境変数で
-    # legacy / shadow / layered を切替。デフォルト "legacy" で既存挙動維持。
-    s2 = run_stage2_with_mode(surviving, caller="page1_master")
-
-    # Stage 3 — in-place fill final_score on the Stage-2 entry dict.
-    integrate_scores(s2.evaluations_by_url)
-
-    # Merge LLM scores + final_score back into the surviving article dicts
-    # so the renderer has both rendering fields and scoring fields together.
-    by_url = s2.evaluations_by_url
-    scored: list[dict] = []
-    for art in surviving:
-        url = art.get("url")
-        if url and url in by_url:
-            art.update(by_url[url])
-            scored.append(art)
-    # Sprint 6 (2026-05-03): Page I source-based soft penalty。
-    # final_score sort の直前で source_name に基づく減点を適用。
-    # 神山さんが既に購読中の媒体（Foresight）の頻出抑制。
-    for art in scored:
-        penalty = _apply_page1_source_penalty(art)
-        if penalty != 0.0:
-            original_score = float(art.get("final_score", 0.0))
-            new_score = round(original_score + penalty, 2)
-            art["final_score"] = new_score
-            art["page1_source_penalty"] = penalty
-            print(
-                f"  [page1] source penalty: "
-                f"{(art.get('source_name') or '')[:30]} "
-                f"({original_score:.2f} → {new_score:.2f}, {penalty:+.1f})  "
-                f"{(art.get('title') or '')[:40]}",
-                file=sys.stderr,
-            )
-    scored.sort(key=lambda a: a.get("final_score", 0.0), reverse=True)
-
-    return PipelineResult(
-        fetched_by_source={},
-        fetched_total=len(articles),
-        stage1_passed=len(surviving),
-        stage1_excluded=excluded_count,
-        stage2_evaluated=len(s2.evaluations_by_url),
-        stage2_errors=len(s2.errors),
-        stage2_cost_usd=s2.cost_usd,
-        selected=scored[: N_TOP + N_SECONDARIES],
-        candidates_scored=scored,
-    )
-
-
-# ---------------------------------------------------------------------------
-# Translation
-# ---------------------------------------------------------------------------
-
-# ---------------------------------------------------------------------------
-# Rendering — source-aware Page I builder
-# ---------------------------------------------------------------------------
-
-# Sprint 5 task #2 (2026-05-04): masthead-data 2-row block の CSS。
-# 既存の <div class="strip">（4/25 template ダミー）を置換する形で挿入。
 
 
 def inject_masthead_data_css(html_text: str) -> str:
@@ -509,222 +273,41 @@ def inject_link_style_css(html_text: str) -> str:
     return html_text[:end_style_idx] + LINK_STYLE_CSS + html_text[end_style_idx:]
 
 
-# Sprint 5 (2026-05-03): 第1面の HTML 表示形式を「原文タイトル大 + 日本語小書き」に
-# 変更（選択肢 C）。CSS は inject_page_one_css でテンプレ </style> 直前に挿入。
-
-
-def inject_page_one_css(html_text: str) -> str:
-    """Idempotently inject Page I title CSS just before </style>."""
-    if PAGE_ONE_CSS_MARKER in html_text:
-        return html_text
-    end_style_idx = html_text.rfind("</style>")
-    if end_style_idx < 0:
-        head_close = html_text.find("</head>")
-        if head_close < 0:
-            return html_text
-        injected = f"<style>\n{PAGE_ONE_CSS}\n</style>\n"
-        return html_text[:head_close] + injected + html_text[head_close:]
-    return html_text[:end_style_idx] + PAGE_ONE_CSS + html_text[end_style_idx:]
-
-
 def _esc(s: str) -> str:
     return html.escape(s or "")
 
 
-def _render_top_body(top: dict) -> str:
-    """Single-paragraph dropcap from desc_ja + a source byline.
+# ---------------------------------------------------------------------------
+# Rendering — Page I placeholder (C155, Sprint 13, 2026-08-10)
+# ---------------------------------------------------------------------------
 
-    Sprint 6: byline を「出典：{label}」(plain text) に変更。タイトル h2 が
-    <a href> で URL を持つため、byline には URL リンクを置かない（重複回避）。
+
+def build_page_one_placeholder(*, target_date: date) -> str:
+    """v3 が swap する対象の ``page-one`` marker section を返す.
+
+    C155 で v2 の Page I 生成（トップ1本 + セカンド3本）を廃止した。Page I の
+    中身は ``regen_front_page_v3`` が ``data/monthly_pivotal.json`` の週次
+    主軸記事から essay を組んで surgical swap する。
+
+    本関数の出力は二つの役割を持つ：
+
+    1. **swap ターゲット** — ``regen_front_page_v3._swap_page_one`` は
+       ``<section class="page page-one">`` を文字列検索して置換するため、
+       この marker が archive HTML に必ず 1 個存在する必要がある。
+    2. **フェイルセーフ表示** — 月次選定が未投入の週、または v3 が例外を
+       吐いた日は、この内容がそのまま紙面に残る。旧実装ではテンプレートの
+       2026-04-25 合宿ダミー記事が露出する危険があったが、明示的な休載
+       通知に置き換えることで「古い記事が本日の紙面に出る」事故を防ぐ。
     """
-    desc_ja = top.get("desc_ja", "") or top.get("description", "")
-    paragraphs = [f'<p class="dropcap">{_esc(desc_ja)}</p>']
-    source_name = top.get("source_name", "") or "外部ソース"
-    label = source_name
-    for prefix, kicker in KICKER_PREFIXES:
-        if prefix in source_name:
-            label = kicker.split("・")[0]
-            break
-    paragraphs.append(
-        f'<p class="byline" style="margin-top:8px;">出典：{_esc(label)}</p>'
-    )
-    return "\n".join("          " + p for p in paragraphs)
+    date_label = _esc(target_date.isoformat())
+    return f"""<section class="page page-one">
+    <div class="page-banner"><span class="pg-num">— Page I —</span> Essay &amp; Pivotal · A Week with One Question</div>
 
-
-def _render_secondary_body(sec: dict) -> str:
-    desc_ja = sec.get("desc_ja", "") or sec.get("description", "")
-    source_name = sec.get("source_name", "") or "外部ソース"
-    label = source_name
-    for prefix, kicker in KICKER_PREFIXES:
-        if prefix in source_name:
-            label = kicker.split("・")[0]
-            break
-    paragraphs = [f"        <p>{_esc(desc_ja)}</p>"]
-    paragraphs.append(
-        f'        <p class="byline" style="margin-top:6px;">出典：{_esc(label)}</p>'
-    )
-    return "\n".join(paragraphs)
-
-
-def _build_sidebar(top: dict) -> str:
-    """The 'なぜ重要か' sidebar — LLM-generated 3 points with static fallback.
-
-    Sprint 2 後半 / Sprint 3: docs/why_important_v1.md §6.3 の設計に従い、
-    トップ記事の主題・重要論点・経営者視点 3点を Sonnet 4.6 で動的生成。
-    LLM 障害・validation 失敗・cap 抵触時は static_why_important() の
-    定型文にフォールバック（神山さんの第1面読書体験は最低限保証）。
-    """
-    try:
-        points = generate_why_important(top)
-    except (
-        WhyImportantLLMError,
-        WhyImportantValidationError,
-        CapExceededError,
-    ) as e:
-        print(
-            f"[sidebar] LLM failed, using static fallback: {e}",
-            file=sys.stderr,
-        )
-        points = static_why_important(top)
-    return _render_sidebar_html(top, points)
-
-
-def _render_sidebar_html(top: dict, points: dict) -> str:
-    """Render the lead-sidebar HTML from a 3-point dict.
-
-    Layout follows archive/2026-04-25.html's <aside class="lead-sidebar">.
-    Points dict keys: point_1_subject / point_2_significance /
-    point_3_executive_perspective.
-    """
-    p1 = _esc(points.get("point_1_subject", ""))
-    p2 = _esc(points.get("point_2_significance", ""))
-    p3 = _esc(points.get("point_3_executive_perspective", ""))
-    return f"""
-      <aside class="lead-sidebar" lang="ja">
-        <div class="kicker">なぜ重要か</div>
-        <h4 class="headline-m">本日のトップから読み取るべきこと</h4>
-        <p>読み解きのための3点：</p>
-        <hr class="dotted" />
-        <p><strong>1・</strong>{p1}</p>
-        <p><strong>2・</strong>{p2}</p>
-        <p><strong>3・</strong>{p3}</p>
-        <hr class="dotted" />
-        <p class="byline" style="margin-top:8px;">出典：3ソース合議 · 翻訳：Google／MyMemory（日本語ソースは原文）</p>
-      </aside>""".rstrip()
-
-
-def build_page_one_v2(
-    articles: list[dict], *, target_date: date | None = None,
-) -> str:
-    """Assemble the full <section class='page page-one'> block."""
-    if len(articles) < N_TOP + N_SECONDARIES:
-        raise ValueError(
-            f"need {N_TOP + N_SECONDARIES} articles, got {len(articles)}"
-        )
-    top = articles[0]
-    secs = articles[1 : N_TOP + N_SECONDARIES]
-
-    secondaries_html: list[str] = []
-    for s in secs:
-        kicker = _kicker_for(s.get("source_name"), is_top=False)
-        byline = _byline_for(s.get("source_name"))
-        date_label = _format_publish_date_ja(s.get("pub_date"))
-        if date_label:
-            byline = f"{byline} · {date_label}"
-        # Sprint 5: 原文タイトル大 + 日本語小書き。JA ソースは title_ja=title なので
-        # 二重表示を避けて jp タイトル行を出さない。
-        s_title_orig = s.get("title", "")
-        s_title_ja = s.get("title_ja", "")
-        s_is_ja = _is_japanese_article(s)
-        s_jp_line = (
-            "" if s_is_ja
-            else f'\n        <p class="article-title-japanese">{_esc(s_title_ja)}</p>'
-        )
-        # Sprint 6: タイトルにリンク。URL があれば <a> で囲む。
-        s_url = s.get("url", "")
-        s_title_html = (
-            f'<a href="{_esc(s_url)}" target="_blank" rel="noopener noreferrer">{_esc(s_title_orig)}</a>'
-            if s_url else _esc(s_title_orig)
-        )
-        secondaries_html.append(
-            f"""
-      <div class="col" lang="ja">
-        <div class="kicker">{_esc(kicker)}</div>
-        <h3 class="headline-l article-title-original">{s_title_html}</h3>{s_jp_line}
-        <p class="byline">{_esc(byline)}</p>
-{_render_secondary_body(s)}
-      </div>""".rstrip()
-        )
-
-    top_kicker = _kicker_for(top.get("source_name"), is_top=True)
-    top_byline = _byline_for(top.get("source_name"))
-    top_date_label = _format_publish_date_ja(top.get("pub_date"))
-    if top_date_label:
-        top_byline = f"{top_byline} · {top_date_label}"
-
-    # Sprint 5: top の表示も原文大 + 日本語小書き。
-    top_title_orig = top.get("title", "")
-    top_title_ja = top.get("title_ja", "")
-    top_is_ja = _is_japanese_article(top)
-    top_jp_line = (
-        "" if top_is_ja
-        else f'\n        <p class="article-title-japanese">{_esc(top_title_ja)}</p>'
-    )
-    # Sprint 6: top のタイトルにリンク。URL があれば <a> で囲む。
-    top_url = top.get("url", "")
-    top_title_html = (
-        f'<a href="{_esc(top_url)}" target="_blank" rel="noopener noreferrer">{_esc(top_title_orig)}</a>'
-        if top_url else _esc(top_title_orig)
-    )
-
-    # Sprint 5 task #3 (2026-05-04): top のリード deck を LLM 生成。
-    # deck と dropcap が同じ desc_ja を表示していた重複を解消する。
-    # deck = LLM が記事核心を 60-100 字に圧縮、dropcap は desc_ja のまま（本文）。
-    # LLM 失敗時は desc_ja[:80] フォールバック。deck が空文字列なら <p> 自体を出さない。
-    try:
-        lead_deck_result = page1_lead_deck.write_lead_deck(top)
-    except Exception as e:
-        print(
-            f"[lead_deck] FAILED (unhandled): {type(e).__name__}: {e}",
-            file=sys.stderr,
-        )
-        lead_deck_result = {
-            "deck": (top.get("desc_ja") or "")[:80],
-            "is_fallback": True,
-            "cost_usd": 0.0,
-        }
-    lead_deck = lead_deck_result.get("deck") or ""
-    deck_line = (
-        f'\n        <p class="deck">{_esc(lead_deck)}</p>'
-        if lead_deck else ""
-    )
-
-    # C69 (Sprint 9, 2026-06-09): 1 面右下にコメント CTA。target_date が
-    # 渡された場合のみ出力（旧 caller 後方互換）。
-    cta_html = ""
-    if target_date is not None:
-        cta_html = "\n    " + render_page_one_comment_cta(target_date)
-
-    page = f"""<section class="page page-one">
-    <div class="page-banner"><span class="pg-num">— Page I —</span> The Front Page · World &amp; Business</div>
-
-    <article class="front-top">
-      <div class="lead-story" lang="ja">
-        <div class="kicker">{_esc(top_kicker)}</div>
-        <h2 class="headline-xl article-title-original">{top_title_html}</h2>{top_jp_line}{deck_line}
-        <p class="byline">{_esc(top_byline)}</p>
-        <div class="body-3col">
-{_render_top_body(top)}
-        </div>
-      </div>
-{_build_sidebar(top)}
-    </article>
-
-    <div class="secondaries">{"".join(secondaries_html)}
-    </div>{cta_html}
+    <div class="page-one-placeholder" lang="ja" data-date="{date_label}">
+      <p>本日の第1面は休載です。</p>
+      <p>今週の主軸記事が未登録のため、論考を生成できませんでした。</p>
+    </div>
   </section>"""
-
-    return page
 
 
 # ---------------------------------------------------------------------------
@@ -848,63 +431,7 @@ def _render_briefing_row(company_key: str, sel) -> str:
     </div>""".rstrip()
 
 
-def _render_todays_headlines(headlines: list[dict] | None) -> str:
-    """Today's Headlines HTML を生成 (Sprint 7 Phase 2 Step 2, 2026-05-19).
-
-    Page II 下段に挿入する `<aside class="todays-headlines">` セクション。
-    headlines が空 or None なら空文字列を返し、Page II の HTML 末尾には何も
-    挿入されない（page2 の既存挙動を破壊しない）。
-
-    summary は ``todays_headlines.format_summary`` で 100 字 truncate。
-    description 空 (Yahoo! 等の title-only feed) なら summary <p> 自体を省略。
-    """
-    if not headlines:
-        return ""
-
-    items: list[str] = []
-    for art in headlines:
-        title = art.get("title") or ""
-        url = art.get("url") or ""
-        source = art.get("source_name") or ""
-        # C14 (Sprint 8): main() で LLM 要約を art["summary"] に事前計算済みなら
-        # それを使う。未計算（テスト等）なら format_summary に fallback。
-        summary = art.get("summary")
-        if summary is None:
-            summary = todays_headlines.format_summary(art)
-
-        if url:
-            title_html = (
-                f'<a href="{_esc(url)}" target="_blank" rel="noopener noreferrer">'
-                f'{_esc(title)}</a>'
-            )
-        else:
-            title_html = _esc(title)
-
-        summary_html = (
-            f'      <p class="headline-summary">{_esc(summary)}</p>\n'
-            if summary else ""
-        )
-
-        items.append(
-            f"""    <li class="headline-item">
-      <span class="headline-title">{title_html}</span>
-{summary_html}      <span class="headline-byline">{_esc(source)}</span>
-    </li>"""
-        )
-    items_html = "\n".join(items)
-
-    return f"""
-<aside class="todays-headlines">
-  <h3 class="headlines-banner">Today's Headlines</h3>
-  <ol class="headlines-list">
-{items_html}
-  </ol>
-</aside>"""
-
-
-def build_page_two_v2(
-    selections: dict, *, headlines: list[dict] | None = None,
-) -> str:
+def build_page_two_v2(selections: dict) -> str:
     """Assemble the full Page II <section> block from page2 pipeline selections.
 
     ``selections`` is the ``Page2Result.selections`` dict mapping
@@ -912,9 +439,9 @@ def build_page_two_v2(
     Order is fixed (Cocolomi → Human Energy → Web-Repo) per the inaugural
     issue's Page II layout.
 
-    Sprint 7 Phase 2 Step 2 (2026-05-19): optional ``headlines`` 引数を追加。
-    None or 空 list なら従来の 3 社朝会のみのレイアウトに戻る（後方互換）。
-    与えられた場合は `<aside class="todays-headlines">` を </section> 直前に挿入。
+    C155 (Sprint 13, 2026-08-10): Today's Headlines (下段 3 本) を廃止し、
+    3 社ブリーフィングのみの面に戻した。Sprint 7 Phase 2 Step 2 で追加した
+    ``headlines`` 引数も削除。
     """
     rows: list[str] = []
     # COMPANY_KEYS は page2.py から import 済（cocolomi → human_energy → web_repo）
@@ -932,7 +459,6 @@ def build_page_two_v2(
         rows.append(_render_briefing_row(company_key, sel))
 
     rows_html = "\n".join(rows)
-    headlines_html = _render_todays_headlines(headlines)
     return f"""<section class="page page-two">
     <div class="page-banner"><span class="pg-num">— Page II —</span> The President's Morning Briefing · Three Companies, One Desk</div>
 
@@ -940,7 +466,6 @@ def build_page_two_v2(
       Cocolomi・Human Energy・Web-Repo3社の事業文脈に関わる今朝の話題を、各社につき1本——朝の経営判断のための短い問いを添えて。
     </p>
 {rows_html}
-{headlines_html}
   </section>"""
 
 
@@ -1851,93 +1376,6 @@ def update_index_redirect(target: date) -> None:
 # CLI
 # ---------------------------------------------------------------------------
 
-def _print_dry_run_report(result: PipelineResult, fetched_by_source: dict[str, int]) -> None:
-    print()
-    print("=== Dry-run report ===")
-    print()
-    print("Per-source fetch counts:")
-    for name, n in fetched_by_source.items():
-        print(f"  {name:>16}: {n} articles")
-    print(f"  {'TOTAL':>16}: {result.fetched_total}")
-    print()
-    print(f"Stage 1: {result.stage1_passed} passed, {result.stage1_excluded} excluded")
-    print(
-        f"Stage 2: {result.stage2_evaluated} evaluated, {result.stage2_errors} errors, "
-        f"cost=${result.stage2_cost_usd:.4f}"
-    )
-    print()
-    print("All candidates ranked by final_score:")
-    for i, a in enumerate(result.candidates_scored, 1):
-        score = a.get("final_score", 0.0)
-        src = a.get("source_name", "?")
-        # Compact aesthetic breakdown.
-        bk = "/".join(
-            str(a.get(k, "?")) for k in ("美意識1", "美意識3", "美意識5", "美意識6", "美意識8")
-        )
-        m2 = a.get("美意識2_machine", "?")
-        warn = " [missing_a2]" if a.get("missing_aesthetic_2_warning") else ""
-        title = a.get("title", "")[:60]
-        print(
-            f"  {i:2d}. {score:6.2f}  [1/3/5/6/8={bk}, m2={m2}]{warn}"
-            f"  ({src[:20]})  {title}"
-        )
-    print()
-    print(f"Selected for Page I (top {N_TOP} + sec {N_SECONDARIES}):")
-    for i, a in enumerate(result.selected, 1):
-        role = "TOP" if i == 1 else f"SEC{i-1}"
-        score = a.get("final_score", 0.0)
-        src = a.get("source_name", "?")
-        title = a.get("title", "")[:70]
-        print(f"  [{role}] {score:6.2f}  ({src[:20]})  {title}")
-
-
-def _dry_run_sidebar_preview(top: dict) -> None:
-    """Translate top + call generate_why_important + print 3-point preview.
-
-    Exists only for ``--dry-run`` so the operator can sanity-check sidebar
-    output without writing HTML. Production rendering goes through
-    ``_build_sidebar(top)`` inside ``build_page_one_v2``.
-    """
-    print()
-    print("=== Sidebar preview (Page I top) ===")
-    if _is_japanese_source(top.get("source_name", "")):
-        top["title_ja"] = top.get("title", "")
-        top["desc_ja"] = top.get("description", "")
-    else:
-        try:
-            _translate_article(top)
-        except Exception as e:
-            print(f"  translation failed: {e}")
-            top["title_ja"] = top.get("title", "")
-            top["desc_ja"] = top.get("description", "")
-    print(f"  top.title_ja: {top.get('title_ja','')[:80]}")
-    try:
-        points = generate_why_important(top)
-        used_fallback = False
-    except (
-        WhyImportantLLMError,
-        WhyImportantValidationError,
-        CapExceededError,
-    ) as e:
-        print(f"  LLM failed → static fallback ({e})")
-        points = static_why_important(top)
-        used_fallback = True
-    print(f"  fallback used: {used_fallback}")
-    for k in (
-        "point_1_subject",
-        "point_2_significance",
-        "point_3_executive_perspective",
-    ):
-        v = points.get(k, "")
-        n = len(v)
-        in_band = (
-            "OK" if 60 <= n <= 100
-            else "soft-out" if 50 <= n <= 120
-            else "hard-out"
-        )
-        print(f"  [{k}] {n}字 ({in_band})")
-        print(f"    {v}")
-
 
 def _make_dedup_aware_page2_fetcher(target: date, days_back: int = PAGE2_DEDUP_DAYS):
     """Wrap ``page2_default_fetcher`` so each ``companies:*`` fetch removes
@@ -2097,33 +1535,24 @@ def _run_page2_selection(target: date, *, write_log: bool, threshold: float):
 def _run_page3_selection(
     target: date,
     *,
-    page1_result,
     page2_result,
     write_log: bool,
 ):
-    """Page III pipeline: 6領域 × 各1本.
+    """Page III pipeline: 5領域 + セレンディピティ 1枠.
 
-    Stage 2 結果は page1 と共有（page1 で評価済の Foresight / Economist 等
-    の URL は再評価しない、page3_design_v1.md §10.4）。
+    C155 (Sprint 13, 2026-08-10): page1_master 廃止に伴い ``pre_evaluated``
+    による Stage 2 結果共有は消滅した（page3_design_v1.md §10.4 は無効）。
+    page3 は自前で全候補を評価する。C155a の実測では page1 の 63 URL は
+    page3 の 303 URL の完全な部分集合だったため、評価対象の総数は不変で、
+    コストが page1_master タグから page3 タグへ付け替わるだけである。
     """
     print(
         "Fetching business + geopolitics + academic + books for Page III...",
         file=sys.stderr,
     )
 
-    # Stage 2 結果共有：page1 で評価済の article dict をキャッシュ。
-    pre_evaluated: dict[str, dict] = {}
-    for art in page1_result.candidates_scored:
-        url = art.get("url")
-        if url:
-            pre_evaluated[url] = art
-
-    # 当日 page1 + page2 で選定された URL を当日他面 dedup として渡す。
+    # 当日 page2 で選定された URL を当日他面 dedup として渡す。
     today_urls: set[str] = set()
-    for art in page1_result.selected:
-        url = art.get("url")
-        if url:
-            today_urls.add(url)
     if page2_result is not None:
         for sel in page2_result.selections.values():
             if sel.article is not None:
@@ -2147,7 +1576,7 @@ def _run_page3_selection(
     )
     page3_result = run_page3_pipeline(
         target_date=target,
-        pre_evaluated=pre_evaluated,
+        pre_evaluated=None,
         displayed_urls_today=today_urls,
         displayed_urls_past_n=past_urls,
         write_log=write_log,
@@ -2205,34 +1634,6 @@ def _print_page2_report(page2_result) -> None:
         print(f"      問い:  {sel.morning_question}")
         if sel.fallback_reason:
             print(f"      fallback: {sel.fallback_reason[:120]}")
-
-
-def _v3_swap_will_apply(target: date, *, pivotal_path: Path | None = None) -> bool:
-    """Return True if regen_front_page_v3 would swap Page I on this date.
-
-    C45 D2 (Sprint 8, 2026-05-29): editorial が紙面に出ない記事を引用する
-    事象の真因対策。本番 cron は regen_front_page_v3 経由で呼ばれ、
-    monthly_pivotal.json に当該日の週が登録されていれば Page I が essay 形式に
-    surgical swap される。swap 後の Page I に v2 の top4 は出てこないため、
-    editorial 生成時に Page I を context から除外する必要がある。
-
-    本関数は monthly_pivotal を覗いて swap 適用可否のみ判定する（v3 が呼ばれた
-    かどうかは見ない）。v2 を単独で叩く dev 経路では Page I が v2 として残る
-    のに editorial から外れる軽い不整合があるが、本番経路 (v3) と整合を優先。
-
-    Pivotal load 失敗時は False（保守側）に倒し、Page I を editorial に含める
-    従来挙動を維持する。
-    """
-    try:
-        monthly = load_monthly_pivotal(pivotal_path or DEFAULT_PIVOTAL_PATH)
-        return find_week_for_date(target, monthly) is not None
-    except Exception as e:  # noqa: BLE001 — どんな失敗でも保守的 fallback
-        print(
-            f"[editorial] monthly_pivotal load failed "
-            f"({type(e).__name__}: {e}), assuming v3 swap NOT applicable",
-            file=sys.stderr,
-        )
-        return False
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -2301,48 +1702,33 @@ def main(argv: list[str] | None = None) -> int:
 
     print(f"Target date: {target.isoformat()}", file=sys.stderr)
 
-    # 1) Fetch Page I sources
-    print(f"Fetching candidates from {len(SOURCE_NAME_FILTERS)} sources...", file=sys.stderr)
-    articles, per_source = fetch_candidates()
-    if not articles:
-        print("No candidates fetched. Aborting.", file=sys.stderr)
-        return 1
-    print(f"  fetched {len(articles)} articles total", file=sys.stderr)
-
-    # 2) Pipeline (Stage 1 → 2 → 3) for Page I
-    print("Running Page I selection pipeline (Stage 1 → 2 → 3)...", file=sys.stderr)
-    result = run_pipeline(articles)
-    result.fetched_by_source = per_source
-
-    # 2b) Sprint 2 Step D: Page I dedup against past 7 days' displayed URLs.
-    page1_displayed = load_recently_displayed_urls(
-        days_back=PAGE1_DEDUP_DAYS, page="page1", until_date=target,
-    )
-    if page1_displayed:
-        before = len(result.candidates_scored)
-        deduped_candidates = filter_recently_displayed(
-            result.candidates_scored, page1_displayed,
-        )
-        removed = before - len(deduped_candidates)
-        print(
-            f"[dedup] Page I: removed {removed}/{before} candidates "
-            f"already shown in past {PAGE1_DEDUP_DAYS} days "
-            f"({len(deduped_candidates)} remain)",
-            file=sys.stderr,
-        )
-        result.candidates_scored = deduped_candidates
-        result.selected = deduped_candidates[: N_TOP + N_SECONDARIES]
-
-    if len(result.selected) < N_TOP + N_SECONDARIES:
-        print(
-            f"WARNING: Page I 候補枯渇 ({len(result.selected)}/{N_TOP + N_SECONDARIES} 本)",
-            file=sys.stderr,
-        )
-        # If we have ≥1 article we still try to render. If 0, abort.
-        if len(result.selected) == 0:
-            print("ERROR: 0 candidates after dedup. Aborting.", file=sys.stderr)
-            _print_dry_run_report(result, per_source)
-            return 1
+    # 1-2) C155 (Sprint 13, 2026-08-10): v2 Page I パイプライン廃止。
+    #
+    # Phase 3 (2026-05-23) 以降、本番 cron は regen_front_page_v3 経由で走り、
+    # v2 が組んだ「トップ1本 + セカンド3本」の Page I は毎朝 essay 形式に
+    # surgical swap されて紙面に出ていなかった。にもかかわらず fetch →
+    # Stage 1 → Stage 2 (caller=page1_master) → 翻訳 → build_page_one_v2 が
+    # 毎日フル実行されていた。
+    #
+    # C155a 計測 (2026-08-10, 8/1-8/10 の GHA artifact 10 日分):
+    #   * page1_master Stage 2      $0.0615/日 ($1.87/月)
+    #   * page1 レンダ側 LLM        $0.0208/日 ($0.63/月)
+    #     (page1.lead_deck + page1.why_important)
+    #
+    # ただし page1_master の Stage 2 は「純粋な無駄」ではなかった。page3 /
+    # page4 / page5 / page6 が ``pre_evaluated`` 経由で評価結果を共有しており、
+    # 重複 URL の再評価を免れていたためである。C155a で page1 / page3 の fetch
+    # を実測したところ **page1 の 63 URL は page3 の 303 URL の完全な部分集合**
+    # (63/63 = 100%、page1 専用 URL は 0 本) だった。したがって page1_master を
+    # 止めると Stage 2 コストは消えるのではなく page3 に付け替わる。
+    # 実質的な削減は render 側の $0.63/月 のみ、という前提で本変更を行う。
+    #
+    # Page I の HTML は v3 (regen_front_page_v3) が組む。本 module は
+    # ``<section class="page page-one">`` の最小プレースホルダのみ出力し、
+    # v3 がそこへ swap する二段構成を維持する（月次選定未投入週は
+    # プレースホルダがそのまま残るフェイルセーフ）。
+    #
+    # revert: git tag ``pre-c155-baseline`` を参照。docs/paper_structure_v2.md §8。
 
     # 3) Page II pipeline (independent fetch from companies.md High)
     page2_result = None
@@ -2351,30 +1737,25 @@ def main(argv: list[str] | None = None) -> int:
             target, write_log=not args.dry_run, threshold=args.page2_threshold,
         )
 
-    # 3b) Page III pipeline (Sprint 3 Step A): 6領域 × 各1本.
-    # Stage 2 結果は page1 と共有（page3_design_v1.md §13 Q6）。
+    # 3b) Page III pipeline (Sprint 3 Step A → C155 で 5領域 + セレンディピティ).
+    # C155: page1_master 廃止に伴い ``pre_evaluated`` 共有は消滅。page3 が
+    # 自前で全候補（旧 page1 の 7 ソースを含む superset）を評価する。
     page3_result = None
     if not args.skip_page3:
         page3_result = _run_page3_selection(
             target,
-            page1_result=result,
             page2_result=page2_result,
             write_log=not args.dry_run,
         )
 
     if args.dry_run:
-        _print_dry_run_report(result, per_source)
         if page2_result is not None:
             _print_page2_report(page2_result)
         if page3_result is not None:
             _print_page3_report(page3_result)
-        if result.selected:
-            _dry_run_sidebar_preview(result.selected[0])
         return 0
 
-    # 4) Translate selected (Page I + Page II articles).
-    print("Translating Page I articles...", file=sys.stderr)
-    translate_for_render(result.selected)
+    # 4) Translate Page II articles.
     if page2_result is not None:
         page2_articles = [
             sel.article for sel in page2_result.selections.values()
@@ -2393,10 +1774,8 @@ def main(argv: list[str] | None = None) -> int:
     page_six_telemetry: dict | None = None
     if not args.skip_page4:
         print("Building Page IV (concept + 3 academic articles)...", file=sys.stderr)
-        # Reuse Stage 2 cache for academic + books overlap (small but consistent).
-        pre_evaluated_for_page4: dict[str, dict] = {
-            a["url"]: a for a in result.candidates_scored if a.get("url")
-        }
+        # C155: page1_master 廃止で pre_evaluated 共有元が消滅。page4 は自前評価。
+        pre_evaluated_for_page4: dict[str, dict] | None = None
         # C49 案A (Sprint 8, 2026-06-01): Page III (page3_result.selections) で
         # 採用済の URL を Page IV に渡して構造的に除外する。5/15-19 / 5/25 / 5/31
         # で観測された集英社新書プラス記事の 3 面 / 4 面 同時表示（30 日中 7 件=
@@ -2431,31 +1810,18 @@ def main(argv: list[str] | None = None) -> int:
             )
             page_four_html = None
 
-    # 4b.5) C40 第二弾 (Sprint 8, 2026-05-30): Today's Headlines を Page V より前に
-    # 選定する。AIかみやま selector が candidate pool として headlines を参照する
-    # ため、Page V build の前に確定させる必要がある。LLM 要約 (generate_summary_with_llm)
-    # は表示用なので Page II HTML 構築直前まで遅延する（後段 §5 に残置）。
-    headlines: list[dict] = []
-    if page2_result is not None:
-        recent_headlines_urls = load_recently_displayed_urls(
-            todays_headlines.HEADLINES_DEDUP_DAYS,
-            page="headlines",
-            until_date=target,
-        )
-        headlines = todays_headlines.select_todays_headlines(
-            target_date=target,
-            candidates_scored=result.candidates_scored,
-            page1_selected=result.selected,
-            page3_selections=(
-                page3_result.selections if page3_result is not None else None
-            ),
-            recent_displayed_urls=recent_headlines_urls,
-        )
-        print(
-            f"  Today's Headlines preselected: {len(headlines)} 件 "
-            f"({', '.join((h.get('source_name') or '')[:10] for h in headlines) or '(none)'})",
-            file=sys.stderr,
-        )
+    # 4b.5) C155 (Sprint 13, 2026-08-10): Today's Headlines 廃止。
+    #
+    # Headlines は Page I の ``candidates_scored`` を候補プールにしていたため、
+    # v2 page1 パイプライン廃止と同時に枠ごと消滅する（依頼書「裏側の構造変更 1:
+    # Today's Headlines の候補プール依存 → 枠ごと消滅」）。
+    #
+    # C155a で判明した副次事実：LLM 要約経路は BBC 記事限定だが、
+    # ``BbcArticleScraper`` の ``sc-`` prefix 正規表現が BBC の CSS 変更で
+    # マッチしなくなっており、8/1-8/10 の 10 日間で
+    # ``page2.headlines_summary`` タグの呼び出しは 0 件だった。結果として
+    # Headlines には RSS の英語 description が翻訳も要約もされずに出ていた。
+    # 廃止によりこの品質問題も同時に解消される。
 
     # 4c) Page V pipeline (Sprint 4: Columns & Serendipity, was Sprint 3 Step D)
     if not args.skip_page5:
@@ -2463,14 +1829,12 @@ def main(argv: list[str] | None = None) -> int:
             "Building Page V (serendipity + AIかみやま column via miibo)...",
             file=sys.stderr,
         )
-        pre_evaluated_for_page5: dict[str, dict] = {
-            a["url"]: a for a in result.candidates_scored if a.get("url")
-        }
+        # C155: page1_master 廃止で pre_evaluated 共有元が消滅。page5 は自前評価。
+        pre_evaluated_for_page5: dict[str, dict] | None = None
         try:
             page_five_html, page_five_telemetry = build_page_five_v2(
                 target,
                 pre_evaluated=pre_evaluated_for_page5,
-                page_two_headlines=headlines,
                 page3_result=page3_result,
                 page4_telemetry=page_four_telemetry,
             )
@@ -2508,9 +1872,10 @@ def main(argv: list[str] | None = None) -> int:
     # 4d) Page VI pipeline (Sprint 4: Leisure 4 columns, was Sprint 3 Step C)
     if not args.skip_page6:
         print("Building Page VI (books + music + outdoor + cooking)...", file=sys.stderr)
-        pre_evaluated_for_page6: dict[str, dict] = {
-            a["url"]: a for a in result.candidates_scored if a.get("url")
-        }
+        # C155: page1_master 廃止で pre_evaluated 共有元が消滅。page6 は自前評価。
+        # （page1 の 7 ソースは business/geopolitics 系で page6 の
+        #   books/music/outdoor とほぼ重ならず、共有の実効は元々小さかった）
+        pre_evaluated_for_page6: dict[str, dict] | None = None
         # C139 (Sprint 12, 2026-07-10): 当日 Page V serendipity 記事の URL を
         # Page VI に渡して同日 cross-page dedup を行う。7/10 archive で
         # Stereogum URL が Page V + Page VI music の両方に採用された事象
@@ -2554,21 +1919,12 @@ def main(argv: list[str] | None = None) -> int:
     # 4e) Editorial postscript (Sprint 4 Phase 3) — depends on all pages above.
     editorial_result: dict | None = None
     if not args.skip_editorial:
-        # C45 D2 (Sprint 8, 2026-05-29): v3 swap が適用される日は Page I の
-        # v2 top4 が essay に置換されて最終紙面に出ないため、editorial の
-        # context から Page I を除外する。これにより editorial が「紙面に存在
-        # しない記事」を引用する事象（C45 真因）を防ぐ。v3 swap 不適用日は
-        # 従来通り Page I を含める。
-        v3_will_apply = _v3_swap_will_apply(target)
-        page_one_for_editorial = None if v3_will_apply else result.selected
-        if v3_will_apply:
-            print(
-                "[editorial] C45 D2: v3 swap applicable for this date → "
-                "excluding Page I from editorial context",
-                file=sys.stderr,
-            )
+        # C45 D2 (Sprint 8, 2026-05-29) → C155 (Sprint 13, 2026-08-10) で恒久化。
+        # v2 page1 パイプライン廃止により Page I は常に v3 essay（または休載
+        # プレースホルダ）となり、v2 の top4 記事はそもそも存在しない。
+        # よって editorial context の page_one は常に None。
         ctx = editorial_context.build_editorial_context(
-            page_one_selected=page_one_for_editorial,
+            page_one_selected=None,
             page_two_selections=(
                 page2_result.selections if page2_result is not None else None
             ),
@@ -2588,26 +1944,16 @@ def main(argv: list[str] | None = None) -> int:
             )
             editorial_result = {"body": "", "is_fallback": True, "cost_usd": 0.0}
 
-    # 5) Render Page I + Page II + Page III
-    print("Building Page I HTML...", file=sys.stderr)
-    page_one_html = build_page_one_v2(result.selected, target_date=target)
+    # 5) Render Page I placeholder + Page II + Page III
+    # C155: Page I の中身は regen_front_page_v3 が組む。ここでは v3 が
+    # surgical swap する対象の marker section だけを置く。月次選定未投入週は
+    # このプレースホルダがそのまま紙面に残る（フェイルセーフ）。
+    print("Building Page I placeholder (v3 swap target)...", file=sys.stderr)
+    page_one_html = build_page_one_placeholder(target_date=target)
     page_two_html: str | None = None
     if page2_result is not None:
         print("Building Page II HTML...", file=sys.stderr)
-        # C40 第二弾 (Sprint 8, 2026-05-30): headlines の SELECTION は §4b.5 で
-        # 済ませてある（Page V AIかみやま selector が参照するため事前選定が必要）。
-        # ここでは LLM 要約（C14, 5/20 神山さん観察、~200 字に拡張）と Page II
-        # HTML 構築のみ行う。BBC 以外 / fetch 失敗 / LLM 失敗時は format_summary に fallback。
-        for art in headlines:
-            art["summary"] = todays_headlines.generate_summary_with_llm(art)
-        print(
-            "  Today's Headlines summary 文字数: "
-            f"{[len(h.get('summary') or '') for h in headlines]}",
-            file=sys.stderr,
-        )
-        page_two_html = build_page_two_v2(
-            page2_result.selections, headlines=headlines,
-        )
+        page_two_html = build_page_two_v2(page2_result.selections)
     page_three_html: str | None = None
     if page3_result is not None:
         print("Building Page III HTML...", file=sys.stderr)
@@ -2621,8 +1967,8 @@ def main(argv: list[str] | None = None) -> int:
     dated = inject_link_style_css(dated)
     # Sprint 5 task #2: masthead-data の CSS は常に inject。
     dated = inject_masthead_data_css(dated)
-    # Sprint 5: Page I も常に CSS injection（タイトル原文大 + 日本語小書き）。
-    dated = inject_page_one_css(dated)
+    # C155: Page I の CSS は v3 (inject_page_one_v3_css) が担当。v2 が出すのは
+    # プレースホルダのみで、専用 CSS は不要。
     if page_two_html is not None:
         dated = inject_page_two_css(dated)
     if page_four_html is not None:
@@ -2670,7 +2016,10 @@ def main(argv: list[str] | None = None) -> int:
     print(f"Wrote {out_path}", file=sys.stderr)
 
     # 7) Sprint 2/3: record displayed URLs for tomorrow's dedup.
-    page1_urls_displayed = [a.get("url", "") for a in result.selected if a.get("url")]
+    # C155: page1 は v3 essay（週次主軸記事、月次人手選定）なので日次 URL dedup
+    # の対象外。空リストを渡して log の page1 フィールドは維持する（過去日 log の
+    # スキーマ互換のため。load_recently_displayed_urls(page="page1") は空を返す）。
+    page1_urls_displayed: list[str] = []
     page2_urls_displayed: dict[str, str | None] = {k: None for k in PAGE2_COMPANY_ORDER}
     if page2_result is not None:
         for company_key in PAGE2_COMPANY_ORDER:
@@ -2703,14 +2052,9 @@ def main(argv: list[str] | None = None) -> int:
             r = page_six_telemetry.get(area, {})
             art = r.get("article")
             page6_urls_displayed[area] = art.get("url") if art else None
-    # C40 (Sprint 8, 2026-05-28): 第2面 Today's Headlines の URL も dedup 用に記録。
-    # BBC 等で同 URL のタイトルだけ更新されるパターンに対応するため、過去日の
-    # headlines URL を翌朝以降の selector から見えるようにする。
-    headlines_urls_displayed: list[str] = []
-    if page_two_html is not None:
-        headlines_urls_displayed = [
-            (h.get("url") or "") for h in headlines if h.get("url")
-        ]
+    # C155: Today's Headlines 廃止に伴い headlines_urls は常に None。
+    # 過去日 log には headlines フィールドが残るため、読み出し側
+    # (load_recently_displayed_urls(page="headlines")) は引き続き動作する。
     log_path = write_displayed_urls_log(
         target,
         page1_urls=page1_urls_displayed,
@@ -2719,7 +2063,7 @@ def main(argv: list[str] | None = None) -> int:
         page4_urls=page4_urls_displayed if page_four_telemetry is not None else None,
         page5_url=page5_url_displayed,
         page6_urls=page6_urls_displayed if page_six_telemetry is not None else None,
-        headlines_urls=headlines_urls_displayed if page_two_html is not None else None,
+        headlines_urls=None,
     )
     print(f"Wrote {log_path}", file=sys.stderr)
 
@@ -2730,13 +2074,9 @@ def main(argv: list[str] | None = None) -> int:
         print("(index.html not touched; pass --update-index to rewrite redirect)", file=sys.stderr)
 
     print()
-    print("=== Page I summary ===")
-    for i, a in enumerate(result.selected, 1):
-        role = "TOP" if i == 1 else f"SEC{i-1}"
-        score = a.get("final_score", 0.0)
-        src = a.get("source_name", "?")
-        print(f"  [{role}] {score:6.2f}  ({src[:20]})  {a.get('title_ja', '')[:60]}")
-    print(f"  cost (Page I Stage 2 LLM): ${result.stage2_cost_usd:.4f}")
+    print("=== Page I ===")
+    print("  v3 (regen_front_page_v3) が essay を swap する。本 module は"
+          "プレースホルダのみ出力。")
 
     if page2_result is not None:
         print()
