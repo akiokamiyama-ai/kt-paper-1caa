@@ -1,8 +1,8 @@
-"""Unit tests for scripts/page5/serendipity_selector.py.
+"""Unit tests for scripts/selector/serendipity.py.
 
 Run::
 
-    python3 -m tests.page5.test_serendipity_selector
+    python3 -m tests.selector.test_serendipity
 
 External dependencies (fetch / Stage 1+2+3 / dedup_filter / source_registry)
 are mocked; pure logic only.
@@ -18,7 +18,7 @@ from collections import Counter
 from datetime import date, timedelta
 from pathlib import Path
 
-from scripts.page5 import serendipity_selector
+from scripts.selector import serendipity as serendipity_selector
 
 PASS = 0
 FAIL = 0
@@ -365,7 +365,10 @@ def test_reference_articles_reach_pipeline_input():
         return [{**d, "is_excluded": False} for d in pipeline_dicts]
 
     # Stage 2 が呼ばれないように、stage1 の結果を空にせず、stage2 mock も入れる
-    def fake_run_stage2(arts):
+    # C155: 本 module は run_stage2_with_mode を呼ぶ（C85 の layered 切替経路）。
+    # 旧テストは run_stage2 だけを差し替えており、実際には本物の Stage 2 が
+    # 走って ANTHROPIC_API_KEY 未設定で落ちていた（移設前から失敗していた既存バグ）。
+    def fake_run_stage2(arts, **kwargs):
         class FakeS2:
             evaluations_by_url = {a["url"]: {"final_score": 50.0} for a in arts}
             cost_usd = 0.0
@@ -375,15 +378,18 @@ def test_reference_articles_reach_pipeline_input():
     original_fetch = serendipity_selector.fetch_run
     original_s1 = serendipity_selector.run_stage1
     original_s2 = serendipity_selector.run_stage2
+    original_s2m = serendipity_selector.run_stage2_with_mode
     serendipity_selector.fetch_run = fake_fetch_run
     serendipity_selector.run_stage1 = fake_run_stage1
     serendipity_selector.run_stage2 = fake_run_stage2
+    serendipity_selector.run_stage2_with_mode = fake_run_stage2
     try:
         scored, _cost = serendipity_selector._fetch_and_score_category("music")
     finally:
         serendipity_selector.fetch_run = original_fetch
         serendipity_selector.run_stage1 = original_s1
         serendipity_selector.run_stage2 = original_s2
+        serendipity_selector.run_stage2_with_mode = original_s2m
 
     # Stage 1 入力に reference 由来の URL が含まれている
     urls_in_pipeline = {

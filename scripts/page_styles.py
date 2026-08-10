@@ -348,14 +348,19 @@ PAGE_FOUR_CSS = f"""
   text-align: justify;
   text-indent: 1em;
 }}
-.academic-column .item {{
-  margin-bottom: 20px;
-  padding-bottom: 16px;
-  border-bottom: 1px dotted #ccc;
+/* C155 (Sprint 13, 2026-08-10): 学術ニュース枠 (.academic-column) を廃止。
+   概念コラム 1 本だけの面になったので、2 カラム grid を単一カラムに切替える。
+   .page-four-single が付いたときは concept-column の縦罫も外す。 */
+.page-four-grid.page-four-single {{
+  grid-template-columns: 1fr;
+  max-width: 760px;
+  margin: 0 auto;
 }}
-.academic-column .item:last-child {{ border-bottom: none; }}
-/* Sprint 8 C41 (2026-05-28): iPad / iPhone レスポンシブ。
-   横並び (55%:45%) を縦積み (concept 上、academic 下) に切替。 */
+.page-four-single .concept-column {{
+  border-right: none;
+  padding-right: 0;
+}}
+/* Sprint 8 C41 (2026-05-28): iPad / iPhone レスポンシブ。 */
 @media (max-width: 834px) {{
   .page-four-grid {{
     grid-template-columns: 1fr;
@@ -386,17 +391,22 @@ PAGE_FIVE_CSS_MARKER = "/* === Page V (Sprint 4 layout swap, was Sprint 3 Step D
 
 PAGE_FIVE_CSS = f"""
 {PAGE_FIVE_CSS_MARKER}
+/* C155 (Sprint 13, 2026-08-10): 第5面を「AIかみやまの一筆」100% に。
+   旧構成は上 40% セレンディピティ / 下 60% 一筆の固定比 grid だった。
+   セレンディピティは第3面へ移設し、上段は「一筆が読んだ記事」の
+   参照サマリ（300-400 字）に置き換わる。固定比をやめて内容に応じた
+   auto 送りにし、一筆本文が主役として面を占めるようにする。 */
 .page-five-content {{
   display: grid;
-  grid-template-rows: 40% 60%;
+  grid-template-rows: auto 1fr;
   padding: 16px 24px;
 }}
-.serendipity-article {{
+.reference-article {{
   padding-bottom: 24px;
   margin-bottom: 24px;
   border-bottom: 1px solid #ccc;
 }}
-.serendipity-article .kicker {{
+.reference-article .kicker {{
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -404,21 +414,21 @@ PAGE_FIVE_CSS = f"""
   text-transform: uppercase;
   margin-bottom: 8px;
 }}
-.serendipity-article .article-title {{
+.reference-article .article-title {{
   font-family: 'Noto Serif JP', 'Old Standard TT', serif;
   font-size: 18px;
   font-weight: 700;
   line-height: 1.5;
   margin: 0 0 10px;
 }}
-.serendipity-article .description {{
+.reference-article .reference-summary {{
   font-family: 'Noto Serif JP', 'Old Standard TT', serif;
   font-size: 14px;
   line-height: 1.8;
   color: #333;
   margin-bottom: 8px;
 }}
-.serendipity-article .serendipity-byline {{
+.reference-article .reference-byline {{
   font-size: 11px;
   color: #888;
   border-top: 1px dotted #ccc;
@@ -495,7 +505,7 @@ PAGE_FIVE_CSS = f"""
    (1) overflow-wrap で長語を折り返し、
    (2) iPad / iPhone では padding / 行間を緩めて余裕を持たせる。 */
 .page-five-content,
-.serendipity-article,
+.reference-article,
 .ai-kamiyama-column {{
   min-width: 0;
   overflow-wrap: break-word;
@@ -505,8 +515,8 @@ PAGE_FIVE_CSS = f"""
 .ai-kamiyama-column .column-title,
 .ai-kamiyama-column .ai-source-ref,
 .ai-kamiyama-column .ai-article-summary,
-.serendipity-article .article-title,
-.serendipity-article .description {{
+.reference-article .article-title,
+.reference-article .reference-summary {{
   overflow-wrap: break-word;
 }}
 @media (max-width: 834px) {{
@@ -515,7 +525,7 @@ PAGE_FIVE_CSS = f"""
     padding: 16px 18px;
     row-gap: 12px;
   }}
-  .serendipity-article {{
+  .reference-article {{
     padding-bottom: 18px;
     margin-bottom: 18px;
   }}
@@ -546,8 +556,8 @@ PAGE_FIVE_CSS = f"""
     padding: 8px 10px;
     font-size: 12.5px;
   }}
-  .serendipity-article .article-title {{ font-size: 16px; }}
-  .serendipity-article .description {{ font-size: 13px; }}
+  .reference-article .article-title {{ font-size: 16px; }}
+  .reference-article .reference-summary {{ font-size: 13px; }}
 }}
 """
 

@@ -11,9 +11,12 @@ Sprint 4 Phase 3 (2026-05-03).
 from __future__ import annotations
 
 
-# Page III の region ラベル（context 用、order を保つ）
-PAGE3_REGIONS: tuple[str, ...] = (
-    "R1", "R2", "R3", "R4", "R5", "R6",
+# Page III の slot ラベル（context 用、order を保つ）。
+# C155 (Sprint 13, 2026-08-10): R2 廃止、6 枠目に SER（セレンディピティ）。
+# selector.page3 を import せずローカル定義しているのは、editorial が
+# selector 層に依存しないようにするため（既存方針を踏襲）。
+PAGE3_DISPLAY_SLOTS: tuple[str, ...] = (
+    "R1", "R3", "R4", "R5", "R6", "SER",
 )
 
 # Page II 表示順（Cocolomi → Human Energy → Web-Repo）
@@ -60,12 +63,17 @@ def build_editorial_context(
     empty entries. The output is a JSON-serialisable dict.
 
     Parameters mirror the regen_front_page_v2 main-flow telemetry shape:
-      * page_one_selected: list of article dicts (top + 3 secondaries)
+      * page_one_selected: C155 以降は常に None（Page I は週次 essay で、
+        editorial の参照対象から外している。C45 D2 の恒久化）
       * page_two_selections: dict[company_key → CompanySelection]
-      * page_three_selections: dict[region → SelectionResult]
-      * page_four_telemetry: {"concept": ..., "essay_result": ..., "articles_result": ...}
-      * page_five_telemetry: {"serendipity": ..., "column": ...}
+      * page_three_selections: dict[slot → RegionSelection]（5 領域 + SER）
+      * page_four_telemetry: {"concept": ..., "essay_result": ...}
+      * page_five_telemetry: {"ai_article": ..., "summary": ..., "column": ...}
       * page_six_telemetry: {"books": ..., "music": ..., "outdoor": ..., "cooking": ...}
+
+    C155 (Sprint 13, 2026-08-10) での変更:
+      * page4_articles（学術ニュース 3 本）を廃止
+      * page5_serendipity → page5_reference（一筆の参照記事）に置換
     """
     out: dict = {}
 
@@ -90,7 +98,7 @@ def build_editorial_context(
     # ----- Page III -----
     p3_list: list[dict] = []
     p3sels = page_three_selections or {}
-    for region in PAGE3_REGIONS:
+    for region in PAGE3_DISPLAY_SLOTS:
         sel = p3sels.get(region)
         article = getattr(sel, "article", None) if sel is not None else None
         info = _extract_title_source(article)
@@ -99,33 +107,27 @@ def build_editorial_context(
     out["page3"] = p3_list
 
     # ----- Page IV -----
+    # C155: 学術ニュース枠を廃止し、概念のみの面になった。
     p4_concept = ""
-    p4_articles: list[str] = []
     if page_four_telemetry:
         concept = page_four_telemetry.get("concept") or {}
         p4_concept = _safe_str(concept.get("name_ja")) or _safe_str(concept.get("id"))
-        articles_result = page_four_telemetry.get("articles_result") or {}
-        for art in articles_result.get("articles", []) or []:
-            t = _safe_str(art.get("title"))
-            if t:
-                p4_articles.append(t)
     out["page4_concept"] = p4_concept
-    out["page4_articles"] = p4_articles
 
     # ----- Page V -----
-    p5_serendipity: dict = {"title": "", "source": "", "category": ""}
+    # C155: serendipity 枠は Page III へ移設。第5面は一筆とその参照記事のみ。
+    p5_reference: dict = {"title": "", "source": "", "category": ""}
     p5_column_title = ""
     if page_five_telemetry:
-        sty = page_five_telemetry.get("serendipity") or {}
-        article = sty.get("article") or {}
-        p5_serendipity = {
+        article = page_five_telemetry.get("ai_article") or {}
+        p5_reference = {
             "title": _safe_str(article.get("title")),
             "source": _safe_str(article.get("source_name")),
-            "category": _safe_str(sty.get("category")),
+            "category": _safe_str(article.get("category")),
         }
         col = page_five_telemetry.get("column") or {}
         p5_column_title = _safe_str(col.get("column_title"))
-    out["page5_serendipity"] = p5_serendipity
+    out["page5_reference"] = p5_reference
     out["page5_aikamiyama_column_title"] = p5_column_title
 
     # ----- Page VI -----

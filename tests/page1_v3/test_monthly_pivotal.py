@@ -151,11 +151,20 @@ def test_find_next_week_real():
 
 
 def test_find_next_week_returns_none_when_no_next():
-    """W4 の翌週は未投入 → None."""
+    """最終週の翌週は未投入 → None.
+
+    C155 (Sprint 13, 2026-08-10): 元は「W4 の翌週」を固定で見ていたが、
+    月次選定が進んで W5 以降が投入されるたびに落ちるようになっていた。
+    monthly_pivotal.json の**最終週**を動的に求めて検証する形に変更。
+    """
     monthly = mp.load_monthly_pivotal()
-    w4 = mp.find_week_for_date(date(2026, 6, 14), monthly)
-    next_w = mp.find_next_week(w4, monthly)
-    _check("d2 W4 next → None（未投入）", next_w is None)
+    weeks = monthly.get("weeks", {})
+    last_label = max(weeks, key=lambda k: weeks[k]["period"][0])
+    last_start = date.fromisoformat(weeks[last_label]["period"][0])
+    last_w = mp.find_week_for_date(last_start, monthly)
+    next_w = mp.find_next_week(last_w, monthly)
+    _check(f"d2 最終週 ({last_label}) の next → None（未投入）",
+           next_w is None, f"got {next_w.week_label if next_w else None}")
 
 
 # ---------------------------------------------------------------------------

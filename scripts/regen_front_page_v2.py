@@ -49,8 +49,9 @@ from .selector.page2 import (
     run_page2_pipeline,
 )
 from .selector.page3 import (
-    REGIONS as PAGE3_REGIONS,
+    DISPLAY_SLOTS as PAGE3_DISPLAY_SLOTS,
     REGION_DISPLAY_NAMES as PAGE3_REGION_DISPLAY_NAMES,
+    SERENDIPITY_SLOT as PAGE3_SERENDIPITY_SLOT,
     _generate_kicker as _page3_generate_kicker,
     _is_japanese_source as _page3_is_japanese_source,
     run_page3_pipeline,
@@ -58,11 +59,9 @@ from .selector.page3 import (
 from .editorial import context_builder as editorial_context
 from .editorial import editorial_writer
 from .header import header_builder as header_module
-from .page4 import article_rotator as page4_rotator
 from .page4 import concept_selector as page4_concept_selector
 from .page4 import concept_writer as page4_concept_writer
 from .page5 import ai_kamiyama_writer as page5_ai_kamiyama
-from .page5 import serendipity_selector as page5_serendipity
 from .page6 import cooking_generator as page6_cooking
 from .page6 import leisure_recommender as page6_leisure
 
@@ -543,12 +542,15 @@ def _render_page3_placeholder(region: str) -> str:
 def build_page_three_v2(selections: dict) -> str:
     """Assemble the full Page III <section> block.
 
-    ``selections`` is the ``Page3Result.selections`` dict mapping region
-    keys (R1〜R6) to RegionSelection objects. Order is fixed per
-    PAGE3_REGIONS (R1→R6, 1行目左→2行目右).
+    ``selections`` is the ``Page3Result.selections`` dict mapping slot keys
+    to RegionSelection objects. Order is fixed per PAGE3_DISPLAY_SLOTS
+    (1行目 R1/R3/R4、2行目 R5/R6/SER).
+
+    C155 (Sprint 13, 2026-08-10): R2 廃止で 5 領域になり、6 枠目に
+    セレンディピティ (SER) が入る。描画は 6 枠とも同一形式。
     """
     items_html: list[str] = []
-    for region in PAGE3_REGIONS:
+    for region in PAGE3_DISPLAY_SLOTS:
         sel = selections.get(region)
         if sel is None or sel.article is None:
             items_html.append(_render_page3_placeholder(region))
@@ -645,104 +647,42 @@ def _render_page4_concept_column(concept: dict, essay: str) -> str:
     </article>""".rstrip()
 
 
-def _render_page4_academic_item(article: dict) -> str:
-    """Render one item in the academic column.
-
-    C36 Step 2b (2026-06-09): 英語ソース多様化に合わせ、title_ja/desc_ja を採用。
-    desc_ja は Sprint 5 ポリシーにより原文 passthrough（英語ソースは英語のまま）。
-    C80 (2026-06-12, Fable review L3): 英語段落に ``lang="ja"`` が付くと
-    typography / 読み上げが崩れるため、title と desc で lang を分離。title は
-    翻訳済 (ja)、desc は原文ソースの言語に従う。
-    """
-    title_ja = article.get("title_ja") or article.get("title") or ""
-    desc_ja = article.get("desc_ja") or article.get("description") or ""
-    source_name = article.get("source_name") or ""
-    url = article.get("url") or ""
-    date_label = _format_publish_date_ja(article.get("pub_date"))
-    if date_label:
-        byline_text = f"出典：{source_name} · {date_label}"
-    else:
-        byline_text = f"出典：{source_name}"
-    title_html = f'<a href="{_esc(url)}" target="_blank" rel="noopener noreferrer">{_esc(title_ja)}</a>' if url else _esc(title_ja)
-    # C80: desc の言語属性を Source.language ベースで決定。``_is_japanese_article``
-    # は source_language を最優先、fallback で name-heuristic を見る（Sprint 5
-    # 設計）。これにより英語ソース desc に ``lang="ja"`` が付く問題を解消。
-    desc_is_ja = _is_japanese_article(article)
-    desc_lang_attr = "" if desc_is_ja else ' lang="en"'
-    return f"""
-      <div class="item" lang="ja">
-        <h5 class="headline-s">{title_html}</h5>
-        <p{desc_lang_attr}>{_esc(desc_ja)}</p>
-        <p class="byline" style="font-size: 11px; color: #666; margin-top: 4px;">{_esc(byline_text)}</p>
-      </div>""".rstrip()
+# C155 (Sprint 13, 2026-08-10): 学術ニュース 3 本の枠を廃止。
+# _render_page4_academic_item / _render_page4_academic_column および
+# scripts/page4/article_rotator.py（3 日ローテーション）を削除した。
+# 第4面は「今日の概念」1 本のみの面になる。
+#
+# C155a 実測: stage2.*.page4 は $0.153/日 ($4.66/月) で、再構想で消える
+# コストとしては最大。学術ニュースは 3 面 R6「学術・科学」と扱う領域が
+# 重なっており、Page IV は概念コラムに純化させる判断（依頼書「新4面」）。
 
 
-def _render_page4_academic_column(articles: list[dict]) -> str:
-    """Render the right column (3 academic articles)."""
-    if not articles:
-        items_html = (
-            '\n      <div class="item" lang="ja">'
-            '\n        <h5 class="headline-s" style="font-style: italic; color: #666;">本日該当なし</h5>'
-            '\n      </div>'
-        )
-    else:
-        items_html = "\n".join(_render_page4_academic_item(a) for a in articles)
-    return f"""
-    <aside class="academic-column" lang="ja">
-      <div class="kicker">学術ニュース</div>
-{items_html}
-    </aside>""".rstrip()
-
-
-def build_page_four_v2(
-    target_date: date,
-    *,
-    pre_evaluated: dict[str, dict] | None = None,
-    displayed_urls_today: set[str] | None = None,
-) -> tuple[str, dict]:
+def build_page_four_v2(target_date: date) -> tuple[str, dict]:
     """Build the full <section class="page page-four"> block.
+
+    C155 (Sprint 13, 2026-08-10): 学術ニュース 3 本を廃止し、「今日の概念」
+    のみの面にした。概念選出ロジック（222 概念 / 60 日除外窓）は不変。
 
     Returns ``(html, telemetry)`` where telemetry contains:
       - concept: the chosen concept dict
       - essay_result: {essay, is_fallback, cost_usd}
-      - articles_result: {articles, from_cache, cost_usd, rotation}
-
-    C49 案A (Sprint 8, 2026-06-01) — ``displayed_urls_today`` を受け取って
-    Page IV academic rotator に渡す。同日に他面（特に Page III R6）で採用
-    された URL を構造的に除外する。
     """
-    # 1) Concept of the week
     concept = page4_concept_selector.select_concept_for_today(today=target_date)
     essay_result = page4_concept_writer.write_essay(concept)
 
-    # 2) Academic 3 articles (rotation)
-    articles_result = page4_rotator.get_today_articles(
-        target_date,
-        pre_evaluated=pre_evaluated,
-        displayed_urls_today=displayed_urls_today,
-    )
-
-    # C36 Step 2b (2026-06-09): 英語ソース多様化に伴い翻訳経路を追加。
-    # title のみ翻訳（Sprint 5 ポリシー）、desc は原文 passthrough。
-    translate_for_render(articles_result["articles"])
-
-    # 3) Render
     concept_html = _render_page4_concept_column(concept, essay_result["essay"])
-    academic_html = _render_page4_academic_column(articles_result["articles"])
 
     page = f"""<section class="page page-four">
     <div class="page-banner"><span class="pg-num">— Page IV —</span> Arts &amp; Letters · A Page for Slow Reading</div>
 
-    <div class="page-four-grid">
+    <div class="page-four-grid page-four-single">
 {concept_html}
-{academic_html}
     </div>
   </section>"""
 
     telemetry = {
         "concept": concept,
         "essay_result": essay_result,
-        "articles_result": articles_result,
     }
     return page, telemetry
 
@@ -801,189 +741,107 @@ def _truncate_to_chars(text: str, n: int = 120) -> str:
 def build_page_five_v2(
     target_date: date,
     *,
-    pre_evaluated: dict[str, dict] | None = None,
-    page_two_headlines: list[dict] | None = None,
     page3_result=None,
-    page4_telemetry: dict | None = None,
 ) -> tuple[str, dict]:
-    """Build the full <section class="page page-five"> block (Columns & Serendipity).
+    """Build the full <section class="page page-five"> block.
+
+    C155 (Sprint 13, 2026-08-10): 第5面を「AIかみやまの一筆」100% にした。
+
+    旧構成は上 40% にセレンディピティ記事（今朝出会った1本）、下 60% に一筆
+    という 2 枠構成で、両者は別々の記事を扱っていた（Sprint 7 Phase 1 Step 2 で
+    独立化）。C155 でセレンディピティ枠は第3面 6 枠目に移設し、第5面は一筆と
+    その参照記事サマリだけの面になる。
+
+    参照記事サマリは ``page5/article_summarizer.py`` が Anthropic API で生成する
+    （300-400 字目安、第6面コラム同等の品質）。一筆本文は従来通り miibo が
+    生成し、両者を並べて表示する。声を混ぜないため、サマリは事実要約に徹する。
 
     Returns (html, telemetry) — telemetry contains:
-      - serendipity (article + category + tie_candidates + cost_usd)
-      - ai_article (AIかみやま 論評対象記事、Sprint 7 Phase 1 Step 2 追加)
-      - column (column_title + column_body + is_fallback + elapsed_ms)
-
-    Sprint 7 Phase 1 Step 2 (2026-05-19):
-    - AIかみやま column の対象記事を serendipity から独立化
-
-    C40 第二弾 (Sprint 8, 2026-05-30):
-    - AIかみやま 候補プールを「当日確定紙面（Page II Today's Headlines +
-      Page III + Page IV 学術記事）」に限定。
-    - 旧 page1_result の candidates_scored 全体参照は廃止。Page I 除外は
-      候補プールに含めないことで実現（C45 D2 と同じ哲学）。
-    - 連続日重複は他面 dedup が連動して自動回避。
+      - ai_article (一筆の論評対象記事)
+      - summary    (参照記事サマリ {summary, is_fallback, cost_usd})
+      - column     (column_title + column_body + is_fallback + elapsed_ms)
     """
     from .page5 import ai_kamiyama_selector as page5_ai_selector
+    from .page5 import article_summarizer as page5_summarizer
 
-    # 1) Select the serendipity article
-    serendipity = page5_serendipity.select_for_today(
-        target_date=target_date, pre_evaluated=pre_evaluated,
-    )
-
-    # 2) Render placeholder if no candidates
-    if serendipity["is_placeholder"]:
-        html = _render_page_five_placeholder()
-        return html, {
-            "serendipity": serendipity,
-            "ai_article": None,
-            "column": None,
-        }
-
-    serendipity_article = serendipity["article"]
-
-    # 3) AIかみやま 専用の記事選定（C40 第二弾 神山案、2026-05-30）。
-    # 候補プールは当日確定紙面：Page II Today's Headlines + Page III R1-R6 +
-    # Page IV 学術記事。Page I は意図的に除外（C45 D2）、Page V serendipity も
-    # 背中合わせ枠なので除外。category フィルタは候補プールが既に編集判断を
-    # 通過しているため skip（eligible_categories=None）。
+    # 1) 一筆の対象記事を選ぶ。
+    #    候補プール = Page III 確定 6 枠 + Page III 不採用の評価済み上位候補。
+    #    後者は Page III が既に採点済なので追加 LLM コストは 0。
     page3_selections = (
         getattr(page3_result, "selections", None) if page3_result is not None else None
     )
-    page4_articles = None
-    if page4_telemetry:
-        page4_articles = (page4_telemetry.get("articles_result") or {}).get("articles")
+    page3_runner_ups = (
+        getattr(page3_result, "runner_up_candidates", None)
+        if page3_result is not None else None
+    )
     ai_article = page5_ai_selector.select_ai_kamiyama_article(
         target_date=target_date,
-        page_two_headlines=page_two_headlines,
         page3_selections=page3_selections,
-        page4_articles=page4_articles,
-        serendipity_article=serendipity_article,
+        page3_runner_ups=page3_runner_ups,
         registry=None,
         eligible_categories=None,
     )
 
-    # 4) AIかみやま column generation via miibo
-    #    ai_article がゼロ件なら fallback column を組み立てる（API は呼ばない）
-    if ai_article is not None:
-        column = page5_ai_kamiyama.write_column(ai_article)
-    else:
-        column = {
-            "column_title": "本日 AIかみやま休載",
-            "column_body": "本日は AIかみやま に渡す独立記事が候補ゼロでした。",
-            "is_fallback": True,
-            "raw_response": None,
-            "elapsed_ms": 0,
-            "ai_kamiyama_called": False,
-            "ai_kamiyama_failed": False,
-            "fallback_used": True,
+    # 2) 候補ゼロなら面ごと休載（miibo も要約 API も呼ばない）
+    if ai_article is None:
+        return _render_page_five_placeholder(), {
+            "ai_article": None,
+            "summary": None,
+            "column": None,
         }
 
-    # Sprint 5 task #5 (2026-05-04): selector は column 生成前に history へ
-    # placeholder 値（false 固定）で書込済。column 生成結果と AIかみやま 記事メタを
-    # 反映するため同じ entry を見つけて上書きする。
-    page5_serendipity.update_history_column_fields(
-        target_date=target_date,
-        article_url=(serendipity_article.get("url") or ""),
-        ai_kamiyama_called=bool(column.get("ai_kamiyama_called", False)),
-        ai_kamiyama_failed=bool(column.get("ai_kamiyama_failed", False)),
-        fallback_used=bool(column.get("fallback_used", False)),
-        ai_kamiyama_url=(ai_article.get("url") if ai_article else None),
-        ai_kamiyama_title=(ai_article.get("title") if ai_article else None),
-        ai_kamiyama_category=(ai_article.get("category") if ai_article else None),
-        ai_kamiyama_source_name=(ai_article.get("source_name") if ai_article else None),
-    )
+    # 3) 参照記事の日本語サマリ（Tribune 側 = Anthropic API）
+    summary = page5_summarizer.summarize_article(ai_article)
 
-    # 5) Render full structure
-    html = _render_page_five(serendipity, ai_article, column)
+    # 4) 一筆本文（miibo）
+    column = page5_ai_kamiyama.write_column(ai_article)
+
+    html = _render_page_five(ai_article, summary, column)
     return html, {
-        "serendipity": serendipity,
         "ai_article": ai_article,
+        "summary": summary,
         "column": column,
     }
 
 
 def _render_page_five(
-    serendipity: dict,
-    ai_article: dict | None,
+    ai_article: dict,
+    summary: dict,
     column: dict,
 ) -> str:
-    """Render Page V: serendipity article (top 40%) + AIかみやま column (bottom 60%).
+    """Render Page V: 参照記事サマリ + AIかみやまの一筆（面全体）。
 
-    Sprint 4 Phase 2: order flipped from Sprint 3 Step D layout (was AI on top).
-
-    Sprint 7 Phase 1 Step 2 (2026-05-19): AIかみやま column の対象記事を
-    serendipity から独立化。下部に「対象記事：title (source)」の 1 行を追加して
-    読者に「AIかみやま が何を論評しているか」を明示。
-    ``ai_article=None`` の場合は対象記事行を省略（AIかみやま 候補ゼロ時の fallback）。
+    C155: 旧 2 枠構成（上=セレンディピティ / 下=一筆）から、一筆 100% + その
+    参照記事サマリ併載に変更。読者が「何への論評か」を紙面内で完結して
+    理解できるようにする。
     """
-    article = serendipity["article"]
-    title = (article.get("title") or "").strip()
-    source_name = (article.get("source_name") or "").strip()
-    url = (article.get("url") or "").strip()
-    # C19 (5/21 神山さん観察): Serendipity の文章が短い。120 字 hardcode
-    # truncate を 300 字に拡張し、RSS の content:encoded があれば description
-    # の代わりにそちらを使う（_get_serendipity_description_text が吸収）。
-    description = _truncate_to_chars(
-        page5_serendipity._get_serendipity_description_text(article), 300,
-    )
-    date_label = _format_publish_date_ja(article.get("pub_date"))
-    if date_label:
-        article_byline = f"出典：{source_name} · {date_label}"
-    else:
-        article_byline = f"出典：{source_name}"
+    title = (ai_article.get("title_ja") or ai_article.get("title") or "").strip()
+    source_name = (ai_article.get("source_name") or "").strip()
+    url = (ai_article.get("url") or "").strip()
+    date_label = _format_publish_date_ja(ai_article.get("pub_date"))
+    byline = f"出典：{source_name} · {date_label}" if date_label else f"出典：{source_name}"
 
-    column_title = column.get("column_title", "")
-    column_body = column.get("column_body", "")
-
-    # Sprint 6: serendipity の article-title を <a> で囲む。元記事タイトルが
-    # 見える場所なので、Q2 設計原則に従いタイトルにリンク。
     title_html = (
         f'<a href="{_esc(url)}" target="_blank" rel="noopener noreferrer">{_esc(title)}</a>'
         if url else _esc(title)
     )
 
-    # AIかみやま 対象記事の参照行（Sprint 7 Phase 1 Step 2）
-    ai_source_ref_html = ""
-    if ai_article:
-        ai_title = (ai_article.get("title") or "").strip()
-        ai_source = (ai_article.get("source_name") or "").strip()
-        ai_url = (ai_article.get("url") or "").strip()
-        if ai_title:
-            ai_title_html = (
-                f'<a href="{_esc(ai_url)}" target="_blank" rel="noopener noreferrer">{_esc(ai_title)}</a>'
-                if ai_url else _esc(ai_title)
-            )
-            source_suffix = f"（{_esc(ai_source)}）" if ai_source else ""
-            ai_source_ref_html = (
-                f'<p class="ai-source-ref">対象記事：{ai_title_html}{source_suffix}</p>'
-            )
-
-    # AIかみやま 対象記事のサマリ（Sprint 8, 5/20 神山さん観察 C16）。
-    # 対象記事は独立選定で他面に乗らないため、概要が無いと読者に
-    # 「何への論評か」が伝わらない。description を 200 字で表示。
-    ai_article_summary_html = ""
-    if ai_article:
-        ai_desc = _truncate_to_chars(ai_article.get("description") or "", 200)
-        if ai_desc:
-            ai_article_summary_html = (
-                f'<p class="ai-article-summary">{_esc(ai_desc)}</p>'
-            )
+    column_title = column.get("column_title", "")
+    column_body = column.get("column_body", "")
 
     return f"""<section class="page page-five">
-    <div class="page-banner"><span class="pg-num">— Page V —</span> Columns &amp; Serendipity · A Room with a Different Window</div>
+    <div class="page-banner"><span class="pg-num">— Page V —</span> AI Kamiyama's Column · One Article, Read Closely</div>
 
     <div class="page-five-content" lang="ja">
-      <aside class="serendipity-article">
-        <div class="kicker">今朝出会った1本</div>
+      <aside class="reference-article">
+        <div class="kicker">一筆が読んだ記事</div>
         <h3 class="article-title">{title_html}</h3>
-        <p class="description">{_esc(description)}</p>
-        <p class="serendipity-byline">{_esc(article_byline)}</p>
+        <p class="reference-summary">{_esc(summary.get("summary", ""))}</p>
+        <p class="reference-byline">{_esc(byline)}</p>
       </aside>
 
       <article class="ai-kamiyama-column">
         <div class="kicker">AIかみやまの一筆</div>
-        {ai_source_ref_html}
-        {ai_article_summary_html}
         <h3 class="column-title">{_esc(column_title)}</h3>
         <div class="column-body">
           <p>{_esc(column_body)}</p>
@@ -995,13 +853,13 @@ def _render_page_five(
 
 
 def _render_page_five_placeholder() -> str:
-    """Render the both-sides-empty placeholder (no serendipity candidate)."""
+    """Render the 休載 placeholder (一筆の対象記事が候補ゼロ)."""
     return """<section class="page page-five">
-    <div class="page-banner"><span class="pg-num">— Page V —</span> Columns &amp; Serendipity · A Room with a Different Window</div>
+    <div class="page-banner"><span class="pg-num">— Page V —</span> AI Kamiyama's Column · One Article, Read Closely</div>
 
     <div class="page-five-placeholder" lang="ja">
-      <p>本日は出会いがありませんでした。</p>
-      <p>明日の更新をお待ちください。</p>
+      <p>本日 AIかみやま は休載です。</p>
+      <p>一筆に渡す記事の候補がありませんでした。</p>
     </div>
   </section>"""
 
@@ -1597,7 +1455,7 @@ def _print_page3_report(page3_result) -> None:
     print(f"  cost (Stage 2 LLM): ${page3_result.cost_usd:.4f}")
     print(f"  placeholders: {page3_result.placeholder_count}/6")
     print()
-    for region in PAGE3_REGIONS:
+    for region in PAGE3_DISPLAY_SLOTS:
         sel = page3_result.selections.get(region)
         display = PAGE3_REGION_DISPLAY_NAMES[region]
         if sel is None or sel.article is None:
@@ -1765,7 +1623,7 @@ def main(argv: list[str] | None = None) -> int:
             print("Translating Page II articles...", file=sys.stderr)
             translate_for_render(page2_articles)
 
-    # 4b) Page IV pipeline (Sprint 3 Step B): concept + 3 academic articles.
+    # 4b) Page IV pipeline: 今日の概念のみ（C155 で学術ニュース 3 本を廃止）。
     page_four_html: str | None = None
     page_four_telemetry: dict | None = None
     page_five_html: str | None = None
@@ -1773,34 +1631,17 @@ def main(argv: list[str] | None = None) -> int:
     page_six_html: str | None = None
     page_six_telemetry: dict | None = None
     if not args.skip_page4:
-        print("Building Page IV (concept + 3 academic articles)...", file=sys.stderr)
-        # C155: page1_master 廃止で pre_evaluated 共有元が消滅。page4 は自前評価。
-        pre_evaluated_for_page4: dict[str, dict] | None = None
-        # C49 案A (Sprint 8, 2026-06-01): Page III (page3_result.selections) で
-        # 採用済の URL を Page IV に渡して構造的に除外する。5/15-19 / 5/25 / 5/31
-        # で観測された集英社新書プラス記事の 3 面 / 4 面 同時表示（30 日中 7 件=
-        # 23%）への対処。C40 案1+案2 / C40 第二弾 / C45 D2 と同じ「当日確定他面
-        # 情報を後段 context に入れる」哲学の延長。
-        page4_other_pages_urls: set[str] = set()
-        if page3_result is not None:
-            for sel in page3_result.selections.values():
-                art = getattr(sel, "article", None)
-                if art and art.get("url"):
-                    page4_other_pages_urls.add(art["url"])
+        print("Building Page IV (今日の概念)...", file=sys.stderr)
+        # C155: 学術ニュース枠の廃止により、Page IV は外部記事を一切持たない。
+        # C49 案A の cross-page dedup（Page III 採用 URL の除外）は対象が
+        # 消えたため不要になった。
         try:
-            page_four_html, page_four_telemetry = build_page_four_v2(
-                target,
-                pre_evaluated=pre_evaluated_for_page4,
-                displayed_urls_today=page4_other_pages_urls or None,
-            )
+            page_four_html, page_four_telemetry = build_page_four_v2(target)
             essay_meta = page_four_telemetry["essay_result"]
-            articles_meta = page_four_telemetry["articles_result"]
             print(
                 f"  Page IV: concept={page_four_telemetry['concept']['id']}, "
                 f"essay_fallback={essay_meta['is_fallback']}, "
-                f"articles={len(articles_meta['articles'])}/3, "
-                f"from_cache={articles_meta['from_cache']}, "
-                f"cost=${essay_meta['cost_usd'] + articles_meta['cost_usd']:.4f}",
+                f"cost=${essay_meta['cost_usd']:.4f}",
                 file=sys.stderr,
             )
         except Exception as e:
@@ -1823,43 +1664,33 @@ def main(argv: list[str] | None = None) -> int:
     # Headlines には RSS の英語 description が翻訳も要約もされずに出ていた。
     # 廃止によりこの品質問題も同時に解消される。
 
-    # 4c) Page V pipeline (Sprint 4: Columns & Serendipity, was Sprint 3 Step D)
+    # 4c) Page V pipeline: AIかみやまの一筆 100% + 参照記事サマリ（C155）
     if not args.skip_page5:
         print(
-            "Building Page V (serendipity + AIかみやま column via miibo)...",
+            "Building Page V (参照記事サマリ + AIかみやまの一筆 via miibo)...",
             file=sys.stderr,
         )
-        # C155: page1_master 廃止で pre_evaluated 共有元が消滅。page5 は自前評価。
-        pre_evaluated_for_page5: dict[str, dict] | None = None
         try:
             page_five_html, page_five_telemetry = build_page_five_v2(
-                target,
-                pre_evaluated=pre_evaluated_for_page5,
-                page3_result=page3_result,
-                page4_telemetry=page_four_telemetry,
+                target, page3_result=page3_result,
             )
-            sty = page_five_telemetry["serendipity"]
             ai_art = page_five_telemetry.get("ai_article")
             col = page_five_telemetry.get("column")
-            if sty["is_placeholder"]:
-                print(
-                    f"  Page V: PLACEHOLDER ({sty['category']}, "
-                    f"tied={sty['tie_candidates']}, no candidates)",
-                    file=sys.stderr,
-                )
+            summ = page_five_telemetry.get("summary")
+            if ai_art is None:
+                print("  Page V: PLACEHOLDER (一筆の対象記事が候補ゼロ)", file=sys.stderr)
             else:
-                article = sty["article"]
                 col_status = (
                     "fallback" if col["is_fallback"]
                     else f"AIかみやま OK ({col['elapsed_ms']}ms)"
                 )
-                ai_src = (
-                    ai_art.get("source_name", "")[:20] if ai_art else "(no candidate)"
+                summ_status = (
+                    "fallback" if summ.get("is_fallback")
+                    else f"{len(summ.get('summary') or '')}字"
                 )
                 print(
-                    f"  Page V: serendipity={sty['category']} ({article.get('source_name', '')[:20]}), "
-                    f"ai_kamiyama={ai_src}, "
-                    f"column={col_status}",
+                    f"  Page V: ai_kamiyama={ai_art.get('source_name', '')[:20]}, "
+                    f"summary={summ_status}, column={col_status}",
                     file=sys.stderr,
                 )
         except Exception as e:
@@ -1876,18 +1707,23 @@ def main(argv: list[str] | None = None) -> int:
         # （page1 の 7 ソースは business/geopolitics 系で page6 の
         #   books/music/outdoor とほぼ重ならず、共有の実効は元々小さかった）
         pre_evaluated_for_page6: dict[str, dict] | None = None
-        # C139 (Sprint 12, 2026-07-10): 当日 Page V serendipity 記事の URL を
-        # Page VI に渡して同日 cross-page dedup を行う。7/10 archive で
-        # Stereogum URL が Page V + Page VI music の両方に採用された事象
-        # (C138 調査) への恒久対策。Page V build（4c 節）が Page VI build
-        # より先に実行される順序を前提とする。Page V が placeholder / 例外で
-        # 記事を選ばなかった場合は set() を渡し、dedup は no-op。
+        # C139 (Sprint 12, 2026-07-10) → C155 で再配線。
+        #
+        # 旧: Page V serendipity 記事の URL を Page VI に渡す（Page V → Page VI 順）。
+        # 新: セレンディピティ枠は Page III に移ったため、**Page III の全採用
+        #     URL**（5 領域 + セレンディピティ枠）を Page VI に渡す。build 順序は
+        #     Page III (§3b) → Page VI (§4d) で Page III が先なので順序は保証済み。
+        #     Page III が None / 例外の場合は set() で dedup は no-op。
+        #
+        # C138 で観測された Stereogum の Page V / Page VI music 二重採用は、
+        # 移設後は「Page III セレンディピティ枠 / Page VI music」の衝突として
+        # 同じ経路で防がれる。
         page6_other_pages_urls: set[str] = set()
-        if page_five_telemetry is not None:
-            sty = page_five_telemetry.get("serendipity", {})
-            article = sty.get("article") if isinstance(sty, dict) else None
-            if article and article.get("url"):
-                page6_other_pages_urls.add(article["url"])
+        if page3_result is not None:
+            for sel in page3_result.selections.values():
+                art = getattr(sel, "article", None)
+                if art and art.get("url"):
+                    page6_other_pages_urls.add(art["url"])
         try:
             page_six_html, page_six_telemetry = build_page_six_v2(
                 target, pre_evaluated=pre_evaluated_for_page6,
@@ -2028,24 +1864,26 @@ def main(argv: list[str] | None = None) -> int:
                 page2_urls_displayed[company_key] = sel.article.get("url")
     page3_urls_displayed: list[str | None] = []
     if page3_result is not None:
-        for region in PAGE3_REGIONS:
+        for region in PAGE3_DISPLAY_SLOTS:
             sel = page3_result.selections.get(region)
             if sel is not None and sel.article is not None:
                 page3_urls_displayed.append(sel.article.get("url"))
             else:
                 page3_urls_displayed.append(None)
+    # C155: Page IV は「今日の概念」のみで外部記事を持たないため、
+    # displayed_urls への記録対象がなくなった（page4_urls は常に空）。
     page4_urls_displayed: list[str] = []
-    if page_four_telemetry is not None:
-        for art in page_four_telemetry["articles_result"]["articles"]:
-            url = art.get("url")
-            if url:
-                page4_urls_displayed.append(url)
+    # C155: 第5面の serendipity 枠は Page III へ移設。第5面が持つ記事は
+    # 「一筆の参照記事」1 本で、これは Page III 由来（確定枠 or runner-up）の
+    # ため page3_urls 側で既に記録済み。二重記録を避けるため page5_url は
+    # 一筆の参照記事が runner-up 由来だった場合のみ記録する。
     page5_url_displayed: str | None = None
     if page_five_telemetry is not None:
-        sty5 = page_five_telemetry.get("serendipity") or {}
-        art5 = sty5.get("article")
-        if art5:
-            page5_url_displayed = art5.get("url")
+        ai_art5 = page_five_telemetry.get("ai_article")
+        if ai_art5 and ai_art5.get("url"):
+            url5 = ai_art5["url"]
+            if url5 not in [u for u in page3_urls_displayed if u]:
+                page5_url_displayed = url5
     page6_urls_displayed: dict[str, str | None] = {}
     if page_six_telemetry is not None:
         for area in ("books", "music", "outdoor"):
@@ -2060,7 +1898,7 @@ def main(argv: list[str] | None = None) -> int:
         page1_urls=page1_urls_displayed,
         page2_urls_by_company=page2_urls_displayed,
         page3_urls=page3_urls_displayed if page3_result is not None else None,
-        page4_urls=page4_urls_displayed if page_four_telemetry is not None else None,
+        page4_urls=None,  # C155: Page IV は外部記事を持たない
         page5_url=page5_url_displayed,
         page6_urls=page6_urls_displayed if page_six_telemetry is not None else None,
         headlines_urls=None,
@@ -2099,7 +1937,7 @@ def main(argv: list[str] | None = None) -> int:
     if page3_result is not None:
         print()
         print("=== Page III summary ===")
-        for region in PAGE3_REGIONS:
+        for region in PAGE3_DISPLAY_SLOTS:
             sel = page3_result.selections.get(region)
             display = PAGE3_REGION_DISPLAY_NAMES[region]
             if sel is None or sel.article is None:
@@ -2124,38 +1962,30 @@ def main(argv: list[str] | None = None) -> int:
         print("=== Page IV summary ===")
         c = page_four_telemetry["concept"]
         e = page_four_telemetry["essay_result"]
-        ar = page_four_telemetry["articles_result"]
         print(f"  Concept of the Week: {c['id']}  ({c['name_ja']} / {c['name_en']})")
         print(f"    domain: {c['domain']}, difficulty: {c['difficulty']}")
         print(f"    essay length: {len(e['essay'])} chars, "
               f"fallback: {e['is_fallback']}, cost: ${e['cost_usd']:.4f}")
-        print(f"  Academic articles ({len(ar['articles'])}/3, from_cache={ar['from_cache']}):")
-        for i, a in enumerate(ar["articles"], 1):
-            score = a.get("final_score", 0.0)
-            print(f"    [{i}] score={score:6.2f}  ({a.get('source_name', '')[:25]})")
-            print(f"        title: {a.get('title', '')[:70]}")
-        print(f"  cost (Page IV Stage 2 + concept LLM): "
-              f"${e['cost_usd'] + ar['cost_usd']:.4f}")
 
     if page_five_telemetry is not None:
         print()
         print("=== Page V summary ===")
-        sty5 = page_five_telemetry["serendipity"]
+        art5 = page_five_telemetry.get("ai_article")
         col5 = page_five_telemetry.get("column")
-        print(f"  category   : {sty5['category']}  "
-              f"(tied: {sty5['tie_candidates']})")
-        if sty5["is_placeholder"]:
-            print("  PLACEHOLDER (no candidates)")
+        sum5 = page_five_telemetry.get("summary")
+        if art5 is None:
+            print("  PLACEHOLDER (一筆の対象記事が候補ゼロ)")
         else:
-            art = sty5["article"]
-            print(f"  article    : {art.get('source_name', '')[:30]}")
-            print(f"  title      : {art.get('title', '')[:70]}")
-            print(f"  pool size  : {sty5['selected_from_pool_size']}")
+            print(f"  参照記事   : {art5.get('source_name', '')[:30]}")
+            print(f"  title      : {art5.get('title', '')[:70]}")
+            if sum5 is not None:
+                tag = "(fallback)" if sum5["is_fallback"] else "(LLM)"
+                print(f"  サマリ     : {len(sum5['summary'])}字 {tag}  "
+                      f"cost=${sum5.get('cost_usd', 0.0):.4f}")
             if col5 is not None:
                 tag = "(fallback)" if col5["is_fallback"] else f"({col5['elapsed_ms']}ms)"
-                print(f"  column     : {col5['column_title']} {tag}")
+                print(f"  一筆       : {col5['column_title']} {tag}")
                 print(f"  body[:60]  : {col5['column_body'][:60]}")
-        print(f"  cost (page5 stage2 LLM): ${sty5.get('cost_usd', 0.0):.4f}")
         print("  miibo API cost: 別系統（神山さんの会社契約定額枠内）")
 
     if page_six_telemetry is not None:

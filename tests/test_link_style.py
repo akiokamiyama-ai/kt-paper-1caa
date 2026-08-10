@@ -123,53 +123,47 @@ def test_page_three_item_without_url_plain_title():
 
 
 # ---------------------------------------------------------------------------
-# (e) Page V serendipity article-title
+# (e) Page V 参照記事タイトルのリンク
+#
+# C155 (Sprint 13, 2026-08-10): 第5面が「AIかみやまの一筆」100% に。
+# _render_page_five の signature は (ai_article, summary, column) の 3 引数。
+# 上段は serendipity ではなく「一筆が読んだ記事」の参照サマリになった。
 # ---------------------------------------------------------------------------
 
-def test_page_five_serendipity_title_linked():
-    """Sprint 7 Phase 1 Step 2 (2026-05-19): _render_page_five は
-    3 引数 (serendipity, ai_article, column) signature に変更."""
-    serendipity = {
-        "is_placeholder": False,
-        "article": {
-            "title": "Sauna Article",
-            "description": "Sauna body excerpt...",
-            "source_name": "AXIS",
-            "url": "https://example.test/p5",
-            "pub_date": "2026-05-01",
-        },
-    }
+def test_page_five_reference_title_linked():
     ai_article = {
         "title": "Strategy Note",
         "source_name": "Economist",
         "url": "https://example.test/ai-art",
-        "description": "対象記事の概要テキスト。AIかみやま が論評する元記事の要旨。",
+        "description": "対象記事の概要テキスト。",
+        "pub_date": "2026-05-01",
+    }
+    summary = {
+        "summary": "この記事は経営戦略の転換について論じている。",
+        "is_fallback": False,
+        "cost_usd": 0.01,
     }
     column = {
         "column_title": "Sauna Column Title",
         "column_body": "Column body...",
     }
-    html = regen._render_page_five(serendipity, ai_article, column)
+    html = regen._render_page_five(ai_article, summary, column)
     title_linked = (
         '<h3 class="article-title">'
-        '<a href="https://example.test/p5"' in html
+        '<a href="https://example.test/ai-art"' in html
     )
     column_title_plain = (
         '<h3 class="column-title">Sauna Column Title</h3>' in html
     )
-    ai_source_ref = (
-        'class="ai-source-ref"' in html
-        and 'https://example.test/ai-art' in html
+    summary_shown = (
+        'class="reference-summary"' in html
+        and "経営戦略の転換について論じている" in html
     )
-    # Sprint 8 (2026-05-20, C16): 対象記事のサマリ表示。
-    ai_article_summary = (
-        'class="ai-article-summary"' in html
-        and "対象記事の概要テキスト" in html
-    )
-    _check("e1 serendipity article-title wrapped in <a>", title_linked)
+    byline_shown = 'class="reference-byline"' in html and "Economist" in html
+    _check("e1 参照記事 article-title wrapped in <a>", title_linked)
     _check("e2 AIかみやま column-title is plain (no <a>)", column_title_plain)
-    _check("e3 AIかみやま ai-source-ref includes ai_article URL", ai_source_ref)
-    _check("e4 AIかみやま ai-article-summary に対象記事 description", ai_article_summary)
+    _check("e3 reference-summary に LLM サマリが入る", summary_shown)
+    _check("e4 reference-byline に出典が入る", byline_shown)
 
 
 # ---------------------------------------------------------------------------
@@ -232,8 +226,8 @@ def main() -> int:
     test_page_three_item_with_url_has_link()
     test_page_three_item_without_url_plain_title()
     print()
-    print("(e) Page V serendipity article-title:")
-    test_page_five_serendipity_title_linked()
+    print("(e) Page V 参照記事タイトル:")
+    test_page_five_reference_title_linked()
     print()
     print("(f) Page VI leisure column byline:")
     test_leisure_column_byline_source_linked()

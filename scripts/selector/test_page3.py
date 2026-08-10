@@ -129,12 +129,22 @@ def test_region_R3_AI_regulation():
            page3._region_for(a) == "R3", f"got {page3._region_for(a)}")
 
 
-def test_region_R2_japan_macro():
+def test_region_R2_removed_falls_through():
+    """C155: R2「国内マクロ・産業」廃止後、旧 R2 記事の行き先を固定する.
+
+    判定順序 R6→R5→R3→R4→R1 を通り、R4 キーワードを持たない日本マクロ記事は
+    最終的に R1 に落ちる（_matches_R1 のキーワード一致 or geopolitics 既定）。
+    重要なのは「どこかの領域に必ず入る or None になる」ことを明示的に
+    決めておくこと。ここでは None にならないことを検証する。
+    """
     a = _art(source_name="日本経済新聞", category="business",
              title="生産年齢人口、初の60%割れ",
              description="2025年国勢調査確定値、人口減少が加速")
-    _check("a6 R2: 日本経済新聞 + 人口/生産年齢 → R2",
-           page3._region_for(a) == "R2", f"got {page3._region_for(a)}")
+    got = page3._region_for(a)
+    _check("a6 C155: 旧 R2 記事は R2 に振られない",
+           got != "R2", f"got {got}")
+    _check("a6b C155: REGIONS に R2 が存在しない",
+           "R2" not in page3.REGIONS, f"REGIONS={page3.REGIONS}")
 
 
 def test_region_R4_japan_industry():
@@ -149,7 +159,7 @@ def test_region_R1_geopolitics_default():
     a = _art(source_name="Foresight", category="geopolitics",
              title="UAEのOPEC脱退、市場支配力の行方",
              description="OPECプラスの枠組みが揺らぐ")
-    # geopolitics で R6/R5/R3/R2/R4 にマッチしなければ R1
+    # geopolitics で R6/R5/R3/R4 にマッチしなければ R1
     _check("a8 R1: geopolitics + OPEC → R1",
            page3._region_for(a) == "R1", f"got {page3._region_for(a)}")
 
@@ -224,7 +234,7 @@ def test_kicker_title_location_extraction():
 
 def test_kicker_title_japanese_location():
     a = _art(source_name="日本経済新聞", title="東京・人口断崖：生産年齢人口割れ")
-    k = page3._generate_kicker(a, "R2")
+    k = page3._generate_kicker(a, "R4")
     _check("c2 kicker: title 和文地名 '東京' 抽出",
            k == "東京", f"got {k!r}")
 
@@ -329,11 +339,6 @@ def _make_full_six_region_set() -> list[dict]:
              title="Currency wars and the dollar's future",
              description="An analysis on global monetary order, IMF and BRICS",
              final_score=55),
-        # R2 国内マクロ
-        _art(url="r2", source_name="日本経済新聞", category="business",
-             title="春闘賃上げ率、過去最高水準に",
-             description="春闘とGDP動向、日銀の物価判断",
-             final_score=52),
         # R3 国際規制
         _art(url="r3", source_name="The Economist", category="business",
              title="GDPR enforcement intensifies in 2026",
@@ -363,17 +368,42 @@ def _make_mock_fetcher(articles: list[dict]):
     return fetcher
 
 
-def test_pipeline_all_six_regions_filled():
+def _mock_serendipity(article: dict | None = None):
+    """C155: 6 枠目 serendipity selector のモック（select_for_today 互換）."""
+    def selector(*, target_date=None, **kwargs):
+        if article is None:
+            return {"article": None, "category": "music",
+                    "is_placeholder": True, "cost_usd": 0.0}
+        return {"article": dict(article), "category": "music",
+                "is_placeholder": False, "cost_usd": 0.0}
+    return selector
+
+
+_SER_ARTICLE = {
+    "url": "ser1", "source_name": "Pitchfork", "category": "music",
+    "title": "An album that rewires how you hear rhythm",
+    "description": "A long-form review of a quietly radical record",
+    "final_score": 44,
+}
+
+
+def test_pipeline_all_six_slots_filled():
+    """C155: 5 領域 + セレンディピティ = 6 枠すべて埋まる."""
     fetcher = _make_mock_fetcher(_make_full_six_region_set())
     result = page3.run_page3_pipeline(
         target_date=date(2026, 5, 2),
         fetcher=fetcher,
         write_log=False,
+        serendipity_selector=_mock_serendipity(_SER_ARTICLE),
     )
     filled = sum(1 for s in result.selections.values() if s.article is not None)
     ok = filled == 6 and result.placeholder_count == 0
-    _check("e1 pipeline: 6 regions all filled", ok,
+    _check("e1 pipeline: 5 領域 + SER = 6 枠すべて充填", ok,
            f"filled={filled}, placeholders={result.placeholder_count}")
+    _check("e1b pipeline: SER 枠に serendipity 記事が入る",
+           result.selections["SER"].article is not None
+           and result.selections["SER"].article["url"] == "ser1",
+           f"SER={result.selections['SER'].article}")
 
 
 def test_pipeline_one_region_empty():
@@ -385,6 +415,7 @@ def test_pipeline_one_region_empty():
         target_date=date(2026, 5, 2),
         fetcher=fetcher,
         write_log=False,
+        serendipity_selector=_mock_serendipity(_SER_ARTICLE),
     )
     ok = (
         result.selections["R6"].article is None
@@ -402,6 +433,7 @@ def test_pipeline_all_empty():
         target_date=date(2026, 5, 2),
         fetcher=fetcher,
         write_log=False,
+        serendipity_selector=_mock_serendipity(None),
     )
     ok = result.placeholder_count == 6 and result.candidates_total == 0
     _check("e3 pipeline: empty fetch → 6 placeholders", ok,
@@ -415,26 +447,28 @@ def test_pipeline_dedup_integration():
     result = page3.run_page3_pipeline(
         target_date=date(2026, 5, 2),
         fetcher=fetcher,
-        displayed_urls_today={"r1", "r2"},  # R1 + R2 を当日 dedup
+        displayed_urls_today={"r1", "r3"},  # R1 + R3 を当日 dedup
         write_log=False,
+        serendipity_selector=_mock_serendipity(_SER_ARTICLE),
     )
     ok = (
         result.selections["R1"].article is None
-        and result.selections["R2"].article is None
-        and result.selections["R3"].article is not None
+        and result.selections["R3"].article is None
+        and result.selections["R4"].article is not None
     )
-    _check("e4 pipeline: dedup removes R1+R2, R3+ remain", ok,
-           f"R1={result.selections['R1'].article}, R2={result.selections['R2'].article}")
+    _check("e4 pipeline: dedup removes R1+R3, R4+ remain", ok,
+           f"R1={result.selections['R1'].article}, R3={result.selections['R3'].article}")
 
 
 def test_pipeline_warning_on_2plus_placeholders():
     """2 領域以上 placeholder で stderr WARNING が出るか（exception を上げない）。"""
-    arts = _make_full_six_region_set()[:3]  # 最初の3つだけ → R4/R5/R6 は空
+    arts = _make_full_six_region_set()[:2]  # 最初の2つだけ → 残りは空
     fetcher = _make_mock_fetcher(arts)
     result = page3.run_page3_pipeline(
         target_date=date(2026, 5, 2),
         fetcher=fetcher,
         write_log=False,
+        serendipity_selector=_mock_serendipity(None),
     )
     ok = result.placeholder_count >= 2  # warning は stderr 経由
     _check("e5 pipeline: 2+ placeholders triggers WARNING (no exception)", ok,
@@ -601,7 +635,7 @@ def main() -> int:
     test_region_R5_books_default()
     test_region_R5_aeon_no_R6_keyword()
     test_region_R3_AI_regulation()
-    test_region_R2_japan_macro()
+    test_region_R2_removed_falls_through()
     test_region_R4_japan_industry()
     test_region_R1_geopolitics_default()
     test_region_none_unmatched()
@@ -630,7 +664,7 @@ def main() -> int:
 
     print()
     print("(e) run_page3_pipeline:")
-    test_pipeline_all_six_regions_filled()
+    test_pipeline_all_six_slots_filled()
     test_pipeline_one_region_empty()
     test_pipeline_all_empty()
     test_pipeline_dedup_integration()

@@ -53,10 +53,14 @@ def test_yaml_loads_as_list_of_219():
     Sprint 9 C65 (2026-06-06): 神山さんが「掘りたい」と発言した概念を
     都度追加するパターン第一弾、217 → 219（不二一元論、マルチアライメント）。
     アクターネットワークは既に id=actor_network_theory で登録済のため dedup。
+
+    C155 (Sprint 13, 2026-08-10): その後も概念追加が続き現在 222 件。
+    件数を固定値でハードコードすると追加のたびに落ちるため、
+    「下限を満たすこと」＋「id 重複が無いこと」の検証に変更した。
     """
     concepts = concept_selector.load_concepts()
-    _check("a1 yaml loads as list of 219 (Sprint 9 C65 +2)",
-           isinstance(concepts, list) and len(concepts) == 219,
+    _check(f"a1 yaml loads as list (>= 219 件, 現在 {len(concepts)} 件)",
+           isinstance(concepts, list) and len(concepts) >= 219,
            f"got len={len(concepts) if isinstance(concepts, list) else type(concepts).__name__}")
 
 
