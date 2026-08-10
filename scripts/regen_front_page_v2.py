@@ -302,7 +302,8 @@ def build_page_one_placeholder(*, target_date: date) -> str:
     return f"""<section class="page page-one">
     <div class="page-banner"><span class="pg-num">— Page I —</span> Essay &amp; Pivotal · A Week with One Question</div>
 
-    <div class="page-one-placeholder" lang="ja" data-date="{date_label}">
+    <div class="page-one-placeholder" lang="ja" data-date="{date_label}"
+         style="padding: 48px 24px; text-align: center; color: #666; font-style: italic;">
       <p>本日の第1面は休載です。</p>
       <p>今週の主軸記事が未登録のため、論考を生成できませんでした。</p>
     </div>

@@ -158,37 +158,12 @@ a:visited {{
 
 # ======================================================================
 # PAGE_ONE
+#
+# C155 (Sprint 13, 2026-08-10): PAGE_ONE_CSS / PAGE_ONE_CSS_MARKER を削除。
+# v2 の Page I（トップ1本 + セカンド3本、.article-title-original 等）が
+# 廃止され、Page I の CSS は page1_v3.renderer.PAGE_ONE_V3_CSS が担当する。
+# v2 が出す休載プレースホルダは inline style で足りるため専用 CSS を持たない。
 # ======================================================================
-
-PAGE_ONE_CSS_MARKER = "/* === Page I title formatting (Sprint 5, 2026-05-03) === */"
-
-PAGE_ONE_CSS = f"""
-{PAGE_ONE_CSS_MARKER}
-.article-title-original {{
-  font-family: 'Noto Serif JP', 'Times New Roman', serif;
-  font-size: 22px;
-  font-weight: 700;
-  line-height: 1.3;
-  margin: 0 0 6px;
-}}
-.article-title-japanese {{
-  font-family: 'Noto Serif JP', serif;
-  font-size: 13px;
-  font-weight: 400;
-  color: #666;
-  line-height: 1.5;
-  margin: 0 0 12px;
-  padding-left: 2px;
-}}
-/* Top の lead-story では h2.headline-xl をそのまま original 用に流用、サイズだけ拡張 */
-.lead-story h2.article-title-original {{
-  font-size: 36px;
-  line-height: 1.2;
-}}
-.secondaries .col h3.article-title-original {{
-  font-size: 20px;
-}}
-"""
 
 # ======================================================================
 # PAGE_TWO
@@ -216,87 +191,8 @@ PAGE_TWO_CSS = f"""
   display: block;
 }}
 
-/* Sprint 7 Phase 2 (2026-05-19): 2 面下段 Today's Headlines。
-   3 社の朝会セクションの下に、Page I/III 採用記事を除く許可ソース
-   (NHK 主要/経済、Yahoo! 経済、BBC、Economist) から top 3 を掲載。 */
-.todays-headlines {{
-  margin-top: 32px;
-  padding-top: 20px;
-  border-top: 1px solid #ccc;
-}}
-.todays-headlines .headlines-banner {{
-  font-family: 'Playfair Display', serif;
-  font-size: 14px;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  margin: 0 0 12px;
-  text-align: center;
-}}
-.todays-headlines .headlines-list {{
-  /* 5/20 神山さん観察 (C13): 新聞らしい 3 段組み。
-     5/19 の縦 1 列は Code の誤解釈、横並びの段組みが本来の意図。 */
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-}}
-.todays-headlines .headline-item {{
-  margin-bottom: 0;
-  padding-bottom: 0;
-  border-bottom: none;
-  border-right: 1px solid #ccc;
-  padding-right: 24px;
-}}
-.todays-headlines .headline-item:last-child {{
-  border-right: none;
-  padding-right: 0;
-}}
-@media (max-width: 768px) {{
-  /* 媒体特性: スマホでは段組みを解いて縦並び。 */
-  .todays-headlines .headlines-list {{
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }}
-  .todays-headlines .headline-item {{
-    border-right: none;
-    padding-right: 0;
-    padding-bottom: 16px;
-    border-bottom: 1px dotted #ddd;
-  }}
-  .todays-headlines .headline-item:last-child {{
-    border-bottom: none;
-    padding-bottom: 0;
-  }}
-}}
-.todays-headlines .headline-title {{
-  display: block;
-  font-family: 'Noto Serif JP', 'Old Standard TT', serif;
-  font-weight: 700;
-  font-size: 16px;  /* 5/19 神山さん観察「縦割り格上げ」: 14 → 16 */
-  line-height: 1.5;
-  margin: 0 0 6px;
-}}
-.todays-headlines .headline-title a {{
-  color: inherit;
-  text-decoration: none;
-  border-bottom: 1px dotted var(--ink-soft);
-}}
-.todays-headlines .headline-title a:hover {{
-  border-bottom-style: solid;
-}}
-.todays-headlines .headline-summary {{
-  font-size: 12px;
-  color: #333;
-  line-height: 1.7;
-  margin: 4px 0;
-}}
-.todays-headlines .headline-byline {{
-  display: block;
-  font-size: 11px;
-  color: #888;
-}}
+/* C155 (Sprint 13, 2026-08-10): Today's Headlines (.todays-headlines 一式) の
+   CSS を削除。第2面は 3 社ブリーフィングのみになった。 */
 """
 
 # ======================================================================
