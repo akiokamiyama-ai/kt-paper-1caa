@@ -128,7 +128,7 @@ def test_generate_column_eval_guide_in_system():
     for area, expected_phrase in (
         ("books", "純文学"),
         ("music", "Radiohead"),
-        ("outdoor", "ウルトラライト"),
+        ("outdoor", "ロングトレイル"),  # C155: guide 改訂に追随（旧「ウルトラライト」）
     ):
         with _StubLLM(text=_good_column_json()) as stub:
             leisure_recommender._generate_column(area, article)

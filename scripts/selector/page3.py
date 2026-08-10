@@ -1,22 +1,28 @@
 """Page 3 (中面 General News) selection pipeline.
 
-Implements ``docs/page3_design_v1.md`` v1.0 — 6領域 × 各1本の領域配分。
+C155 (Sprint 13, 2026-08-10) で 6領域 → **5領域 + セレンディピティ 1 枠** に再構成。
 
-Pipeline (per ``docs/page3_design_v1.md`` §4):
+Pipeline:
 
 * business.md / geopolitics.md / academic.md / books.md の High+Medium を
   領域横断的に取得（``default_fetcher``）。
 * Stage 1（機械フィルタ）→ Stage 2（美意識 LLM）→ Stage 3（final_score 統合）。
-  Stage 2 結果は ``pre_evaluated`` キャッシュ経由で第1面と共有可能。
-* dedup：当日の page1/page2 で選定された URL を除外、過去 N=7 日に
-  page3 で表示された URL を除外。
-* 領域振分け（``_region_for``、判定順序 R6→R5→R3→R2→R4→R1）。
+* dedup：当日の page2 で選定された URL を除外、過去 N=7 日に page3 で
+  表示された URL を除外。
+* 領域振分け（``_region_for``、判定順序 R6→R5→R3→R4→R1）。
 * 各領域内で final_score 上位1本を選定。候補なし領域は ``None``。
+* 6 枠目は ``scripts/selector/serendipity.py`` が「過去 30 日で最も表示が
+  少ないカテゴリ」から抽選（旧第5面上段「今朝出会った1本」を移設）。
 * kicker はルールベース（``_generate_kicker``）。LLM 解説は付けない。
+
+C155 での変更点:
+  * R2「国内マクロ・産業」を廃止（旧 R2 の記事は R4 または R1 に流れる）
+  * ``pre_evaluated`` による第1面との Stage 2 共有は消滅（v2 Page I 廃止）
+  * セレンディピティ枠を追加
 
 Public entry points
 -------------------
-* ``run_page3_pipeline(scored_or_fetcher, ...)`` — メインのオーケストレーション
+* ``run_page3_pipeline(...)`` — メインのオーケストレーション
 * ``select_page3_articles(scored, ...)`` — 領域振分け + 選定（in-memory）
 * ``_region_for(article)`` — 領域判定（テスト用）
 * ``_generate_kicker(article, region)`` — kicker 生成（テスト用）
@@ -47,32 +53,49 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 SOURCES_DIR = PROJECT_ROOT / "sources"
 LOG_DIR = PROJECT_ROOT / "logs"
 
-# 紙面表示順（R1→R6）。1行目=R1/R2/R3、2行目=R4/R5/R6（CSS Grid 3列）。
-REGIONS: tuple[str, ...] = ("R1", "R2", "R3", "R4", "R5", "R6")
+# C155 (Sprint 13, 2026-08-10): R2「国内マクロ・産業」を廃止し 5 領域に。
+# 空いた 6 枠目にはセレンディピティ枠 (SERENDIPITY_SLOT) が入る。
+#
+# R2 廃止の影響：旧 R2 に振り分けられていた日本のマクロ・産業政策記事は、
+# 判定順序に従って R4「国内産業・経営」（R4 キーワード一致時）または
+# R1「国際金融・地政経済」（フォールバック）に流れる。
+REGIONS: tuple[str, ...] = ("R1", "R3", "R4", "R5", "R6")
 
 # 判定順序（specific → broad）。docs/page3_design_v1.md §3.3。
 # 一記事は最初にマッチした領域に振り分ける（重複振分けはしない）。
-REGION_DETECTION_ORDER: tuple[str, ...] = ("R6", "R5", "R3", "R2", "R4", "R1")
+# C155: R2 を抜いて再構成（R6 → R5 → R3 → R4 → R1）。
+REGION_DETECTION_ORDER: tuple[str, ...] = ("R6", "R5", "R3", "R4", "R1")
+
+# セレンディピティ枠。領域マッチングではなく
+# ``scripts/selector/serendipity.py`` が「過去 30 日で最も表示が少ない
+# カテゴリ」から抽選して埋める。紙面上は他 5 記事と同格に表示する。
+SERENDIPITY_SLOT: str = "SER"
+
+# AIかみやま に供給する「3 面不採用の上位候補」の最大件数。
+RUNNER_UP_POOL_SIZE: int = 20
+
+# 紙面表示順（CSS Grid 3列 × 2行）。1行目=R1/R3/R4、2行目=R5/R6/SER。
+DISPLAY_SLOTS: tuple[str, ...] = REGIONS + (SERENDIPITY_SLOT,)
 
 # 紙面表示用の領域名。placeholder の kicker fallback でも使う。
 REGION_DISPLAY_NAMES: dict[str, str] = {
     "R1": "国際金融・地政経済",
-    "R2": "国内マクロ・産業",
     "R3": "国際規制・テクノ覇権",
     "R4": "国内産業・経営",
     "R5": "文化・書評・社会",
     "R6": "学術・科学",
+    SERENDIPITY_SLOT: "セレンディピティ",
 }
 
 # kicker fallback：source_name map / title 抽出に失敗した時の最終手段。
 # 紙面の kicker としては短く保ちたいので、領域名の短縮形を使う。
 REGION_KICKER_FALLBACK: dict[str, str] = {
     "R1": "国際金融",
-    "R2": "国内マクロ",
     "R3": "国際規制",
     "R4": "国内産業",
     "R5": "文化・社会",
     "R6": "学術・科学",
+    SERENDIPITY_SLOT: "今朝の一本",
 }
 
 # source_name → デフォルト kicker map（v1、25 ソース）。
@@ -136,11 +159,6 @@ JAPANESE_SOURCE_PATTERNS: tuple[str, ...] = (
     "東京大学",
 )
 
-# 日本マクロ・産業の主要ソース（R2 / R4 判定で使用）。
-JAPAN_PRIMARY_SOURCES: tuple[str, ...] = (
-    "日本経済新聞", "東洋経済オンライン",
-)
-
 # books.md「自然科学ノンフィクション」セクションのソース。R6 に振り分ける。
 # books.md L110-153 で確認済。それ以外の books.md ソース（小説・純文学・SF）
 # は R5（文化）に振り分ける。
@@ -160,15 +178,6 @@ R1_KEYWORDS: tuple[str, ...] = (
     "decoupling", "制裁", "sanctions", "BRICS", "OPEC",
     # 国家間機関
     "G7", "G20", "IMF", "WTO", "World Bank", "OECD",
-)
-
-R2_KEYWORDS: tuple[str, ...] = (
-    # 人口
-    "人口", "生産年齢", "出生", "高齢化", "労働力不足",
-    # 産業政策
-    "経産省", "METI", "産業政策", "補助金", "スタートアップ支援", "産業競争力",
-    # マクロ指標
-    "GDP", "物価", "インフレ", "デフレ", "賃上げ", "春闘", "日銀", "日本銀行",
 )
 
 R3_KEYWORDS: tuple[str, ...] = (
@@ -253,6 +262,12 @@ class Page3Result:
     placeholder_count: int = 0
     candidates_total: int = 0
     candidates_after_dedup: int = 0
+    # C155 (Sprint 13, 2026-08-10): 3 面で採用されなかった評価済み上位候補。
+    # AIかみやま（第5面）の候補プールに供給する。page3 は 300 本前後を fetch・
+    # 採点して 6 本しか表示しないため、残りは **追加 LLM コスト 0** で使える。
+    # 学術ニュース枠と Today's Headlines の廃止で候補プールが 12 本 → 5 本に
+    # 縮むのを、この runner-up 供給で補う（神山さん判断、2026-08-10）。
+    runner_up_candidates: list[dict] = field(default_factory=list)
 
 
 # ---------------------------------------------------------------------------
@@ -334,7 +349,7 @@ def _source_name_match(article: dict, candidates: tuple[str, ...]) -> bool:
 
 
 # ---------------------------------------------------------------------------
-# Region detection (judgment order: R6 → R5 → R3 → R2 → R4 → R1)
+# Region detection (judgment order: R6 → R5 → R3 → R4 → R1)
 # ---------------------------------------------------------------------------
 
 def _matches_R6(article: dict) -> bool:
@@ -405,28 +420,6 @@ def _matches_R3(article: dict) -> bool:
     return _has_keyword(_haystack(article), R3_KEYWORDS)
 
 
-def _matches_R2(article: dict) -> bool:
-    """国内マクロ・産業：日本主要ソース or R2 keywords + 日本文脈。"""
-    cat = _category_of(article)
-
-    # business.md の日本主要ソース：マクロ・人口・産業政策キーワードを含む
-    if cat == "business" and _source_name_match(article, JAPAN_PRIMARY_SOURCES):
-        if _has_keyword(_haystack(article), R2_KEYWORDS):
-            return True
-        # 日本主要ソースで R4 keyword も無いなら R2 にデフォルト振分け
-        # （企業個別記事は R4 で先に拾う、ここまで降りてきたものはマクロ寄りと推定）
-        if not _has_keyword(_haystack(article), R4_KEYWORDS):
-            return True
-
-    # キーワード一致（"日本" or "国内" を含む文脈）
-    if _has_keyword(_haystack(article), R2_KEYWORDS):
-        haystack = _haystack(article)
-        if "日本" in haystack or "国内" in haystack or _is_japanese_source(article.get("source_name")):
-            return True
-
-    return False
-
-
 def _matches_R4(article: dict) -> bool:
     """国内産業・経営：日本/Boston系経営ソース or R4 keywords."""
     cat = _category_of(article)
@@ -455,7 +448,7 @@ def _matches_R1(article: dict) -> bool:
     cat = _category_of(article)
     name = article.get("source_name") or ""
 
-    # geopolitics.md は基本 R1（R6/R5/R3/R2/R4 で拾われなかったもの）
+    # geopolitics.md は基本 R1（R6/R5/R3/R4 で拾われなかったもの）
     if cat == "geopolitics":
         return True
 
@@ -473,7 +466,6 @@ def _matches_R1(article: dict) -> bool:
 
 _REGION_MATCHERS: dict[str, Callable[[dict], bool]] = {
     "R1": _matches_R1,
-    "R2": _matches_R2,
     "R3": _matches_R3,
     "R4": _matches_R4,
     "R5": _matches_R5,
@@ -484,8 +476,8 @@ _REGION_MATCHERS: dict[str, Callable[[dict], bool]] = {
 def _region_for(article: dict) -> str | None:
     """記事を1領域に振分け。docs/page3_design_v1.md §3.3。
 
-    判定順序 R6 → R5 → R3 → R2 → R4 → R1。最初にマッチした領域に
-    振り分ける。どれにもマッチしなければ None（第3面の対象外）。
+    判定順序 R6 → R5 → R3 → R4 → R1（C155 で R2 を廃止）。最初にマッチした
+    領域に振り分ける。どれにもマッチしなければ None（第3面の対象外）。
     """
     for region in REGION_DETECTION_ORDER:
         matcher = _REGION_MATCHERS[region]
@@ -556,7 +548,15 @@ def _generate_kicker(article: dict, region: str) -> str:
     1. Title 内 whitelist 地名抽出
     2. source_name → KICKER_BY_SOURCE map
     3. REGION_KICKER_FALLBACK[region]
+
+    C155: セレンディピティ枠だけは地名 / source map を経由せず常に
+    ``REGION_KICKER_FALLBACK[SERENDIPITY_SLOT]`` （「今朝の一本」）を返す。
+    レイアウトは他 5 枠と同格だが、その枠が「未読領域からの抽選」であることを
+    読者が判別できるようにするため。
     """
+    if region == SERENDIPITY_SLOT:
+        return REGION_KICKER_FALLBACK[SERENDIPITY_SLOT]
+
     # 1) Title 抽出
     loc = _extract_title_location(article.get("title"))
     if loc:
@@ -585,7 +585,8 @@ def select_page3_articles(
     """全 scored articles に対して dedup → 領域振分け → 各領域 top1 を選定。
 
     Returns (selections, candidates_total, candidates_after_dedup)。
-    selections は REGIONS 順で全 6 keys を含む（候補なし領域は article=None）。
+    selections は REGIONS 順で 5 keys を含む（候補なし領域は article=None）。
+    6 枠目のセレンディピティは ``run_page3_pipeline`` が後から足す。
     """
     if displayed_urls_today is None:
         displayed_urls_today = set()
@@ -767,6 +768,70 @@ def default_fetcher(
 
 
 # ---------------------------------------------------------------------------
+# Serendipity slot (C155, Sprint 13, 2026-08-10)
+# ---------------------------------------------------------------------------
+
+def _select_serendipity_slot(
+    *,
+    target_date: date,
+    selector: Callable[..., dict],
+    exclude_urls: set[str],
+    result: Page3Result,
+) -> RegionSelection:
+    """6 枠目のセレンディピティ記事を選び ``RegionSelection`` に包む.
+
+    ``selector`` は ``scripts.selector.serendipity.select_for_today`` 互換で、
+    ``{"article", "category", "is_placeholder", "cost_usd", ...}`` を返す。
+
+    失敗しても 3 面全体を落とさない：例外は握り潰して placeholder に倒す。
+    5 領域の選定は既に終わっているため、ここでの失敗は 1 枠の欠損で済む。
+    """
+    try:
+        picked = selector(target_date=target_date)
+    except Exception as e:  # noqa: BLE001 — 1 枠の欠損に留める
+        print(
+            f"[page3] serendipity FAILED: {type(e).__name__}: {e} "
+            "— falling back to placeholder",
+            file=sys.stderr,
+        )
+        return RegionSelection(
+            region=SERENDIPITY_SLOT, article=None, final_score=None,
+            fallback_reason=f"serendipity_error: {type(e).__name__}",
+        )
+
+    result.cost_usd = round(result.cost_usd + float(picked.get("cost_usd") or 0.0), 6)
+
+    article = picked.get("article")
+    if picked.get("is_placeholder") or not article:
+        return RegionSelection(
+            region=SERENDIPITY_SLOT, article=None, final_score=None,
+            fallback_reason="serendipity_no_candidates",
+        )
+
+    # 当日 3 面の 5 領域で既に採用済なら 1 枠空ける（重複掲載の防止）。
+    if article.get("url") in exclude_urls:
+        print(
+            "[page3] serendipity: 選定記事が当日 3 面の他枠と重複 "
+            f"({(article.get('title') or '')[:40]}) — placeholder に倒す",
+            file=sys.stderr,
+        )
+        return RegionSelection(
+            region=SERENDIPITY_SLOT, article=None, final_score=None,
+            fallback_reason="serendipity_duplicate_within_page3",
+        )
+
+    # 領域記事と同じ形で扱えるよう category を残しておく
+    # （AIかみやま selector / editorial context が参照する）。
+    article.setdefault("category", picked.get("category"))
+    return RegionSelection(
+        region=SERENDIPITY_SLOT,
+        article=article,
+        final_score=article.get("final_score"),
+        fallback_reason=None,
+    )
+
+
+# ---------------------------------------------------------------------------
 # Pipeline orchestration
 # ---------------------------------------------------------------------------
 
@@ -778,8 +843,9 @@ def run_page3_pipeline(
     displayed_urls_today: set[str] | None = None,
     displayed_urls_past_n: set[str] | None = None,
     write_log: bool = True,
+    serendipity_selector: Callable[..., dict] | None = None,
 ) -> Page3Result:
-    """End-to-end Page 3 pipeline。
+    """End-to-end Page 3 pipeline（5 領域 + セレンディピティ 1 枠）。
 
     Parameters
     ----------
@@ -789,19 +855,25 @@ def run_page3_pipeline(
         ``(*, pre_evaluated, limit) -> (articles, cost)`` 形式の関数。
         テスト時にモック差し替え。None なら ``default_fetcher`` を使う。
     pre_evaluated :
-        {url: article_dict} 形式の Stage 2 共有キャッシュ。第1面で評価済の
-        記事を再評価しないため。
+        {url: article_dict} 形式の Stage 2 共有キャッシュ。C155 で第1面との
+        共有元が消滅したため通常は None。テスト用に残置。
     displayed_urls_today :
-        当日 page1 / page2 で選定された URL の集合。dedup 対象。
+        当日 page2 で選定された URL の集合。dedup 対象。
     displayed_urls_past_n :
         過去 N=7 日に page3 で表示された URL の集合。dedup 対象。
     write_log :
         ``logs/page3_selection_<date>.json`` を書くか否か。
+    serendipity_selector :
+        セレンディピティ枠の選定関数（``select_for_today`` 互換）。
+        None なら ``scripts.selector.serendipity.select_for_today``。
+        テスト時にモック差し替え。
     """
     if target_date is None:
         target_date = date.today()
     if fetcher is None:
         fetcher = default_fetcher
+    if serendipity_selector is None:
+        from .serendipity import select_for_today as serendipity_selector
 
     result = Page3Result(today=target_date)
 
@@ -809,12 +881,12 @@ def run_page3_pipeline(
     cap = llm_usage.check_caps(target_date)
     if not cap.ok:
         print(f"[page3] daily cap reached: {cap.reason}", file=sys.stderr)
-        for region in REGIONS:
-            result.selections[region] = RegionSelection(
-                region=region, article=None, final_score=None,
+        for slot in DISPLAY_SLOTS:
+            result.selections[slot] = RegionSelection(
+                region=slot, article=None, final_score=None,
                 fallback_reason=f"daily_cap_exceeded: {cap.reason}",
             )
-        result.placeholder_count = len(REGIONS)
+        result.placeholder_count = len(DISPLAY_SLOTS)
         return result
 
     # Fetch + Stage 1 + Stage 2 + Stage 3
@@ -833,15 +905,50 @@ def run_page3_pipeline(
     result.selections = selections
     result.candidates_total = total
     result.candidates_after_dedup = after_dedup
+
+    # C155: 6 枠目 = セレンディピティ（旧第5面上段「今朝出会った1本」）。
+    # 5 領域の選定が終わってから走らせ、当日 3 面で既に採用された URL を
+    # 除外対象として渡す（同一記事が 3 面内で 2 枠を占めるのを防ぐ）。
+    region_urls_today = {
+        sel.article.get("url")
+        for sel in selections.values()
+        if sel.article and sel.article.get("url")
+    }
+    result.selections[SERENDIPITY_SLOT] = _select_serendipity_slot(
+        target_date=target_date,
+        selector=serendipity_selector,
+        exclude_urls=region_urls_today,
+        result=result,
+    )
+
+    # C155: 3 面で採用されなかった評価済み候補を AIかみやま 用に確保する。
+    # dedup 条件は select_page3_articles と揃える（当日他面 + 過去 7 日 page3）。
+    dedup_set = (displayed_urls_today or set()) | (displayed_urls_past_n or set())
+    used_urls = {
+        sel.article.get("url")
+        for sel in result.selections.values()
+        if sel.article and sel.article.get("url")
+    }
+    runner_ups = [
+        a for a in scored
+        if a.get("url") and a["url"] not in dedup_set and a["url"] not in used_urls
+    ]
+    runner_ups.sort(
+        key=lambda a: a.get("final_score") if isinstance(a.get("final_score"), (int, float))
+        else float("-inf"),
+        reverse=True,
+    )
+    result.runner_up_candidates = runner_ups[:RUNNER_UP_POOL_SIZE]
+
     result.placeholder_count = sum(
-        1 for s in selections.values() if s.article is None
+        1 for s in result.selections.values() if s.article is None
     )
 
     if result.placeholder_count >= 2:
         print(
-            f"[page3] WARNING: {result.placeholder_count} regions resulted in "
+            f"[page3] WARNING: {result.placeholder_count} slots resulted in "
             "「本日該当なし」 placeholder. Check logs/page3_selection_*.json "
-            "for fallback reasons. (page3_design_v1.md §7 — 2 領域以上は要観察)",
+            "for fallback reasons. (2 枠以上は要観察)",
             file=sys.stderr,
         )
 
@@ -865,7 +972,7 @@ def write_page3_log(result: Page3Result) -> Path:
     LOG_DIR.mkdir(parents=True, exist_ok=True)
 
     selections_log: dict[str, Any] = {}
-    for region in REGIONS:
+    for region in DISPLAY_SLOTS:
         sel = result.selections.get(region)
         if sel is None:
             continue

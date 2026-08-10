@@ -51,8 +51,8 @@ def test_empty_inputs_produce_skeleton():
     ctx = context_builder.build_editorial_context()
     expected_keys = {
         "page1_top", "page1_secondaries", "page2", "page3",
-        "page4_concept", "page4_articles",
-        "page5_serendipity", "page5_aikamiyama_column_title",
+        "page4_concept",
+        "page5_reference", "page5_aikamiyama_column_title",
         "page6_columns",
     }
     has_all = expected_keys.issubset(ctx.keys())
@@ -63,7 +63,7 @@ def test_empty_inputs_produce_skeleton():
     _check("a3 page2 has 3 entries (one per company) even on empty",
            len(ctx["page2"]) == 3,
            f"len={len(ctx['page2'])}")
-    _check("a4 page3 has 6 entries (R1..R6) even on empty",
+    _check("a4 page3 has 6 entries (5 領域 + SER) even on empty",
            len(ctx["page3"]) == 6)
     _check("a5 page6_columns has all 4 areas",
            set(ctx["page6_columns"].keys()) == {"books", "music", "outdoor", "cooking"})
@@ -121,16 +121,18 @@ def test_page3_region_order():
         "R1": SimpleNamespace(article={"title": "国際金融記事", "source_name": "WoTR"}),
         "R3": SimpleNamespace(article={"title": "テック覇権記事", "source_name": "MIT"}),
         "R6": SimpleNamespace(article={"title": "学術記事", "source_name": "Nautilus"}),
-        # R2/R4/R5 missing entirely
+        # R4/R5/SER missing entirely
     }
     ctx = context_builder.build_editorial_context(page_three_selections=sels)
     regions = [e["region"] for e in ctx["page3"]]
-    _check("d1 page3 region order R1..R6",
-           regions == ["R1", "R2", "R3", "R4", "R5", "R6"])
+    # C155 (Sprint 13, 2026-08-10): R2 廃止、6 枠目に SER（セレンディピティ）。
+    _check("d1 page3 slot order R1/R3/R4/R5/R6/SER",
+           regions == ["R1", "R3", "R4", "R5", "R6", "SER"], f"got {regions}")
     _check("d2 R1 article populated",
            ctx["page3"][0]["title"] == "国際金融記事")
-    _check("d3 R2 missing → empty entry",
-           ctx["page3"][1] == {"title": "", "source": "", "region": "R2"})
+    _check("d3 R4 missing → empty entry",
+           ctx["page3"][2] == {"title": "", "source": "", "region": "R4"},
+           f"got {ctx['page3'][2]}")
 
 
 # ---------------------------------------------------------------------------
@@ -138,24 +140,16 @@ def test_page3_region_order():
 # ---------------------------------------------------------------------------
 
 def test_page4_concept_and_articles():
-    telemetry = {
-        "concept": {"id": "theory_of_mind", "name_ja": "心の理論"},
-        "articles_result": {
-            "articles": [
-                {"title": "学術記事1"},
-                {"title": "学術記事2"},
-                {"title": "学術記事3"},
-            ],
-        },
-    }
+    """C155: 学術ニュース枠を廃止したので concept のみを検証する."""
+    telemetry = {"concept": {"id": "theory_of_mind", "name_ja": "心の理論"}}
     ctx = context_builder.build_editorial_context(page_four_telemetry=telemetry)
     _check("e1 page4_concept = name_ja", ctx["page4_concept"] == "心の理論")
-    _check("e2 page4_articles has 3 titles",
-           ctx["page4_articles"] == ["学術記事1", "学術記事2", "学術記事3"])
+    _check("e2 C155: page4_articles キーは廃止された",
+           "page4_articles" not in ctx, f"keys={sorted(ctx)}")
 
 
 def test_page4_falls_back_to_concept_id_if_no_name_ja():
-    telemetry = {"concept": {"id": "tom_only"}, "articles_result": {"articles": []}}
+    telemetry = {"concept": {"id": "tom_only"}}
     ctx = context_builder.build_editorial_context(page_four_telemetry=telemetry)
     _check("e3 page4_concept falls back to id when name_ja missing",
            ctx["page4_concept"] == "tom_only")
@@ -165,17 +159,19 @@ def test_page4_falls_back_to_concept_id_if_no_name_ja():
 # (f) Page V serendipity + AIかみやま
 # ---------------------------------------------------------------------------
 
-def test_page5_serendipity_and_column():
+def test_page5_reference_and_column():
     telemetry = {
-        "serendipity": {
+        "ai_article": {"title": "サウナ記事", "source_name": "AXIS",
+                       "category": "culture"},
+        "_legacy_serendipity_removed": {
             "article": {"title": "サウナ記事", "source_name": "AXIS"},
             "category": "culture",
         },
         "column": {"column_title": "ロウリュは沈黙の傘装置"},
     }
     ctx = context_builder.build_editorial_context(page_five_telemetry=telemetry)
-    _check("f1 page5_serendipity article + category populated",
-           ctx["page5_serendipity"] == {
+    _check("f1 page5_reference article + category populated",
+           ctx["page5_reference"] == {
                "title": "サウナ記事", "source": "AXIS", "category": "culture",
            })
     _check("f2 AIかみやま column_title extracted",
@@ -240,7 +236,7 @@ def main() -> int:
     test_page4_falls_back_to_concept_id_if_no_name_ja()
     print()
     print("(f) Page V:")
-    test_page5_serendipity_and_column()
+    test_page5_reference_and_column()
     print()
     print("(g) Page VI:")
     test_page6_4_columns()

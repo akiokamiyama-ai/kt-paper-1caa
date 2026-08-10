@@ -49,13 +49,15 @@ DEFAULT_HAIKU_MODEL = "claude-haiku-4-5"
 
 # 既知 caller。``run_stage2(caller=...)`` で識別、llm_usage tag suffix に使う。
 # Phase B Step 1 のコスト按分（master 69% / page3 31% 等）と整合。
+# C155 (Sprint 13, 2026-08-10): page1_master は v2 Page I パイプライン廃止で消滅。
+# page4 は学術ニュース枠廃止で消滅。page5 は セレンディピティ枠が 3 面へ移った
+# ため page3_serendipity に改称（cost 時系列の対応表は
+# docs/paper_structure_v2.md §7 を参照）。
 KNOWN_CALLERS: tuple[str, ...] = (
-    "page1_master",   # regen_front_page_v2.run_pipeline（最大の caller）
-    "page3",          # selector/page3.py default_fetcher
-    "page2",          # selector/page2.py（companies 経路、現状 free rider）
-    "page4",          # page4/article_rotator.py
-    "page5",          # page5/serendipity_selector.py
-    "page6",          # page6/leisure_recommender.py
+    "page3",              # selector/page3.py default_fetcher（最大の caller）
+    "page3_serendipity",  # selector/serendipity.py（3 面 6 枠目）
+    "page2",              # selector/page2.py（companies 経路）
+    "page6",              # page6/leisure_recommender.py
 )
 
 # §4.2 Mode-A vs Mode-B threshold (description char count).

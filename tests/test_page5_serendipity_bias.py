@@ -17,8 +17,8 @@ import sys
 from collections import Counter
 from datetime import date
 
-from scripts.page5 import serendipity_selector as page5
-from scripts.page5.serendipity_selector import (
+from scripts.selector import serendipity as page5
+from scripts.selector.serendipity import (
     ELIGIBLE_CATEGORIES,
     HISTORY_PENALTY_DAYS,
     HISTORY_PENALTY_PER_USE,

@@ -1,4 +1,22 @@
-"""第5面 セレンディピティ記事選定（Sprint 4 layout swap で旧 page6 から移動）。
+"""第3面 セレンディピティ枠の記事選定。
+
+C155 (Sprint 13, 2026-08-10) で ``scripts/page5/serendipity_selector.py`` から
+本 module に移動した。第5面上段「今朝出会った1本」を第3面の 6 枠目
+（5 領域 + セレンディピティ）に移し、他の 5 記事と同格の扱いにする再構想に伴う。
+選定ロジック自体は不変。
+
+3 面の通常 pool に統合しなかった理由（C155 の設計判断）:
+    page3 の fetch scope は business / geopolitics / academic / books の 4 つ。
+    一方セレンディピティの対象は academic / books / culture / music / outdoor で、
+    **culture / music / outdoor の 3 つは page3 が取得していない**。統合すると
+    セレンディピティが academic / books だけに縮退し、「過去 30 日で最も表示が
+    少ないカテゴリから抽選する = 未読領域に出会う」という設計思想そのものが
+    壊れる。よって専用 fetch 経路を維持し、枠と描画だけを 3 面に移した。
+
+履歴ファイル名について:
+    ``logs/page5_history.json`` は旧名のまま維持する。過去 30 日の
+    category 別表示頻度がセレンディピティ選定の入力そのものであり、
+    改名するとルックバック窓のデータが失われるため。
 
 Strategy:
 1. 過去 LOOKBACK_DAYS=30 日の displayed_urls_*.json を全 page 横断で読み込み
@@ -218,7 +236,7 @@ def update_history_column_fields(
             matched_idx = i  # keep the latest (last) match
     if matched_idx < 0:
         print(
-            f"[page5] history update: entry not found for "
+            f"[serendipity] history update: entry not found for "
             f"{article_url!r} on {target_iso}",
             file=sys.stderr,
         )
@@ -449,7 +467,7 @@ def _fetch_and_score_category(
             raw.extend(summary.get("articles", []))
         except Exception as e:
             print(
-                f"[page6] fetch_run({category}, {pri}) failed: "
+                f"[serendipity] fetch_run({category}, {pri}) failed: "
                 f"{type(e).__name__}: {e}",
                 file=sys.stderr,
             )
@@ -494,7 +512,7 @@ def _fetch_and_score_category(
     cost = 0.0
     if uncached:
         # C85 Sub-Step 6: TRIBUNE_STAGE2_MODE で legacy/shadow/layered 切替
-        s2 = run_stage2_with_mode(uncached, caller="page5")
+        s2 = run_stage2_with_mode(uncached, caller="page3_serendipity")
         cost += s2.cost_usd
         integrate_scores(s2.evaluations_by_url)
         by_url = s2.evaluations_by_url
@@ -593,7 +611,7 @@ def select_for_today(
         removed = before - len(scored)
         if removed:
             print(
-                f"[page6] dedup: removed {removed}/{before} already-shown "
+                f"[serendipity] dedup: removed {removed}/{before} already-shown "
                 f"({len(scored)} remain in {chosen_cat})",
                 file=sys.stderr,
             )

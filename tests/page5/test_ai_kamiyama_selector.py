@@ -96,34 +96,49 @@ def _make_article(
 
 
 # ---------------------------------------------------------------------------
-# (a) build_candidate_pool: 各経路から記事を集計
+# (a) build_candidate_pool: Page III 確定枠 + runner-up
+#
+# C155 (Sprint 13, 2026-08-10): 候補プールの構成を変更した。
+# 旧: Today's Headlines + Page III + Page IV 学術記事 − serendipity
+# 新: Page III 確定 6 枠（5 領域 + SER） + Page III runner-up
 # ---------------------------------------------------------------------------
 
-def test_pool_combines_all_paper_sources():
-    headlines = [
-        _make_article("https://h/1", source="BBC Business"),
-        _make_article("https://h/2", source="NHK ニュース 主要"),
-    ]
+def test_pool_combines_page3_slots_and_runner_ups():
     page3 = {
         "R1": _RegSel(article=_make_article("https://r1/a")),
-        "R2": _RegSel(article=_make_article("https://r2/b")),
+        "R4": _RegSel(article=_make_article("https://r4/b")),
         "R3": _RegSel(article=None),  # placeholder
+        "SER": _RegSel(article=_make_article("https://ser/c")),
     }
-    page4 = [
-        _make_article("https://p4/x", category="academic"),
-        _make_article("https://p4/y", category="academic"),
+    runner_ups = [
+        _make_article("https://ru/x"),
+        _make_article("https://ru/y"),
     ]
     pool = build_candidate_pool(
-        page_two_headlines=headlines,
-        page3_selections=page3,
-        page4_articles=page4,
+        page3_selections=page3, page3_runner_ups=runner_ups,
     )
     urls = {a["url"] for a in pool}
     _check(
-        "a1 headlines + page3 + page4 から計 6 件",
-        urls == {"https://h/1", "https://h/2", "https://r1/a",
-                 "https://r2/b", "https://p4/x", "https://p4/y"},
+        "a1 Page III 確定枠 + runner-up から計 5 件",
+        urls == {"https://r1/a", "https://r4/b", "https://ser/c",
+                 "https://ru/x", "https://ru/y"},
         f"got {urls}",
+    )
+
+
+def test_pool_includes_serendipity_slot():
+    """C155: セレンディピティは Page III の 1 枠になったので候補に含む.
+
+    旧構成では第5面上段の serendipity は「背中合わせ枠」として一筆の候補から
+    除外していた。C155 で第3面に移り、他 5 記事と同格になったため除外理由が
+    消えた。
+    """
+    page3 = {"SER": _RegSel(article=_make_article("https://ser/only"))}
+    pool = build_candidate_pool(page3_selections=page3)
+    _check(
+        "a2 SER 枠の記事も候補に含まれる",
+        [a["url"] for a in pool] == ["https://ser/only"],
+        f"got {[a['url'] for a in pool]}",
     )
 
 
@@ -131,32 +146,32 @@ def test_pool_handles_page3_dict_shape():
     """page3_selections が dict 形式 ({"article": {...}}) でも動く."""
     page3 = {
         "R1": {"article": _make_article("https://d/1")},
-        "R2": {"article": None},
+        "R4": {"article": None},
     }
     pool = build_candidate_pool(page3_selections=page3)
     _check(
-        "a2 page3 dict 形式に対応",
+        "a3 page3 dict 形式に対応",
         [a["url"] for a in pool] == ["https://d/1"],
     )
 
 
 def test_pool_empty_when_all_none():
     _check(
-        "a3 全引数 None → 空 pool",
+        "a4 全引数 None → 空 pool",
         build_candidate_pool() == [],
     )
 
 
 def test_pool_skips_articles_without_url():
-    headlines = [
-        _make_article("https://h/1"),
+    runner_ups = [
+        _make_article("https://ru/1"),
         {"title": "no url", "source_name": "X"},  # url 欠落
         {"url": None, "title": "null url"},
     ]
-    pool = build_candidate_pool(page_two_headlines=headlines)
+    pool = build_candidate_pool(page3_runner_ups=runner_ups)
     _check(
-        "a4 url 欠落 / None は除外",
-        [a["url"] for a in pool] == ["https://h/1"],
+        "a5 url 欠落 / None は除外",
+        [a["url"] for a in pool] == ["https://ru/1"],
     )
 
 
@@ -165,11 +180,11 @@ def test_pool_skips_articles_without_url():
 # ---------------------------------------------------------------------------
 
 def test_no_page_one_parameter():
-    """select_ai_kamiyama_article は page1_selected を受けない（廃止済）.
+    """select_ai_kamiyama_article は Page I を一切受けない.
 
-    旧 API では page1_selected が candidates_scored の subset とされ、
-    excluded_urls 経由で除外する形式だった。C40 第二弾以降、Page I は
-    そもそも候補プールに含まれない設計。
+    C40 第二弾以降、Page I は候補プールに含まれない設計。C155 で Page I が
+    週次 essay になった後もこの方針は維持する（editorial / 一筆と参照が
+    重複するため）。
     """
     import inspect
     sig = inspect.signature(select_ai_kamiyama_article)
@@ -182,43 +197,15 @@ def test_no_page_one_parameter():
         f"got params: {sorted(params)}",
     )
     _check(
-        "b2 select API は page_two_headlines / page3_selections / page4_articles を受ける",
-        {"page_two_headlines", "page3_selections", "page4_articles"}.issubset(params),
+        "b2 select API は page3_selections / page3_runner_ups を受ける",
+        {"page3_selections", "page3_runner_ups"}.issubset(params),
         f"got params: {sorted(params)}",
     )
-
-
-# ---------------------------------------------------------------------------
-# (c) serendipity URL 除外
-# ---------------------------------------------------------------------------
-
-def test_pool_excludes_serendipity_url():
-    headlines = [_make_article("https://shared/")]
-    page3 = {"R1": _RegSel(article=_make_article("https://r1/"))}
-    serendipity = _make_article("https://shared/")  # headlines と同 URL
-    pool = build_candidate_pool(
-        page_two_headlines=headlines,
-        page3_selections=page3,
-        serendipity_article=serendipity,
-    )
-    urls = {a["url"] for a in pool}
     _check(
-        "c1 serendipity と同 URL の記事は除外される",
-        urls == {"https://r1/"},
-        f"got {urls}",
-    )
-
-
-def test_pool_keeps_distinct_when_serendipity_differs():
-    headlines = [_make_article("https://h/")]
-    serendipity = _make_article("https://different/")
-    pool = build_candidate_pool(
-        page_two_headlines=headlines,
-        serendipity_article=serendipity,
-    )
-    _check(
-        "c2 serendipity が別 URL なら影響なし",
-        [a["url"] for a in pool] == ["https://h/"],
+        "b3 C155 で廃止した引数が残っていない",
+        not {"page_two_headlines", "page4_articles",
+             "serendipity_article"} & params,
+        f"got params: {sorted(params)}",
     )
 
 
@@ -226,19 +213,17 @@ def test_pool_keeps_distinct_when_serendipity_differs():
 # (d) URL 重複は順序保持で dedup
 # ---------------------------------------------------------------------------
 
-def test_pool_dedups_same_url_across_pages():
-    """同一 URL が headlines と page3 両方に出る稀ケース (Page III と headline
-    が同記事を採用するパターン) では先出が残る."""
-    same = _make_article("https://dup/")
-    headlines = [same, _make_article("https://h/2")]
+def test_pool_dedups_same_url_across_sources():
+    """同一 URL が確定枠と runner-up 両方に出た場合は先出（確定枠）が残る."""
     page3 = {"R1": _RegSel(article=_make_article("https://dup/"))}
+    runner_ups = [_make_article("https://dup/"), _make_article("https://ru/2")]
     pool = build_candidate_pool(
-        page_two_headlines=headlines, page3_selections=page3,
+        page3_selections=page3, page3_runner_ups=runner_ups,
     )
     urls = [a["url"] for a in pool]
     _check(
         "d1 同 URL が 2 経路で出ても 1 つだけ pool に残る（順序保持）",
-        urls == ["https://dup/", "https://h/2"],
+        urls == ["https://dup/", "https://ru/2"],
         f"got {urls}",
     )
 
@@ -249,13 +234,13 @@ def test_pool_dedups_same_url_across_pages():
 
 def test_select_top_n_random_within_pool():
     """top_n=3 の場合、score 上位 3 件のみ候補。"""
-    headlines = [_make_article(f"https://u/{i}", score=100 - i) for i in range(8)]
+    runner_ups = [_make_article(f"https://u/{i}", score=100 - i) for i in range(8)]
     chosen_urls = set()
     for seed in range(60):
         rng = random.Random(seed)
         chosen = select_ai_kamiyama_article(
             target_date=date(2026, 5, 31),
-            page_two_headlines=headlines,
+            page3_runner_ups=runner_ups,
             rng=rng,
             top_n=3,
         )
@@ -274,14 +259,14 @@ def test_select_top_n_random_within_pool():
 
 
 def test_select_score_descending_top1():
-    headlines = [
+    runner_ups = [
         _make_article("https://low/", score=10),
         _make_article("https://high/", score=99),
         _make_article("https://mid/", score=50),
     ]
     chosen = select_ai_kamiyama_article(
         target_date=date(2026, 5, 31),
-        page_two_headlines=headlines,
+        page3_runner_ups=runner_ups,
         rng=random.Random(0),
         top_n=1,
     )
@@ -293,14 +278,14 @@ def test_select_score_descending_top1():
 
 
 def test_select_score_none_treated_as_lowest():
-    headlines = [
+    runner_ups = [
         _make_article("https://noscore/", score=None),
         _make_article("https://low/", score=10),
         _make_article("https://high/", score=90),
     ]
     chosen = select_ai_kamiyama_article(
         target_date=date(2026, 5, 31),
-        page_two_headlines=headlines,
+        page3_runner_ups=runner_ups,
         rng=random.Random(0),
         top_n=1,
     )
@@ -321,17 +306,22 @@ def test_select_empty_pool_returns_none():
     )
 
 
-def test_select_all_excluded_by_serendipity_returns_none():
-    """唯一の候補が serendipity と同 URL → 候補ゼロ → None."""
-    headlines = [_make_article("https://only/")]
-    serendipity = _make_article("https://only/")
+def test_select_single_candidate_is_chosen():
+    """C155: serendipity 除外ロジックは廃止。唯一候補はそのまま選ばれる.
+
+    旧 f2 は「唯一の候補が serendipity と同 URL → None」を検証していたが、
+    セレンディピティが Page III の 1 枠になり除外理由が消えたため差し替えた。
+    """
+    page3 = {"SER": _RegSel(article=_make_article("https://only/"))}
+    chosen = select_ai_kamiyama_article(
+        target_date=date(2026, 5, 31),
+        page3_selections=page3,
+        rng=random.Random(0),
+    )
     _check(
-        "f2 唯一候補が serendipity と一致 → None",
-        select_ai_kamiyama_article(
-            target_date=date(2026, 5, 31),
-            page_two_headlines=headlines,
-            serendipity_article=serendipity,
-        ) is None,
+        "f2 唯一候補（SER 枠）がそのまま選ばれる",
+        chosen is not None and chosen["url"] == "https://only/",
+        f"got {chosen}",
     )
 
 
@@ -341,12 +331,12 @@ def test_select_all_excluded_by_serendipity_returns_none():
 
 def test_select_no_category_filter_by_default():
     """eligible_categories=None なら category 関係なく全候補から選ばれる."""
-    headlines = [
+    runner_ups = [
         _make_article("https://m/", category="music"),
     ]
     chosen = select_ai_kamiyama_article(
         target_date=date(2026, 5, 31),
-        page_two_headlines=headlines,
+        page3_runner_ups=runner_ups,
         eligible_categories=None,
         rng=random.Random(0),
     )
@@ -358,13 +348,13 @@ def test_select_no_category_filter_by_default():
 
 def test_select_with_explicit_category_filter():
     """eligible_categories を明示すれば フィルタが効く（後方互換）."""
-    headlines = [
+    runner_ups = [
         _make_article("https://biz/", category="business"),
         _make_article("https://music/", category="music"),
     ]
     chosen = select_ai_kamiyama_article(
         target_date=date(2026, 5, 31),
-        page_two_headlines=headlines,
+        page3_runner_ups=runner_ups,
         eligible_categories=("business",),
         rng=random.Random(0),
         top_n=1,
@@ -377,7 +367,7 @@ def test_select_with_explicit_category_filter():
 
 def test_select_with_registry_lookup():
     """article.category なくても registry + source_name から解決."""
-    headlines = [
+    runner_ups = [
         _make_article("https://biz/", source="BBC Business"),
         _make_article("https://music/", source="natalie.mu"),
     ]
@@ -387,7 +377,7 @@ def test_select_with_registry_lookup():
     })
     chosen = select_ai_kamiyama_article(
         target_date=date(2026, 5, 31),
-        page_two_headlines=headlines,
+        page3_runner_ups=runner_ups,
         registry=reg,
         eligible_categories=("business",),
         rng=random.Random(0),
@@ -407,24 +397,24 @@ def test_consecutive_days_pick_different_urls_when_paper_changes():
     """紙面が日ごとに変われば AIかみやま は別 URL を選ぶ.
 
     5/29-5/30 で同一 BBC URL (czx2qll4rlyo) を連続表示した事象の対策。本テストは
-    候補プールが日ごとに変わる前提（headlines / page3 / page4 は他面 dedup により
-    過去日と差し替わる）で、selector が当該日プールに閉じていることを確認する。
+    候補プールが日ごとに変わる前提（page3 の確定枠 / runner-up は過去 7 日
+    dedup により差し替わる）で、selector が当該日プールに閉じていることを
+    確認する。
     """
     # Day 1: 紙面に「czx2qll4rlyo」記事がある
-    day1_headlines = [_make_article("https://bbc.com/czx2qll4rlyo", score=99)]
+    day1 = [_make_article("https://bbc.com/czx2qll4rlyo", score=99)]
     chosen_day1 = select_ai_kamiyama_article(
         target_date=date(2026, 5, 29),
-        page_two_headlines=day1_headlines,
+        page3_runner_ups=day1,
         rng=random.Random(0),
         top_n=1,
     )
 
-    # Day 2: 他面 dedup により czx2qll4rlyo は当日紙面に出ない。
-    # 紙面構成が変わり、AIかみやま 候補も別 URL のみ。
-    day2_headlines = [_make_article("https://bbc.com/new-day2-article", score=99)]
+    # Day 2: 過去日 dedup により czx2qll4rlyo は当日候補に出ない。
+    day2 = [_make_article("https://bbc.com/new-day2-article", score=99)]
     chosen_day2 = select_ai_kamiyama_article(
         target_date=date(2026, 5, 30),
-        page_two_headlines=day2_headlines,
+        page3_runner_ups=day2,
         rng=random.Random(0),
         top_n=1,
     )
@@ -439,10 +429,11 @@ def test_consecutive_days_pick_different_urls_when_paper_changes():
 
 
 def main() -> int:
-    print("ai_kamiyama_selector tests (C40 第二弾, Sprint 8, 2026-05-30)")
+    print("ai_kamiyama_selector tests (C40 第二弾 → C155 で候補プール拡張)")
     print()
-    print("(a) build_candidate_pool 集計:")
-    test_pool_combines_all_paper_sources()
+    print("(a) build_candidate_pool: Page III 確定枠 + runner-up:")
+    test_pool_combines_page3_slots_and_runner_ups()
+    test_pool_includes_serendipity_slot()
     test_pool_handles_page3_dict_shape()
     test_pool_empty_when_all_none()
     test_pool_skips_articles_without_url()
@@ -450,12 +441,8 @@ def main() -> int:
     print("(b) Page I は API 構造から除外:")
     test_no_page_one_parameter()
     print()
-    print("(c) serendipity URL 除外:")
-    test_pool_excludes_serendipity_url()
-    test_pool_keeps_distinct_when_serendipity_differs()
-    print()
     print("(d) URL 重複の順序保持 dedup:")
-    test_pool_dedups_same_url_across_pages()
+    test_pool_dedups_same_url_across_sources()
     print()
     print("(e) select_ai_kamiyama_article 動作:")
     test_select_top_n_random_within_pool()
@@ -464,7 +451,7 @@ def main() -> int:
     print()
     print("(f) 候補ゼロ → None:")
     test_select_empty_pool_returns_none()
-    test_select_all_excluded_by_serendipity_returns_none()
+    test_select_single_candidate_is_chosen()
     print()
     print("(g) category フィルタ（任意、通常 skip）:")
     test_select_no_category_filter_by_default()

@@ -80,57 +80,12 @@ def test_inject_link_style_no_style_tag():
 
 
 # ---------------------------------------------------------------------------
-# (c) Page I: h2/h3 wrapped in <a>
+# (c) C155 (Sprint 13, 2026-08-10): Page I の h2/h3 リンク検証は削除
+#
+# v2 Page I（トップ1本 + セカンド3本）の廃止により
+# ``build_page_one_v2`` / ``_build_sidebar`` が消滅した。Page I の
+# リンク挙動は v3 renderer 側 (tests/page1_v3/test_renderer.py) が担当する。
 # ---------------------------------------------------------------------------
-
-def test_page_one_h2_h3_wrapped_in_a():
-    original_sidebar = regen._build_sidebar
-    regen._build_sidebar = lambda top: '<aside>[mock]</aside>'
-    try:
-        articles = [
-            {
-                "title": "Top Story", "title_ja": "トップ記事",
-                "description": "...", "desc_ja": "...",
-                "source_name": "The Economist", "source_language": "en",
-                "url": "https://example.test/top", "pub_date": "2026-05-03",
-            },
-            {
-                "title": "Sec1", "title_ja": "セク1",
-                "description": ".", "desc_ja": ".",
-                "source_name": "BBC Business", "source_language": "en",
-                "url": "https://example.test/s1", "pub_date": "2026-05-03",
-            },
-            {
-                "title": "Sec2", "title_ja": "セク2",
-                "description": ".", "desc_ja": ".",
-                "source_name": "Reuters Business", "source_language": "en",
-                "url": "https://example.test/s2", "pub_date": "2026-05-03",
-            },
-            {
-                "title": "Sec3", "title_ja": "セク3",
-                "description": ".", "desc_ja": ".",
-                "source_name": "BBC Business", "source_language": "en",
-                "url": "https://example.test/s3", "pub_date": "2026-05-03",
-            },
-        ]
-        html = regen.build_page_one_v2(articles)
-    finally:
-        regen._build_sidebar = original_sidebar
-    top_a = (
-        '<h2 class="headline-xl article-title-original">'
-        '<a href="https://example.test/top"' in html
-    )
-    sec1_a = (
-        '<h3 class="headline-l article-title-original">'
-        '<a href="https://example.test/s1"' in html
-    )
-    sec2_a = (
-        '<h3 class="headline-l article-title-original">'
-        '<a href="https://example.test/s2"' in html
-    )
-    _check("c1 top h2 wraps title in <a href>", top_a)
-    _check("c2 secondary 1 h3 wraps title in <a href>", sec1_a)
-    _check("c3 secondary 2 h3 wraps title in <a href>", sec2_a)
 
 
 # ---------------------------------------------------------------------------
@@ -168,53 +123,47 @@ def test_page_three_item_without_url_plain_title():
 
 
 # ---------------------------------------------------------------------------
-# (e) Page V serendipity article-title
+# (e) Page V 参照記事タイトルのリンク
+#
+# C155 (Sprint 13, 2026-08-10): 第5面が「AIかみやまの一筆」100% に。
+# _render_page_five の signature は (ai_article, summary, column) の 3 引数。
+# 上段は serendipity ではなく「一筆が読んだ記事」の参照サマリになった。
 # ---------------------------------------------------------------------------
 
-def test_page_five_serendipity_title_linked():
-    """Sprint 7 Phase 1 Step 2 (2026-05-19): _render_page_five は
-    3 引数 (serendipity, ai_article, column) signature に変更."""
-    serendipity = {
-        "is_placeholder": False,
-        "article": {
-            "title": "Sauna Article",
-            "description": "Sauna body excerpt...",
-            "source_name": "AXIS",
-            "url": "https://example.test/p5",
-            "pub_date": "2026-05-01",
-        },
-    }
+def test_page_five_reference_title_linked():
     ai_article = {
         "title": "Strategy Note",
         "source_name": "Economist",
         "url": "https://example.test/ai-art",
-        "description": "対象記事の概要テキスト。AIかみやま が論評する元記事の要旨。",
+        "description": "対象記事の概要テキスト。",
+        "pub_date": "2026-05-01",
+    }
+    summary = {
+        "summary": "この記事は経営戦略の転換について論じている。",
+        "is_fallback": False,
+        "cost_usd": 0.01,
     }
     column = {
         "column_title": "Sauna Column Title",
         "column_body": "Column body...",
     }
-    html = regen._render_page_five(serendipity, ai_article, column)
+    html = regen._render_page_five(ai_article, summary, column)
     title_linked = (
         '<h3 class="article-title">'
-        '<a href="https://example.test/p5"' in html
+        '<a href="https://example.test/ai-art"' in html
     )
     column_title_plain = (
         '<h3 class="column-title">Sauna Column Title</h3>' in html
     )
-    ai_source_ref = (
-        'class="ai-source-ref"' in html
-        and 'https://example.test/ai-art' in html
+    summary_shown = (
+        'class="reference-summary"' in html
+        and "経営戦略の転換について論じている" in html
     )
-    # Sprint 8 (2026-05-20, C16): 対象記事のサマリ表示。
-    ai_article_summary = (
-        'class="ai-article-summary"' in html
-        and "対象記事の概要テキスト" in html
-    )
-    _check("e1 serendipity article-title wrapped in <a>", title_linked)
+    byline_shown = 'class="reference-byline"' in html and "Economist" in html
+    _check("e1 参照記事 article-title wrapped in <a>", title_linked)
     _check("e2 AIかみやま column-title is plain (no <a>)", column_title_plain)
-    _check("e3 AIかみやま ai-source-ref includes ai_article URL", ai_source_ref)
-    _check("e4 AIかみやま ai-article-summary に対象記事 description", ai_article_summary)
+    _check("e3 reference-summary に LLM サマリが入る", summary_shown)
+    _check("e4 reference-byline に出典が入る", byline_shown)
 
 
 # ---------------------------------------------------------------------------
@@ -273,15 +222,12 @@ def main() -> int:
     test_inject_link_style_idempotent()
     test_inject_link_style_no_style_tag()
     print()
-    print("(c) Page I h2/h3 wrap title in <a>:")
-    test_page_one_h2_h3_wrapped_in_a()
-    print()
     print("(d) Page III _render_page3_item:")
     test_page_three_item_with_url_has_link()
     test_page_three_item_without_url_plain_title()
     print()
-    print("(e) Page V serendipity article-title:")
-    test_page_five_serendipity_title_linked()
+    print("(e) Page V 参照記事タイトル:")
+    test_page_five_reference_title_linked()
     print()
     print("(f) Page VI leisure column byline:")
     test_leisure_column_byline_source_linked()

@@ -496,35 +496,9 @@ def test_geopolitics_md_registers_shincho_que():
         )
 
 
-def test_penalty_pattern_applies_to_shincho_que():
-    """SHINCHO_QUE_PATTERNS で source_name 'Shincho QUE...' に penalty 値が出る.
-
-    6/5 調整: -5.0 → 0.0 にいったん外し（W2 Day 6 で QUE 採用 0 件、効きすぎ
-    判定）、1 週間運用観察後に再調整。テストは現行値 SHINCHO_QUE_PENALTY を
-    定数参照で固定して、将来再強化時にもテスト書き換え不要にする。
-    """
-    from scripts.regen_front_page_v2 import (
-        SHINCHO_QUE_PATTERNS, SHINCHO_QUE_PENALTY, _apply_page1_source_penalty,
-    )
-    art = {"source_name": "Shincho QUE（新潮QUE）"}
-    penalty = _apply_page1_source_penalty(art)
-    _check(
-        f"g5 Shincho QUE source → penalty SHINCHO_QUE_PENALTY ({SHINCHO_QUE_PENALTY})",
-        penalty == SHINCHO_QUE_PENALTY, f"got {penalty}",
-    )
-
-
-def test_penalty_does_not_double_apply():
-    """Foresight と Shincho QUE は別パターン、二重適用しない（Foresight が先勝ち）."""
-    from scripts.regen_front_page_v2 import _apply_page1_source_penalty
-    fs = _apply_page1_source_penalty({"source_name": "Foresight（新潮社）"})
-    _check("g6 Foresight → -10.0（既存値維持）", fs == -10.0, f"got {fs}")
-
-
-def test_penalty_skips_unmatched_sources():
-    from scripts.regen_front_page_v2 import _apply_page1_source_penalty
-    other = _apply_page1_source_penalty({"source_name": "Foreign Affairs"})
-    _check("g7 マッチしない source → 0.0", other == 0.0, f"got {other}")
+# C155 (Sprint 13, 2026-08-10): penalty 系テスト 3 件 (g5/g6/g7) を削除。
+# Page I 限定の source soft penalty (scripts/page1_penalty.py) が v2 Page I
+# パイプライン廃止と共に不要になり、モジュールごと削除されたため。
 
 
 # ---------------------------------------------------------------------------
@@ -608,10 +582,13 @@ def test_build_article_writes_geopolitics_for_intl():
 
 
 def test_pipeline_dict_propagates_tribune_category():
-    """_article_to_pipeline_dict が raw[tribune_category] を pipeline_dict[category] に伝播."""
+    """Article.to_pipeline_dict が raw[tribune_category] を pipeline_dict[category] に伝播.
+
+    C155: 旧 ``regen_front_page_v2._article_to_pipeline_dict`` 経由の検証を
+    ``Article.to_pipeline_dict`` 直接呼び出しに置換（page1 経路が廃止されたため）。
+    """
     from datetime import datetime, timezone
     from scripts.lib.source import Article
-    from scripts.regen_front_page_v2 import _article_to_pipeline_dict
     art = Article(
         source_name="Shincho QUE（新潮QUE）",
         title="サンプル",
@@ -621,7 +598,7 @@ def test_pipeline_dict_propagates_tribune_category():
         source_language="ja",
         raw={"tribune_category": "business", "category_que": "経済・ビジネス"},
     )
-    d = _article_to_pipeline_dict(art)
+    d = art.to_pipeline_dict(description=art.description or "", body="")
     _check(
         "h6 pipeline_dict: category=business が動的セットされる",
         d.get("category") == "business",
@@ -632,7 +609,6 @@ def test_pipeline_dict_propagates_tribune_category():
 def test_pipeline_dict_no_category_when_raw_empty():
     from datetime import datetime, timezone
     from scripts.lib.source import Article
-    from scripts.regen_front_page_v2 import _article_to_pipeline_dict
     art = Article(
         source_name="BBC Business",
         title="x",
@@ -640,7 +616,7 @@ def test_pipeline_dict_no_category_when_raw_empty():
         pub_date=datetime(2026, 6, 9, tzinfo=timezone.utc),
         source_language="en",
     )
-    d = _article_to_pipeline_dict(art)
+    d = art.to_pipeline_dict(description=art.description or "", body="")
     _check(
         "h7 driver が tribune_category をセットしない → pipeline_dict に category キーなし"
         "（_attach_category で registry から引き当てる既存パス維持）",
@@ -864,9 +840,6 @@ def main() -> int:
     print("(g) fetch.py dispatch + sources MD + penalty:")
     test_fetch_dispatch_includes_que_driver()
     test_geopolitics_md_registers_shincho_que()
-    test_penalty_pattern_applies_to_shincho_que()
-    test_penalty_does_not_double_apply()
-    test_penalty_skips_unmatched_sources()
     print()
     print("(h) C76 (2026-06-10): category 動的マッピング + 全 page 走査:")
     test_map_que_category_to_tribune_domestic()

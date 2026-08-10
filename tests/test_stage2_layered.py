@@ -80,8 +80,11 @@ def test_n_for_caller_with_overrides():
 
 
 def test_known_callers_set():
-    expected = {"page1_master", "page3", "page2", "page4", "page5", "page6"}
-    _check("a13 KNOWN_CALLERS が 6 件揃う",
+    # C155 (Sprint 13, 2026-08-10): page1_master（v2 Page I 廃止）と
+    # page4（学術ニュース枠廃止）が消滅、page5 は セレンディピティ枠が
+    # 3 面へ移り page3_serendipity に改称。
+    expected = {"page3", "page3_serendipity", "page2", "page6"}
+    _check("a13 KNOWN_CALLERS が 4 件揃う",
            set(KNOWN_CALLERS) == expected,
            f"got {set(KNOWN_CALLERS)}")
 

@@ -106,14 +106,14 @@ def test_call_sites_use_known_tags():
 
     Phase A (Sprint 8, 2026-06-01): tag 命名規約整理
     - "stage2" → "stage2.batch" （batched evaluation を明示）
-    - todays_headlines は LLM_SUMMARY_TAG="page2.headlines_summary" を使用、
-      tag= リテラルとしては検査しない（定数経由のため）。
+    C155 (Sprint 13, 2026-08-10): v2 Page I パイプラインと Today's Headlines を
+    廃止したため、以下 3 tag は検査対象から外れた。
+    - page1.lead_deck / page1.why_important （モジュールごと削除）
+    - page2.headlines_summary （todays_headlines.py ごと削除）
     """
     expected_tags = {
         "scripts/selector/page2.py": ["page2.step1", "page2.step2"],
         "scripts/selector/stage2.py": ["stage2.batch"],
-        "scripts/page1/lead_deck_writer.py": ["page1.lead_deck"],
-        "scripts/selector/why_important.py": ["page1.why_important"],
         "scripts/editorial/editorial_writer.py": ["editorial"],
         "scripts/page4/concept_writer.py": ["page4.concept"],
         "scripts/page6/cooking_generator.py": ["page6.cooking"],
@@ -131,7 +131,7 @@ def test_call_sites_use_known_tags():
                     f"b {rel_path} で tag='{tag}' が見つからない",
                     False,
                 )
-    _check("b 全 9 呼び出し箇所が規定の tag を使う", all_ok)
+    _check("b 全 6 呼び出し箇所が規定の tag を使う", all_ok)
 
 
 def main() -> int:

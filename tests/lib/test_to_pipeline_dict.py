@@ -199,10 +199,13 @@ def test_body_default_empty_when_no_paragraphs():
 # ---------------------------------------------------------------------------
 
 def test_three_paths_share_same_shape():
-    """page1 _article_to_pipeline_dict / page3 default_fetcher / stage1 _to_dict
-    の 3 経路が全て Article.to_pipeline_dict() に集約されたことを確認.
+    """page3 default_fetcher / stage1 _to_dict の各経路が
+    Article.to_pipeline_dict() に集約されたことを確認.
+
+    C155 (Sprint 13, 2026-08-10): page1 経路
+    (``regen_front_page_v2._article_to_pipeline_dict``) は v2 Page I
+    パイプライン廃止と共に削除。直接 ``to_pipeline_dict`` を呼ぶ形に置換した。
     """
-    from scripts.regen_front_page_v2 import _article_to_pipeline_dict
     from scripts.selector.stage1 import _to_dict as stage1_to_dict
 
     art = _make_article(
@@ -210,7 +213,9 @@ def test_three_paths_share_same_shape():
         raw={"tribune_category": "business"},
     )
 
-    d_page1 = _article_to_pipeline_dict(art)
+    d_page1 = art.to_pipeline_dict(
+        description="raw description with no tags", body="",
+    )
     d_stage1 = stage1_to_dict(art)
     # page3 経路は default_fetcher 内 inline。直接 to_pipeline_dict を呼んで
     # 同じ shape が返ることを確認（stripping は経路固有のため別途）。

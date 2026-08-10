@@ -44,8 +44,11 @@ def _install_mock_translate():
     """Replace translation_helpers.translate with a deterministic mock.
 
     C81 段階 4 (2026-06-13): translate ロジックが translation_helpers に移動
-    したため、patch 対象もそちらに変更。regen.translate も追従して同じ
-    mock を指す（re-export 経由の caller 互換のため）。
+    したため、patch 対象もそちらに変更。
+
+    C155 (Sprint 13, 2026-08-10): v2 の ``translate`` / ``_translate_article``
+    re-export は Page I パイプライン廃止と共に削除された。patch も呼び出しも
+    translation_helpers 側に一本化する。
     """
     calls: list[str] = []
 
@@ -55,13 +58,11 @@ def _install_mock_translate():
 
     original = trans_mod.translate
     trans_mod.translate = mock_translate
-    regen.translate = mock_translate
     return original, calls
 
 
 def _restore_translate(original):
     trans_mod.translate = original
-    regen.translate = original
 
 
 # Patch out the sleep so tests run instantly.
@@ -91,7 +92,7 @@ def test_en_article_title_translated_desc_passthrough():
             "source_name": "WIRED.com Backchannel",
             "source_language": "en",
         }
-        regen._translate_article(article)
+        trans_mod.translate_article(article)
     finally:
         _restore_translate(orig_t)
         _restore_sleep(orig_s)
@@ -120,7 +121,7 @@ def test_ja_article_no_translation():
             "source_name": "経済産業省ニュースリリース",
             "source_language": "ja",
         }
-        regen._translate_article(article)
+        trans_mod.translate_article(article)
     finally:
         _restore_translate(orig_t)
         _restore_sleep(orig_s)
@@ -148,7 +149,7 @@ def test_source_language_en_overrides_ja_name_heuristic():
             "source_name": "日本語名のソース",  # JA-pattern in name
             "source_language": "en",  # but explicitly EN
         }
-        regen._translate_article(article)
+        trans_mod.translate_article(article)
     finally:
         _restore_translate(orig_t)
         _restore_sleep(orig_s)
@@ -168,7 +169,7 @@ def test_source_language_ja_overrides_en_name_heuristic():
             "source_name": "Forbes Japan",  # name not matched by JA hira-kana heuristic without pattern
             "source_language": "ja",
         }
-        regen._translate_article(article)
+        trans_mod.translate_article(article)
     finally:
         _restore_translate(orig_t)
         _restore_sleep(orig_s)
@@ -195,7 +196,7 @@ def test_missing_source_language_uses_heuristic_for_en_name():
             "source_name": "MIT Sloan Management Review",
             # source_language MISSING — must trigger heuristic fallback
         }
-        regen._translate_article(article)
+        trans_mod.translate_article(article)
     finally:
         _restore_translate(orig_t)
         _restore_sleep(orig_s)
@@ -215,7 +216,7 @@ def test_missing_source_language_uses_heuristic_for_ja_name():
             "source_name": "経済産業省ニュースリリース",
             # source_language MISSING
         }
-        regen._translate_article(article)
+        trans_mod.translate_article(article)
     finally:
         _restore_translate(orig_t)
         _restore_sleep(orig_s)
@@ -246,7 +247,7 @@ def test_translate_for_render_log_markers():
                 "source_language": "ja",
             },
         ]
-        regen.translate_for_render(articles)
+        trans_mod.translate_for_render(articles)
     finally:
         sys.stderr = original_stderr
         _restore_translate(orig_t)

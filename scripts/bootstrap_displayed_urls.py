@@ -10,8 +10,14 @@ Run::
     python3 -m scripts.bootstrap_displayed_urls --date 2026-04-29  # single date
     python3 -m scripts.bootstrap_displayed_urls --dry-run          # don't write
 
-Extraction patterns (mirrors ``regen_front_page_v2.build_page_one_v2`` /
-``build_page_two_v2`` output):
+C155 (Sprint 13, 2026-08-10) 注記：
+    本スクリプトは 2026-04-29/30 の 2 日分を one-shot で埋める用途で書かれた
+    使い捨てツールで、既に役目を終えている。抽出パターンは **当時の v2 紙面
+    構造**（Page I = トップ1本 + セカンド3本 / Page II = 3 社 + Headlines）を
+    前提としており、C155 後の紙面には適用できない。過去日の再生成が必要に
+    なった場合は、対象日の紙面構造に合わせてパターンを書き直すこと。
+
+Extraction patterns (当時の v2 紙面構造。現行紙面とは一致しない):
 
 * Page I: ``<a href="...">`` inside ``<p class="byline" ...>原題：…全文：``
   is the source URL. There are 4 such links per Page I (TOP + SEC1〜3).

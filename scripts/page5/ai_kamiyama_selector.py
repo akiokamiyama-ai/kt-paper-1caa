@@ -94,50 +94,46 @@ def _collect_page3_articles(page3_selections: Any | None) -> list[dict]:
 
 def build_candidate_pool(
     *,
-    page_two_headlines: list[dict] | None = None,
     page3_selections: Any | None = None,
-    page4_articles: list[dict] | None = None,
-    serendipity_article: dict | None = None,
+    page3_runner_ups: list[dict] | None = None,
 ) -> list[dict]:
-    """C40 第二弾の候補プールを構築する.
+    """AIかみやま の候補プールを構築する.
 
-    当日確定紙面の Page II Today's Headlines + Page III + Page IV 学術記事を
-    まとめ、Page V serendipity と URL 衝突したものを除き、URL で順序保持 dedup
-    する。Page I は意図的に含めない（C45 D2 と同じ哲学）。
+    C155 (Sprint 13, 2026-08-10) で構成を変更した。
+
+    旧構成（C40 第二弾）は「当日確定紙面」= Page II Today's Headlines 3 本 +
+    Page III 6 本 + Page IV 学術記事 3 本 = 約 12 本だった。C155 で Headlines と
+    Page IV 学術記事を廃止したため、確定紙面だけでは Page III の 6 本
+    （うち 1 本はセレンディピティ）しか残らない。第5面を AIかみやま 100% に
+    格上げする改定で候補が半減するのは方向が噛み合わないため、**Page III で
+    採用されなかった評価済み上位候補**を加える（神山さん判断、2026-08-10）。
+
+    runner-up は Page III が既に Stage 1/2/3 を通して採点済みなので、
+    プール拡張に追加 LLM コストはかからない。
+
+    Page I は引き続き意図的に含めない（C45 D2 と同じ哲学：週次 essay は
+    editorial / 一筆と参照が重複するため）。
 
     Parameters
     ----------
-    page_two_headlines :
-        Today's Headlines に表示される記事のリスト（``select_todays_headlines``
-        の戻り値そのまま）。
     page3_selections :
         ``Page3Result.selections`` (dict[str, RegionSelection])。
-    page4_articles :
-        Page IV 学術記事リスト（``page4_telemetry["articles_result"]["articles"]``）。
-        concept 部分（概念解説）は紙面記事ではないため対象外。
-    serendipity_article :
-        Page V 上段の serendipity 記事（背中合わせ枠なので除外）。
+        セレンディピティ枠 (SER) もここに含まれる。
+    page3_runner_ups :
+        ``Page3Result.runner_up_candidates``。3 面に載らなかった上位候補。
 
     Returns
     -------
     list[dict]
-        URL を持つ candidate article の順序保持リスト。
+        URL を持つ candidate article の順序保持リスト（確定紙面が先、
+        runner-up が後）。
     """
     pool: list[dict] = []
-    if page_two_headlines:
-        pool.extend(a for a in page_two_headlines if a and a.get("url"))
     pool.extend(_collect_page3_articles(page3_selections))
-    if page4_articles:
-        pool.extend(a for a in page4_articles if a and a.get("url"))
-
-    ser_url = (
-        (serendipity_article or {}).get("url") if serendipity_article else None
-    )
+    if page3_runner_ups:
+        pool.extend(a for a in page3_runner_ups if a and a.get("url"))
 
     seen: set[str] = set()
-    if ser_url:
-        seen.add(ser_url)
-
     deduped: list[dict] = []
     for a in pool:
         url = a.get("url")
@@ -151,35 +147,30 @@ def build_candidate_pool(
 def select_ai_kamiyama_article(
     *,
     target_date: date,
-    page_two_headlines: list[dict] | None = None,
     page3_selections: Any | None = None,
-    page4_articles: list[dict] | None = None,
-    serendipity_article: dict | None = None,
+    page3_runner_ups: list[dict] | None = None,
     registry: SourceRegistry | None = None,
     eligible_categories: tuple[str, ...] | None = None,
     rng: random.Random | None = None,
     top_n: int = DEFAULT_TOP_N,
 ) -> dict | None:
-    """AIかみやま 専用の記事選定（C40 第二弾、2026-05-30）.
+    """AIかみやま 専用の記事選定（C40 第二弾 2026-05-30 → C155 で候補拡張）.
 
-    当日確定紙面（Page II Today's Headlines + Page III + Page IV 学術記事）から、
-    Page V serendipity を除いた候補プールで選定する。
+    候補プールは Page III の確定 6 枠 + Page III で採用されなかった評価済み
+    上位候補（``Page3Result.runner_up_candidates``）。詳細は
+    ``build_candidate_pool`` の docstring を参照。
 
-    Page I は意図的に対象外（C45 D2 と同じ哲学：v3 swap で消えるか、editorial と
-    の重複参照を避けるため）。
+    Page I は意図的に対象外（C45 D2 と同じ哲学：週次 essay は editorial /
+    一筆と参照が重複するため）。
 
     Parameters
     ----------
     target_date :
         対象日（将来 Phase 3 のテーマ判定で使う想定、現状は使用しない）。
-    page_two_headlines :
-        Page II Today's Headlines のリスト（``select_todays_headlines`` 戻り値）。
     page3_selections :
         ``Page3Result.selections`` (dict[str, RegionSelection])。
-    page4_articles :
-        Page IV 学術記事のリスト（concept は含めない）。
-    serendipity_article :
-        Page V 上段に出る serendipity 記事（背中合わせ枠なので除外）。
+    page3_runner_ups :
+        ``Page3Result.runner_up_candidates``。
     registry :
         source category 解決用。``None`` の場合は category フィルタを skip。
         C40 第二弾以降、候補プールが既に編集判断を通っているため通常 None で
@@ -198,10 +189,8 @@ def select_ai_kamiyama_article(
         選ばれた article dict、または候補ゼロで None。
     """
     pool = build_candidate_pool(
-        page_two_headlines=page_two_headlines,
         page3_selections=page3_selections,
-        page4_articles=page4_articles,
-        serendipity_article=serendipity_article,
+        page3_runner_ups=page3_runner_ups,
     )
     if not pool:
         return None

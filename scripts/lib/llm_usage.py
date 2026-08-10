@@ -217,15 +217,21 @@ def record_call(
     Sprint 6 Phase 1 added it for per-page cost analysis. Defaults to
     ``"untagged"`` so call sites can be migrated incrementally.
 
-    Phase A (Sprint 8, 2026-06-01) で命名規約を整理：
-      * ``stage2.batch`` — 美意識スコアリングのバッチ評価（page 非依存、フラット）
-      * ``page1.lead_deck`` / ``page1.why_important`` — Page I (v2 lead deck)
+    Phase A (Sprint 8, 2026-06-01) で命名規約を整理、C155 (Sprint 13,
+    2026-08-10) の紙面再構成で以下の一覧に更新：
+      * ``stage2.batch.layer{1,2,3}.<caller>`` — 美意識スコアリングのバッチ評価。
+        caller は page3 / page3_serendipity / page2 / page6
       * ``page1_v3.essay`` / ``page1_v3.saturday_digest`` — Page I (v3 essay/digest)
       * ``page2.step1`` / ``page2.step2`` — Page II 社別 selector
-      * ``page2.headlines_summary`` — Page II Today's Headlines の Haiku 要約
       * ``page4.concept`` — Page IV 今日の概念
+      * ``page5.article_summary`` — Page V 一筆の参照記事サマリ
       * ``page6.leisure`` / ``page6.cooking`` — Page VI 趣味コラム
       * ``editorial`` — Page VI 後の編集後記 postscript（紙面横断で page 非依存）
+
+    C155 で廃止された tag（過去日の log には残る）：
+      ``page1.lead_deck`` / ``page1.why_important`` — v2 Page I
+      ``page2.headlines_summary`` — Today's Headlines
+      ``stage2.*.page1_master`` / ``stage2.*.page4`` / ``stage2.*.page5``
     """
     d = today or _jst_today()
     data = _load_today(d)
