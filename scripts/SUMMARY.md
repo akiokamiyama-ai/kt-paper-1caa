@@ -266,17 +266,23 @@ lib/llm_usage.py      ──→ stdlib のみ（Phase 2 LLM呼び出しから利
 
 ## 12. scripts/lib/drivers/html.py
 
-**目的**：(a) HtmlScrapeDriver の placeholder スタブ、(b) BBC記事ページからの本文抽出。
+**目的**：(a) HtmlScrapeDriver の placeholder スタブ、(b) BBC記事ページからの本文抽出（**現在は破損、deprecated**）。
 
 **主要要素**
 - `HtmlScrapeDriver.fetch()`：「scraper not implemented」プレースホルダ Article を1本返す（per-site サブクラスで上書き想定、Phase 2以降で山と道Shopify／YAMAP SaaS 等用に実装）
-- `BbcArticleScraper.paragraphs(url, max_n)`：BBCの styled-component class `sc-XXXX` を正規表現で抽出 → タグ除去 → 整形 → 60〜480文字の段落を最大N本
+- `BbcArticleScraper.paragraphs(url, max_n)`：**DEPRECATED (C156)**。BBCの styled-component class `sc-XXXX` を正規表現で抽出する設計だったが、**2026-08 時点で BBC の CSS 変更により 1 件も当たらない**
 
 **外部依存**：BBC News 記事ページ（CSS 命名規則変更で破綻リスク、roadmap.md §4.2 既知の脆さ）
 
 **失敗モード**
 - HTTP 失敗：stderr に `[bbc-scrape] FAIL`、空リスト
-- BBC が `sc-` prefix を変えた場合：silently 0件返却（テスト推奨：roadmap.md §4.4 技術的負債）
+- ~~BBC が `sc-` prefix を変えた場合：silently 0件返却~~
+  → **⚠️ この予見が的中した。** C155a (2026-08-10) のコスト調査で、
+  `page2.headlines_summary` の LLM 呼び出しが 20 日間 0 件であることから発覚。
+  Today's Headlines は英語 description のまま出ていた（6/29 の C109 観察の真因の
+  片割れ。詳細は `docs/observations.md`「2 面 Headlines 英語ソースの和訳消失」節）。
+  C155 で Headlines を枠ごと廃止、C156 で deprecated 化 + 0 件時に
+  `BROKEN` / `EMPTY` を切り分けて warn するよう修正済
 
 **読み書きするファイル**：なし（外部HTTPのみ）
 
@@ -285,4 +291,8 @@ lib/llm_usage.py      ──→ stdlib のみ（Phase 2 LLM呼び出しから利
 ## バージョン
 
 - v1.0：2026-04-27 Phase 1 完了直後に作成
-- 次回見直し：Phase 2 Sprint 1 完了時（選定ロジック追加で該当セクション拡張）
+- **⚠️ 本ファイルは v1.0 以降ほぼ更新されておらず、現状と大きく乖離している。**
+  記載は Phase 1 の fetch 基盤 10 モジュールのみだが、`scripts/` は現在 90 モジュール超。
+  C155 (Sprint 13, 2026-08-10) で §2 の `regen_front_page` 系や §4 の `render.py` が
+  扱う紙面構造も変わった。現行の紙面構成は `docs/paper_structure_v2.md` を参照。
+- 次回見直し：全面書き直しが必要（Sprint 14 候補）

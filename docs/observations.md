@@ -895,7 +895,7 @@ Tribune の運用中に神山さんが発見した改善点・違和感・将来
 - **状態**: 完了（C138 調査 + C139/C140 実装）
 - **関連 commit**: C139 (`5ca4183`) / C140 (`21f0e5e`)
 
-### 2 面 Headlines 英語ソース（BBC 等）の和訳消失 → 仕様として受容
+### 2 面 Headlines 英語ソース（BBC 等）の和訳消失 → 真因は 2 つあった
 
 - **発見日**: 2026-06-29（W6 Day 2 朝刊レビュー）
 - **観察当初**: 以前は BBC 等英語ソースが日本語訳で表示されていたが、
@@ -909,10 +909,47 @@ Tribune の運用中に神山さんが発見した改善点・違和感・将来
     truncate のみ、翻訳経路なし（6/28 例：「Lithium battery fires...」）
   - Sprint 9 改革（C42 / C75 / C76 / C79）によるソース多様化の自然な結果
 - **神山さん判断**: 選択肢 C（仕様として受容、様子見）
-- **将来検討（Sprint 11+）**: Today's Headlines にタイトル翻訳経路を追加する
-  なら別案件として扱う
-- **状態**: 完了（仕様として受容）
-- **関連 commit**: C109 調査結果報告のみ
+
+#### ⚠️ C155a / C156 追記（2026-08-10）— **真因は 2 つあった**
+
+C109 の調査は「Page I 降格」を真因と結論づけたが、**もう 1 つ独立した原因が
+並行して存在していた**ことが C155a のコスト調査で判明した。
+
+- **真因 1（C109 で特定済）**: Page I 降格による翻訳経路の喪失。
+  Headlines のレンダラにはタイトル翻訳が無い
+- **真因 2（C155a で新たに判明）**: **`BbcArticleScraper` の破損**。
+  Headlines には「BBC 記事のみ本文を取得して Haiku で 250-350 字の日本語
+  要約を付ける」経路（`generate_summary_with_llm`）が Sprint 7 Phase 2 で
+  実装されていたが、これが**動いていなかった**
+
+  - `scripts/lib/drivers/html.py` の `sc-` prefix 正規表現が BBC の CSS 変更で
+    当たらなくなり、段落抽出が **silently 0 件**を返す状態
+  - 本文 0 件 → `BODY_MIN_CHARS=400` 未満 → `format_summary()`（description の
+    truncate）に fallback
+  - 実測: `page2.headlines_summary` タグの LLM 呼び出しが **2026-08-01〜08-10
+    の 10 日間で 0 件**。7/13〜7/22 の 10 日間も 0 件
+  - 8/10 紙面の実物: `It's lurking in one of the US's top exports: higher education`
+    （英語 description がそのまま）
+
+- **なぜ C109 時点で気づけなかったか**: 0 件返却が silent だったため、
+  呼び出し側から見ると「本文が短い記事」と区別がつかず、fallback に落ちる
+  だけで何のログも出なかった。`scripts/SUMMARY.md` §12 は
+  「BBC が sc- prefix を変えた場合：silently 0件返却」と **failure mode を
+  正確に予見していた**が、検知手段が無かった
+- **教訓**: fallback は紙面を守るが、**fallback したこと自体を記録しないと
+  破損が可視化されない**。C155 で新設した `page5/article_summarizer.py` は
+  fallback 時に必ず stderr へ理由を出すようにしてある
+
+- **対処**:
+  - C155（2026-08-16 切替）で Today's Headlines を枠ごと廃止 → 実害は消滅
+  - C156 で `BbcArticleScraper` を deprecated 明示 + 0 件時に
+    `BROKEN` / `EMPTY` を切り分けて warn。`DeprecationWarning` も送出
+  - 唯一の import 元は Phase 1 レガシー `scripts/regen_front_page.py`
+    （cron / GHA から実行されない使い捨てスクリプト）。修正は別途判断
+- **将来検討**: 本文抽出を復活させるなら CSS クラス名依存をやめ、構造ベース
+  抽出か Readability 系ライブラリの導入が必要。BBC 以外にも効かせたいなら後者
+- **状態**: 完了（C155 で枠ごと廃止 + C156 で deprecated 化）
+- **関連 commit**: C109 調査結果報告のみ / C155 (`574fc57`) / C156
 
 ### Sprint 9 中の主要観察事項
 
