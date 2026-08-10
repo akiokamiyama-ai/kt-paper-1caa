@@ -524,6 +524,11 @@
       "concept_id": "quantum_computation",
       "name_ja": "量子計算",
       "displayed_on": "2026-08-10"
+    },
+    {
+      "concept_id": "plato",
+      "name_ja": "プラトン",
+      "displayed_on": "2026-08-11"
     }
   ]
 }

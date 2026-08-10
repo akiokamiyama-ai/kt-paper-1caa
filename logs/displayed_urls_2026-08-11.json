@@ -1,0 +1,25 @@
+{
+  "date": "2026-08-11",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/business/articles/2608/10/news028.html",
+    "human_energy": "https://jinjibu.jp/news/detl/26734/",
+    "web_repo": "https://www.bc01.net/serialize/yasuda_009/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/chinas-policies-are-not-beggar-thy-neighbor-by-dani-rodrik-2026-08",
+    "https://www.ft.com/content/98a8fd17-15b6-4f67-9cb4-825722b11348?syn-25a6b1a6=1",
+    "https://www.mckinsey.com/institute-for-economic-mobility/our-insights/solutions-for-the-black-maternal-health-crisis",
+    "https://wordswithoutborders.org/read/article/2026-07/a-womans-presence-completes-the-existence-of-a-man-mohiuddin-khawaja/",
+    "https://3quarksdaily.com/3quarksdaily/2026/08/how-earths-night-lights-became-our-most-honest-economist.html",
+    "https://stereogum.com/2507840/heavensouls-dawn-of-the-city/music/"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://www.project-syndicate.org/commentary/low-carbon-economy-distributing-knowledge-and-innovation-not-just-technology-by-pedro-ivo-ferraz-da-silva-2026-08",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-08/interview-with-erika-kobayashi-basak-bergstrom/",
+    "music": "https://stereogum.com/2507821/radiator-hospital-walk-with-love/music/",
+    "outdoor": "https://www.atlasobscura.com/places/mollestien"
+  },
+  "headlines_urls": []
+}

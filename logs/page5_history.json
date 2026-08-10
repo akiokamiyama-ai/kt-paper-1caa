@@ -1832,6 +1832,20 @@
       "ai_kamiyama_title": "What We Talk About When We Talk About the Interstitium",
       "ai_kamiyama_category": "books:海外純文学",
       "ai_kamiyama_source_name": "The Paris Review"
+    },
+    {
+      "displayed_on": "2026-08-11",
+      "article_url": "https://stereogum.com/2507840/heavensouls-dawn-of-the-city/music/",
+      "article_title": "heavensouls – “dawn of the city”",
+      "article_category": "music",
+      "tie_candidates": [
+        "music"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": false,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
     }
   ]
 }
