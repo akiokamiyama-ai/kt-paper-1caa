@@ -1846,6 +1846,20 @@
       "ai_kamiyama_failed": false,
       "fallback_used": false,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-08-12",
+      "article_url": "https://www.axismag.jp/posts/2026/08/717636.html",
+      "article_title": "Morrama、家族の会話を支えるAIデバイス「Alight」を発表。データ取得ではなく、人とのつながりのためのプロダクト",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": false,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
     }
   ]
 }

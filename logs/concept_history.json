@@ -529,6 +529,11 @@
       "concept_id": "plato",
       "name_ja": "プラトン",
       "displayed_on": "2026-08-11"
+    },
+    {
+      "concept_id": "heidegger",
+      "name_ja": "ハイデガー",
+      "displayed_on": "2026-08-12"
     }
   ]
 }

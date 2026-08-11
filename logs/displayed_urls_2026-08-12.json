@@ -1,0 +1,25 @@
+{
+  "date": "2026-08-12",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://japan.zdnet.com/article/35251459/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2608/11/news005.html",
+    "web_repo": "https://www.bc01.net/seminar-report/fc_sesshon_202608_2/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/ai-token-economy-requires-data-cooperatives-fair-remuneration-collective-governance-by-yaniv-benhamou-2026-08",
+    "https://www.asahi.com/articles/ASV8C3F5FV8CULFA00PM.html?ref=rss",
+    "https://www.mckinsey.com/featured-insights/mckinsey-on-books/author-talks-the-biggest-misconceptions-about-leadership",
+    "https://wordswithoutborders.org/read/article/2026-08/interview-with-erika-kobayashi-basak-bergstrom/",
+    "https://nautil.us/why-doctors-telling-patients-their-symptoms-are-normal-can-backfire-1283597/",
+    "https://www.axismag.jp/posts/2026/08/717636.html"
+  ],
+  "page4_urls": [],
+  "page5_url": null,
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-08/another-detective-in-this-mystery-on-cotranslating-with-a-parent-andrei/",
+    "music": "https://stereogum.com/2507973/adult-dvd-rolling-face/music/",
+    "outdoor": "https://sectionhiker.com/are-ultralight-tarps-dead/"
+  },
+  "headlines_urls": []
+}
