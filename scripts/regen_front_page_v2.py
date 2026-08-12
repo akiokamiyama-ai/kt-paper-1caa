@@ -61,6 +61,7 @@ from .editorial import editorial_writer
 from .header import header_builder as header_module
 from .page4 import concept_selector as page4_concept_selector
 from .page4 import concept_writer as page4_concept_writer
+from .page4 import related_concepts as page4_related
 from .page5 import ai_kamiyama_writer as page5_ai_kamiyama
 from .page6 import cooking_generator as page6_cooking
 from .page6 import leisure_recommender as page6_leisure
@@ -617,7 +618,44 @@ def inject_page_four_css(html_text: str) -> str:
 _PAGE4_CONCEPT_BOLD_RE = re.compile(r"\*\*([^*\n]+?)\*\*")
 
 
-def _render_page4_concept_column(concept: dict, essay: str) -> str:
+def _render_page4_related_section(related: list[dict]) -> str:
+    """関連概念セクション（C158, Sprint 13, 2026-08-12）。
+
+    C155 で学術ニュース枠を廃止して第4面が概念 1 本だけになったため、
+    concepts.yaml のグラフ構造（``related``）を紙面に出して分量を戻しつつ、
+    神山さんが「次に掘りたい概念」を見つける導線にする。
+
+    ``related`` が空なら空文字列を返し、セクションごと出さない
+    （概念のみのレイアウトに自然に戻る）。
+    """
+    if not related:
+        return ""
+    items = []
+    for r in related:
+        name_ja = _esc(r.get("name_ja", ""))
+        name_en = _esc(r.get("name_en", ""))
+        note = _esc(r.get("note", ""))
+        note = _PAGE4_CONCEPT_BOLD_RE.sub(r"<strong>\1</strong>", note)
+        en_html = f'<span class="rc-en">{name_en}</span>' if name_en else ""
+        items.append(
+            f'        <li class="related-concept-item">\n'
+            f'          <span class="rc-name">{name_ja}</span>{en_html}\n'
+            f'          <p class="rc-note">{note}</p>\n'
+            f'        </li>'
+        )
+    items_html = "\n".join(items)
+    return f"""
+      <aside class="related-concepts">
+        <div class="rc-heading">この概念とつながるもの</div>
+        <ul class="related-concept-list">
+{items_html}
+        </ul>
+      </aside>"""
+
+
+def _render_page4_concept_column(
+    concept: dict, essay: str, related: list[dict] | None = None,
+) -> str:
     """Render the left column (concept of the week).
 
     C55 (Sprint 8, 2026-06-02) — C52 (1 面論考) と同じ二段ガードの 2 段目。
@@ -644,7 +682,7 @@ def _render_page4_concept_column(concept: dict, essay: str) -> str:
       </div>
       <div class="concept-essay">
         <p>{essay_html}</p>
-      </div>
+      </div>{_render_page4_related_section(related or [])}
     </article>""".rstrip()
 
 
@@ -664,14 +702,25 @@ def build_page_four_v2(target_date: date) -> tuple[str, dict]:
     C155 (Sprint 13, 2026-08-10): 学術ニュース 3 本を廃止し、「今日の概念」
     のみの面にした。概念選出ロジック（222 概念 / 60 日除外窓）は不変。
 
+    C158 (Sprint 13, 2026-08-12): 関連概念セクションを追加。学術ニュース廃止で
+    面が概念 1 本だけになり分量的に寂しくなったため、concepts.yaml のグラフ
+    構造を紙面に可視化する。関連概念の解説は本文と **同じ 1 回の LLM 呼び出し**
+    で生成するのでコスト増はトークン分のみ。
+
     Returns ``(html, telemetry)`` where telemetry contains:
       - concept: the chosen concept dict
-      - essay_result: {essay, is_fallback, cost_usd}
+      - essay_result: {essay, related, is_fallback, cost_usd}
     """
-    concept = page4_concept_selector.select_concept_for_today(today=target_date)
-    essay_result = page4_concept_writer.write_essay(concept)
+    concepts = page4_concept_selector.load_concepts()
+    concept = page4_concept_selector.select_concept_for_today(
+        today=target_date, concepts=concepts,
+    )
+    related = page4_related.select_related(concept, concepts)
+    essay_result = page4_concept_writer.write_essay(concept, related)
 
-    concept_html = _render_page4_concept_column(concept, essay_result["essay"])
+    concept_html = _render_page4_concept_column(
+        concept, essay_result["essay"], essay_result.get("related"),
+    )
 
     page = f"""<section class="page page-four">
     <div class="page-banner"><span class="pg-num">— Page IV —</span> Arts &amp; Letters · A Page for Slow Reading</div>

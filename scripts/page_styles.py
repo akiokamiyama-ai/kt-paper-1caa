@@ -256,6 +256,64 @@ PAGE_FOUR_CSS = f"""
   border-right: none;
   padding-right: 0;
 }}
+/* C158 (Sprint 13, 2026-08-12): 関連概念セクション。
+   concepts.yaml の related グラフを紙面に可視化し、C155 で学術ニュースを
+   外して薄くなった面の分量を戻す。本文との階層差を出すため、地色を敷いて
+   「本文の付録」であることを視覚的に示す。 */
+.related-concepts {{
+  margin-top: 28px;
+  padding: 18px 22px;
+  background: #f7f6f3;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}}
+.rc-heading {{
+  font-family: 'Noto Serif JP', serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: #666;
+  margin-bottom: 14px;
+}}
+.related-concept-list {{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}}
+.related-concept-item {{
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px dotted #ccc;
+}}
+.related-concept-item:last-child {{
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}}
+.rc-name {{
+  font-family: 'Noto Serif JP', 'Old Standard TT', serif;
+  font-size: 15px;
+  font-weight: 700;
+  margin-right: 8px;
+}}
+.rc-en {{
+  font-size: 11px;
+  font-style: italic;
+  color: #888;
+}}
+.rc-note {{
+  font-family: 'Noto Serif JP', 'Old Standard TT', serif;
+  font-size: 13px;
+  line-height: 1.8;
+  color: #333;
+  margin: 5px 0 0;
+  text-align: justify;
+}}
+@media (max-width: 480px) {{
+  .related-concepts {{ padding: 14px 14px; margin-top: 20px; }}
+  .rc-name {{ font-size: 14px; }}
+  .rc-note {{ font-size: 12px; }}
+}}
 /* Sprint 8 C41 (2026-05-28): iPad / iPhone レスポンシブ。 */
 @media (max-width: 834px) {{
   .page-four-grid {{
