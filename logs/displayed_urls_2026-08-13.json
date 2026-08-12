@@ -1,0 +1,25 @@
+{
+  "date": "2026-08-13",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://www.ppc.go.jp/news/press/2026/260717",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2608/12/news018.html",
+    "web_repo": "https://www.bc01.net/article/tokyu-gf_202608/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/icc-lacks-authority-and-legitimacy-to-act-as-global-guardian-of-human-rights-by-shlomo-ben-ami-2026-08",
+    "https://news.google.com/rss/articles/CBMinAFBVV95cUxQNld0SUlYR0RFZHBWempqbXJwcUpjakROVXhsX1lubnRpVm1JclFsTkZIalRZSGNmXzBweGVsTkxpZV9UUkRSZzgxQld4OWRhSzhVclRPZzdSRXB2Q2o0Z1JQODV4YmZGQjdxWWpGeWRCNzNZVEdMSDAzV2hiazVFWld2THRzUDdSWjVLQWpNSk1DZnhRUFBiUXp1VUM?oc=5",
+    "https://www.mckinsey.com/capabilities/people-and-organizational-performance/our-insights/ai-transformations-run-on-trust",
+    "https://wordswithoutborders.org/read/article/2026-08/another-detective-in-this-mystery-on-cotranslating-with-a-parent-andrei/",
+    "https://nautil.us/we-wanted-to-create-an-experience-of-microscopic-awe-a-radical-new-view-of-sacred-plants-1283647/",
+    "https://thetrek.co/pacific-crest-trail/new-study-shows-hiking-with-an-engineer-has-no-effect-on-daily-enjoyment/"
+  ],
+  "page4_urls": [],
+  "page5_url": null,
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/08/12/the-bookstore-slash-skate-shop-next-to-ballerina-farm/",
+    "music": "https://stereogum.com/2508083/saturday-night-live-parts-ways-with-longtime-music-booker/news/",
+    "outdoor": "https://sectionhiker.com/review-therm-a-rest-parsec-20-down-sleeping-bag/"
+  },
+  "headlines_urls": []
+}

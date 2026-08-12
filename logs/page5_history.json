@@ -1860,6 +1860,20 @@
       "ai_kamiyama_failed": false,
       "fallback_used": false,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-08-13",
+      "article_url": "https://thetrek.co/pacific-crest-trail/new-study-shows-hiking-with-an-engineer-has-no-effect-on-daily-enjoyment/",
+      "article_title": "New Study Shows Hiking With an Engineer Has No Effect on Daily Enjoyment",
+      "article_category": "outdoor",
+      "tie_candidates": [
+        "outdoor"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": false,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
     }
   ]
 }
