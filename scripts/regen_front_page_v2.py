@@ -27,6 +27,7 @@ CLI::
 """
 
 from __future__ import annotations
+from .lib.jst import jst_today
 
 import argparse
 import html
@@ -1606,7 +1607,7 @@ def main(argv: list[str] | None = None) -> int:
             print(f"invalid --date {args.date!r}", file=sys.stderr)
             return 1
     else:
-        target = date.today()
+        target = jst_today()
 
     print(f"Target date: {target.isoformat()}", file=sys.stderr)
 

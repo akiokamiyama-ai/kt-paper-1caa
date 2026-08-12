@@ -12,6 +12,7 @@ Pipeline:
 """
 
 from __future__ import annotations
+from ..lib.jst import jst_today
 
 import json
 import re
@@ -259,7 +260,7 @@ def generate_cooking_column(
         }
     """
     if target_date is None:
-        target_date = date.today()
+        target_date = jst_today()
     if history is None:
         history = load_history(path=history_path)
 

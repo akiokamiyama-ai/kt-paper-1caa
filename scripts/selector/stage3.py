@@ -45,6 +45,7 @@ Phase 2 Sprint 1 scope
 """
 
 from __future__ import annotations
+from ..lib.jst import jst_today
 
 import argparse
 import json
@@ -200,7 +201,9 @@ def integrate_scores(
 # ---------------------------------------------------------------------------
 
 def _scores_log_path(d: date | None = None) -> Path:
-    return LOG_DIR / f"scores_{(d or date.today()).isoformat()}.json"
+    # C159: stage2._scores_log_path と同じ JST 基準に揃える（CLI 専用経路だが、
+    # 基準がずれると `python3 -m scripts.selector.stage3` が別日のログを掴む）。
+    return LOG_DIR / f"scores_{(d or jst_today()).isoformat()}.json"
 
 
 def update_log_file(

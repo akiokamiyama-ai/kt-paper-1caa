@@ -45,6 +45,7 @@ CLI
 """
 
 from __future__ import annotations
+from ..lib.jst import jst_today
 
 import argparse
 import json
@@ -414,7 +415,7 @@ def main(argv: list[str] | None = None) -> int:
 
     # 期間決定
     if args.days is not None:
-        end = date.today()
+        end = jst_today()
         start = end - timedelta(days=args.days - 1)
     elif args.start and args.end:
         try:
@@ -425,7 +426,7 @@ def main(argv: list[str] | None = None) -> int:
             return 2
     else:
         # デフォルト: 過去 7 日
-        end = date.today()
+        end = jst_today()
         start = end - timedelta(days=6)
 
     if end < start:

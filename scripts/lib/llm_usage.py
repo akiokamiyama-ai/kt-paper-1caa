@@ -43,9 +43,8 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
-from datetime import date, datetime
+from datetime import date
 from pathlib import Path
-from zoneinfo import ZoneInfo
 
 LOG_DIR = Path(__file__).resolve().parent.parent.parent / "logs"
 
@@ -54,17 +53,11 @@ LOG_DIR = Path(__file__).resolve().parent.parent.parent / "logs"
 # 06:29 the UTC clock still reads the previous day, so the 5/10 archive's
 # costs landed in llm_usage_2026-05-09.json. We anchor all "today" lookups
 # to JST so the log path matches the archive date.
-JST = ZoneInfo("Asia/Tokyo")
-
-
-def _jst_today() -> date:
-    """Return today's date in JST (Tribune's editorial day)."""
-    return datetime.now(JST).date()
-
-
-def _jst_now_iso() -> str:
-    """Return current JST timestamp (seconds precision, no tz suffix)."""
-    return datetime.now(JST).replace(tzinfo=None).isoformat(timespec="seconds")
+# C159 (Sprint 13, 2026-08-12): 実装を scripts/lib/jst.py に一本化。
+# 同じ JST anchor が本 module と stage2_shadow.py に重複していたため
+# （3 度目の同種バグ = scores_*.json の発覚を機に集約）。
+# 旧名は外部 import 互換のため re-export として残す。
+from .jst import jst_now_iso as _jst_now_iso, jst_today as _jst_today  # noqa: F401
 
 # Caps. Override at runtime by editing this file (intentionally not exposed
 # via env vars — these are durable safety bounds, not per-run knobs).

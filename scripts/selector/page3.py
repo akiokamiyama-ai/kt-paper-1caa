@@ -39,6 +39,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from ..lib import llm_usage
+from ..lib.jst import jst_today
 from .source_registry import SourceRegistry, build_registry
 from .stage1 import run_stage1
 from .stage2 import run_stage2  # noqa: F401  re-export 互換
@@ -869,7 +870,7 @@ def run_page3_pipeline(
         テスト時にモック差し替え。
     """
     if target_date is None:
-        target_date = date.today()
+        target_date = jst_today()
     if fetcher is None:
         fetcher = default_fetcher
     if serendipity_selector is None:
@@ -963,11 +964,12 @@ def run_page3_pipeline(
 # ---------------------------------------------------------------------------
 
 def _page3_log_path(d: date | None = None) -> Path:
-    return LOG_DIR / f"page3_selection_{(d or date.today()).isoformat()}.json"
+    # C159: UTC → JST（他ログと基準を統一）。
+    return LOG_DIR / f"page3_selection_{(d or jst_today()).isoformat()}.json"
 
 
 def write_page3_log(result: Page3Result) -> Path:
-    today = result.today or date.today()
+    today = result.today or jst_today()
     path = _page3_log_path(today)
     LOG_DIR.mkdir(parents=True, exist_ok=True)
 

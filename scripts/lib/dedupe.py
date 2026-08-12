@@ -16,6 +16,7 @@ Format of one log file::
 """
 
 from __future__ import annotations
+from .jst import jst_today
 
 import json
 from datetime import date, timedelta
@@ -33,7 +34,7 @@ def _log_path(d: date) -> Path:
 
 def load_recent_urls(today: date | None = None) -> set[str]:
     """Read the last RETENTION_DAYS log files and return the union of URLs."""
-    base = today or date.today()
+    base = today or jst_today()
     out: set[str] = set()
     for offset in range(RETENTION_DAYS):
         d = base - timedelta(days=offset)
@@ -54,7 +55,7 @@ def append_today(articles: list[Article], today: date | None = None) -> Path:
     If a log already exists for today (e.g. multiple fetch runs in one day),
     URLs are merged so a re-run doesn't drop earlier entries.
     """
-    base = today or date.today()
+    base = today or jst_today()
     path = _log_path(base)
     existing_urls: list[str] = []
     existing_by_src: dict[str, list[str]] = {}

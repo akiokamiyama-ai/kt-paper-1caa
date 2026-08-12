@@ -51,6 +51,7 @@ Why "上位 N からランダム抽選"：score 1位固定だと毎日同じ記�
 """
 
 from __future__ import annotations
+from ..lib.jst import jst_today
 
 import html
 import json
@@ -581,7 +582,7 @@ def select_for_today(
         }
     """
     if target_date is None:
-        target_date = date.today()
+        target_date = jst_today()
     if rng is None:
         rng = random.Random()
     if registry is None:

@@ -23,6 +23,7 @@ archive ファイルは v2 状態のまま保たれる。
 """
 
 from __future__ import annotations
+from .lib.jst import jst_today
 
 import argparse
 import importlib
@@ -100,7 +101,7 @@ def _parse_target_date(s: str | None) -> date | None:
         except ValueError:
             print(f"[page1_v3] invalid --date {s!r}", file=sys.stderr)
             return None
-    return date.today()
+    return jst_today()
 
 
 # ============================================================================

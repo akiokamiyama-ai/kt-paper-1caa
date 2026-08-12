@@ -29,6 +29,7 @@ Public entry points
 """
 
 from __future__ import annotations
+from ..lib.jst import jst_today
 
 import argparse
 import json
@@ -1349,7 +1350,7 @@ def run_page2_pipeline(
     fetch + Stage 2 の 3 社重複が解消され Page II 所要時間が大幅短縮される。
     """
     if today is None:
-        today = date.today()
+        today = jst_today()
     result = Page2Result(threshold=threshold, today=today)
 
     # Pre-flight cap check.
@@ -1410,11 +1411,13 @@ def run_page2_pipeline(
 # ---------------------------------------------------------------------------
 
 def _page2_log_path(d: date | None = None) -> Path:
-    return LOG_DIR / f"page2_scores_{(d or date.today()).isoformat()}.json"
+    # C159: UTC → JST。本番は result.today（--date 由来）が渡るのでずれないが、
+    # デフォルト経路の基準を他ログと揃える。
+    return LOG_DIR / f"page2_scores_{(d or jst_today()).isoformat()}.json"
 
 
 def write_page2_log(result: Page2Result) -> Path:
-    today = result.today or date.today()
+    today = result.today or jst_today()
     path = _page2_log_path(today)
     LOG_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -1560,7 +1563,7 @@ def main(argv: list[str] | None = None) -> int:
             print(f"invalid --date {args.date!r}", file=sys.stderr)
             return 1
     else:
-        target = date.today()
+        target = jst_today()
 
     cap = llm_usage.check_caps(target)
     if not cap.ok:

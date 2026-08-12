@@ -26,10 +26,9 @@ from __future__ import annotations
 import json
 import os
 import sys
-from datetime import date, datetime
+from datetime import date
 from pathlib import Path
 from typing import Any
-from zoneinfo import ZoneInfo
 
 from .stage2 import (
     LayerConfig,
@@ -46,12 +45,8 @@ LOG_DIR = PROJECT_ROOT / "logs"
 # 1 日ずれる事故が起きていた（6/16 朝の artifact stage2_shadow_2026-06-15.json
 # が実は 6/16 朝刊分）。``scripts/lib/llm_usage.py`` と同じ JST anchor を採用し、
 # 日付を「Tribune の編集日」と一致させる。
-_JST = ZoneInfo("Asia/Tokyo")
-
-
-def _jst_today() -> date:
-    """Return today's date in JST (Tribune's editorial day, C88)."""
-    return datetime.now(_JST).date()
+# C159 (Sprint 13, 2026-08-12): 実装を scripts/lib/jst.py に一本化。
+from ..lib.jst import jst_today as _jst_today  # noqa: F401
 
 # 環境変数名（GHA workflow で指定可能）
 ENV_MODE = "TRIBUNE_STAGE2_MODE"

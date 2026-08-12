@@ -15,6 +15,7 @@ Pipeline (per area = books | music | outdoor):
 """
 
 from __future__ import annotations
+from ..lib.jst import jst_today
 
 import json
 import re
@@ -396,7 +397,7 @@ def recommend_for_area(
     if area not in SUPPORTED_AREAS:
         raise ValueError(f"unsupported area: {area!r}")
     if target_date is None:
-        target_date = date.today()
+        target_date = jst_today()
 
     # 1〜3) Fetch + Stage 1+2+3
     scored, fetch_cost = _fetch_and_score_area(

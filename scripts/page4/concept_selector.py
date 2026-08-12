@@ -9,6 +9,7 @@ window, reuse the **oldest** displayed concept (warning logged).
 """
 
 from __future__ import annotations
+from ..lib.jst import jst_today
 
 import json
 import random
@@ -91,7 +92,7 @@ def select_concept_for_today(
     pass an explicit ``rng=random.Random(seed)``.
     """
     if today is None:
-        today = date.today()
+        today = jst_today()
     if concepts is None:
         concepts = load_concepts()
     if history is None:

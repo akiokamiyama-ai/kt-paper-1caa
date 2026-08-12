@@ -68,6 +68,7 @@ Public API:
 """
 
 from __future__ import annotations
+from ..lib.jst import jst_today
 
 import json
 from datetime import date, timedelta
@@ -139,7 +140,7 @@ def load_recently_displayed_urls(
     if days_back < 1:
         return set()
     if until_date is None:
-        until_date = date.today()
+        until_date = jst_today()
     if page == "page2" and not company_key:
         raise ValueError("company_key is required when page='page2'")
 

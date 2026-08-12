@@ -693,7 +693,9 @@ def test_jst_today_uses_tokyo_timezone():
                 return fixed_utc.replace(tzinfo=None)
             return fixed_utc.astimezone(tz)
 
-    with patch.object(shw, "datetime", _FakeDT):
+    # C159 (2026-08-12): _jst_today の実装が scripts/lib/jst.py に集約されたため、
+    # patch 対象を stage2_shadow.datetime から共通ヘルパ側に変更。
+    with patch("scripts.lib.jst.datetime", _FakeDT):
         result = shw._jst_today()
     _check(
         "b16 UTC 6/15 23:50 → JST 換算で 6/16 を返す",
@@ -722,7 +724,7 @@ def test_shadow_log_path_uses_jst_date():
 
     with tempfile.TemporaryDirectory() as td:
         # path 指定なし → 自動命名を JST 化したか確認
-        with patch.object(shw, "datetime", _FakeDT), \
+        with patch("scripts.lib.jst.datetime", _FakeDT), \
              patch.object(shw, "LOG_DIR", Path(td)):
             written = shw.write_shadow_comparison(
                 legacy, layered,

@@ -34,6 +34,7 @@ from pathlib import Path
 from typing import Any
 
 from ..lib import llm, llm_usage
+from ..lib.jst import jst_today
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -703,14 +704,16 @@ def _load_recent_scores(
         True なら当日の scores log は cache から除外（現在 run 自身の書込と
         衝突しないため）。
     today:
-        基準日。デフォルト ``date.today()``。
+        基準日。デフォルト ``jst_today()``（C159）。**writer 側
+        (``_scores_log_path``) と必ず同じ基準にすること。**片方だけ UTC だと
+        最新日のファイルを永久に読み落とす恒久ギャップになる。
     log_dir:
         テスト用オーバーライド。デフォルト ``LOG_DIR``。
     """
     if lookback_days <= 0:
         return {}
     if today is None:
-        today = date.today()
+        today = jst_today()
     if log_dir is None:
         log_dir = LOG_DIR
 
@@ -1379,7 +1382,10 @@ def _run_stage2_layered(
 # ---------------------------------------------------------------------------
 
 def _scores_log_path(d: date | None = None) -> Path:
-    return LOG_DIR / f"scores_{(d or date.today()).isoformat()}.json"
+    # C159 (Sprint 13, 2026-08-12): UTC → JST。GHA runner は UTC で、cron は
+    # 17:37 UTC (= 02:37 JST 翌日) に起動するため date.today() だとファイル名が
+    # 紙面日付より 1 日古くなっていた（8/12 の紙面が scores_2026-08-11.json）。
+    return LOG_DIR / f"scores_{(d or jst_today()).isoformat()}.json"
 
 
 def _load_scores_log(path: Path) -> dict:
