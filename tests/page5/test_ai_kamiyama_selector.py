@@ -96,83 +96,148 @@ def _make_article(
 
 
 # ---------------------------------------------------------------------------
-# (a) build_candidate_pool: Page III 確定枠 + runner-up
+# (a) build_candidate_pool: runner-up のみ（C161）
 #
-# C155 (Sprint 13, 2026-08-10): 候補プールの構成を変更した。
-# 旧: Today's Headlines + Page III + Page IV 学術記事 − serendipity
-# 新: Page III 確定 6 枠（5 領域 + SER） + Page III runner-up
+# C155: Today's Headlines + Page III + Page IV 学術記事 − serendipity
+# C161: **Page III 確定 6 枠を除外**し runner-up のみ。3 面と 5 面に同じ記事が
+#       出る事象（C160 観察で 3 日中 2 日）を構造的に断つ。
 # ---------------------------------------------------------------------------
 
-def test_pool_combines_page3_slots_and_runner_ups():
+def test_pool_is_runner_ups_only():
     page3 = {
         "R1": _RegSel(article=_make_article("https://r1/a")),
         "R4": _RegSel(article=_make_article("https://r4/b")),
-        "R3": _RegSel(article=None),  # placeholder
         "SER": _RegSel(article=_make_article("https://ser/c")),
     }
-    runner_ups = [
-        _make_article("https://ru/x"),
-        _make_article("https://ru/y"),
-    ]
+    runner_ups = [_make_article("https://ru/x"), _make_article("https://ru/y")]
     pool = build_candidate_pool(
         page3_selections=page3, page3_runner_ups=runner_ups,
     )
     urls = {a["url"] for a in pool}
     _check(
-        "a1 Page III 確定枠 + runner-up から計 5 件",
-        urls == {"https://r1/a", "https://r4/b", "https://ser/c",
-                 "https://ru/x", "https://ru/y"},
-        f"got {urls}",
+        "a1 候補は runner-up のみ（確定枠は入らない）",
+        urls == {"https://ru/x", "https://ru/y"}, f"got {sorted(urls)}",
     )
 
 
-def test_pool_includes_serendipity_slot():
-    """C155: セレンディピティは Page III の 1 枠になったので候補に含む.
-
-    旧構成では第5面上段の serendipity は「背中合わせ枠」として一筆の候補から
-    除外していた。C155 で第3面に移り、他 5 記事と同格になったため除外理由が
-    消えた。
-    """
+def test_pool_excludes_serendipity_slot():
+    """C161: SER 枠も確定枠なので除外される（C155 では含めていた）."""
     page3 = {"SER": _RegSel(article=_make_article("https://ser/only"))}
-    pool = build_candidate_pool(page3_selections=page3)
+    runner_ups = [_make_article("https://ru/1")]
+    pool = build_candidate_pool(page3_selections=page3, page3_runner_ups=runner_ups)
     _check(
-        "a2 SER 枠の記事も候補に含まれる",
-        [a["url"] for a in pool] == ["https://ser/only"],
+        "a2 SER 枠は候補に含まれない",
+        [a["url"] for a in pool] == ["https://ru/1"],
         f"got {[a['url'] for a in pool]}",
     )
 
 
-def test_pool_handles_page3_dict_shape():
-    """page3_selections が dict 形式 ({"article": {...}}) でも動く."""
-    page3 = {
-        "R1": {"article": _make_article("https://d/1")},
-        "R4": {"article": None},
-    }
-    pool = build_candidate_pool(page3_selections=page3)
+def test_pool_preserves_runner_up_order():
+    runner_ups = [_make_article(f"https://ru/{i}") for i in range(4)]
+    pool = build_candidate_pool(page3_runner_ups=runner_ups)
     _check(
-        "a3 page3 dict 形式に対応",
-        [a["url"] for a in pool] == ["https://d/1"],
+        "a3 runner-up の順序（final_score 降順）を保つ",
+        [a["url"] for a in pool] == [f"https://ru/{i}" for i in range(4)],
     )
 
 
 def test_pool_empty_when_all_none():
-    _check(
-        "a4 全引数 None → 空 pool",
-        build_candidate_pool() == [],
-    )
+    _check("a4 全引数 None → 空 pool", build_candidate_pool() == [])
 
 
 def test_pool_skips_articles_without_url():
     runner_ups = [
         _make_article("https://ru/1"),
-        {"title": "no url", "source_name": "X"},  # url 欠落
+        {"title": "no url", "source_name": "X"},
         {"url": None, "title": "null url"},
     ]
     pool = build_candidate_pool(page3_runner_ups=runner_ups)
-    _check(
-        "a5 url 欠落 / None は除外",
-        [a["url"] for a in pool] == ["https://ru/1"],
+    _check("a5 url 欠落 / None は除外",
+           [a["url"] for a in pool] == ["https://ru/1"])
+
+
+def test_pool_dedups_runner_ups():
+    runner_ups = [_make_article("https://dup/"), _make_article("https://dup/"),
+                  _make_article("https://ru/2")]
+    pool = build_candidate_pool(page3_runner_ups=runner_ups)
+    _check("a6 runner-up 内の重複 URL は 1 つに畳む",
+           [a["url"] for a in pool] == ["https://dup/", "https://ru/2"],
+           f"got {[a['url'] for a in pool]}")
+
+
+# ---------------------------------------------------------------------------
+# (a2) 枯渇時の fallback（C161）
+#
+# runner-up が 0 件になるのは Page III の fetch が総崩れした異常時のみ。
+# そのときは確定枠に戻す（重複記事が出るほうが第5面が白紙になるより良い）。
+# ---------------------------------------------------------------------------
+
+def test_fallback_to_confirmed_when_runner_ups_empty():
+    page3 = {
+        "R1": _RegSel(article=_make_article("https://r1/a")),
+        "R6": _RegSel(article=_make_article("https://r6/b")),
+    }
+    pool = build_candidate_pool(page3_selections=page3, page3_runner_ups=[])
+    urls = {a["url"] for a in pool}
+    _check("a7 runner-up 0 件 → 確定枠に fallback",
+           urls == {"https://r1/a", "https://r6/b"}, f"got {sorted(urls)}")
+
+
+def test_fallback_also_when_runner_ups_none():
+    page3 = {"R1": _RegSel(article=_make_article("https://r1/a"))}
+    pool = build_candidate_pool(page3_selections=page3, page3_runner_ups=None)
+    _check("a8 runner-up None でも fallback が効く",
+           [a["url"] for a in pool] == ["https://r1/a"])
+
+
+def test_fallback_skips_placeholder_slots():
+    page3 = {"R1": _RegSel(article=None), "R6": _RegSel(article=_make_article("https://r6/b"))}
+    pool = build_candidate_pool(page3_selections=page3, page3_runner_ups=[])
+    _check("a9 fallback でも placeholder 枠は拾わない",
+           [a["url"] for a in pool] == ["https://r6/b"])
+
+
+def test_fallback_not_used_when_runner_ups_present():
+    """runner-up が 1 件でもあれば確定枠は混ざらない（fallback は最後の手段）."""
+    page3 = {"R1": _RegSel(article=_make_article("https://r1/a"))}
+    pool = build_candidate_pool(
+        page3_selections=page3, page3_runner_ups=[_make_article("https://ru/1")],
     )
+    _check("a10 runner-up が 1 件でもあれば fallback しない",
+           [a["url"] for a in pool] == ["https://ru/1"],
+           f"got {[a['url'] for a in pool]}")
+
+
+def test_pool_handles_page3_dict_shape_in_fallback():
+    page3 = {"R1": {"article": _make_article("https://d/1")}, "R4": {"article": None}}
+    pool = build_candidate_pool(page3_selections=page3, page3_runner_ups=[])
+    _check("a11 fallback は page3 dict 形式にも対応",
+           [a["url"] for a in pool] == ["https://d/1"])
+
+
+# ---------------------------------------------------------------------------
+# (a3) top_n が runner-up のみで成立すること（C161）
+# ---------------------------------------------------------------------------
+
+def test_top_n_satisfied_by_runner_ups_alone():
+    """runner-up 20 件想定で top_n=5 が確定枠なしに成立する."""
+    runner_ups = [_make_article(f"https://ru/{i}", score=100 - i) for i in range(20)]
+    page3 = {"R1": _RegSel(article=_make_article("https://r1/a", score=999))}
+    chosen_urls = set()
+    for seed in range(40):
+        c = select_ai_kamiyama_article(
+            target_date=date(2026, 8, 14),
+            page3_selections=page3,
+            page3_runner_ups=runner_ups,
+            rng=random.Random(seed),
+            top_n=5,
+        )
+        chosen_urls.add(c["url"])
+    _check("a12 top_n=5 が runner-up だけで成立",
+           chosen_urls <= {f"https://ru/{i}" for i in range(5)},
+           f"got {sorted(chosen_urls)}")
+    _check("a13 score 999 の確定枠は絶対に選ばれない（除外の構造的保証）",
+           "https://r1/a" not in chosen_urls)
 
 
 # ---------------------------------------------------------------------------
@@ -210,22 +275,10 @@ def test_no_page_one_parameter():
 
 
 # ---------------------------------------------------------------------------
-# (d) URL 重複は順序保持で dedup
+# (d) C161 (2026-08-13): 旧「確定枠と runner-up をまたぐ dedup」テストは削除。
+# 確定枠が候補に入らなくなり、両者をまたぐ重複自体が起こり得ない。
+# runner-up 内の dedup は (a6) が検証する。
 # ---------------------------------------------------------------------------
-
-def test_pool_dedups_same_url_across_sources():
-    """同一 URL が確定枠と runner-up 両方に出た場合は先出（確定枠）が残る."""
-    page3 = {"R1": _RegSel(article=_make_article("https://dup/"))}
-    runner_ups = [_make_article("https://dup/"), _make_article("https://ru/2")]
-    pool = build_candidate_pool(
-        page3_selections=page3, page3_runner_ups=runner_ups,
-    )
-    urls = [a["url"] for a in pool]
-    _check(
-        "d1 同 URL が 2 経路で出ても 1 つだけ pool に残る（順序保持）",
-        urls == ["https://dup/", "https://ru/2"],
-        f"got {urls}",
-    )
 
 
 # ---------------------------------------------------------------------------
@@ -431,18 +484,26 @@ def test_consecutive_days_pick_different_urls_when_paper_changes():
 def main() -> int:
     print("ai_kamiyama_selector tests (C40 第二弾 → C155 で候補プール拡張)")
     print()
-    print("(a) build_candidate_pool: Page III 確定枠 + runner-up:")
-    test_pool_combines_page3_slots_and_runner_ups()
-    test_pool_includes_serendipity_slot()
-    test_pool_handles_page3_dict_shape()
+    print("(a) build_candidate_pool: runner-up のみ (C161):")
+    test_pool_is_runner_ups_only()
+    test_pool_excludes_serendipity_slot()
+    test_pool_preserves_runner_up_order()
     test_pool_empty_when_all_none()
     test_pool_skips_articles_without_url()
+    test_pool_dedups_runner_ups()
+    print()
+    print("(a2) 枯渇時の fallback (C161):")
+    test_fallback_to_confirmed_when_runner_ups_empty()
+    test_fallback_also_when_runner_ups_none()
+    test_fallback_skips_placeholder_slots()
+    test_fallback_not_used_when_runner_ups_present()
+    test_pool_handles_page3_dict_shape_in_fallback()
+    print()
+    print("(a3) top_n が runner-up のみで成立:")
+    test_top_n_satisfied_by_runner_ups_alone()
     print()
     print("(b) Page I は API 構造から除外:")
     test_no_page_one_parameter()
-    print()
-    print("(d) URL 重複の順序保持 dedup:")
-    test_pool_dedups_same_url_across_sources()
     print()
     print("(e) select_ai_kamiyama_article 動作:")
     test_select_top_n_random_within_pool()
