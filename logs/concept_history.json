@@ -539,6 +539,11 @@
       "concept_id": "engram",
       "name_ja": "エングラム",
       "displayed_on": "2026-08-13"
+    },
+    {
+      "concept_id": "shannon_information",
+      "name_ja": "情報量（シャノン情報）",
+      "displayed_on": "2026-08-14"
     }
   ]
 }

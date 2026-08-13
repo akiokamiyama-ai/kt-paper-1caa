@@ -1874,6 +1874,20 @@
       "ai_kamiyama_failed": false,
       "fallback_used": false,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-08-14",
+      "article_url": "https://www.axismag.jp/posts/2026/08/716786.html",
+      "article_title": "アムステルダムに子どものための美術館「KiMu」がオープン。創造のプロセスを尊重するアトリエ型ミュージアム",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": false,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
     }
   ]
 }
