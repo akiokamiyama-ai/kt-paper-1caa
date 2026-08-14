@@ -544,6 +544,11 @@
       "concept_id": "shannon_information",
       "name_ja": "情報量（シャノン情報）",
       "displayed_on": "2026-08-14"
+    },
+    {
+      "concept_id": "educational_anthropology",
+      "name_ja": "教育人類学",
+      "displayed_on": "2026-08-15"
     }
   ]
 }

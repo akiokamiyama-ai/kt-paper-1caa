@@ -1,0 +1,25 @@
+{
+  "date": "2026-08-15",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/news/article/2608/14/2000000538/",
+    "human_energy": "https://jinjibu.jp/news/detl/26737/",
+    "web_repo": "https://www.bc01.net/article/ah-inc_202608/"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/08/14/how-ronald-reagan-sold-calm-to-americans/",
+    "https://www.project-syndicate.org/commentary/middle-power-coalitions-of-the-willing-must-be-within-adjacent-to-multilateral-institutions-by-anne-marie-slaughter-2026-08",
+    "https://www.mckinsey.com/industries/travel/our-insights/how-premium-leisure-travel-is-rewriting-airline-economics",
+    "https://www.theparisreview.org/blog/2026/07/29/the-theater-of-sport-bill-buford-revisits-among-the-thugs/",
+    "https://wordswithoutborders.org/read/article/2026-07/the-giant-mausoleum-yapan-benitez/",
+    "https://stereogum.com/2508315/more-eaze-announces-new-album-valley-and-structure-hear-whats-wrong-with-the-structure/music/"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://nautil.us/the-extraterrestrial-rings-of-bronze-age-greece-1283789/",
+  "page6_urls": {
+    "books": "https://lithub.com/where-does-the-will-to-live-come-from-in-humans-and-nonhumans-alike/",
+    "music": "https://stereogum.com/2508357/ghostemane-zero-day/music/",
+    "outdoor": "https://www.atlasobscura.com/articles/guide-to-strangest-christmas-traditions"
+  },
+  "headlines_urls": []
+}
