@@ -34,7 +34,11 @@
 
 ### Medium Priority（候補が薄い日に拾う）
 
-#### 3. ダ・ヴィンチWeb（KADOKAWA） ⚠️
+#### 3. ダ・ヴィンチWeb（KADOKAWA） ❌
+- **fetch_status**: BLOCKED_RUNNER_IP（2026-08-14 確認 / C163）
+  - GHA runner から `HTTP 403 Forbidden`。**ローカルからは 200 OK**（server: Apache）
+  - 採用実績: **0 日**（2026-04-25 の運用開始以来 109 日間、一度も紙面に載っていない）
+  - 判断: **日次 fetch から除外**（週次プローブは継続）。書評ソースは好書好日 / 本の雑誌 / 集英社新書プラス等が機能しており、欠落の実害は小さい
 - **URL**: https://ddnavi.com/
 - **RSS**: **未提供**（`/feed/` 404、HTML内に `feed`/`rss` リンクなし）。代替として `https://ddnavi.com/sitemap.xml`（200、application/xml）で記事URL列挙が可能
 - **形式**: sitemap.xml スクレイピング

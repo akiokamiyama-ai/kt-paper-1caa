@@ -29,6 +29,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+from datetime import date
 from collections import Counter
 from pathlib import Path
 
@@ -44,9 +45,29 @@ from .lib.drivers.jftc import HOST as JFTC_HOST, JftcDriver
 from .lib.drivers.ppc import HOST as PPC_HOST, PpcDriver
 from .lib.drivers.que_shincho import HOST as QUE_HOST, QueShinchoDriver
 from .lib.drivers.rss import RssDriver
+from .lib.jst import jst_today
 from .lib.source import Article, FetchMethod, Priority, Source, load_all_sources
 
 SOURCES_DIR = Path(__file__).resolve().parent.parent / "sources"
+
+# C163 (Sprint 13, 2026-08-14): 到達不能ソース（BLOCKED_RUNNER_IP）の週次プローブ。
+#
+# 経産省 / JFTC / ダ・ヴィンチWeb / ナタリー音楽 の 4 件は、フィード自体は生きて
+# いる（ローカルからは 200 OK）が GHA runner の IP からは 403/405 が返る。毎朝
+# 叩いても必ず失敗し、ログに 6-10 件のノイズを出して**新規の障害を見えにくく
+# していた**（8/14 の Reuters 503 が埋もれた）。
+#
+# 日次 fetch からは外すが、「静かに諦める」と復旧を見落とす（C156 の教訓：
+# BbcArticleScraper が silently 0 件を返し続けて 10 日以上気づかれなかった）。
+# そこで **週 1 回だけプローブ**して、復旧していれば気づけるようにする。
+#
+# 月曜を選んだ理由は特にない（曜日が固定でさえあれば良い）。JST 基準。
+UNREACHABLE_PROBE_WEEKDAY = 0  # 0=月曜
+
+
+def is_probe_day(today: date | None = None) -> bool:
+    """C163: 到達不能ソースをプローブする日か（週 1 回、JST 基準）。"""
+    return (today or jst_today()).weekday() == UNREACHABLE_PROBE_WEEKDAY
 
 
 def select_sources(
@@ -56,10 +77,21 @@ def select_sources(
     priority: str | None,
     name_substring: str | None,
     include_html: bool,
+    probe_unreachable: bool | None = None,
 ) -> list[Source]:
+    """条件に合うソースを選ぶ。
+
+    C163: ``is_unreachable``（BLOCKED_RUNNER_IP marker 付き）のソースは
+    日次 fetch から除外する。``probe_unreachable`` が True の日（既定では
+    週 1 回のプローブ日）だけ含めて、復旧していないかを確認する。
+    """
+    if probe_unreachable is None:
+        probe_unreachable = is_probe_day()
     out = []
     for s in sources:
         if not s.is_actionable:
+            continue
+        if s.is_unreachable and not probe_unreachable:
             continue
         if s.fetch_method == FetchMethod.HTML and not include_html:
             continue
@@ -131,6 +163,7 @@ def run(
     fetched: list[Article] = []
     by_source: Counter = Counter()
     failures: list[tuple[str, str]] = []
+    probed_ok: list[str] = []
     for src in selected:
         if src.fetch_method == FetchMethod.RSS:
             driver = rss
@@ -156,6 +189,26 @@ def run(
             arts = arts[:limit]
         by_source[src.name] = len(arts)
         fetched.extend(arts)
+        # C163: 到達不能マークのソースが取れたら復旧の可能性。目立たせる。
+        if src.is_unreachable and arts:
+            probed_ok.append(src.name)
+            print(
+                f"  [C163] 到達不能マークの {src.name} が {len(arts)} 件取得できました。"
+                "復旧した可能性があります。sources/*.md の fetch_status を見直してください。",
+                file=sys.stderr,
+            )
+
+    # C163: プローブ日に到達不能ソースが依然ダメだったことも記録する
+    # （「静かに諦める」を避ける。C156 の教訓）。
+    probed = [x.name for x in selected if x.is_unreachable]
+    if probed:
+        still_blocked = [n for n in probed if n not in probed_ok]
+        print(
+            f"  [C163] 週次プローブ: {len(probed)} 件中 復旧 {len(probed_ok)} / "
+            f"依然ブロック {len(still_blocked)}"
+            + (f" → {', '.join(still_blocked)}" if still_blocked else ""),
+            file=sys.stderr,
+        )
 
     pre_dedupe = len(fetched)
     if not no_dedupe:

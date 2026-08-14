@@ -113,6 +113,29 @@ class Source:
         """True if a driver can actually fetch from this source."""
         return self.fetch_method != FetchMethod.BLOCKED
 
+    @property
+    def is_unreachable(self) -> bool:
+        """True if the source is reachable in principle but not from our runner.
+
+        C163 (Sprint 13, 2026-08-14): ``sources/*.md`` の見出しに ❌ を付け、
+        ``- **fetch_status**:`` フィールドに理由を書いたソースを指す。
+
+        ``FetchMethod.BLOCKED``（そもそも RSS も scrape 経路も無い）とは
+        **別概念**であることに注意。こちらは「フィードは生きているが GHA
+        runner の IP からは 403/405 が返る」状態で、ローカルからは 200 OK。
+        つまりソースが壊れたのではなく**こちらから見えない**。
+
+        毎朝叩いても必ず失敗するので日次 fetch からは外すが、定義は残す
+        （実行環境が変われば復活しうるため）。復旧の見落としを防ぐため、
+        ``scripts/fetch.py`` が週 1 回だけプローブする。
+        """
+        return UNREACHABLE_MARKER in (self.raw_fields.get("fetch_status") or "")
+
+    @property
+    def fetch_status_note(self) -> str:
+        """``- **fetch_status**:`` フィールドの生テキスト（無ければ空文字）。"""
+        return (self.raw_fields.get("fetch_status") or "").strip()
+
 
 @dataclass
 class Article:
@@ -247,9 +270,26 @@ def _extract_status(name_part: str) -> tuple[str, Status]:
     return name_with_emoji.strip(), Status.PARTIAL
 
 
-def _decide_fetch_method(rss_value: str, status: Status) -> tuple[FetchMethod, str | None]:
-    """Decide how to fetch a source from its RSS field text and status."""
-    if status == Status.FAILED:
+# C163 (Sprint 13, 2026-08-14): 「フィードは生きているが GHA runner の IP からは
+# 403/405 が返る」ソースの marker。``- **fetch_status**:`` フィールドの先頭に置く。
+# ソースが壊れたのではなく**こちらから見えない**状態を、恒久的に死んだソース
+# （閉鎖など）と区別するために導入した。
+UNREACHABLE_MARKER = "BLOCKED_RUNNER_IP"
+
+
+def _decide_fetch_method(
+    rss_value: str,
+    status: Status,
+    fetch_status: str = "",
+) -> tuple[FetchMethod, str | None]:
+    """Decide how to fetch a source from its RSS field text and status.
+
+    C163: ``fetch_status`` に ``BLOCKED_RUNNER_IP`` marker がある場合は
+    ``BLOCKED`` に落とさず **本来の取得方法を保持**する。日次 fetch からは
+    ``select_sources`` が別途除外するが、週 1 回の復旧プローブでは正しい
+    driver に dispatch する必要があるため。
+    """
+    if status == Status.FAILED and UNREACHABLE_MARKER not in fetch_status:
         # Fully blocked sources document an RSS field with "未検証完了" or similar.
         # We surface them as BLOCKED so the orchestrator can show them in reports
         # without dispatching a driver.
@@ -295,7 +335,9 @@ def _parse_one_block(
     if not url_field:
         return None  # not a source block (e.g. an unrelated heading)
     rss_field = fields.get("RSS", "")
-    fetch_method, rss_url = _decide_fetch_method(rss_field, status)
+    fetch_method, rss_url = _decide_fetch_method(
+        rss_field, status, fields.get("fetch_status", ""),
+    )
     # If the RSS field itself had no URL but an indented bullet did, use that
     # first sub-URL as the primary endpoint and remember the rest.
     if not rss_url and rss_extra_urls and status != Status.FAILED:

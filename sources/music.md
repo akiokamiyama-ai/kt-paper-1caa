@@ -62,7 +62,11 @@
 
 ## 国内ロックメディア（毎日〜週数回）
 
-### 6. ナタリー音楽 ✅
+### 6. ナタリー音楽 ❌
+- **fetch_status**: BLOCKED_RUNNER_IP（2026-08-14 確認 / C163）
+  - GHA runner から `HTTP 405 Not Allowed`。**ローカルからは 200 OK**（403 ではなく 405 な点が他 3 件と異なる。CDN が特定のリクエストパターンを拒否している可能性）
+  - 採用実績: 2026-05-05 〜 **2026-06-29 の 40 日**。6/29 を最後に途絶
+  - 判断: **日次 fetch から除外**（週次プローブは継続）。4 件の中で最も惜しい — 国内音楽ニュースの最頻ハブで採用実績も突出していた。代替は C125/C131 で導入済の Stereogum（Medium、日次 40 items）と rockinon.com、CINRA が担う
 - **URL**: https://natalie.mu/music
 - **RSS**: https://natalie.mu/music/feed/news（Atom 1.0、21KB、2026-04-27 10:50 更新）
 - **形式**: Atom 1.0
