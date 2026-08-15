@@ -1,0 +1,25 @@
+{
+  "date": "2026-08-16",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/business/articles/2608/14/news053.html",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2608/14/news015.html",
+    "web_repo": "https://www.bc01.net/seminar-report/fc_sesshon_202608_2/"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/08/14/ai-military-just-war/",
+    "https://toyokeizai.net/articles/-/954934?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://www.mckinsey.com/capabilities/strategy-and-corporate-finance/our-insights/improving-private-equity-exit-prospects",
+    "https://www.theparisreview.org/blog/2026/08/06/no-more-missionaries-shiva-naipauls-jonestown/",
+    "https://3quarksdaily.com/3quarksdaily/2026/08/c-p-snows-two-cultures-lecture-provoked-a-savage-response-from-fellow-critic-f-r-leavis-what-was-at-the-heart-of-it-all.html",
+    "https://www.atlasobscura.com/articles/best-catacombs-around-the-world"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://www.nplusonemag.com/online-only/online-only/in-the-grip-of-politics/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/08/14/chad-fore-on-lil-spooky/",
+    "music": "https://stereogum.com/2508425/courtney-love-gives-album-update-reveals-she-almost-died/news/",
+    "outdoor": "https://www.atlasobscura.com/articles/guide-to-winter-sun"
+  },
+  "headlines_urls": []
+}

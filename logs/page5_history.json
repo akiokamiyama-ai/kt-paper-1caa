@@ -1902,6 +1902,20 @@
       "ai_kamiyama_failed": false,
       "fallback_used": false,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-08-16",
+      "article_url": "https://www.atlasobscura.com/articles/best-catacombs-around-the-world",
+      "article_title": "19 Creepy Catacombs Around the World You Can Visit",
+      "article_category": "outdoor",
+      "tie_candidates": [
+        "outdoor"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": false,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
     }
   ]
 }
