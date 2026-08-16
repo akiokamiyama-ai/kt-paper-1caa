@@ -490,6 +490,27 @@ def replace_page_two(html_text: str, new_page_html: str) -> str:
 # Rendering — Page III ("General News")
 # ---------------------------------------------------------------------------
 
+# C164 (Sprint 13, 2026-08-15): 第3面 item 本文の文字数上限。
+#
+# 3 面は運用開始（2026-04-25）以来 **一度も truncate していなかった**。通常の
+# RSS description は 800 字以内に収まるため顕在化していなかったが、8/16 紙面で
+# Atlas Obscura のリスト記事（"19 Creepy Catacombs Around the World"）が
+# **17,179 字**そのまま流し込まれ、3 面のグリッドが崩れた。
+#
+# 旧第5面のセレンディピティ枠は 300 字 truncate していたが、C155 で枠を 3 面へ
+# 移した際、3 面の renderer には truncate が無かったため制限が失われた。
+# SER 枠固有ではなく **3 面 6 枠すべてに上限が無い**のが真因。
+#
+# 実測分布（archive 109 日分・593 item）:
+#     p50=174  p75=299  p90=458  p95=675  p99=802  max=17,179
+#     1000 字超は 1 件のみ（今回の Atlas Obscura）
+#
+# 400 字は p90 相当。外れ値を確実に潰しつつ、既存 item の 9 割は無改変で残る。
+# 3 列グリッドでセル高が揃う実用的な上限でもある。旧 5 面準拠の 300 字にすると
+# 既存の 24% が truncate されて紙面の見た目が大きく変わるため採らなかった。
+PAGE3_DESC_MAX_CHARS = 400
+
+
 def _render_page3_item(article: dict, region: str) -> str:
     """Render one <div class="item"> for Page III.
 
@@ -505,7 +526,11 @@ def _render_page3_item(article: dict, region: str) -> str:
     lang_attr = ' lang="ja"' if is_ja else ''
     kicker = _page3_generate_kicker(article, region)
     title = article.get("title") or ""
-    description = article.get("description") or ""
+    # C164: 6 枠すべてに同じ上限をかける（SER 枠も他 5 枠と同格に扱う）。
+    # _truncate_to_chars は文末（。．.）で切るので不自然な途切れになりにくい。
+    description = _truncate_to_chars(
+        article.get("description") or "", PAGE3_DESC_MAX_CHARS,
+    )
     source_name = article.get("source_name") or ""
     url = article.get("url") or ""
     date_label = _format_publish_date_ja(article.get("pub_date"))
