@@ -97,6 +97,14 @@ PAGE2_THRESHOLD = 35.0
 # 過去 N 日に「実際に紙面で表示した」記事を翌朝以降の選定から除外する。
 PAGE1_DEDUP_DAYS = 7
 PAGE2_DEDUP_DAYS = 3
+# C168 (Sprint 13, 2026-08-17): 第5面 AIかみやま 参照記事の自己 dedup 窓。
+# 5 面は長らく唯一 dedup を持たない面だった（C40 が「他面 dedup に相乗りする
+# から不要」と設計したが、C167 調査で全期間 6 件の日跨ぎ重複が判明し前提が
+# 崩れた）。7 日にした理由は、候補の供給元が 3 面 runner-up で 3 面の窓が
+# 7 日だから——「3 面に 7 日出ていない & 5 面に 7 日出ていない」で意味が揃う。
+# 実測では 30 日窓でも残候補 17-20 件（top_n=5 に必要な 5 件を大きく上回る）
+# ため枯渇リスクは実質ゼロ。強めたければこの 1 行を伸ばせばよい。
+PAGE5_DEDUP_DAYS = 7
 
 # 逆引き：companies.md の Source.category → page2 短縮キー
 PAGE2_CATEGORY_TO_KEY: dict[str, str] = {
@@ -850,10 +858,15 @@ def build_page_five_v2(
         getattr(page3_result, "runner_up_candidates", None)
         if page3_result is not None else None
     )
+    # C168: 過去 PAGE5_DEDUP_DAYS 日に 5 面で採用した URL を除外する。
+    recent_page5_urls = load_recently_displayed_urls(
+        PAGE5_DEDUP_DAYS, page="page5", until_date=target_date,
+    )
     ai_article = page5_ai_selector.select_ai_kamiyama_article(
         target_date=target_date,
         page3_selections=page3_selections,
         page3_runner_ups=page3_runner_ups,
+        exclude_urls=recent_page5_urls,
         registry=None,
         eligible_categories=None,
     )

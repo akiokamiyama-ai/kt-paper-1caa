@@ -22,10 +22,34 @@ Sprint 7 で第5面を「上：serendipity / 下：AIかみやま column」の�
 - 過去日 dedup は不要：当日紙面は他面の dedup（C40 案1+案2 で headlines、page3
   は 7 日、page4 は 30 日）により既に過去重複から保護されている
 
+# C168 (Sprint 13, 2026-08-17) — 上記「過去日 dedup は不要」の前提は誤りだった
+
+C167 調査で、C40 の想定「他面 dedup に相乗りすれば連続日重複は自動解決する」が
+**実際には機能していなかった**ことが判明した。archive 全期間（2026-04-25〜08-17、
+5 面参照記事 100 ユニーク URL）を走査した結果、日跨ぎ重複は **6 件**:
+
+    5/22→5/23  5/29→5/30  6/20→6/21  7/02→7/05  8/03→8/04   （C155 前、5 件）
+    8/14→8/17                                                （C161 後、1 件）
+
+5/29-30 の BBC 重複は C40 第二弾を生んだ事象そのものだが、その対策後も
+6/20 / 7/02 / 8/03 と再発し続けていた。他面の dedup 窓（page3 7 日）を超えた
+記事が候補に戻ってくるため、相乗りでは防ぎきれない。
+
+さらに C161 で候補プールを page3 runner-up のみにしたことで、**相乗り先が
+完全に消えた**。runner-up は「3 面に載らなかった記事」なので
+``displayed_urls`` の ``page3_urls`` に記録されず、どの面の dedup にも
+引っかからない。8/14→8/17 の重複はこれで起きた（当該 URL は 4 日間ずっと
+候補プールの top 5 圏内に居り、8/15・8/16 に選ばれなかったのは
+``rng.choice`` の抽選に外れただけ）。
+
+対処として **5 面自身の過去 N 日 dedup** を入れた（``PAGE5_DEDUP_DAYS``）。
+書き手（``write_displayed_urls_log(page5_url=...)``）と読み手
+（``load_recently_displayed_urls(page="page5")``）は以前から実装済で、
+呼び出す人がいなかっただけである。
+
 設計上のメリット
 ----------------
 - 紙面の内的整合性が保たれる（AIかみやま が引く記事は読者が紙面で発見できる）
-- 連続日重複が他面 dedup の連動で自動解決
 - ロジックが単純化（pre-evaluated 候補プールへの依存が消える）
 """
 
@@ -175,6 +199,7 @@ def select_ai_kamiyama_article(
     target_date: date,
     page3_selections: Any | None = None,
     page3_runner_ups: list[dict] | None = None,
+    exclude_urls: set[str] | None = None,
     registry: SourceRegistry | None = None,
     eligible_categories: tuple[str, ...] | None = None,
     rng: random.Random | None = None,
@@ -199,6 +224,12 @@ def select_ai_kamiyama_article(
         fallback 用**にのみ使う（通常は候補に入らない）。
     page3_runner_ups :
         ``Page3Result.runner_up_candidates``。C161 以降はこれが主候補。
+    exclude_urls :
+        C168: 過去 ``PAGE5_DEDUP_DAYS`` 日に 5 面で採用した URL の集合。
+        候補から除外して日跨ぎ重複を防ぐ。除外後に候補が 0 件になる場合は
+        **除外を諦めて元の候補に戻す**（白紙より重複、C161 の fallback と
+        同じ思想）。呼出側が ``load_recently_displayed_urls(page="page5")``
+        で算出して渡す。
     registry :
         source category 解決用。``None`` の場合は category フィルタを skip。
         C40 第二弾以降、候補プールが既に編集判断を通っているため通常 None で
@@ -222,6 +253,28 @@ def select_ai_kamiyama_article(
     )
     if not pool:
         return None
+
+    # C168: 5 面自身の過去日 dedup。C40 が想定した「他面 dedup への相乗り」は
+    # 実際には機能していなかった（module docstring 参照）。
+    if exclude_urls:
+        kept = [a for a in pool if a.get("url") not in exclude_urls]
+        if kept:
+            removed = len(pool) - len(kept)
+            if removed:
+                print(
+                    f"[ai_kamiyama] 過去 {len(exclude_urls)} URL と重複する "
+                    f"{removed} 件を候補から除外（残り {len(kept)} 件）",
+                    file=sys.stderr,
+                )
+            pool = kept
+        else:
+            # 除外後 0 件。白紙にするより重複を許す（C161 fallback と同じ思想）。
+            print(
+                f"[ai_kamiyama] WARN: 過去日 dedup で候補が 0 件になったため "
+                f"除外を諦めます（候補 {len(pool)} 件すべてが過去 5 面に既出）。"
+                "日跨ぎ重複が発生します。runner-up の供給状況を確認してください。",
+                file=sys.stderr,
+            )
 
     if rng is None:
         rng = random.Random()
