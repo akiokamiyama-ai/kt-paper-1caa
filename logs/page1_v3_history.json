@@ -1367,6 +1367,23 @@
           "cost_usd": 0.056589,
           "is_fallback": false
         }
+      },
+      {
+        "date": "2026-08-17",
+        "day_label": "月",
+        "angle_key": "critical",
+        "angle_label_jp": "批判的",
+        "essay": {
+          "angle_label": "月曜 - 批判的",
+          "daily_question": "ハンの「ポジティブな暴力」論が見落とす現実とは何か",
+          "essay_title": "自己搾取論の死角——ハン批判の三つの急所",
+          "body": "ビョンチョル・ハンの「ポジティブな暴力」論は、現代人の疲弊感に鋭く切り込む。しかし切れ味の鋭い刃は、同時に見えにくい死角を生む。今日は称賛ではなく、批判的な目でハンの思想の輪郭を測り直したい。\n\n第一の急所は、「構造的支配の消去」という楽観すぎる前提にある。ハンは「権力はもはや政治の主要な媒体ではない」と断言し、規律社会から達成社会への移行を論じる。しかし社会学者ナンシー・フレイザーはこの種の議論に早くから警鐘を鳴らしてきた。ジェンダー・人種・階級によって「自己搾取の条件」は根本的に不均等であり、「燃え尽きる自由」を持つ者と、そもそも選択肢すら持てない者の非対称性をハンは十分に照射しない。ハンがBerlinのカフェで想定する「意欲ある個人」は、すでに相当な資本と教育を持つ主体である。大量収監、移民労働者、ケアワーカーの疲弊は「ポジティブな暴力」の語彙では捉えきれない。批判理論の俎上に載せるべき他者からの支配は、ハンが宣言する以上にまだ厳然と存在している。\n\n第二の急所は、「禅的静寂」を処方箋とすることの政治的無害性にある。哲学者スラヴォイ・ジジェクは、こうした東洋的contemplationの流用が資本主義のガス抜きとして機能する点を繰り返し指摘してきた。「深い退屈」や「世界親和性」への呼びかけは、個人の内的転換を促す一方で、システムへの変革意欲を静める方向に作用しかねない。ハンはKoonsの鏡面彫刻を批判しながら、実は自身の思想もまた、既存秩序を根底から揺さぶる力を持たない「美しい鏡」に終わる危険を孕んでいる。禅の開放的な自己は、資本主義的主体性を解除するのか、それとも更新された形で再吸収されるだけなのか——この問いにハンは明確に答えていない。\n\n第三の急所は、「達成社会」概念の地域的偏差にある。ハンはソウルとベルリンを往復しながら普遍的診断を下すが、精神医学者ディミトリ・マルクシスは、burnoutの臨床実態が文化圏によって大きく異なることを実証的に示してきた。集団主義的規範が強い社会では、自己搾取と他者からの期待圧力は分離しがたく絡み合っており、「自己対自己」という二項では現象を切り取れない。ハンの理論は、個人主義的な後期近代ヨーロッパの経験を普遍化しすぎている疑いがある。同じ「燃え尽き」でも、その発生機序と処方箋が文化によって異なるなら、禅的解決もまたローカルな答えに過ぎない可能性が出てくる。\n\nもちろん、これらの批判はハンの問題設定そのものを無効化するわけではない。「自由の名のもとに行使される自己強制」というテーゼが、現代経営者の現場感覚と強く共鳴することは事実であり、先週の論考で示した通りである。しかし経営者が思考の刺激としてハンを読むなら、その思想の照らす射程と影の部分を同時に把握しておく必要がある。ハンを手放しで「処方箋」と扱う前に、彼が映し出せていない現実——構造的不平等、処方の政治性、文化的偏差——を補助線として加えることで、はじめてハンの洞察は実践に耐える思考道具になる。思想は一枚の地図であり、地図には必ず「ここには何も描かれていない」余白が存在する。その余白を自覚しながら読む眼こそ、ディープリスニング経営が必要とする知的態度である。",
+          "annotation_label": "反対論者・批判者",
+          "annotation_body": "ナンシー・フレイザー（批判理論・フェミニズム）はハン型の主体論が階級・ジェンダー格差を捨象すると批判。スラヴォイ・ジジェク（精神分析的左派）は禅的contemplationを資本主義のガス抜きと見なし、変革力の欠如を指摘。精神医学者ディミトリ・マルクシスはburnoutの発生機序が文化圏で異なることを実証的に示し、普遍的診断への疑問を呈している。",
+          "quote_excerpt": "Before we tally off obvious counterexamples, from mass incarceration and the COVID-19 pandemic to the Russian invasion of Ukraine and Bhabha's enduring postcolonial legacies, we should pause to consider just how contrarian Han's claim is on its face. Political theorists have spent the last two hundred years—at least since John Stuart Mill's 'tyranny of the majority' and 'despotism of custom'—unmasking the hidden structures by which one group dominates another. Typical critical theorists debate which vectors of oppression prevent us from achieving the free society; the administrative state, crony capitalism, patriarchy, global elites, sexual repression, and structural racism are all familiar candidates. From political science textbooks to leading critical theorists like Wendy Brown, we assume, as Brown claims in Edgework: Critical Essays on Knowledge and Politics, that politics just is 'human relations organized by power.' Enter Han, who asserts in his book Topology of Violence: 'Power is no longer a key medium of politics.'",
+          "cost_usd": 0.059609999999999996,
+          "is_fallback": false
+        }
       }
     ]
   }

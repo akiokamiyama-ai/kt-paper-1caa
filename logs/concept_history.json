@@ -554,6 +554,11 @@
       "concept_id": "umwelt",
       "name_ja": "環世界",
       "displayed_on": "2026-08-16"
+    },
+    {
+      "concept_id": "behavioral_economics",
+      "name_ja": "行動経済学",
+      "displayed_on": "2026-08-17"
     }
   ]
 }
