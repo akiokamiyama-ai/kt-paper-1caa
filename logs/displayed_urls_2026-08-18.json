@@ -1,0 +1,25 @@
+{
+  "date": "2026-08-18",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://japan.zdnet.com/article/35251613/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2608/17/news021.html",
+    "web_repo": "https://www.bc01.net/article/pisola_202608_02/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/cogs-of-war/blanchards-lathe-and-the-long-arc-of-american-manufacturing/",
+    null,
+    "https://www.mckinsey.com/capabilities/risk-and-resilience/our-insights/governing-ai-with-intention-in-the-social-impact-sector",
+    "https://www.theparisreview.org/blog/2026/08/17/james-joycess-baby-impressions-and-other-awkward-pleasures-of-literary-biography/",
+    "https://3quarksdaily.com/3quarksdaily/2026/08/magic-or-realism-genetic-variants-seem-to-protect-against-alzheimers-disease.html",
+    "https://3quarksdaily.com/3quarksdaily/2026/08/mecca-and-the-mall.html"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://thepointmag.com/literature/advanced-fiction/",
+  "page6_urls": {
+    "books": "https://lithub.com/everything-but-the-burden-greg-tate-john-henryism-and-the-cost-of-solidarity/",
+    "music": "https://stereogum.com/2508207/some-nights-the-pit-is-not-for-you/columns/let-the-roundup-begin/",
+    "outdoor": "https://www.atlasobscura.com/articles/guide-to-northern-lights"
+  },
+  "headlines_urls": []
+}

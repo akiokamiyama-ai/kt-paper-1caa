@@ -559,6 +559,11 @@
       "concept_id": "behavioral_economics",
       "name_ja": "行動経済学",
       "displayed_on": "2026-08-17"
+    },
+    {
+      "concept_id": "knowledge_transfer",
+      "name_ja": "知識伝承",
+      "displayed_on": "2026-08-18"
     }
   ]
 }

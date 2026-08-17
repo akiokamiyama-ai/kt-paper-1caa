@@ -1384,6 +1384,23 @@
           "cost_usd": 0.059609999999999996,
           "is_fallback": false
         }
+      },
+      {
+        "date": "2026-08-18",
+        "day_label": "火",
+        "angle_key": "practitioner",
+        "angle_label_jp": "実践者",
+        "essay": {
+          "angle_label": "火曜 - 実践者",
+          "daily_question": "「達成社会の罠」を、組織設計でどう無効化できるか",
+          "essay_title": "自己搾取を組織設計で解除する三つの選択肢",
+          "body": "月曜の全体像、火曜の批判的検討を経て、今日は経営の現場に降りる。ビョンチョル・ハンの「ポジティブな暴力」論を思想として眺めることと、それを組織の設計図に落とし込むことは、まったく別の行為である。後者は「すべき論」ではなく、選択肢の話だ。今この瞬間、経営者が手をつけられる設計が、少なくとも三つある。\n\n第一に、「目標の分離設計」という選択肢がある。ハンの診断によれば、達成社会における搾取の回路は「すべての可能性を活かさなければならない」という強迫から始まる。これを組織設計の言葉に翻訳すると、KPI の全面展開が社員を自己搾取のエンジンに変える構造になり得る、ということだ。リクルートホールディングスは2019年前後から、個人目標と学習・内省の時間を意図的に分離する試みを一部事業に導入した。達成指標と「立ち止まる時間」を同一の評価フレームに混在させないという設計は、ハンが言う「熟考の次元」を制度として守ることに相当する。人材紹介・組織開発を業とする神山氏の文脈では、クライアント企業の評価制度設計において「不達成でも問われない探索時間」を明示的に予算化するよう提案できる。これは精神論ではなく、設計の選択である。\n\n第二に、「摩擦の復権」という選択肢がある。ハンは、スマートフォンのタッチスクリーンが自己を映す「鏡の回廊」になると批判する。組織においてこれに対応するのは、心理的安全性の名のもとに摩擦が排除された会議体だ。異論が「傷つける行為」として忌避されるとき、組織はハンの言う「滑らか（smooth）」な空間に退化し、思考の深度が失われる。Bridgewater Associates が「極度の透明性（radical transparency）」を制度化したのは、摩擦を意図的に設計に組み込む試みとして読める。手法の賛否は別として、「他者の否定性を制度的に保全する」という発想は、ハンの美学論——真の美は自我を傷つけ、他者へと開く——と構造的に重なる。神山氏が関わる経営者支援の場では、1on1 の設計において「同意ではなく問い返しを促す問い」を意図的に組み込む選択肢がある。これは「摩擦の制度化」の最小単位だ。\n\n第三に、「空白のカレンダー化」という選択肢がある。ハンが「深い退屈（profound boredom）」と呼ぶ状態——自我が弛緩し、外の世界に親和的になる時間——は、現代の組織では最初に予算を削られる。3M の「15%ルール」や Google の「20%タイム」は広く知られるが、重要なのは制度の名称ではなく「成果に紐づかない時間を、失敗ではなく設計として正当化する」という経営判断の側にある。こころみグループのような人的資本を中心に置く事業体では、この「空白の正当化」を採用候補者への訴求軸にする選択肢も現実的だ。「何も生まない時間を持てる組織である」と明言することは、達成強迫に疲弊した層へのシグナルとして機能し得る。\n\n三つの選択肢に共通するのは、「自己搾取の回路を断ち切る仕掛けを、個人の意志力ではなく組織の構造に埋め込む」という発想だ。ハンの思想が経営者に問うているのは、結局ここに尽きる。燃え尽きを防ぐ責任を社員の自己管理に丸投げするか、設計者として構造に介入するか——この選択を迫られたとき、ハン哲学は理念ではなく設計基準になる。",
+          "annotation_label": "関連企業・事例",
+          "annotation_body": "リクルートホールディングスは個人目標と内省時間の分離を試行。Bridgewater Associates は「極度の透明性」により制度的摩擦を保全。3M の「15%ルール」は成果に紐づかない時間の予算化の先例。いずれも「自己搾取の回路を構造で断つ」という共通の設計思想を持つ。",
+          "quote_excerpt": "Everywhere Han sees highly motivated people opt into personal projects and burn out pursuing them, so that self-inflicted harms replace other-inflicted ones. Han calls this \"positive violence\".\n\nAll of this is worsened, for Han, by the Western (now global and hypercultural) sense that the self is something that must be made, a culture where everyone is an \"entrepreneur of the self.\" Freedom itself is being exploited in the free society—corporations of course profit from our frenetic activity—because people around the world increasingly lack contemplative practices.\n\nThe only remedy is to find a more profound dimension of tiredness. This, of course, is the friendly boredom of the Zen contemplative which embraces dissipation. Yet Han thinks more usually we binge watch and scroll through our malaise, continually in a digitally mediated state of chronic burnout.",
+          "cost_usd": 0.058587,
+          "is_fallback": false
+        }
       }
     ]
   }
