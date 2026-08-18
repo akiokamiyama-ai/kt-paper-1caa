@@ -34,6 +34,7 @@ import json
 import re
 import sys
 from dataclasses import dataclass, field
+from functools import lru_cache
 from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any, Callable
@@ -252,7 +253,15 @@ class RegionSelection:
     region: str
     article: dict | None
     final_score: float | None
-    fallback_reason: str | None  # "no_candidates" / "all_deduped" / etc.
+    # C170 (2026-08-18): 空枠の原因を機械可読コードで区別する。
+    #   "no_candidates"          … プールに該当記事が 1 本も無かった
+    #   "all_deduped"            … 該当記事はあったが全件 dedup で除外された
+    #   "claimed_by_other_region"… matcher にはヒットしたが判定順序で他領域が先取り
+    # 旧実装は空枠を全部 "no_candidates" にしていたため、R3 の placeholder 頻発
+    # （8/09・8/10・8/18）の原因が追えなかった。
+    fallback_reason: str | None
+    # 件数入りの人間可読な内訳。ログ・stderr 双方に出す（C156 の教訓）。
+    fallback_detail: str | None = None
 
 
 @dataclass
@@ -313,14 +322,93 @@ def _is_japanese_source(source_name: str | None) -> bool:
     return ja_chars >= 2
 
 
+# C171 (2026-08-18): 英字キーワードの語中一致を防ぐための語境界判定。
+#
+# 旧実装は ``kw.lower() in text.lower()`` の素の部分一致だったため、短い英字
+# 略語が**別の単語の途中**にヒットしていた。C170 調査で archive 113 日・
+# 表示記事 630 件を走査した実測:
+#
+#   DMA        → Goldman(10) landmark(7) roadmap(2) Friedman Freedman
+#                Feldman Steadman Madman            … R3 誤検知 22 件
+#   EUV        → maneuver, Fleuve                    … R3 誤検知 2 件
+#   DSA        → EDSA（マニラの幹線道路）            … R3 誤検知 2 件
+#   evolution  → revolution / Revolutionary          … R6 誤検知 8 件
+#   Fed        → Confederacy, rebuffed               … R1 誤検知 2 件
+#   NBER       → Eisenberg                           … R6 誤検知 1 件
+#
+# 結果、3 面 R3「国際規制・テクノ覇権」枠には Goldman Sachs の決算記事や
+# W 杯の予想記事が載っていた（R3 充填 86 件のうち 24 件 = 28% が誤分類）。
+#
+# 対処は **先頭のみ語境界を要求**する。末尾は開けておく:
+#
+#   semiconductor  → semiconductors           ○ 通す（複数形）
+#   export control → export controls          ○ 通す（複数形）
+#   sovereign      → sovereignty              ○ 通す（派生語）
+#   evolution      → evolutionary             ○ 通す（派生語）
+#   DMA            → Goldman                  × 弾く（語中）
+#
+# 末尾にも境界を課す案は実測で ``evolutionary`` / ``sovereignty`` /
+# ``export controls`` を巻き添えにしたため採らない（許容する接尾辞を列挙する
+# 方式も試したが、英語の派生形を列挙しきれず同じ問題が残る）。
+#
+# 和文キーワードは語境界の概念が違う（分かち書きしない）ので従来どおり
+# 素の部分一致。「半導体」「独禁法」等は複合語の一部でも意味が保たれる。
+
+# 先頭境界だけでは防げない、末尾にも境界が要るキーワード。
+# 「最後の語が、より長い英単語の接頭辞になっている」ものだけがここに入る。
+#   "AI Act" → "AI Actually"（Foreign Policy, 2026-05-12 で実際に誤検知）
+# 複数形まで弾いてしまうので、実測で誤検知が出たものだけを足すこと。
+# 例えば "export control" をここに入れると "export controls" が落ちる。
+TRAILING_BOUNDARY_KEYWORDS: frozenset[str] = frozenset({
+    "AI Act",
+})
+
+_ASCII_ONLY_RE = re.compile(r"[\x20-\x7e]+")
+
+
+@lru_cache(maxsize=None)
+def _compile_keywords(
+    keywords: tuple[str, ...],
+) -> tuple[re.Pattern[str] | None, tuple[str, ...]]:
+    """キーワード集合を (英字用の正規表現, 和文キーワード) に分ける。
+
+    英字は 1 本の交替パターンにまとめて先頭に ``(?<![A-Za-z])`` を付ける。
+    領域判定は記事数 × 領域数だけ呼ばれるので、tuple をキーにキャッシュする。
+    """
+    ascii_parts: list[str] = []
+    japanese: list[str] = []
+    for kw in keywords:
+        if _ASCII_ONLY_RE.fullmatch(kw):
+            part = re.escape(kw)
+            if kw in TRAILING_BOUNDARY_KEYWORDS:
+                part += r"(?![A-Za-z])"
+            ascii_parts.append(part)
+        else:
+            japanese.append(kw)
+    pattern = None
+    if ascii_parts:
+        pattern = re.compile(
+            r"(?<![A-Za-z])(?:" + "|".join(ascii_parts) + r")",
+            re.IGNORECASE,
+        )
+    return pattern, tuple(japanese)
+
+
 def _has_keyword(text: str, keywords: tuple[str, ...]) -> bool:
-    """case-insensitive substring match. 和文キーワードはそのまま contains 判定。"""
+    """英字キーワードは先頭語境界つき、和文キーワードは部分一致で判定する。
+
+    C171 以前は全部素の部分一致だった。経緯は上のコメントを参照。
+    """
     if not text:
         return False
-    lower = text.lower()
-    for kw in keywords:
-        if kw.lower() in lower:
-            return True
+    pattern, japanese = _compile_keywords(tuple(keywords))
+    if pattern is not None and pattern.search(text):
+        return True
+    if japanese:
+        lower = text.lower()
+        for kw in japanese:
+            if kw.lower() in lower:
+                return True
     return False
 
 
@@ -500,6 +588,59 @@ def _filter_for_region(articles: list[dict], region: str) -> list[dict]:
     return out
 
 
+def _diagnose_empty_region(
+    region: str,
+    pre_dedup: list[dict],
+    post_dedup: list[dict],
+) -> tuple[str, str]:
+    """空枠になった領域の原因を切り分けて (reason_code, detail) を返す。
+
+    C170 (2026-08-18): 3 面 R3「国際規制・テクノ覇権」の placeholder が
+    8 月に 3 回発生したが、``fallback_reason`` が常に "no_candidates" で
+    「候補が無かった」以上のことが分からなかった。原因は排他的に 3 つ:
+
+      1. dedup で全部消えた            → "all_deduped"
+      2. matcher は当たったが他領域が先取り → "claimed_by_other_region"
+      3. そもそも 1 本も当たらなかった   → "no_candidates"
+
+    2 が起きるのは ``REGION_DETECTION_ORDER`` が first-match-wins だからで、
+    特に R3 は 3 番目に判定される上、他領域と違って category/source の
+    無条件マッチを持たない（キーワード専用）ため先取りされやすい。
+
+    なお閾値による脱落は原因になり得ない —— ``_select_top_for_region`` は
+    threshold を適用しない（docs/page3_design_v1.md §13 Q2）。
+    """
+    matched_pre = [a for a in pre_dedup if _region_for(a) == region]
+    if matched_pre:
+        return (
+            "all_deduped",
+            f"pool={len(pre_dedup)} → {region} 該当 {len(matched_pre)} 件、"
+            f"全件 dedup で除外（残 {len(post_dedup)} 件）",
+        )
+
+    matcher = _REGION_MATCHERS[region]
+    claimed: dict[str, int] = {}
+    for art in pre_dedup:
+        if not matcher(art):
+            continue
+        owner = _region_for(art) or "none"
+        claimed[owner] = claimed.get(owner, 0) + 1
+    if claimed:
+        breakdown = ", ".join(
+            f"{k}:{v}" for k, v in sorted(claimed.items(), key=lambda kv: -kv[1])
+        )
+        return (
+            "claimed_by_other_region",
+            f"pool={len(pre_dedup)} → {region} matcher hit {sum(claimed.values())} 件、"
+            f"全件が判定順序で先取り（{breakdown}）",
+        )
+
+    return (
+        "no_candidates",
+        f"pool={len(pre_dedup)} → {region} matcher hit 0 件",
+    )
+
+
 def _select_top_for_region(articles: list[dict], region: str) -> dict | None:
     """指定 region 内で final_score 上位1本を選ぶ。候補なしは None.
 
@@ -606,6 +747,10 @@ def select_page3_articles(
 
     candidates_total = len(scored_articles)
 
+    # C170: 空枠の原因切り分け（dedup 起因か先取り起因か）に dedup 前の
+    # プールが要るので、上書きせず退避しておく。
+    pre_dedup_articles = list(scored_articles)
+
     # dedup：当日他面 + 過去 N 日 page3
     dedup_set = displayed_urls_today | displayed_urls_past_n
     if dedup_set:
@@ -618,9 +763,12 @@ def select_page3_articles(
     for region in REGIONS:
         pick = _select_top_for_region(scored_articles, region)
         if pick is None:
+            reason, detail = _diagnose_empty_region(
+                region, pre_dedup_articles, scored_articles,
+            )
             selections[region] = RegionSelection(
                 region=region, article=None, final_score=None,
-                fallback_reason="no_candidates",
+                fallback_reason=reason, fallback_detail=detail,
             )
         else:
             selections[region] = RegionSelection(
@@ -984,6 +1132,7 @@ def write_page3_log(result: Page3Result) -> Path:
                 "display_name": REGION_DISPLAY_NAMES[region],
                 "article": None,
                 "fallback_reason": sel.fallback_reason,
+                "fallback_detail": sel.fallback_detail,
             }
         else:
             art = sel.article

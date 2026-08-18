@@ -1549,6 +1549,8 @@ def _print_page3_report(page3_result) -> None:
         display = PAGE3_REGION_DISPLAY_NAMES[region]
         if sel is None or sel.article is None:
             print(f"  [{region} {display:<18}] 本日該当なし  ({sel.fallback_reason if sel else 'no entry'})")
+            if sel is not None and sel.fallback_detail:
+                print(f"      理由: {sel.fallback_detail}")
             continue
         art = sel.article
         kicker = _page3_generate_kicker(art, region)
@@ -2030,7 +2032,14 @@ def main(argv: list[str] | None = None) -> int:
             sel = page3_result.selections.get(region)
             display = PAGE3_REGION_DISPLAY_NAMES[region]
             if sel is None or sel.article is None:
-                print(f"  [{region} {display:<18}] 本日該当なし")
+                # C170 (2026-08-18): ここだけ fallback_reason を落としていた。
+                # 他の空枠ログ（Page III selections / Page VI）は理由を出しており、
+                # 本番経路で出るのはこの summary なので、R3 の placeholder が
+                # 8 月に 3 回起きても原因が追えなかった（C156 の教訓の適用漏れ）。
+                reason = sel.fallback_reason if sel else "no entry"
+                print(f"  [{region} {display:<18}] 本日該当なし  ({reason})")
+                if sel is not None and sel.fallback_detail:
+                    print(f"      理由: {sel.fallback_detail}")
                 continue
             art = sel.article
             kicker = _page3_generate_kicker(art, region)
@@ -2043,7 +2052,9 @@ def main(argv: list[str] | None = None) -> int:
         if page3_result.placeholder_count >= 2:
             print(
                 f"  ⚠ {page3_result.placeholder_count} 領域 placeholder "
-                "（2 領域以上）— logs/page3_selection_*.json で確認推奨"
+                "（2 領域以上）— 詳細は GHA artifact audit-logs-<日付> 内の "
+                "logs/page3_selection_*.json（.gitignore 済みで repo には無い、"
+                "retention 90 日）"
             )
 
     if page_four_telemetry is not None:
