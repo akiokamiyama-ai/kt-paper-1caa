@@ -1401,6 +1401,23 @@
           "cost_usd": 0.058587,
           "is_fallback": false
         }
+      },
+      {
+        "date": "2026-08-19",
+        "day_label": "水",
+        "angle_key": "thinker",
+        "angle_label_jp": "思想家",
+        "essay": {
+          "angle_label": "水曜 - 思想家",
+          "daily_question": "本日の論考は休載となります",
+          "essay_title": "論考休載",
+          "body": "本日の論考は通信または生成の失敗により休載となります。\n\n主軸記事『Five Ways to Read Byung-Chul Han』は引き続き今週のテーマとして掲載しております。明日以降の論考にご期待ください。",
+          "annotation_label": "中心思想家と主著",
+          "annotation_body": "本日は用語解説も休載となります。",
+          "quote_excerpt": "Han が見るのは、意欲に満ちた人々が個人プロジェクトに自ら参加し、その追求のなかで燃え尽き、他者から与えられる害が自己から与えられる害へと置き換わっていく光景である。Han はこれを『ポジティブな暴力』と呼ぶ。",
+          "cost_usd": 0.0,
+          "is_fallback": true
+        }
       }
     ]
   }

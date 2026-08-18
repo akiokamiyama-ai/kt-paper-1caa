@@ -1944,6 +1944,20 @@
       "ai_kamiyama_failed": false,
       "fallback_used": false,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-08-19",
+      "article_url": "https://stereogum.com/2508640/meadow-announce-self-titled-debut-album-hear-yon/music/",
+      "article_title": "Meadow Announce Self-Titled Debut Album: Hear “Yon”",
+      "article_category": "music",
+      "tie_candidates": [
+        "music"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": false,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
     }
   ]
 }

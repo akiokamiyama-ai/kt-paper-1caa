@@ -1,0 +1,25 @@
+{
+  "date": "2026-08-19",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2608/18/2000000544/",
+    "human_energy": "https://jinjibu.jp/news/detl/26737/",
+    "web_repo": "https://www.bc01.net/article/ns-works_202608/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/open-trade-with-china-did-not-cause-us-deindustrialization-by-michael-r-strain-2026-08",
+    null,
+    "https://www.mckinsey.com/industries/public-sector/our-insights/rewiring-public-sector",
+    "https://www.theparisreview.org/blog/2026/08/12/the-bookstore-slash-skate-shop-next-to-ballerina-farm/",
+    "https://3quarksdaily.com/3quarksdaily/2026/08/on-sonny-rollins.html",
+    "https://stereogum.com/2508640/meadow-announce-self-titled-debut-album-hear-yon/music/"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://3quarksdaily.com/3quarksdaily/2026/08/james-k-galbraith-mainstream-economic-myths-are-disastrous-for-us-policy.html",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/08/17/james-joycess-baby-impressions-and-other-awkward-pleasures-of-literary-biography/",
+    "music": "https://stereogum.com/2508649/bloc-party-pigwig/music/",
+    "outdoor": "https://www.atlasobscura.com/places/cinema-africa"
+  },
+  "headlines_urls": []
+}

@@ -564,6 +564,11 @@
       "concept_id": "knowledge_transfer",
       "name_ja": "知識伝承",
       "displayed_on": "2026-08-18"
+    },
+    {
+      "concept_id": "abduction",
+      "name_ja": "アブダクション",
+      "displayed_on": "2026-08-19"
     }
   ]
 }
