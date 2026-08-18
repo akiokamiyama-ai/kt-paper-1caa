@@ -94,6 +94,104 @@ Tribune の運用中に神山さんが発見した改善点・違和感・将来
 
 ## 完了
 
+### Page I 論考の休載 — C24 の診断ファイルが3ヶ月間一度も収録されていなかった
+
+- **発見日**: 2026-08-19（W13 Day 4、水曜 thinker の論考が休載）
+- **対処**: C172
+
+  #### 事象
+
+  Page I の論考が 2 回とも parse に失敗して fallback（「論考休載」）。
+  **76 本中初の fallback**。4 面は正常（`essay_fallback=False`）で、run 自体は
+  success。C171 とは無関係の別系統。
+
+  `llm_usage` で確認したところ output は **2252 / 1969 tokens** で上限 4096 に
+  未達 —— **max_tokens 切り捨てではなく応答は完結していた**。
+
+  #### 原因追求が止まった 2 箇所
+
+  **1. 診断ファイルが書かれて捨てられていた**
+
+  C24 (2026-05-24) が「fallback 時に原因を追えるように」と
+  `logs/page1_v3_fallback_raw_*.txt` を入れ、docstring にはこう書かれていた:
+
+  > GHA workflow が `logs/page1_v3_fallback_raw_*.txt` を audit-logs artifact
+  > に同梱できるようファイル名規約を統一する
+
+  しかし 3 経路すべて未収録だった:
+
+  | 経路 | 状態 |
+  |---|---|
+  | artifact `path:` | `scores_` / `llm_usage_` / `page2_scores_` / `page3_selection_` のみ |
+  | `git add` | 明示列挙で未収録 |
+  | `.gitignore` | 記載なし（意図的な除外ですらない） |
+
+  **命名規約だけ決めて workflow 側の `path:` に追加する作業が漏れていた。**
+  3 ヶ月間一度も機能せず、初めて必要になった日に存在しなかった。残っていたのは
+  stderr の先頭 1000 字スニペットだけ。8/19 分の artifact は既に生成済みなので
+  **今回の raw は永久に回収不能**。
+
+  他の log も監査した結果、書かれるのに未収録なのは**このファイルだけ**だった
+  （`stage2_shadow_*` は shadow-logs artifact に収録済み、`page6_history` は
+  `migrate_sprint4.py` で page5_history に改名された死んだ参照）。
+
+  **2. 失敗理由が区別されていなかった**
+
+  `_parse_essay_json` は構文破損・dict 非該当・必須キー欠落をすべて `None` で
+  返し、呼び出し側が一律 `"JSON parse failed"` とログしていた。構文が壊れたのか
+  キーが欠けたのかすら判別できない。
+
+  #### 有力仮説（未確定、次回の raw で検証する）
+
+  `quote_excerpt` は「主軸記事から 300-500 字を**原文ママ**抜粋」という指示。
+  W13 の主軸記事『Five Ways to Read Byung-Chul Han』の `full_text_excerpt` は
+  **27,201 字（truncate せず全量をプロンプトに投入）で ASCII ダブルクォートを
+  88 個**含み、引用符で囲まれた語句が 35 件ある:
+
+  ```
+  "Friendliness"  "world-friendliness"  "great death"  "Zen"  "guesthouse"  "profound boredom"
+  ```
+
+  失敗した論考のスニペットは、まさにこの語群を論じていた（「フロイントリヒカイト
+  （Freundlichkeit）」/ 禅の「大死」/ 魂は「世界の招待客室（guesthouse）」）。
+  **水曜 thinker の角度は原文の術語＝引用符で囲まれた箇所を取りに行く構造**で、
+  そこから原文ママで 300-500 字を JSON 文字列値に入れる時に `\"` を 1 つ落とせば
+  構文が壊れる。2 回とも同じ場所で転んだ説明も付く（原因が入力データ側にあるなら
+  リトライは効かない）。
+
+  なおプロンプトには既にエスケープ厳守ルールがある（「★ 違反すると紙面が休載に
+  なります」「引用符は必ず `\"` でエスケープする」）。**書いてあるのに守られなかった**
+  ので、プロンプト強化は同じ轍になる可能性が高い。
+
+- **対処 (C172)**:
+
+  1. **診断ファイルの実収録** — daily.yml の artifact `path:` に
+     `logs/page1_v3_fallback_raw_*.txt` を追加。docstring を実装に合わせて
+     修正（経緯も残す）。なお `path:` は YAML の literal block scalar なので
+     **行頭 `#` はコメントにならず glob パターンとして渡る**。説明はブロックの
+     外に書くこと（テストで回帰防止）
+  2. **失敗理由の区別** — `_parse_essay_json` が `EssayParse(data, reason,
+     rescued)` を返すようにし、`empty_response` / `no_json_object` /
+     `decode_error: <msg> at char <N>` / `not_dict(<型>)` /
+     `missing_key:<キー>` / `empty_value:<キー>` / `wrong_type(<型>):<キー>`
+     を区別。リトライ時に 1 回目の理由も、両方失敗時は raw ダンプにも残す
+     （同じ理由なら入力データ側、違う理由なら生成の揺らぎ、と切り分けられる）
+  3. **部分救済** — `quote_excerpt` **だけ**が壊れている場合は 5 キーで紙面を
+     成立させ、引用は `monthly_pivotal.json` の `key_quote_ja` で代替する。
+     救済したことは必ず stderr に WARN で記録（C156 の教訓）。`body` 等が
+     欠けた場合は本文が無ければ紙面が成立しないので従来どおり fallback
+
+  **保留**: `quote_excerpt` の「原文ママ」指示の見直し / 引用符の事前正規化は、
+  1・2 で次回の raw を確認してから判断する。仮説のまま直すと外す。
+
+- **今後の観察ポイント**: 次に Page I が休載したら `gh run download` で
+  `page1_v3_fallback_raw_<日付>.txt` を取得し、`decode_error` の文字位置が
+  `quote_excerpt` の中かどうかを見る。仮説が当たっていれば救済が効いて
+  そもそも休載しなくなるはずなので、**「休載しなくなったが救済 WARN が出る」**
+  が最も期待される観測結果。
+
+---
+
 ### 3面 R3「国際規制・テクノ覇権」の placeholder 頻発 — キーワードの語中一致で28%が誤分類されていた
 
 - **発見日**: 2026-08-18（C169 の 8/18 検証で 3 面 R3 が「本日該当なし」だったのが端緒）

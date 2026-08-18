@@ -30,6 +30,29 @@ ESSAY_MODEL = "claude-sonnet-4-6"
 ESSAY_TAG = "page1_v3.essay"
 ESSAY_MAX_TOKENS = 4096
 
+# C172 (2026-08-19): 論考 JSON の必須キー。
+REQUIRED_KEYS: tuple[str, ...] = (
+    "daily_question", "essay_title", "body",
+    "annotation_label", "annotation_body", "quote_excerpt",
+)
+
+# 欠落・破損しても**紙面を成立させられる**キー（部分救済の対象）。
+#
+# 8/19 (W13 Day 4, 水曜 thinker) に essay が 2 回とも parse に失敗して休載した。
+# 応答は完結しており（output 2252 / 1969 tokens、上限 4096 に未達）、
+# 論考本文そのものは書けていた可能性が高いのに、紙面全体を落としていた。
+#
+# ``quote_excerpt`` は「主軸記事から 300-500 字を**原文ママ**抜粋」という指示で、
+# W13 の主軸記事（Byung-Chul Han、full_text_excerpt 27,201 字）は ASCII
+# ダブルクォートを 88 個含む。"great death" / "guesthouse" / "Friendliness"
+# のような術語がすべて引用符付きで、水曜 thinker の角度はまさにそこを取りに行く。
+# 原文ママの引用を JSON 文字列値へ入れる時に \" を 1 つ落とせば構文が壊れる。
+#
+# 引用欄 1 つのために論考本文を捨てるのは割に合わないので、このキーだけは
+# ``key_quote_ja`` で代替して紙面を成立させる。body 等は本文が無ければ紙面が
+# 成立しないので救済しない。
+RESCUABLE_KEYS: frozenset[str] = frozenset({"quote_excerpt"})
+
 # Sprint 8 C24 (2026-05-24, 5/24 朝刊 fallback 受け): JSON parse 失敗時の
 # 1 回 retry + 失敗時 raw response 保存先。
 DEFAULT_FALLBACK_RAW_DIR = (
@@ -125,32 +148,87 @@ def _build_user_message(
 # ----------------------------------------------------------------------------
 
 
-def _parse_essay_json(raw: str) -> dict | None:
-    """LLM 応答テキストから dict を取り出す。失敗時 None."""
+@dataclass
+class EssayParse:
+    """``_parse_essay_json`` の結果.
+
+    C172 (2026-08-19): 旧実装は成功=dict / 失敗=None しか返さず、呼び出し側は
+    構文破損もキー欠落も一律 ``"JSON parse failed"`` とログしていた。8/19 の
+    休載時にどちらだったのか事後に判別できず、原因追求が止まった。
+    """
+    data: dict | None = None
+    reason: str | None = None
+    rescued: tuple[str, ...] = ()
+
+
+def _classify_key(parsed: dict, key: str) -> str | None:
+    """必須キー 1 つの状態を判定。問題なければ None."""
+    if key not in parsed:
+        return "missing_key"
+    value = parsed[key]
+    if not isinstance(value, str):
+        return f"wrong_type({type(value).__name__})"
+    if not value.strip():
+        return "empty_value"
+    return None
+
+
+def _parse_essay_json(raw: str) -> EssayParse:
+    """LLM 応答テキストから dict を取り出す。
+
+    失敗時は ``reason`` に機械可読な理由を入れて返す:
+
+      ``empty_response``            応答が空
+      ``no_json_object``            ``{`` が見つからない
+      ``decode_error: <msg>``       json.JSONDecodeError
+      ``not_dict(<type>)``          JSON だが dict でない
+      ``missing_key:<キー>``        必須キーが無い
+      ``empty_value:<キー>``        必須キーが空文字
+      ``wrong_type(<型>):<キー>``   必須キーが str でない
+
+    ``RESCUABLE_KEYS`` だけが壊れている場合は失敗とせず、そのキーを落とした
+    dict と ``rescued`` を返す（呼び出し側が代替値を埋める）。
+    """
     if not raw:
-        return None
+        return EssayParse(reason="empty_response")
     text = _FENCE_RE.sub("", raw).strip()
     if not text.startswith("{"):
         idx = text.find("{")
         if idx < 0:
-            return None
+            return EssayParse(reason="no_json_object")
         text = text[idx:]
     end = text.rfind("}")
     if end >= 0:
         text = text[: end + 1]
     try:
         parsed = json.loads(text)
-    except json.JSONDecodeError:
-        return None
+    except json.JSONDecodeError as e:
+        # 位置つきで残す。どの引用符で転んだかの手掛かりになる。
+        return EssayParse(reason=f"decode_error: {e.msg} at char {e.pos}")
     if not isinstance(parsed, dict):
-        return None
-    required = ("daily_question", "essay_title", "body",
-                "annotation_label", "annotation_body", "quote_excerpt")
-    for k in required:
-        v = parsed.get(k)
-        if not isinstance(v, str) or not v.strip():
-            return None
-    return {k: parsed[k].strip() for k in required}
+        return EssayParse(reason=f"not_dict({type(parsed).__name__})")
+
+    problems: dict[str, str] = {}
+    for key in REQUIRED_KEYS:
+        kind = _classify_key(parsed, key)
+        if kind:
+            problems[key] = kind
+    if problems:
+        blocking = {k: v for k, v in problems.items() if k not in RESCUABLE_KEYS}
+        if blocking:
+            return EssayParse(
+                reason=", ".join(f"{v}:{k}" for k, v in sorted(blocking.items()))
+            )
+        # 救済可能なキーだけが壊れている
+        good = {
+            k: parsed[k].strip() for k in REQUIRED_KEYS if k not in problems
+        }
+        return EssayParse(
+            data=good,
+            reason=", ".join(f"{v}:{k}" for k, v in sorted(problems.items())),
+            rescued=tuple(sorted(problems)),
+        )
+    return EssayParse(data={k: parsed[k].strip() for k in REQUIRED_KEYS})
 
 
 # ----------------------------------------------------------------------------
@@ -173,8 +251,17 @@ def _angle_label_text(week: WeekContext) -> str:
 def _save_fallback_raw(target_date: date, raw: str, out_dir: Path) -> Path | None:
     """fallback 時の raw response を artifact 用ファイルに保存.
 
-    GHA workflow が ``logs/page1_v3_fallback_raw_*.txt`` を audit-logs artifact
-    に同梱できるようファイル名規約を統一する（C24, 2026-05-24）。
+    ``logs/page1_v3_fallback_raw_<日付>.txt`` として書き、daily.yml の
+    ``audit-logs-<日付>`` artifact に収録される（retention 90 日）。
+    ``gh run download`` で取得して parse 失敗の原因を追う。
+
+    C24 (2026-05-24) がこの命名規約を入れた時、docstring には「GHA workflow が
+    audit-logs artifact に同梱できるよう」とだけ書かれ、**workflow 側の
+    ``path:`` に追加する作業が漏れていた**。git add にも .gitignore にも無く、
+    ファイルは runner 上に書かれて捨てられていた。2026-08-19 の休載で初めて
+    必要になり、存在しないことが判明（3 ヶ月間一度も機能していなかった）。
+    C172 で daily.yml に実際に追加した。repo には commit しない（診断専用で
+    cache 参照経路が無いため、artifact 90 日保持で足りる）。
     """
     try:
         out_dir.mkdir(parents=True, exist_ok=True)
@@ -227,10 +314,39 @@ def _make_fallback(
     )
 
 
+def _log_rescue(parse: EssayParse, *, attempt: int) -> None:
+    """部分救済したことを必ず記録する（C156 の教訓）.
+
+    救済は「壊れていたのに紙面が出た」状態なので、黙って通すと破損が
+    可視化されない。
+    """
+    if not parse.rescued:
+        return
+    print(
+        f"[page1_v3] WARN: attempt {attempt} は "
+        f"{'/'.join(parse.rescued)} が壊れていたため代替値で救済しました "
+        f"(reason: {parse.reason})。論考本文は採用します",
+        file=sys.stderr,
+    )
+
+
+def _fallback_quote(week: WeekContext) -> str:
+    """``quote_excerpt`` を救済する時の代替（monthly_pivotal.json 由来）."""
+    a = week.article
+    return (a.get("key_quote_ja") or a.get("key_quote") or "").strip()
+
+
 def _build_essay_result(
     week: WeekContext, parsed: dict, cost: float,
+    *, rescued: tuple[str, ...] = (),
 ) -> EssayResult:
-    """parse 成功時の EssayResult 構築（generate_essay の 2 経路で共有）."""
+    """parse 成功時の EssayResult 構築（generate_essay の 2 経路で共有）.
+
+    C172: ``rescued`` に入ったキーは parsed に無いので代替値で埋める。
+    """
+    quote = parsed.get("quote_excerpt")
+    if not quote:
+        quote = _fallback_quote(week)
     return EssayResult(
         angle_label=_angle_label_text(week),
         daily_question=parsed["daily_question"],
@@ -238,7 +354,7 @@ def _build_essay_result(
         body=parsed["body"],
         annotation_label=parsed["annotation_label"],
         annotation_body=parsed["annotation_body"],
-        quote_excerpt=parsed["quote_excerpt"],
+        quote_excerpt=quote,
         cost_usd=cost,
         is_fallback=False,
     )
@@ -293,7 +409,8 @@ def generate_essay(
         Response は ``.text`` ``.cost_usd`` を持つことを期待する。
     fallback_raw_dir : Path | None
         fallback 時の raw response ダンプ先（テスト用）。default は
-        ``logs/`` ディレクトリ。GHA artifact に同梱される。
+        ``logs/`` ディレクトリ。daily.yml の audit-logs artifact に収録される
+        （C172 で実収録。それ以前は書かれるだけで捨てられていた）。
     """
     caller = llm_caller or _default_llm_caller
     system = ESSAY_SYSTEM_PROMPT
@@ -310,14 +427,15 @@ def generate_essay(
         )
     raw = getattr(resp, "text", "") or ""
     cost = float(getattr(resp, "cost_usd", 0.0) or 0.0)
-    parsed = _parse_essay_json(raw)
-    if parsed is not None:
-        return _build_essay_result(week, parsed, cost)
+    p1 = _parse_essay_json(raw)
+    if p1.data is not None:
+        _log_rescue(p1, attempt=1)
+        return _build_essay_result(week, p1.data, cost, rescued=p1.rescued)
 
     # ----- Attempt 2: JSON parse 失敗時の 1 回 retry -----
     print(
-        f"[page1_v3] essay JSON parse failed on attempt 1 "
-        f"(raw {len(raw)} chars), retrying once",
+        f"[page1_v3] essay parse failed on attempt 1 "
+        f"(raw {len(raw)} chars, reason: {p1.reason}), retrying once",
         file=sys.stderr,
     )
     try:
@@ -325,26 +443,33 @@ def generate_essay(
     except Exception as e:  # noqa: BLE001
         return _make_fallback(
             week, target_date,
-            f"retry call exception {type(e).__name__}",
+            f"retry call exception {type(e).__name__} "
+            f"(attempt 1 reason: {p1.reason})",
             raw=raw, out_dir=out_dir,
         )
     raw2 = getattr(resp2, "text", "") or ""
     cost2 = float(getattr(resp2, "cost_usd", 0.0) or 0.0)
-    parsed2 = _parse_essay_json(raw2)
-    if parsed2 is not None:
+    p2 = _parse_essay_json(raw2)
+    if p2.data is not None:
         print(
-            f"[page1_v3] essay JSON parse succeeded on attempt 2 "
+            f"[page1_v3] essay parse succeeded on attempt 2 "
             f"(retry cost ${cost2:.4f}, total ${cost + cost2:.4f})",
             file=sys.stderr,
         )
-        return _build_essay_result(week, parsed2, cost + cost2)
+        _log_rescue(p2, attempt=2)
+        return _build_essay_result(
+            week, p2.data, cost + cost2, rescued=p2.rescued,
+        )
 
     # ----- 両方失敗: fallback + 両 attempt の raw を連結保存 -----
+    # C172: 両 attempt の理由を残す。同じ理由なら入力データ側（例えば主軸記事の
+    # 引用符）が原因で、違う理由なら生成の揺らぎ、という切り分けができる。
     combined = (
-        f"=== attempt 1 ({len(raw)} chars) ===\n{raw}\n\n"
-        f"=== attempt 2 ({len(raw2)} chars) ===\n{raw2}"
+        f"=== attempt 1 ({len(raw)} chars, reason: {p1.reason}) ===\n{raw}\n\n"
+        f"=== attempt 2 ({len(raw2)} chars, reason: {p2.reason}) ===\n{raw2}"
     )
     return _make_fallback(
-        week, target_date, "JSON parse failed (both attempts)",
+        week, target_date,
+        f"parse failed both attempts (1: {p1.reason} / 2: {p2.reason})",
         raw=combined, out_dir=out_dir,
     )

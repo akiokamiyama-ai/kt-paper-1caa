@@ -106,11 +106,18 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: audit-logs-${{ steps.date.outputs.DATE }}
+        # C172 (2026-08-19): page1_v3_fallback_raw_*.txt を追加。C24
+        # (2026-05-24) が命名規約だけ決めて path 追加を漏らしており、3 ヶ月間
+        # runner 上で書かれては捨てられていた。8/19 の Page I 休載で初めて
+        # 必要になり、存在しないことが判明した。
+        # 注: path は literal block scalar なので行頭 # はコメントにならない。
+        # 説明はこの位置に書くこと。
           path: |
             logs/scores_*.json
             logs/llm_usage_*.json
             logs/page2_scores_*.json
             logs/page3_selection_*.json
+            logs/page1_v3_fallback_raw_*.txt
           retention-days: 90
 
       - name: Refresh index.html with today's archive
