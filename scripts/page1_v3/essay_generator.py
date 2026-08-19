@@ -53,6 +53,17 @@ REQUIRED_KEYS: tuple[str, ...] = (
 # 成立しないので救済しない。
 RESCUABLE_KEYS: frozenset[str] = frozenset({"quote_excerpt"})
 
+# quote_excerpt の字数上限（C176, 2026-08-19）。
+#
+# プロンプトは運用開始から「300-500 字」と指示していたが、実測では **76 本中
+# 53 本 (70%) が 500 字超**（p50=631 / p90=1058 / max=1405）で、指示は事実上
+# 機能していなかった。長い引用ほど内部に引用符を含む確率が上がり、8/19 の
+# 休載（未エスケープの ``"Friendliness"``）はまさに 1,074 字の引用で起きた。
+#
+# C176 で引用を**和訳ベース**に変えたので字数の意味も変わる（英文 500 字 ≒
+# 和訳 200 字弱）。上限は仕様どおり 500 字とし、超過分は句点優先で切り詰める。
+QUOTE_EXCERPT_MAX_CHARS = 500
+
 # Sprint 8 C24 (2026-05-24, 5/24 朝刊 fallback 受け): JSON parse 失敗時の
 # 1 回 retry + 失敗時 raw response 保存先。
 DEFAULT_FALLBACK_RAW_DIR = (
@@ -395,6 +406,36 @@ def _log_rescue(parse: EssayParse, *, attempt: int) -> None:
     )
 
 
+def _truncate_quote(text: str, max_chars: int) -> str:
+    """引用を句点優先で切り詰める。
+
+    ``next_week_preview._truncate_jp`` と同じ作法だが、モジュール間の細かい
+    依存を避けるため独立させている（``_esc`` を各所で独立定義しているのと
+    同じ方針）。
+    """
+    if len(text) <= max_chars:
+        return text
+    cut = text[:max_chars]
+    for sep in ("。", "．", "！", "？"):
+        idx = cut.rfind(sep)
+        if idx >= max_chars // 2:
+            return cut[: idx + 1]
+    return cut.rstrip() + "…"
+
+
+def _enforce_quote_limit(quote: str) -> str:
+    """字数上限を実効化し、切り詰めたら必ず記録する（C176 / C156 の教訓）."""
+    if len(quote) <= QUOTE_EXCERPT_MAX_CHARS:
+        return quote
+    cut = _truncate_quote(quote, QUOTE_EXCERPT_MAX_CHARS)
+    print(
+        f"[page1_v3] WARN: quote_excerpt が {len(quote)} 字で上限 "
+        f"{QUOTE_EXCERPT_MAX_CHARS} 字を超過 → {len(cut)} 字に切り詰めました",
+        file=sys.stderr,
+    )
+    return cut
+
+
 def _fallback_quote(week: WeekContext) -> str:
     """``quote_excerpt`` を救済する時の代替（monthly_pivotal.json 由来）."""
     a = week.article
@@ -412,6 +453,7 @@ def _build_essay_result(
     quote = parsed.get("quote_excerpt")
     if not quote:
         quote = _fallback_quote(week)
+    quote = _enforce_quote_limit(quote)
     return EssayResult(
         angle_label=_angle_label_text(week),
         daily_question=parsed["daily_question"],
