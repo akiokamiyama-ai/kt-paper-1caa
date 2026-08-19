@@ -125,10 +125,29 @@ def test_reason_decode_error():
         '"quote_excerpt": "Han calls this "positive violence" here."}'
     )
     r = eg._parse_essay_json(broken)
-    ok = r.data is None and (r.reason or "").startswith("decode_error")
-    _check("a3 未エスケープの \" → decode_error", ok, str(r.reason))
+    _check("a3 未エスケープの \" → decode_error として検出される",
+           (r.reason or "").startswith("decode_error"), str(r.reason))
     _check("a3b decode_error に文字位置が入る（どこで転んだかの手掛かり）",
            "char" in (r.reason or ""), str(r.reason))
+    # C175: 壊したのが quote_excerpt なら、切り離して 5 キーで救済する
+    _check("a3c quote_excerpt が構文を壊した場合は切り離して救済（C175）",
+           r.data is not None and r.rescued == ("quote_excerpt",),
+           f"rescued={r.rescued}")
+    _check("a3d 救済されても論考本文は残る",
+           bool(r.data) and r.data.get("body") == "本文", str(r.data))
+
+
+def test_decode_error_not_salvageable():
+    """壊れた位置が quote_excerpt より手前なら救済しない。"""
+    broken = (
+        '{"daily_question": "問い", "essay_title": "T", "body": "本文が "壊れて" いる", '
+        '"annotation_label": "L", "annotation_body": "A", '
+        '"quote_excerpt": "引用"}'
+    )
+    r = eg._parse_essay_json(broken)
+    _check("a3e body が構文を壊した場合は救済しない",
+           r.data is None and (r.reason or "").startswith("decode_error"),
+           str(r.reason))
 
 
 def test_reason_not_dict():
@@ -355,6 +374,7 @@ def main() -> int:
     test_reason_empty_response()
     test_reason_no_json_object()
     test_reason_decode_error()
+    test_decode_error_not_salvageable()
     test_reason_not_dict()
     test_reason_missing_and_empty_key()
     test_reason_lists_all_blocking_keys()

@@ -173,6 +173,63 @@ def _classify_key(parsed: dict, key: str) -> str | None:
     return None
 
 
+# 救済可能キーを「丸ごと切り落とす」ための開始位置パターン（C175）。
+# ``, "quote_excerpt":`` の直前で切って ``}`` で閉じ直す。
+_SALVAGE_CUT_RES: dict[str, re.Pattern[str]] = {
+    k: re.compile(r',\s*"' + re.escape(k) + r'"\s*:') for k in RESCUABLE_KEYS
+}
+
+
+def _try_salvage_decode_error(
+    text: str, err_pos: int,
+) -> tuple[dict | None, tuple[str, ...]]:
+    """構文が壊れた JSON から、救済可能キーを捨てて残りを取り出す（C175）.
+
+    C172 の救済は「JSON は parse できるが quote_excerpt が欠落・空」しか
+    見ておらず、**quote_excerpt 自身が構文を壊す**ケースを取りこぼしていた。
+    2026-08-19 の実データがまさにこれで、原文ママ引用の中の未エスケープな
+    ``"`` が JSON 全体を parse 不能にしていた::
+
+        "quote_excerpt": "... is Freundlichkeit. "Friendliness" does not ..."
+                                                 ^ ここで構文が壊れる
+
+    幸い ``quote_excerpt`` は出力の**最後のキー**なので、その手前で切れば
+    残り 5 キーは無傷で取り出せる（8/19 の両 attempt で検証：body 1725 字 /
+    1599 字の完全な論考が救出できた）。
+
+    切り落とした結果、後続キーまで巻き添えになった場合は必須キー検証で落ちる
+    ので、``quote_excerpt`` が最後でない出力を誤って救済することはない。
+
+    Returns ``(data, rescued)``。救済できなければ ``(None, ())``。
+    """
+    for key in sorted(RESCUABLE_KEYS):
+        m = _SALVAGE_CUT_RES[key].search(text)
+        if m is None:
+            continue
+        if m.start() >= err_pos:
+            # そのキーより手前で壊れている → 落としても直らない
+            continue
+        try:
+            parsed = json.loads(text[: m.start()] + "}")
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(parsed, dict):
+            continue
+        problems: dict[str, str] = {}
+        for req in REQUIRED_KEYS:
+            kind = _classify_key(parsed, req)
+            if kind:
+                problems[req] = kind
+        blocking = [k for k in problems if k not in RESCUABLE_KEYS]
+        if blocking:
+            continue
+        good = {
+            k: parsed[k].strip() for k in REQUIRED_KEYS if k not in problems
+        }
+        return good, tuple(sorted(problems))
+    return None, ()
+
+
 def _parse_essay_json(raw: str) -> EssayParse:
     """LLM 応答テキストから dict を取り出す。
 
@@ -204,7 +261,15 @@ def _parse_essay_json(raw: str) -> EssayParse:
         parsed = json.loads(text)
     except json.JSONDecodeError as e:
         # 位置つきで残す。どの引用符で転んだかの手掛かりになる。
-        return EssayParse(reason=f"decode_error: {e.msg} at char {e.pos}")
+        reason = f"decode_error: {e.msg} at char {e.pos}"
+        salvaged, rescued = _try_salvage_decode_error(text, e.pos)
+        if salvaged is not None:
+            return EssayParse(
+                data=salvaged,
+                reason=f"{reason} / {'・'.join(rescued)} を切り離して救済",
+                rescued=rescued,
+            )
+        return EssayParse(reason=reason)
     if not isinstance(parsed, dict):
         return EssayParse(reason=f"not_dict({type(parsed).__name__})")
 
