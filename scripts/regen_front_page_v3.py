@@ -27,6 +27,7 @@ from .lib.jst import jst_today
 
 import argparse
 import importlib
+import re
 import sys
 import traceback
 from dataclasses import asdict
@@ -76,6 +77,11 @@ def _build_parser() -> argparse.ArgumentParser:
     p.add_argument("--comments-dir", help="data/comments/ 上書きディレクトリ")
     p.add_argument("--dry-run-out", default="/tmp/v3_dryrun",
                    help="dry-run 出力ディレクトリ（デフォルト: /tmp/v3_dryrun）")
+    p.add_argument(
+        "--page-one-only", action="store_true",
+        help="v2 を呼ばず、既存 archive の Page I だけを再生成して差し替える"
+             "（C174: 単日の論考作り直し用。他面・各種 history は触らない）",
+    )
     p.add_argument("--save-history-in-dryrun", action="store_true",
                    help="dry-run でも save_essay で履歴に積む（7 日連続テスト用）")
     return p
@@ -91,7 +97,38 @@ def main(argv: list[str] | None = None) -> int:
     if known.dry_run:
         return _run_dryrun(target, known)
 
+    if known.page_one_only:
+        return _run_page_one_only(target, known)
+
     return _run_production(target, known, v2_passthrough_argv=unknown)
+
+
+def _run_page_one_only(target_date: date, args: argparse.Namespace) -> int:
+    """v2 を呼ばず Page I だけ作り直して既存 archive に差し替える（C174）.
+
+    2-6 面・displayed_urls・scores・concept/cooking/page5 の各 history には
+    一切触らない。essay の履歴（page1_v3_history.json）だけは同日上書きで
+    更新される（``save_essay`` が再ラン耐性を持つ）。
+    """
+    print(
+        f"[page1_v3] === page-one-only run for {target_date.isoformat()} ===",
+        file=sys.stderr,
+    )
+    archive_path = _archive_path(target_date)
+    if not archive_path.exists():
+        print(f"[page1_v3] archive missing: {archive_path}", file=sys.stderr)
+        return 1
+    try:
+        applied = _try_v3_swap(target_date, args)
+    except Exception as e:  # noqa: BLE001
+        print(f"[page1_v3] swap exception {type(e).__name__}: {e}", file=sys.stderr)
+        traceback.print_exc(file=sys.stderr)
+        return 1
+    if not applied:
+        print("[page1_v3] swap not applied", file=sys.stderr)
+        return 1
+    print(f"[page1_v3] page-one swapped in {archive_path}", file=sys.stderr)
+    return 0
 
 
 def _parse_target_date(s: str | None) -> date | None:
@@ -172,9 +209,9 @@ def _try_v3_swap(target_date: date, args: argparse.Namespace) -> bool:
         return False
 
     html = archive_path.read_text(encoding="utf-8")
-    if '<section class="page page-one">' not in html:
-        # 既に v3 化済 or v2 構造が変わっている → no-op
-        print("[page1_v3] page-one v2 marker not found, skipping swap",
+    if PAGE_ONE_SECTION_RE.search(html) is None:
+        # v2 構造が変わっている → no-op
+        print("[page1_v3] page-one marker not found, skipping swap",
               file=sys.stderr)
         return False
 
@@ -187,17 +224,38 @@ def _try_v3_swap(target_date: date, args: argparse.Namespace) -> bool:
     return True
 
 
+# swap 対象になる page-one セクションの開始タグ。
+#
+# C174 (2026-08-19): v3 を **2 度目に**当てられるよう page-one-v3 も拾う。
+# 旧実装は v2 の ``<section class="page page-one">`` 完全一致しか見ておらず、
+# 既に v3 化された archive には no-op になるため、単日の Page I 再生成が
+# できなかった。8/19 の論考が parse 失敗で休載した際、C172 の救済入りコードで
+# 作り直したくても、全 6 面を再生成する（＝記事選定が当日の feed で変わり、
+# concept / cooking / page5 の履歴が append で二重記録される）以外に手が
+# 無かった。
+#
+# v3 の開始タグは ``data-date`` 属性を持つ（``<section class="page
+# page-one-v3" data-date="2026-08-19">``）ので、完全一致ではなく属性を許す
+# 形で拾う。``-v3`` を optional にして 1 本の正規表現で両方に当てる。
+PAGE_ONE_SECTION_RE = re.compile(
+    r'<section class="page page-one(?:-v3)?"[^>]*>'
+)
+
+
 def _swap_page_one(html: str, v3_section: str) -> str:
-    """v2 の ``<section class="page page-one">...</section>`` を v3 に置換."""
-    start_marker = '<section class="page page-one">'
-    start = html.find(start_marker)
-    if start == -1:
-        raise RuntimeError("v2 page-one section not found")
-    end = html.find("</section>", start)
+    """既存の page-one セクション（v2 / v3 どちらでも）を v3 に置換.
+
+    page-one セクションは入れ子の ``<section>`` を含まないため、開始タグから
+    最初の ``</section>`` までが正しい範囲（archive 実データで検証済み）。
+    """
+    m = PAGE_ONE_SECTION_RE.search(html)
+    if m is None:
+        raise RuntimeError("page-one section not found")
+    end = html.find("</section>", m.start())
     if end == -1:
-        raise RuntimeError("v2 page-one section end not found")
+        raise RuntimeError("page-one section end not found")
     end += len("</section>")
-    return html[:start] + v3_section + html[end:]
+    return html[:m.start()] + v3_section + html[end:]
 
 
 def _archive_path(target_date: date) -> Path:

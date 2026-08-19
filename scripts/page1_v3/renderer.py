@@ -219,6 +219,10 @@ def render_page_one_v3(
 # CSS — main から template 末尾に inject される
 # ============================================================================
 
+# CSS が既に inject 済みかを判定するマーカー（C174）。
+# PAGE_ONE_V3_CSS の見出しコメント冒頭と一致させること。
+PAGE_ONE_V3_CSS_MARKER = "Page One v3 — 案 C 統合型 1 面再設計"
+
 PAGE_ONE_V3_CSS = """
 /* ============================================================
    Page One v3 — 案 C 統合型 1 面再設計（Phase 3, 2026-05-23）
@@ -492,6 +496,11 @@ def inject_page_one_v3_css(html_text: str) -> str:
     既存の ``</style>`` がなければ ``</head>`` 直前に ``<style>...</style>``
     を新設する（v2 の inject_link_style_css と同じ作法）。
     """
+    # C174 (2026-08-19): 単日の Page I 再生成を可能にするため冪等化。
+    # 旧実装は呼ばれるたびに CSS を追加するので、既に v3 化された archive に
+    # 再 swap すると CSS ブロックが丸ごと二重になっていた。
+    if PAGE_ONE_V3_CSS_MARKER in html_text:
+        return html_text
     if "</style>" in html_text:
         idx = html_text.rfind("</style>")
         return html_text[:idx] + PAGE_ONE_V3_CSS + html_text[idx:]
