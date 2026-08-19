@@ -1958,6 +1958,20 @@
       "ai_kamiyama_failed": false,
       "fallback_used": false,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-08-20",
+      "article_url": "https://www.houyhnhnm.jp/news/1161150/",
+      "article_title": "日々を支える道具のようなトートバッグ。つくったのは、ロンハーマンとトポロジーのタッグです。",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": false,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
     }
   ]
 }

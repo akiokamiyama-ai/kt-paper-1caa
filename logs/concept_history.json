@@ -569,6 +569,11 @@
       "concept_id": "abduction",
       "name_ja": "アブダクション",
       "displayed_on": "2026-08-19"
+    },
+    {
+      "concept_id": "schrodingers_cat",
+      "name_ja": "シュレーディンガーの猫",
+      "displayed_on": "2026-08-20"
     }
   ]
 }
