@@ -574,6 +574,11 @@
       "concept_id": "schrodingers_cat",
       "name_ja": "シュレーディンガーの猫",
       "displayed_on": "2026-08-20"
+    },
+    {
+      "concept_id": "multimodal_communication",
+      "name_ja": "マルチモーダルコミュニケーション",
+      "displayed_on": "2026-08-21"
     }
   ]
 }
