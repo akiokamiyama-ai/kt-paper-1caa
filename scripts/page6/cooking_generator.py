@@ -35,6 +35,31 @@ EXCLUSION_DAYS: int = 30
 RECENT_GENRE_LOOKBACK_DAYS: int = 3
 ALLOWED_GENRES: tuple[str, ...] = ("和", "洋", "中", "エスニック")
 
+# フィールド間整合チェックの閾値（C178, 2026-08-20）。
+#
+# 2026-08-20 の 6 面で、料理名「夏ズッキーニとベーコンの洋風レモンバター
+# スパゲッティ」に対し本文が「とうもろこしとズッキーニのバターソテー」で、
+# ベーコンもスパゲッティも本文に一度も出てこなかった。生成は 1 回の JSON 応答
+# なのでパース時の取り違えではなく、``_validate`` が存在チェックと genre 白名単
+# しか見ていなかったため素通りしていた。
+#
+# 判定対象は ``ingredients_summary`` のみ。料理名も見る案は試したが、日本語の
+# 「と」で分割すると **「とうもろこし」が割れる**（「ズッキーニととうもろこし」→
+# 「うもろこしの…」）ため誤検知源になる。材料欄はカンマ区切りで曖昧さがない。
+#
+# archive 115 日を走査した実測（材料が本文に出現するか）:
+#
+#   未出現 0 件: 88 日 / 1 件: 22 日 / 2 件: 1 日
+#
+# 2 件がちょうど 8/20 の 1 日だけで、完全に分離できる。1 件の 22 日は
+# 「豚こま切れ」対本文「豚肉」のような表記ゆれで、本文は料理名と整合していた。
+# よって閾値は 2 件（発火率 0.9%、誤検知ゼロ）。
+CONSISTENCY_MISSING_THRESHOLD: int = 2
+
+# 材料名が本文に「出現した」と見なす最長共通部分文字列の比率。
+# 「夏トマト」対「トマト」/「絹ごし豆腐」対「豆腐」のような表記ゆれを吸収する。
+CONSISTENCY_MATCH_RATIO: float = 0.5
+
 _FENCE_RE = re.compile(
     r"^\s*```(?:json)?\s*\n?|\n?```\s*$", re.IGNORECASE | re.MULTILINE
 )
@@ -209,6 +234,51 @@ def _validate(parsed: dict | None) -> str | None:
 
 
 # ---------------------------------------------------------------------------
+# Field consistency (C178)
+# ---------------------------------------------------------------------------
+
+_PAREN_RE = re.compile(r"[（(].*?[)）]")
+_INGREDIENT_SPLIT_RE = re.compile(r"[、,／/･・]")
+
+
+def _appears_in_body(term: str, body: str) -> bool:
+    """``term`` が ``body`` に実質的に出現するか（表記ゆれを許容）.
+
+    完全一致だと「夏トマト」対本文「トマト」で落ちるので、term の最長連続
+    部分文字列が body に含まれ、それが term の ``CONSISTENCY_MATCH_RATIO``
+    以上を占めれば出現と見なす。
+    """
+    t = _PAREN_RE.sub("", term).strip()
+    if not t:
+        return True
+    if len(t) <= 2:
+        return t in body
+    n = len(t)
+    for length in range(n, 1, -1):
+        for start in range(0, n - length + 1):
+            if t[start : start + length] in body:
+                return length / n >= CONSISTENCY_MATCH_RATIO
+    return False
+
+
+def _missing_terms(parsed: dict) -> list[str]:
+    """材料欄のうち、本文に出てこない材料を返す（C178）.
+
+    材料欄と本文が別の料理を指していれば、材料の複数が本文に現れない。
+    8/20 は「ベーコン」「スパゲッティ」の 2 件が該当した。
+    """
+    body = parsed.get("column_body") or ""
+    if not body:
+        return []
+    terms = [
+        x.strip()
+        for x in _INGREDIENT_SPLIT_RE.split(parsed.get("ingredients_summary") or "")
+        if x.strip()
+    ]
+    return [t for t in terms if not _appears_in_body(t, body)]
+
+
+# ---------------------------------------------------------------------------
 # Static fallback
 # ---------------------------------------------------------------------------
 
@@ -294,6 +364,66 @@ def generate_cooking_column(
             file=sys.stderr,
         )
         return static_fallback()
+
+    # C178: フィールド間整合チェック（存在チェックだけでは 8/20 を素通りさせた）
+    missing = _missing_terms(parsed)
+    if 0 < len(missing) < CONSISTENCY_MISSING_THRESHOLD:
+        # 閾値未満でも残す。後から閾値の妥当性を検証できるようにするため。
+        print(
+            f"[cooking] debug: 本文に出てこない要素 {len(missing)} 件 "
+            f"{missing}（閾値 {CONSISTENCY_MISSING_THRESHOLD} 未満、そのまま採用）",
+            file=sys.stderr,
+        )
+    elif len(missing) >= CONSISTENCY_MISSING_THRESHOLD:
+        print(
+            f"[cooking] WARN: フィールド不整合を検知 — 本文に出てこない要素 "
+            f"{len(missing)} 件 {missing}（料理名: {parsed['dish_name']}）。"
+            "1 回だけ再生成します",
+            file=sys.stderr,
+        )
+        try:
+            retry_resp = llm.call_claude_with_retry(
+                system=COOKING_SYSTEM,
+                user=user_msg,
+                model=model,
+                max_tokens=DEFAULT_MAX_TOKENS,
+                cache_system=True,
+                tag="page6.cooking.retry",
+            )
+            cost += retry_resp.cost_usd
+            retry_parsed, retry_parse_err = _parse_response(retry_resp.text)
+            retry_validation_err = _validate(retry_parsed)
+            if retry_validation_err is not None:
+                print(
+                    "[cooking] WARN: 再生成が invalid "
+                    f"({retry_parse_err or retry_validation_err}) — 初回の結果を採用します",
+                    file=sys.stderr,
+                )
+            else:
+                retry_missing = _missing_terms(retry_parsed)
+                if len(retry_missing) < CONSISTENCY_MISSING_THRESHOLD:
+                    print(
+                        f"[cooking] 再生成で整合しました（未出現 {len(missing)} → "
+                        f"{len(retry_missing)} 件、料理名: {retry_parsed['dish_name']}）",
+                        file=sys.stderr,
+                    )
+                    parsed = retry_parsed
+                else:
+                    # 静的 fallback には落とさない。不整合は表示上の瑕疵であって
+                    # 紙面は成立しており、「鮭の塩焼き定食」に落ちる方が損失が大きい。
+                    print(
+                        f"[cooking] WARN: 再生成も不整合（未出現 {len(retry_missing)} 件 "
+                        f"{retry_missing}）— 未出現が少ない方を採用します",
+                        file=sys.stderr,
+                    )
+                    if len(retry_missing) < len(missing):
+                        parsed = retry_parsed
+        except Exception as e:  # noqa: BLE001
+            print(
+                f"[cooking] WARN: 再生成の呼び出しに失敗 ({type(e).__name__}: "
+                f"{llm.redact_key(str(e))[:120]}) — 初回の結果を採用します",
+                file=sys.stderr,
+            )
 
     # Success: persist history + return
     if persist:
