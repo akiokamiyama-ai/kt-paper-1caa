@@ -579,6 +579,11 @@
       "concept_id": "multimodal_communication",
       "name_ja": "マルチモーダルコミュニケーション",
       "displayed_on": "2026-08-21"
+    },
+    {
+      "concept_id": "augustine",
+      "name_ja": "アウグスティヌス",
+      "displayed_on": "2026-08-22"
     }
   ]
 }

@@ -1986,6 +1986,20 @@
       "ai_kamiyama_failed": false,
       "fallback_used": false,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-08-22",
+      "article_url": "https://www.axismag.jp/posts/2026/08/720518.html",
+      "article_title": "ケンブリッジ大学が藻類による小型電源を開発。電池に代わって24時間発電するバイオセル技術",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": false,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
     }
   ]
 }
