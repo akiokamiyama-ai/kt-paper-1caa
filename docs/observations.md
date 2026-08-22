@@ -34,16 +34,17 @@ Tribune の運用中に神山さんが発見した改善点・違和感・将来
 
 個別案件を横断して繰り返し現れた構造。着手前にここを読むこと。
 
-### 「実装されているはず」の仕組みが実際には無い — 3 件の連続
+### 「実装されているはず」の仕組みが実際には無い — 4 件
 
 - **記録日**: 2026-08-19
-- **事象**: 2026-08 に同型の問題が 3 件発生した
+- **事象**: 2026-08 に同型の問題が 4 件発生した（記録時 3 件、C180 で 1 件追加）
 
 | 件 | 文書の記述 | 実態 |
 |---|---|---|
 | C168 | `ai_kamiyama_selector` の docstring「過去日 dedup は不要、当日紙面は他面の dedup により既に過去重複から保護されている」 | 相乗り先の dedup は実際には保護になっておらず、C155 前だけで 5 件の日跨ぎ重複が発生していた（5/22 5/29 6/20 7/02 8/03）。`load_recently_displayed_urls` は実装済みで docstring に「Page V uses 30」とまで書かれていたが、**呼び出し元が 0 件** |
 | C170 | （調査時の誤診）`page3_selection_*.json` が artifact に未収録 | 実際は `daily.yml` の artifact `path:` に元から収録済み。複数行 `path:` の継続行が GHA ログでタイムスタンプ無しに出るため grep で隠れていた。C171 で訂正 |
 | C172 | `essay_generator` の docstring「GHA workflow が `logs/page1_v3_fallback_raw_*.txt` を audit-logs artifact に同梱できるようファイル名規約を統一する（C24, 2026-05-24）」 | artifact `path:` / `git add` / `.gitignore` の **3 経路すべてに未収録**。3 ヶ月間一度も機能せず、2026-08-19 に初めて必要になった時に存在しなかった |
+| C180 | `data/monthly_pivotal.json` の `article.angles_hints`（曜日別の角度指示）。`monthly_pivotal.py` の docstring にフィールドとして明記され、W1 以降 14 週分すべてに丁寧に書かれていた | **読むコードが存在しない**。`_build_user_message` は `angles_hints` を渡しておらず、角度指示は週によらない `ANGLE_INSTRUCTIONS` だけで駆動していた。14 週分すべて死にデータ（→ C181 で配線予定） |
 
 - **共通構造**:
 
@@ -75,6 +76,9 @@ Tribune の運用中に神山さんが発見した改善点・違和感・将来
   4. 調査時、「収録されている / されていない」の判定は**複数経路を潰して
      確認する**（C170 の誤診は単一の grep に依存したことが原因。C172 では
      artifact `path:` / `git add` / `.gitignore` の 3 経路を個別に確認した）
+  5. **データを書いたら、それが実際に消費される所まで発火させて確認する**。
+     C180 は `angles_hints` を書いた直後にプロンプトを組み立てて中身を検査した
+     ため、投入当日に気づけた。「書いた → 効くはず」は前提にしない
 
 - **関連**: C161（Chesterton's fence —— 旧構成の制約が「なぜ在ったか」を
   廃止理由と別に確認する）と同系統。C161 が「柵を撤去する前に理由を確認する」
@@ -132,6 +136,46 @@ Tribune の運用中に神山さんが発見した改善点・違和感・将来
 
 
 
+
+### `angles_hints` が essay プロンプトに配線されていない（C181 候補）
+
+- **発見日**: 2026-08-22（C180 で W14 の `angles_hints` を書いた直後、実際に
+  プロンプトを組み立てて検証したところ載っていなかった）
+- **観察内容**: `data/monthly_pivotal.json` の `article.angles_hints`（曜日別の
+  角度指示）を**読むコードが存在しない**。
+  `essay_generator._build_user_message` が使うのは title / source / author /
+  published / url / summary / points / key_quote(_ja) / full_text_excerpt /
+  angle_instruction / past_essays で、`angles_hints` は含まれない。リポジトリ内の
+  言及 2 箇所（`scripts/notes/prompts.py` / `scripts/page1_v3/monthly_pivotal.py`）は
+  いずれも docstring・コメント。**W1〜W14 の 14 週分すべてが死にデータ**だった。
+  角度の指示は実際には `prompts.py::ANGLE_INSTRUCTIONS`（週によらない汎用文）
+  だけで駆動していた
+- **影響**: 週ごとに練った角度設計——特に神山さんの事業ドメイン（ウェブリポ /
+  ヒューマンエナジー / こころみ）への接続指示——が紙面に一切届いていない。
+  論考の質そのものは `full_text_excerpt` と `ANGLE_INSTRUCTIONS` で担保されて
+  いたため、欠落が表面化しなかった
+- **暫定対処（C180 実施済）**: W14 のみ、同内容を `full_text_excerpt` 末尾の
+  【本週の編集方針（角度別）】ブロックに置いて供給経路に載せた。
+  `angles_hints._note` に経緯を記録済み
+- **検討案**: `_build_user_message` に `angles_hints[曜日キー]` を渡し、
+  `ESSAY_USER_TEMPLATE` に注入する。曜日キーは sun/mon/tue/wed/thu/fri で
+  `WeekContext.day_label` から引く。無い週は空文字（W1-W13 互換）。
+  **配線したら W14 の暫定ブロックを削除すること**（重複が残る）
+- **Sprint 候補**: C181（2026-08-23 週）
+- **関連 commit**: C180 `c015d89`
+- **状態**: 未着手（2026-08-22 に神山さん判断で翌週送り）
+- **関連**: パターン「実装されているはずの仕組みが実際には無い」（本ファイル上部）
+  の 4 件目。今回は**自分で書き込んでから発火させて確認した**ため、投入当日に
+  気づけた
+
+### W15 以降の主軸記事選定（期限あり）
+
+- **発見日**: 2026-08-22（C180）
+- **観察内容**: W14（8/23-8/29）までしか確定しておらず、**2026-08-30 以降は
+  `find_week_for_date` が `None` を返す**。Page I が週テーマを失う
+- **期限**: W14 を完走する前、遅くとも **2026-08-29（土）**までに選定セッション
+- **Sprint 候補**: 月次選定（C150/C151 と同型）
+- **状態**: 未着手
 
 ### Sprint 11 候補（既存・神山さん管理）
 
