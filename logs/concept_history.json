@@ -584,6 +584,11 @@
       "concept_id": "augustine",
       "name_ja": "アウグスティヌス",
       "displayed_on": "2026-08-22"
+    },
+    {
+      "concept_id": "multi_alignment",
+      "name_ja": "マルチアライメント",
+      "displayed_on": "2026-08-23"
     }
   ]
 }
