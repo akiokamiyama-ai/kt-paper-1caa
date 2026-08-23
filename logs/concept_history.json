@@ -589,6 +589,11 @@
       "concept_id": "multi_alignment",
       "name_ja": "マルチアライメント",
       "displayed_on": "2026-08-23"
+    },
+    {
+      "concept_id": "feyerabend",
+      "name_ja": "ファイアアーベント",
+      "displayed_on": "2026-08-24"
     }
   ]
 }
