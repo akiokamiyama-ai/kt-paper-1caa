@@ -1,0 +1,25 @@
+{
+  "date": "2026-08-25",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://japan.zdnet.com/article/35251866/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2608/24/news003.html",
+    "web_repo": "https://www.bc01.net/topinterview/tullys_202608_01/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/society-based-on-ai-could-make-citizens-and-democracy-redundant-by-stephen-holmes-2026-08",
+    "http://www3.nhk.or.jp/news/html/20260807/k10015199591000.html",
+    "https://que.dailyshincho.jp/node/20517/",
+    "https://wordswithoutborders.org/read/article/2026-08/the-city-and-the-writer-in-jakarta-with-khairani-barokka-nathalie-handal/",
+    "https://3quarksdaily.com/3quarksdaily/2026/08/almost-everything-you-experience-may-be-a-carefully-edited-fiction.html",
+    null
+  ],
+  "page4_urls": [],
+  "page5_url": "https://warontherocks.com/mental-health-is-a-warfighting-readiness-problem-for-the-u-s-navy/",
+  "page6_urls": {
+    "books": "https://lithub.com/how-technology-assisted-surveillance-promotes-racial-bias-in-policing/",
+    "music": "https://stereogum.com/2509234/olivia-rodrigo-serena-joy/music/",
+    "outdoor": "https://www.atlasobscura.com/places/gin-drinkers-line"
+  },
+  "headlines_urls": []
+}

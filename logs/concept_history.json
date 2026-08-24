@@ -594,6 +594,11 @@
       "concept_id": "feyerabend",
       "name_ja": "ファイアアーベント",
       "displayed_on": "2026-08-24"
+    },
+    {
+      "concept_id": "marx",
+      "name_ja": "マルクス",
+      "displayed_on": "2026-08-25"
     }
   ]
 }
