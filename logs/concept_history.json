@@ -599,6 +599,11 @@
       "concept_id": "marx",
       "name_ja": "マルクス",
       "displayed_on": "2026-08-25"
+    },
+    {
+      "concept_id": "tipping_point",
+      "name_ja": "ティッピングポイント",
+      "displayed_on": "2026-08-26"
     }
   ]
 }

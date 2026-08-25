@@ -2042,6 +2042,20 @@
       "ai_kamiyama_failed": false,
       "fallback_used": false,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-08-26",
+      "article_url": "https://aeon.co/essays/polite-debate-has-privilege-the-marginalised-need-zealotry",
+      "article_title": "In praise of zealotry",
+      "article_category": "academic",
+      "tie_candidates": [
+        "academic"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": false,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
     }
   ]
 }
