@@ -604,6 +604,11 @@
       "concept_id": "tipping_point",
       "name_ja": "ティッピングポイント",
       "displayed_on": "2026-08-26"
+    },
+    {
+      "concept_id": "genetic_drift",
+      "name_ja": "遺伝的浮動",
+      "displayed_on": "2026-08-27"
     }
   ]
 }
