@@ -609,6 +609,11 @@
       "concept_id": "genetic_drift",
       "name_ja": "遺伝的浮動",
       "displayed_on": "2026-08-27"
+    },
+    {
+      "concept_id": "spinoza",
+      "name_ja": "スピノザ",
+      "displayed_on": "2026-08-28"
     }
   ]
 }
