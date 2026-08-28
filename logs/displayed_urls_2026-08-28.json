@@ -2,24 +2,24 @@
   "date": "2026-08-28",
   "page1_urls": [],
   "page2_urls": {
-    "cocolomi": "https://www.itmedia.co.jp/business/articles/2608/28/news067.html",
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2608/28/2000000876/",
     "human_energy": "https://jinjibu.jp/news/detl/26754/",
-    "web_repo": null
+    "web_repo": "https://www.bc01.net/topinterview/tullys_202608_02/"
   },
   "page3_urls": [
     "https://warontherocks.com/would-wartime-elections-save-democracy-or-end-it/",
-    "https://news.google.com/rss/articles/CBMipwFBVV95cUxPYjhTUnRyakVvbHNuOEoxd0xfeVlyZUFNbXJvU2Y2M3lTdTdZSDNLRURQTmF1Tl9VSWpFRjNFVk5ubmhrbTV0TWI2XzJINEk4MDdUR1cxbGgzcFB5MUNFc01FaTRPYm1oZ3FuRVRaay1RQmc1OGt0ZTV5SFEwbFl1UlF5amhqc3NjX2h6d3prdmxJV3k5QzVScl9qeXBISElzU2NQdndaaw?oc=5",
+    null,
     "https://www.mckinsey.com/industries/consumer-packaged-goods/our-insights/consumers-dont-trust-ai-advice-they-turn-to-it-anyway",
     "https://www.theparisreview.org/blog/2026/08/12/the-bookstore-slash-skate-shop-next-to-ballerina-farm/",
-    "https://3quarksdaily.com/3quarksdaily/2026/08/samuel-becketts-proustian-moment-3.html",
-    "https://www.axismag.jp/posts/2026/08/718593.html"
+    "https://www.nplusonemag.com/online-only/gooooaaal/the-fan-zone/",
+    "https://www.axismag.jp/posts/2026/08/718611.html"
   ],
   "page4_urls": [],
-  "page5_url": "https://nautil.us/the-kitchen-of-the-realm-even-the-commoners-ate-well-in-ancient-osaka-1284509/",
+  "page5_url": "https://3quarksdaily.com/3quarksdaily/2026/08/why-authoritarians-fear-common-knowledge-2.html",
   "page6_urls": {
     "books": "https://wordswithoutborders.org/read/article/2026-08/heracleocene-krasilnikova-gushchin/",
     "music": "https://stereogum.com/2509585/80s-downtown-nyc-audio-cassette-magazine-tellus-getting-vinyl-anthology-feat-sonic-youth-liquid-liquid-live-skull-more/music/",
-    "outdoor": "https://www.cleverhiker.com/backpacking/soto-new-river-pot-review/"
+    "outdoor": "https://www.outsideonline.com/adventure-travel/destinations/australia-pacific/new-uluru-trail-australia-outback-kakararra/"
   },
   "headlines_urls": []
 }
