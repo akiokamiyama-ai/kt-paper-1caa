@@ -1,0 +1,25 @@
+{
+  "date": "2026-08-30",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://www.ppc.go.jp/news/press/2026/260826",
+    "human_energy": "https://sloanreview.mit.edu/article/develop-your-teams-social-capital-not-just-their-skills/",
+    "web_repo": "https://www.bc01.net/back-number/2026%e5%b9%b410%e6%9c%88%e5%8f%b7/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/sanctions-low-civilian-toll-an-illusion-that-is-no-longer-defensible-by-jamal-ibrahim-haidar-and-seyed-mohammad-karimi-2026-08",
+    null,
+    "https://www.mckinsey.com/industries/retail/our-insights/pacsuns-gen-z-playbook-listen-learn-and-let-go",
+    "https://www.theparisreview.org/blog/2026/08/21/if-you-build-it-will-they-come-on-the-sperm-racing-world-cup/",
+    "https://www.publicbooks.org/our-guns-make-the-violence-that-people-are-fleeing-ieva-jusionyte-on-guns-violence-in-mexico/",
+    "https://www.axismag.jp/posts/2026/08/721592.html"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://3quarksdaily.com/3quarksdaily/2026/08/when-the-ais-found-each-other.html",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/08/18/the-catalogue-of-lost-things/",
+    "music": "https://stereogum.com/2509777/bad-wolves-singer-speaks-out-after-band-is-dropped-from-skillet-tour-guitarist-quits-over-dolly-parton-cover/news/",
+    "outdoor": "https://www.cleverhiker.com/backpacking/bearvault-bv-one-review/"
+  },
+  "headlines_urls": []
+}

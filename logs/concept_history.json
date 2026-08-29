@@ -619,6 +619,11 @@
       "concept_id": "latour",
       "name_ja": "ラトゥール",
       "displayed_on": "2026-08-29"
+    },
+    {
+      "concept_id": "kuhn",
+      "name_ja": "クーン",
+      "displayed_on": "2026-08-30"
     }
   ]
 }
