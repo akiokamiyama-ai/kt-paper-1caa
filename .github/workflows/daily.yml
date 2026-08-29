@@ -7,7 +7,12 @@ on:
     # に届くため 02:37 JST にさらに前倒し。中途半端な分数（37）で混雑回避を継続。
     # 期待効果: 02:37 起動 + 35-45 分ラン + 2-3 時間遅延 → 06:00 前後着。
     - cron: '37 17 * * *'  # 17:37 UTC = 02:37 JST
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      force:
+        description: '当日分が既に存在しても強制的に再生成する（C185 の二重実行ガードを無効化）'
+        type: boolean
+        default: false
 
 jobs:
   # ===========================================================================
@@ -54,7 +59,39 @@ jobs:
         id: date
         run: echo "DATE=$(TZ='Asia/Tokyo' date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
 
+      # =====================================================================
+      # C185 (2026-08-29): 二重実行ガード
+      # =====================================================================
+      #
+      # 2026-08-28 に schedule が **+8 時間遅延**し、神山さんの手動実行
+      # （08:39 JST）の後に発火した（10:37 JST）。結果、同じ日付で 2 回生成が
+      # 走り、archive commit が 2 本作られて紙面が丸ごと差し替わった
+      # （朝: スピノザ / 白ワインハーブ蒸し煮 → 昼: 遺伝的アルゴリズム /
+      # 韓国風ナムル）。各種 history にも同じ日付が 2 件記録された。
+      #
+      # checkout 時点で当日の archive が既に存在する = 前の run が生成・commit
+      # 済み、という判定でガードする。LLM コスト（1 run 約 $1-2）とランナー
+      # 時間（約 27 分）を丸ごと節約できるので、Python 側ではなくここで止める。
+      #
+      # 意図的な再生成は workflow_dispatch の force=true で通す。schedule 起動
+      # では inputs が空なので常にガードが効く。
+      - name: Guard against duplicate run for the same date
+        id: guard
+        run: |
+          DATE="${{ steps.date.outputs.DATE }}"
+          FORCE="${{ github.event.inputs.force }}"
+          if [ -f "archive/${DATE}.html" ] && [ "$FORCE" != "true" ]; then
+            echo "SKIP=true" >> "$GITHUB_OUTPUT"
+            echo "::warning title=C185 duplicate run skipped::archive/${DATE}.html は既に存在します（前の run が生成済み）。二重実行を防ぐため以降の step を skip しました。意図的に作り直す場合は workflow_dispatch を force=true で起動してください。"
+          else
+            echo "SKIP=false" >> "$GITHUB_OUTPUT"
+            if [ "$FORCE" = "true" ]; then
+              echo "::notice title=C185 forced::force=true のため二重実行ガードを無効化して生成します。"
+            fi
+          fi
+
       - name: Generate Tribune
+        if: steps.guard.outputs.SKIP != 'true'
         # Phase 3 (Sprint 8, 2026-05-23 切替): regen_front_page_v3 を呼ぶ。
         # v3 は内部で v2.main を delegate 実行（全 6 面従来通り archive 書込）後、
         # data/monthly_pivotal.json から当該週を引き当て、page-one のみ v3 案 C
@@ -121,10 +158,12 @@ jobs:
           retention-days: 90
 
       - name: Refresh index.html with today's archive
+        if: steps.guard.outputs.SKIP != 'true'
         run: |
           cp "archive/${{ steps.date.outputs.DATE }}.html" index.html
 
       - name: Prune old scores logs (C137, retention 8 days)
+        if: steps.guard.outputs.SKIP != 'true'
         # C137 (Sprint 12, 2026-07-10): C135 cross-day score cache が過去 7 日の
         # logs/scores_YYYY-MM-DD.json を GHA runner の checkout 時に参照するため
         # scores log を repo に持たせる。無制限に増えないよう 8 日超の古い log を
@@ -156,6 +195,7 @@ jobs:
           echo "Pruned $removed old scores logs"
 
       - name: Commit and push
+        if: steps.guard.outputs.SKIP != 'true'
         id: commit_push
         run: |
           git config user.name "github-actions[bot]"
@@ -186,6 +226,9 @@ jobs:
           fi
 
       - name: Trigger Vercel deploy hook
+        # C185: 二重実行ガードは本 step には不要。下の条件が
+        # steps.commit_push.outputs.committed に依存しており、Commit and push が
+        # skip されれば空文字になって発火しないため。
         # C93 翌日 (2026-06-23): GHA bot による push を Vercel が webhook で
         # 取りこぼし、6/23 朝刊が Production に反映されない事故が発生。
         # push event 経由ではなく Deploy Hook で直接 trigger することで、

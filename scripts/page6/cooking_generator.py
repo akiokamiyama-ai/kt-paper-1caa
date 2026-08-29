@@ -101,10 +101,20 @@ def append_history(
 ) -> dict:
     if history is None:
         history = load_history(path=path)
-    history.setdefault("history", []).append({
+    # C185: 同日エントリは差し替え（再ラン耐性）。
+    #
+    #2026-08-28 に GitHub Actions の schedule が **+8 時間遅延**し、神山さんの
+    #手動実行（08:39 JST）の後に発火した（10:37 JST）。結果、archive commit が
+    #2 本作られ紙面が丸ごと差し替わった上、``.append()`` だったこの履歴に同じ
+    #日付が 2 件記録された。``page1_v3_history`` だけは ``save_essay`` が同日
+    #上書きだったため無傷で、その実装に揃えたのが本修正である。
+    stamp = target_date.isoformat()
+    entries = history.setdefault("history", [])
+    history["history"] = [e for e in entries if e.get("date") != stamp]
+    history["history"].append({
         "dish_name": dish_name,
         "genre": genre,
-        "date": target_date.isoformat(),
+        "date": stamp,
     })
     if persist:
         save_history(history, path=path)

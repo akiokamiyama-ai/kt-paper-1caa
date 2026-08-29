@@ -59,6 +59,23 @@ def save_history(data: dict, *, path: Path | None = None) -> None:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 
+def _upsert_entry(history: dict, entry: dict, *, date_key: str) -> None:
+    """同じ日付の既存エントリを取り除いてから追記する（C185）.
+
+    C185 (2026-08-29): 同日エントリは差し替える（再ラン耐性）。
+
+    2026-08-28 に GitHub Actions の schedule が **+8 時間遅延**し、神山さんの
+    手動実行（08:39 JST）の後に発火した（10:37 JST）。結果、archive commit が
+    2 本作られ紙面が丸ごと差し替わった上、``.append()`` だったこの履歴に同じ
+    日付が 2 件記録された。``page1_v3_history`` だけは ``save_essay`` が同日
+    上書きだったため無傷で、その実装に揃えたのが本修正である。
+    """
+    entries = history.setdefault("history", [])
+    stamp = entry.get(date_key)
+    history["history"] = [e for e in entries if e.get(date_key) != stamp]
+    history["history"].append(entry)
+
+
 def _excluded_ids(history: dict, today: date, exclusion_days: int) -> set[str]:
     """Return the set of concept_ids displayed within the past exclusion_days."""
     cutoff_ord = today.toordinal() - exclusion_days
@@ -123,11 +140,12 @@ def select_concept_for_today(
     selected = rng.choice(candidates)
 
     if persist:
-        history.setdefault("history", []).append({
+        # C185: 同日エントリは差し替え（再ラン耐性）。経緯は _upsert_entry を参照。
+        _upsert_entry(history, {
             "concept_id": selected["id"],
             "name_ja": selected["name_ja"],
             "displayed_on": today.isoformat(),
-        })
+        }, date_key="displayed_on")
         save_history(history)
 
     return selected

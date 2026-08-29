@@ -163,8 +163,21 @@ def save_history(data: dict, *, path: Path | None = None) -> None:
 
 
 def append_history_entry(entry: dict, *, path: Path | None = None) -> None:
+    """履歴に 1 件追記する。**同じ ``displayed_on`` の既存エントリは差し替える**。
+
+    C185 (2026-08-29): 同日エントリは差し替える（再ラン耐性）。
+
+    2026-08-28 に GitHub Actions の schedule が **+8 時間遅延**し、神山さんの
+    手動実行（08:39 JST）の後に発火した（10:37 JST）。結果、archive commit が
+    2 本作られ紙面が丸ごと差し替わった上、``.append()`` だったこの履歴に同じ
+    日付が 2 件記録された。``page1_v3_history`` だけは ``save_essay`` が同日
+    上書きだったため無傷で、その実装に揃えたのが本修正である。
+    """
     h = load_history(path=path)
-    h.setdefault("history", []).append(entry)
+    entries = h.setdefault("history", [])
+    stamp = entry.get("displayed_on")
+    h["history"] = [e for e in entries if e.get("displayed_on") != stamp]
+    h["history"].append(entry)
     save_history(h, path=path)
 
 
