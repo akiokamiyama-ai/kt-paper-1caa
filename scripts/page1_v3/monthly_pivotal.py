@@ -3,14 +3,29 @@
 ``data/monthly_pivotal.json`` から「当該日が属する週」「曜日に対応する論考
 角度」「来週分（土曜の予告用）」を取り出すユーティリティ群。
 
-7 日間構造（仕様 §4.2）：
-    日 → overview     全体像
-    月 → critical     批判的
-    火 → practitioner 実践者
-    水 → thinker      思想家
-    木 → history      歴史
-    金 → integration  統合＋問い
-    土 → response     応答（神山さんコメント → AIかみやま）
+7 日間構造（仕様 §4.2）。C187 (2026-08-29) で並びを変更した：
+
+    曜日   ANGLE_ORDER_V2（W16 以降）   ANGLE_ORDER_V1（W15 まで）
+    日     overview     全体像          overview     全体像
+    月     history      歴史的経緯      critical     批判的
+    火     critical     批判的          practitioner 実践者
+    水     thinker      思想家          thinker      思想家
+    木     practitioner 実践者          history      歴史
+    金     integration  統合＋問い      integration  統合＋問い
+    土     response     応答            response     応答
+
+V2 の意図（神山さん判断）:
+
+* **history を月曜へ前倒し** —— 「この問題はどこから来たか」を先に知ってから
+  批判に入る方が批判の解像度が上がる。V1 では月曜の批判の根拠が木曜に後から
+  補強される形になっていた
+* **practitioner を木曜へ後ろ倒し** —— 思想家（水）の議論を経てから実践に
+  落とす方が具体性が出る。V1 では火曜の実践論が水木の深い議論に接続されない
+  まま終わっていた
+
+切替は ``ANGLE_ORDER_V2_FROM`` の日付境界で行う。W15（8/30-9/5）は既に
+日曜 overview で走り出しており、週の途中でマッピングを変えると
+``angles_hints`` と紙面がずれるため、W16 開始（9/6 日曜）から有効化する。
 
 LLM は呼ばない（純粋なファイル I/O + 日付判定のみ）。
 """
@@ -29,7 +44,9 @@ DEFAULT_PIVOTAL_PATH = (
 
 # 曜日 (date.weekday(): 月=0..日=6) → (日本語ラベル, angle_key, 日本語角度ラベル)。
 # 1 週間 = 日曜開始 - 土曜終了。
-_ANGLE_BY_WEEKDAY: dict[int, tuple[str, str, str]] = {
+
+# C187 以前の並び。W15（〜2026-09-05）まではこちらで走る。
+_ANGLE_BY_WEEKDAY_V1: dict[int, tuple[str, str, str]] = {
     6: ("日", "overview",     "全体像"),
     0: ("月", "critical",     "批判的"),
     1: ("火", "practitioner", "実践者"),
@@ -38,6 +55,25 @@ _ANGLE_BY_WEEKDAY: dict[int, tuple[str, str, str]] = {
     4: ("金", "integration",  "統合＋問い"),
     5: ("土", "response",     "応答"),
 }
+
+# C187 (2026-08-29) の新しい並び。history を月曜へ、practitioner を木曜へ。
+_ANGLE_BY_WEEKDAY_V2: dict[int, tuple[str, str, str]] = {
+    6: ("日", "overview",     "全体像"),
+    0: ("月", "history",      "歴史的経緯"),
+    1: ("火", "critical",     "批判的"),
+    2: ("水", "thinker",      "思想家"),
+    3: ("木", "practitioner", "実践者"),
+    4: ("金", "integration",  "統合＋問い"),
+    5: ("土", "response",     "応答"),
+}
+
+# V2 を有効化する日（この日を含む、JST の紙面日付で判定）。
+# W16 の Day 1（日曜）。週の途中で切り替えると angles_hints とずれるため、
+# 必ず日曜に合わせること。
+#
+# 移行が済んで W15 以前を再生成する必要が無くなったら、V1 と本定数ごと消して
+# _ANGLE_BY_WEEKDAY_V2 を唯一のマップにしてよい。
+ANGLE_ORDER_V2_FROM: date = date(2026, 9, 6)
 
 # 仕様 §4.6 用語解説型補助セクションのラベル（角度ごと）。
 ANNOTATION_LABEL_BY_ANGLE: dict[str, str] = {
@@ -79,8 +115,17 @@ def load_monthly_pivotal(path: Path | None = None) -> dict:
 
 
 def angle_for_day(target: date) -> tuple[str, str, str]:
-    """曜日 → (day_label, angle_key, angle_label_jp)."""
-    return _ANGLE_BY_WEEKDAY[target.weekday()]
+    """曜日 → (day_label, angle_key, angle_label_jp).
+
+    C187: ``ANGLE_ORDER_V2_FROM`` 以降は新しい並び（月=history / 火=critical /
+    木=practitioner）を返す。それ以前の日付は従来どおり。過去日を再生成した
+    ときに当時の紙面と角度がずれないよう、日付で切り替えている。
+    """
+    table = (
+        _ANGLE_BY_WEEKDAY_V2 if target >= ANGLE_ORDER_V2_FROM
+        else _ANGLE_BY_WEEKDAY_V1
+    )
+    return table[target.weekday()]
 
 
 def _parse_period(period_raw: object) -> tuple[date, date] | None:
