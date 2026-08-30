@@ -2850,3 +2850,386 @@
     Arikha が interoceptive turn の哲学的前史として言及する。
   related: [descartes, embodiment, autopoiesis, milieu_interieur, maturana_varela]
   difficulty: 2
+
+# ===========================================================================
+# C188 (2026-08-30): W1-W17 の論考に実際に登場したが未収録だった概念を補充。
+#
+# 選定の元: logs/page1_v3_history.json の論考本文 85 本（183,855 字）と
+# data/monthly_pivotal.json の summary / key_quote / points / angles_hints を
+# 走査し、固有名詞・「」で囲まれた術語・カタカナ語を頻度順に抽出。既存 222 件の
+# id / name_ja / name_en / thinkers / seed と突き合わせて未収録のものだけを残した。
+#
+# 「W で実際に扱った」ものに絞っている（プールを膨らませること自体は目的でない）。
+# ===========================================================================
+
+- id: positive_violence
+  name_ja: ポジティブな暴力
+  name_en: Positive Violence
+  domain: 現代思想
+  thinkers: [ビョンチョル・ハン]
+  seed: |
+    強制や禁止による「否定的な」権力ではなく、「できる」という
+    肯定の過剰が主体を内側から搾取する様式。ハンは『疲労社会』で、
+    規律社会（フーコー）から達成社会への移行を論じ、他者から与えられる
+    害が自己から与えられる害に置き換わったと指摘する。搾取者と被搾取者が
+    同一人物であるため抵抗の相手が見えない。W13 の主軸。
+  related: [foucault, panopticon, ubermensch, nietzsche, flow_experience]
+  difficulty: 2
+
+- id: freundlichkeit
+  name_ja: 世界親和性（フロイントリヒカイト）
+  name_en: Freundlichkeit / World-Friendliness
+  domain: 現代思想
+  thinkers: [ビョンチョル・ハン, 道元]
+  seed: |
+    「親切さ」とは訳しきれない、世界と他者へ開かれた自己のあり方。
+    ハンが禅の「大死」——自我の解体——から汲み、魂を閉じた城ではなく
+    「世界の招待客室（guesthouse）」として捉え直す概念。ハイデガーの
+    本来性が死への先駆という自己内閉に留まるのに対し、他者性への
+    開口部を積極的に置く点で異なる。達成社会の解毒剤として提示される。
+  related: [muga, anatman, sunyata, dogen, heidegger, sorge]
+  difficulty: 3
+
+- id: vita_contemplativa
+  name_ja: 観想的生
+  name_en: Vita Contemplativa
+  domain: 現代思想
+  thinkers: [ビョンチョル・ハン, ハンナ・アーレント, アリストテレス]
+  seed: |
+    活動的生（vita activa）に対する、何もしないことに耐える生の様式。
+    アーレントが労働・仕事・活動として整理した活動的生に対し、ハンは
+    現代がそれを絶対化した結果として深い退屈（profound boredom）を
+    失い、創造の母胎を手放したと論じる。生産性の外側に価値の源泉を
+    置く思想で、経営における「考える時間」の確保にも接続する。
+  related: [arendt, aristotle, positive_violence, mindfulness, ma]
+  difficulty: 2
+
+- id: attention_as_love
+  name_ja: 注意＝愛
+  name_en: Attention as Love
+  domain: 倫理学・現象学
+  thinkers: [シモーヌ・ヴェイユ, アイリス・マードック]
+  seed: |
+    「注意とは、自我を空にして他者をあるがままに受け取ること」。
+    ヴェイユは注意を単なる集中力ではなく、隣人愛の実質そのものと捉えた。
+    「不幸な人に注意を向けられる能力は、きわめて稀で困難なものだ」。
+    注意経済の時代に、注意を資源ではなく倫理として読み直す視座を与える。
+    傾聴の理論的支柱としてディープリスニング経営に直結する。
+  related: [active_listening, silence_in_dialogue, i_thou, empathic_understanding, mindfulness]
+  difficulty: 2
+
+- id: berlin_wisdom_paradigm
+  name_ja: ベルリン知恵パラダイム
+  name_en: Berlin Wisdom Paradigm
+  domain: 発達心理学
+  thinkers: [パウル・バルテス, ウルズラ・シュタウディンガー]
+  seed: |
+    知恵を「生の根本的な事柄に関する専門知識」として操作的に定義し、
+    実証研究の対象にした枠組み。豊かな事実的知識・方法的知識・
+    生涯発達的文脈主義・価値相対主義・不確実性の受容の 5 基準で評価する。
+    加齢が流動性知能を落とす一方、この種の判断力は保たれうることを示した。
+    W12「老いと暗黙知」の骨格。
+  related: [tacit_knowledge, metacognition, dual_process_theory, heuristics]
+  difficulty: 2
+
+- id: maintenance_studies
+  name_ja: メンテナンス研究
+  name_en: Maintenance Studies
+  domain: 科学技術社会論
+  thinkers: [アンドリュー・ラッセル, リー・ヴィンセル, デヴィッド・エジャトン]
+  seed: |
+    イノベーション偏重の技術史を反転させ、既存のものを動かし続ける労働に
+    光を当てる領域。発明家は労働力の約 1% にすぎず、大半の仕事は維持である。
+    エジャトンの「technology-in-use」——扇風機も自動車の多くの部品も一世紀
+    ほとんど変わっていない——が典型。評価制度が「新しいことをした人」にしか
+    向かない組織への批判にもなる。W16 の主軸。
+  related: [innovators_dilemma, broken_world_thinking, care_ethics, tacit_knowledge]
+  difficulty: 1
+
+- id: broken_world_thinking
+  name_ja: 壊れた世界の思考
+  name_en: Broken World Thinking
+  domain: 科学技術社会論
+  thinkers: [スティーヴン・ジャクソン]
+  seed: |
+    世界は常に壊れつつあり、修理と保守こそが世界を成り立たせている、と
+    出発点を反転させる視座。新奇性から出発する技術論に対し、摩耗・故障・
+    修繕を一次的な事実として置く。誰が直しているのかを問うことで、
+    見えなくされてきた労働とケアが可視化される。
+  related: [maintenance_studies, care_ethics, actor_network_theory, resilience]
+  difficulty: 2
+
+- id: care_ethics
+  name_ja: ケアの倫理
+  name_en: Ethics of Care
+  domain: 倫理学
+  thinkers: [キャロル・ギリガン, ネル・ノディングス, ジョアン・トロント]
+  seed: |
+    正義や権利を軸にした倫理に対し、具体的な他者への応答と関係の維持を
+    倫理の中心に据える立場。トロントは「関心を向ける／引き受ける／
+    ケアを行う／受け取る」の 4 局面を示した。成果が「何も起こらなかったこと」
+    として現れるため測定にも評価にも乗りにくい、という構造的な問題を抱える。
+  related: [responsibility_for_other, levinas, i_thou, maintenance_studies, active_listening]
+  difficulty: 2
+
+- id: teire
+  name_ja: 手入れ
+  name_en: Teire / Tending
+  domain: 日本思想
+  thinkers: [養老孟司]
+  seed: |
+    設計でも放置でもない第三の関わり方。手つかずの自然より、人が手を入れた
+    里山にこそ豊かな生命が宿るという観察に根ざす。完成形を先に決めて作り込む
+    のでもなく、自然に任せるのでもなく、毎日少しずつ相手の応答を見ながら
+    働きかけ続ける。化粧も子育ても組織も同じ構造を持つ。W16 の日本側の対応物。
+  related: [maintenance_studies, care_ethics, wabi_sabi, yanagi_soetsu, ma]
+  difficulty: 1
+
+- id: satoyama
+  name_ja: 里山
+  name_en: Satoyama
+  domain: 民俗学
+  thinkers: [守山弘, 養老孟司]
+  seed: |
+    奥山と集落の間に広がる、人の手が入り続けることで維持されてきた環境。
+    薪炭林や採草地としての利用が、結果として高い生物多様性を生んだ。
+    放置すれば林床が暗くなり多様性が失われるため、「保護＝手を触れない」
+    ではないことを示す実例になる。人口減少と高齢化で管理の担い手が
+    失われつつある。
+  related: [teire, yanagita_kunio, minakata_kumagusu, gaia_hypothesis, resilience]
+  difficulty: 1
+
+- id: kintsugi
+  name_ja: 金継ぎ
+  name_en: Kintsugi
+  domain: 日本美学
+  thinkers: [千利休]
+  seed: |
+    割れた器を漆と金銀で継ぎ、傷を隠さずむしろ景色として見せる修繕の技法。
+    繕われた物が特別なのは、繕う価値があったからにほかならない——修理を
+    価値の減少ではなく増加として扱う点が西洋の「恥ずべき必要」と対照的。
+    わび・さびと不可分で、時間と損傷を作品の一部として引き受ける美学。
+  related: [wabi_sabi, mono_no_aware, yanagi_soetsu, maintenance_studies, ma]
+  difficulty: 1
+
+- id: quantification
+  name_ja: 定量化
+  name_en: Quantification
+  domain: 科学技術社会論
+  thinkers: [セオドア・ポーター, サリー・エングル・メリー]
+  seed: |
+    質的なものを数に置き換える営みと、それが社会に及ぼす作用。ポーターは
+    数値への信頼が「個人的判断への不信」から生まれたと論じた。測ることは
+    世界を写すのではなく作り変える——測られたものが管理の対象になり、
+    測られないものが存在しないかのように扱われる。W15 の主題。
+  related: [gdp, goodharts_law, legibility, panopticon, ontology]
+  difficulty: 2
+
+- id: gdp
+  name_ja: 国内総生産（GDP）
+  name_en: Gross Domestic Product
+  domain: 経済学
+  thinkers: [サイモン・クズネッツ, ジョン・メイナード・ケインズ, リチャード・ストーン, ウィリアム・ペティ]
+  seed: |
+    一定期間に経済で生産された貨幣価値の総和。1941 年に英財務省で
+    ケインズの指導下に成立した。前史は 1665 年ペティの政治算術（戦費を賄う
+    課税能力の査定）。設計者クズネッツ自身は厚生を測るつもりで、軍備や
+    投機の支出は差し引くべきだと論じたが、第二次大戦が「厚生は平時の贅沢」
+    として退けた。家庭内の無償労働を除外しながら政府支出は含めるという
+    内的不整合を抱える構築物。W15 の主軸。
+  related: [quantification, goodharts_law, human_capital, marx, tragedy_of_commons]
+  difficulty: 1
+
+- id: goodharts_law
+  name_ja: グッドハートの法則
+  name_en: Goodhart's Law
+  domain: 社会科学方法論
+  thinkers: [チャールズ・グッドハート, マリリン・ストラザーン]
+  seed: |
+    「指標が目標になると、それは良い指標ではなくなる」。1975 年、金融政策の
+    指標が政策目標に採用された途端に機能しなくなった観察から。病院が死亡率を
+    下げるため重症患者を断り、再入院を 31 日目に回すといった実例が示すのは、
+    測定が行動を変え、その行動が測定の意味を壊すという再帰構造である。
+    KPI を組織の健全性指標にすることの罠。
+  related: [quantification, gdp, legibility, feedback_loop, nudge]
+  difficulty: 1
+
+- id: legibility
+  name_ja: 可読性（国家の視線）
+  name_en: Legibility
+  domain: 政治哲学
+  thinkers: [ジェームズ・C・スコット]
+  seed: |
+    国家が複雑で局所的な現実を、上から把握・管理できる標準化された格子に
+    整形する作用。地籍・姓・度量衡・都市計画がその装置で、把握を可能にする
+    のと引き換えに、記録に載らない知——スコットが métis と呼ぶ実践知——を
+    切り捨てる。ハイモダニズムの計画が失敗する構造を説明する。
+  related: [quantification, goodharts_law, tacit_knowledge, panopticon, wild_knowledge]
+  difficulty: 2
+
+- id: mcdonaldization
+  name_ja: マクドナルド化
+  name_en: McDonaldization
+  domain: 社会学
+  thinkers: [ジョージ・リッツァ, マックス・ヴェーバー]
+  seed: |
+    効率性・計算可能性・予測可能性・制御という 4 原理が社会の広い領域を
+    覆っていく過程。ヴェーバーの合理化論の現代版として提示された。産業化
+    された教育が標準化された卒業生を生み、リスク管理を可能にする一方で、
+    人格的な師弟関係が担っていた責任と相互修正を切り落とす。W14 の
+    調理学校批判の理論的支柱。
+  related: [knowledge_transfer, tacit_knowledge, intangible_heritage, habitus, bourdieu]
+  difficulty: 1
+
+- id: intangible_heritage
+  name_ja: 無形文化遺産
+  name_en: Intangible Cultural Heritage
+  domain: 文化人類学
+  thinkers: [ユネスコ, バーバラ・キルシェンブラット＝ギンブレット]
+  seed: |
+    技能・慣習・口承といった形を持たない文化を保護対象とする枠組み。
+    だが「何を守るのか」——産品の味か、技術か、師弟の社会的紐帯か、
+    それを支える生態系全体か——の定義次第で含意が正反対になる。制度に
+    固定することが、伝承を支えていた関係と相互修正から知を切り離す
+    逆説を抱える。W14 の中心的な問い。
+  related: [mcdonaldization, tacit_knowledge, teire, ethnography, knowledge_transfer]
+  difficulty: 2
+
+- id: hedgehog_and_fox
+  name_ja: ハリネズミと狐
+  name_en: The Hedgehog and the Fox
+  domain: 社会思想
+  thinkers: [アイザイア・バーリン, アルキロコス, フィリップ・テトロック]
+  seed: |
+    「狐は多くを知り、ハリネズミは一つの大きなことを知る」。バーリンが
+    トルストイ論で用いた分類だが、後にテトロックが専門家の予測精度を
+    測ったところ、単一の大理論に依拠するハリネズミ型より、複数の枠組みを
+    使い分ける狐型の方が当たることが示された。経営判断における理論への
+    態度を考える補助線になる。
+  related: [heuristics, black_swan, dual_process_theory, falsifiability, isaiah_berlin_pluralism]
+  difficulty: 1
+
+- id: isaiah_berlin_pluralism
+  name_ja: 価値多元論
+  name_en: Value Pluralism
+  domain: 政治哲学
+  thinkers: [アイザイア・バーリン]
+  seed: |
+    人間が追求する価値は複数あり、それらは相互に還元できず、しばしば
+    両立しない——自由と平等、正義と慈悲のように。だから正しい答えが
+    一つに定まる場面ばかりではなく、選択には必ず失われるものがある。
+    相対主義（どれも等価）とは異なり、価値そのものは実在するとみなす。
+    トレードオフを消せない経営判断の哲学的な足場。
+  related: [hedgehog_and_fox, rawls, arendt, middle_way]
+  difficulty: 2
+
+- id: chestertons_fence
+  name_ja: チェスタトンの柵
+  name_en: Chesterton's Fence
+  domain: 社会思想
+  thinkers: [G・K・チェスタトン]
+  seed: |
+    「野原の真ん中に柵がある。なぜあるのか分からないから撤去する、
+    と言う改革者には、まず戻って理由を調べてこいと言うべきだ」。
+    制度や慣行を廃止する前に、それが何を防いでいたのかを廃止理由とは
+    別に確認せよという原則。旧構成の制約が失われたときに何が漏れ出すかを
+    問う、組織改革の実務原則でもある。
+  related: [maintenance_studies, resilience, tacit_knowledge, systems_thinking]
+  difficulty: 1
+
+- id: dwelling
+  name_ja: 住まうこと
+  name_en: Dwelling / Wohnen
+  domain: 現象学
+  thinkers: [マルティン・ハイデガー, クリストファー・アレグザンダー]
+  seed: |
+    「建てること、住まうこと、考えること」でハイデガーが示した、場所と
+    人間の根源的な関係。住まうとは建物の中にいることではなく、大地と空、
+    死すべき者と神的なものの四方界を保護しながらそこに留まること。
+    建築を機能の充足ではなく存在の様式として捉え直す視座で、パタン・
+    ランゲージにも影響した。
+  related: [heidegger, being_in_the_world, pattern_language, ma, watsuji_tetsuro]
+  difficulty: 3
+
+- id: limited_war
+  name_ja: 限定戦争
+  name_en: Limited War
+  domain: 国際関係論
+  thinkers: [カール・フォン・クラウゼヴィッツ, ロバート・オズグッド, トーマス・シェリング]
+  seed: |
+    目的・手段・地理・参加者のいずれかを意図的に限定して行われる戦争。
+    核時代に全面戦争が選択肢から外れた結果、大国間の対立は限定戦争として
+    常態化する。決着ではなく管理された継続が目標になるため、終わり方の
+    設計が始め方より難しい。W6 の主軸。
+  related: [prisoners_dilemma, ess, tipping_point, resilience]
+  difficulty: 2
+
+- id: phenology
+  name_ja: 生物季節学（フェノロジー）
+  name_en: Phenology
+  domain: 生物学
+  thinkers: [カール・リンネ, ロバート・マーシャム]
+  seed: |
+    開花・渡り・落葉といった生物の季節現象と、その年ごとの時期を扱う学。
+    数百年の観察記録が気候変動の最も長い証拠系列の一つになっている。
+    暦が固定されているのに対し、生物の季節は前倒しされ続けており、
+    種ごとにずれ方が違うため生態系の同期が崩れる。「季節を感じる」ことの
+    生物学的な裏側。W17 の背景。
+  related: [gaia_hypothesis, tipping_point, umwelt, coevolution, seasonal_calendar]
+  difficulty: 1
+
+- id: seasonal_calendar
+  name_ja: 二十四節気・七十二候
+  name_en: Solar Terms and Pentads
+  domain: 日本思想
+  thinkers: [渋川春海]
+  seed: |
+    太陽の黄道上の位置で一年を 24 に分け、さらに 5 日程度の 72 候に
+    細分する暦の体系。約 2500 年前の中国の気候を基に成立したため日本の
+    実感とずれる部分があり、七十二候は日本の風土に合わせて改訂された。
+    暦が自然の観察に合わせて書き換えられてきた事実そのものが、季節が
+    与件ではなく編集物であることを示す。
+  related: [phenology, mono_no_aware, ma, yanagita_kunio, motoori_norinaga]
+  difficulty: 1
+
+- id: weather_and_mood
+  name_ja: 気象と気分
+  name_en: Weather and Mood
+  domain: 心理学
+  thinkers: [テッド・ヒューズ, ジョン・ラスキン]
+  seed: |
+    気圧・気温・日照が感情と判断に及ぼす作用。誰もが幾らか「自然の
+    気圧計」である。気候を客観的に記録しても、それへの応答は極めて
+    個人的なものになる。ラスキンが 1884 年「十九世紀の嵐雲」で人と自然の
+    関係の破綻を予感したように、天気の意味は人が変わるにつれて変わる。
+    W17 の主軸が扱う主題。
+  related: [phenology, seasonal_calendar, interoception, qualia, mono_no_aware]
+  difficulty: 1
+
+- id: device_paradigm
+  name_ja: 装置パラダイム
+  name_en: Device Paradigm
+  domain: 科学技術社会論
+  thinkers: [アルバート・ボルグマン]
+  seed: |
+    薪ストーブが暖房装置に置き換わるとき、暖かさは手に入りやすくなる一方、
+    薪を割り火を守るという関わりの世界が消える。技術は財を「利用可能性」
+    として切り出し、それを支えていた文脈を背景に退ける——この構造を
+    ボルグマンは装置パラダイムと呼んだ。対置されるのが焦点的実践
+    （focal practice）で、意味が行為そのものにある営みを指す。
+  related: [maintenance_studies, tacit_knowledge, teire, embodiment, flow_experience]
+  difficulty: 2
+
+- id: illegible_benefits
+  name_ja: 読めない便益
+  name_en: Illegible Benefits
+  domain: 科学哲学
+  thinkers: [カルロ・コルダスコ]
+  seed: |
+    変革的な技術のコストは既存の実践と比べて即座に測れるが、最大の便益は
+    まだ存在しない実践に依存するため測れない、という非対称。麻酔の批判者は
+    リスクを正しく指摘したが、開心術が可能になることは予見できなかった。
+    「測れることと重要であることは同じではない」。測定に基づく慎重さが
+    体系的に保守へ傾く構造を説明する。
+  related: [quantification, legibility, goodharts_law, falsifiability, black_swan]
+  difficulty: 2

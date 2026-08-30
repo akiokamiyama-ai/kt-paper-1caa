@@ -187,7 +187,9 @@ def test_select_includes_concept_displayed_long_ago():
         {"concept_id": "c1", "name_ja": "概念1", "displayed_on": (today - timedelta(days=200)).isoformat()},
     ]}
     rng = random.Random(42)
-    # c0 and c1 should both be available since they're outside the window
+    # C188: 未出（c2/c3/c4）が残っている間は、60 日を過ぎた既出（c0/c1）は
+    # 選ばれない。「窓を過ぎたら候補に戻る」のは**未出が尽きた後**の話に
+    # なった。ここでは未出優先が効いていることを確かめる。
     selections = set()
     for seed in range(20):
         sel = concept_selector.select_concept_for_today(
@@ -196,11 +198,34 @@ def test_select_includes_concept_displayed_long_ago():
         )
         selections.add(sel["id"])
     _check(
-        "b3 concepts displayed > 60 days ago re-enter pool",
-        "c0" in selections or "c1" in selections,
+        "b3 未出が残る間は未出のみ（C188 で挙動変更）",
+        selections == {"c2", "c3", "c4"},
         f"observed selections: {sorted(selections)}",
     )
 
+
+
+def test_select_revisits_after_unseen_exhausted():
+    """C188: 未出が尽きたら、60 日を過ぎた既出が候補に戻る。"""
+    concepts = _toy_concepts()
+    today = date(2026, 5, 1)
+    history = {"history": [
+        {"concept_id": f"c{i}", "name_ja": f"概念{i}",
+         "displayed_on": (today - timedelta(days=100 + i)).isoformat()}
+        for i in range(5)
+    ]}
+    selections = set()
+    for seed in range(20):
+        sel = concept_selector.select_concept_for_today(
+            today=today, concepts=concepts, history=history,
+            persist=False, rng=random.Random(seed),
+        )
+        selections.add(sel["id"])
+    _check(
+        "b3b 未出が尽きたら既出が候補に戻る（再訪）",
+        len(selections) >= 2 and selections <= {f"c{i}" for i in range(5)},
+        f"observed selections: {sorted(selections)}",
+    )
 
 def test_select_pool_exhausted_falls_back_to_oldest():
     """All concepts displayed within window → fallback to oldest."""
@@ -266,6 +291,7 @@ def main() -> int:
     test_select_with_empty_history()
     test_select_excludes_recent_history()
     test_select_includes_concept_displayed_long_ago()
+    test_select_revisits_after_unseen_exhausted()
     test_select_pool_exhausted_falls_back_to_oldest()
     test_select_history_persist_appends_entry()
     print()

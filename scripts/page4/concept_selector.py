@@ -93,6 +93,20 @@ def _excluded_ids(history: dict, today: date, exclusion_days: int) -> set[str]:
     return excluded
 
 
+def _ever_shown_ids(history: dict) -> set[str]:
+    """履歴に**一度でも**登場した concept_id の集合（C188）.
+
+    ``_excluded_ids`` が「直近 N 日」で切るのに対し、こちらは全期間を見る。
+    未出優先（段 2）の判定に使う。
+    """
+    out: set[str] = set()
+    for entry in history.get("history", []):
+        cid = entry.get("concept_id")
+        if cid:
+            out.add(cid)
+    return out
+
+
 def select_concept_for_today(
     *,
     today: date | None = None,
@@ -117,11 +131,52 @@ def select_concept_for_today(
     if rng is None:
         rng = random.Random()
 
+    # ------------------------------------------------------------------
+    # C188 (2026-08-30): 3 段構えの選出
+    #
+    # 段 1  過去 exclusion_days 日に出たものを除外（従来どおり）
+    # 段 2  **未出**（履歴に一度も登場していない）を優先
+    # 段 3  未出が尽きたら既出から選ぶ（＝再訪）
+    #
+    # 従来は段 1 の後すぐ rng.choice していたため、実効候補 162 件のうち
+    # 未出 107 件 / 既出 約 55 件が等確率で並び、**毎日およそ 34% で既出を
+    # 引いていた**。結果、未出が 107 件（プールの 48%）残っているのに
+    # 2026-07-16 以降で再掲が 8 件発生していた（環世界 5/17→8/16、
+    # SECI モデル 5/20→7/31 など）。
+    #
+    # 段 3 で既出を永久に封印しないのは、同じ概念に別の文脈で再会すること
+    # 自体に思考の蓄積としての意味があるため（神山さん判断）。段 3 は当面
+    # ランダムでよい —— 段 1 の 60 日除外で最低限の間隔は担保されている。
+    # 「久しぶりのものほど出やすい」重み付けは複雑になるので保留。
+    #
+    # なお旧実装の「枯渇時は最古を再利用」経路は**構造的に発動しえなかった**。
+    # 60 日で表示できるのは最大 60 件で、222 件すべてが直近 60 日に出ることは
+    # ありえないため。段 3 がその経路を実質的に置き換える。
+    # ------------------------------------------------------------------
     excluded = _excluded_ids(history, today, exclusion_days)
-    candidates = [c for c in concepts if c["id"] not in excluded]
+    ever_shown = _ever_shown_ids(history)
 
-    if not candidates:
-        # Pool exhausted — reuse the oldest displayed concept.
+    pool = [c for c in concepts if c["id"] not in excluded]
+    unseen = [c for c in pool if c["id"] not in ever_shown]
+
+    if unseen:
+        stage = "unseen"
+        candidates = unseen
+    elif pool:
+        stage = "revisit"
+        candidates = pool
+        print(
+            f"[concept] 未出の概念が尽きました（プール {len(concepts)} 件、"
+            f"直近 {exclusion_days} 日の除外 {len(excluded)} 件）。"
+            f"既出 {len(pool)} 件からの再訪に切り替えます。"
+            "—— concepts.yaml の補充を検討してください",
+            file=sys.stderr,
+        )
+    else:
+        # 段 1 で全部消えた（プールが exclusion_days より小さい場合のみ起きる。
+        # 249 件 / 60 日では構造的に起きない）。従来どおり**最古**を再利用する
+        # ——ランダムに戻すより間隔が最大化されるため。
+        stage = "exhausted"
         print(
             f"[concept] WARN: all {len(concepts)} concepts displayed in past "
             f"{exclusion_days} days. Reusing the oldest.",
@@ -134,10 +189,14 @@ def select_concept_for_today(
         oldest_id = sorted_entries[0]["concept_id"] if sorted_entries else None
         candidates = [c for c in concepts if c["id"] == oldest_id]
         if not candidates:
-            # Ultimate fallback: pick anything.
             candidates = list(concepts)
 
     selected = rng.choice(candidates)
+    print(
+        f"[concept] selected={selected['id']} stage={stage} "
+        f"(pool={len(pool)} unseen={len(unseen)} excluded={len(excluded)})",
+        file=sys.stderr,
+    )
 
     if persist:
         # C185: 同日エントリは差し替え（再ラン耐性）。経緯は _upsert_entry を参照。
@@ -145,6 +204,9 @@ def select_concept_for_today(
             "concept_id": selected["id"],
             "name_ja": selected["name_ja"],
             "displayed_on": today.isoformat(),
+            # C188: どの段で選ばれたか。既存エントリには無いので読む側は
+            # .get("stage") で扱うこと。
+            "stage": stage,
         }, date_key="displayed_on")
         save_history(history)
 
