@@ -3233,3 +3233,261 @@
     体系的に保守へ傾く構造を説明する。
   related: [quantification, legibility, goodharts_law, falsifiability, black_swan]
   difficulty: 2
+
+# ===========================================================================
+# C189 (2026-08-30): C188 の抽出漏れを再走査して補充。
+#
+# C188 は「論考本文に出た語」を既存 concepts.yaml と突き合わせる方式だったが、
+# 既存判定に **seed 本文まで含めていた**ため、seed で言及されているだけで
+# 見出し（id / name_ja / name_en / thinkers）としては存在しない概念を
+# 「既収録」と誤判定していた。実践知がその実例（wild_knowledge の seed に
+# 「実践知」の語があったため既収録扱いされた）。
+#
+# 本セクションは判定を見出しのみに絞って再走査した結果。あわせて seed 本文も
+# コーパスに加え、「seed で参照されるのに entry が無い」概念を拾っている。
+# ===========================================================================
+
+- id: phronesis
+  name_ja: 実践知（プロネーシス）
+  name_en: Phronesis / Practical Wisdom
+  domain: 古代哲学
+  thinkers: [アリストテレス, ハンス＝ゲオルク・ガダマー, 野中郁次郎]
+  seed: |
+    個別の状況で「いま何をなすべきか」を見極める知。アリストテレスが
+    『ニコマコス倫理学』で、普遍を扱うエピステーメーや制作を導くテクネーと
+    区別して立てた。規則に還元できず、経験の蓄積と実践の反復によってのみ
+    育つ点で暗黙知と重なる。野中郁次郎はこれを「実践知リーダーシップ」として
+    経営に持ち込み、文脈を読んで適時に判断する能力を組織能力の核に据えた。
+    厨房の身体知（W14）も métis も、この系譜に置くと見通しがよくなる。
+  related: [aristotle, tacit_knowledge, techne, episteme, theoria, metis, seci_model]
+  difficulty: 2
+
+- id: theoria
+  name_ja: 観想知（テオリア）
+  name_en: Theoria / Contemplation
+  domain: 古代哲学
+  thinkers: [アリストテレス, ハンナ・アーレント]
+  seed: |
+    変化しない普遍を、何かの役に立てるためではなく、ただ見るために見る知の
+    あり方。アリストテレスは人間の最高の活動をここに置いた。有用性から
+    切り離されている点が本質で、だからこそ近代の生産性の論理と最も鋭く
+    対立する。アーレントの vita contemplativa、ハンの「深い退屈」は
+    この系譜の現代的な再提起である。
+  related: [aristotle, phronesis, episteme, vita_contemplativa, arendt, mindfulness]
+  difficulty: 2
+
+- id: poiesis
+  name_ja: 制作知（ポイエーシス）
+  name_en: Poiesis / Making
+  domain: 古代哲学
+  thinkers: [アリストテレス, マルティン・ハイデガー]
+  seed: |
+    何かを世界に生み出す活動と、それを導く知。目的が行為の外にある
+    （作られた物）点で、目的が行為そのものにある実践（プラクシス）と区別される。
+    ハイデガーは『技術への問い』でポイエーシスを「隠れなさへともたらすこと」
+    と読み直し、近代技術が自然を用象として立てる態度と対比した。作ることが
+    何を世界に対して行っているのかを問う枠。
+  related: [aristotle, techne, phronesis, poetics_mimesis, heidegger, device_paradigm]
+  difficulty: 2
+
+- id: techne
+  name_ja: テクネー
+  name_en: Techne / Craft Knowledge
+  domain: 古代哲学
+  thinkers: [アリストテレス, プラトン]
+  seed: |
+    作り方を知っていること。何をどう作れば目的の物が得られるかという、
+    伝達可能で規則化しうる知。マニュアルに書けるのはこの層であり、
+    書けない層が実践知として残る。W14 の調理学校が教えられたのはテクネーまで
+    で、厨房が「教えようがない」と評したのはその先の判断だった。技術と技能の
+    差を語るときの古典的な足場。
+  related: [poiesis, phronesis, episteme, tacit_knowledge, knowledge_transfer, mcdonaldization]
+  difficulty: 1
+
+- id: episteme
+  name_ja: エピステーメー
+  name_en: Episteme / Scientific Knowledge
+  domain: 古代哲学
+  thinkers: [アリストテレス, プラトン, ミシェル・フーコー]
+  seed: |
+    論証によって basis を示せる、普遍的で必然的な知。意見（ドクサ）と対比され、
+    近代科学の理想像の祖型になった。フーコーは同じ語を転用し、ある時代の知の
+    可能性を規定する無意識の枠組みという意味で用いた。「証拠を示せる知」だけを
+    知とみなす態度が何を切り捨てるか、という問いの出発点。
+  related: [aristotle, theoria, techne, phronesis, falsifiability, foucault, paradigm_shift]
+  difficulty: 2
+
+- id: metis
+  name_ja: メティス（実践的狡知）
+  name_en: Metis
+  domain: 政治哲学
+  thinkers: [ジェームズ・C・スコット, マルセル・デティエンヌ, ジャン＝ピエール・ヴェルナン]
+  seed: |
+    移ろう状況に即応する、その場かぎりの狡知。古代ギリシアでは船乗りや
+    レスラーの技として語られた。スコットは『国家のように見る』でこれを
+    中心概念に据え、標準化された技術知が上から現場を組み替えるときに
+    真っ先に失われるものとして描いた。記録に載らないがゆえに、計画の
+    失敗が起きて初めてその存在が分かる。
+  related: [legibility, phronesis, tacit_knowledge, wild_knowledge, teire]
+  difficulty: 2
+
+- id: legitimate_peripheral_participation
+  name_ja: 正統的周辺参加
+  name_en: Legitimate Peripheral Participation
+  domain: 認知科学・教育学
+  thinkers: [ジーン・レイヴ, エティエンヌ・ウェンガー]
+  seed: |
+    学習を頭への知識転送ではなく、実践共同体への参加の度合いが深まる過程と
+    捉える理論。新参者はまず周辺的だが正統な役割（下ごしらえ、片づけ）を
+    与えられ、全体の流れに触れながら中心へ移動する。教室で技能が育たない
+    理由と、厨房で育つ理由を同じ枠で説明できる。W14 の徒弟制の議論の土台。
+  related: [tacit_knowledge, phronesis, techne, educational_anthropology, knowledge_transfer, mcdonaldization]
+  difficulty: 1
+
+- id: antifragility
+  name_ja: 反脆弱性
+  name_en: Antifragility
+  domain: 複雑系
+  thinkers: [ナシーム・ニコラス・タレブ]
+  seed: |
+    衝撃を受けて壊れるのが脆弱、耐えるのが頑健、**より良くなる**のが反脆弱。
+    タレブは変動やストレスを避けるのではなく、そこから利得を得る構造を
+    設計せよと説く。予測に頼らずに済む点が要で、黒い白鳥を当てにいくのでは
+    なく、当たらなくても壊れない配置を作る。冗長性・分散・小さく試すことが
+    実装手段になる。
+  related: [black_swan, resilience, redundancy, complex_systems, ess]
+  difficulty: 1
+
+- id: redundancy
+  name_ja: 冗長性
+  name_en: Redundancy
+  domain: システム論
+  thinkers: [クロード・シャノン, チャールズ・ペロー]
+  seed: |
+    同じ機能を複数の経路が担う設計。効率の観点では無駄だが、単一障害点を
+    無くすことで系全体を保つ。情報理論では誤り訂正の余剰として、組織論では
+    重複した役割や非公式な連絡経路として現れる。効率化がまず削るのが冗長性
+    であり、削った後に何が起きるかは平時には見えない。
+  related: [antifragility, resilience, shannon_information, systems_thinking, complex_systems]
+  difficulty: 1
+
+- id: public_sphere
+  name_ja: 公共圏
+  name_en: Public Sphere / Öffentlichkeit
+  domain: 社会哲学
+  thinkers: [ユルゲン・ハーバーマス, ハンナ・アーレント, ナンシー・フレイザー]
+  seed: |
+    私的でも国家的でもない、市民が理性的な討議によって世論を形成する空間。
+    ハーバーマスは 18 世紀のコーヒーハウスや新聞にその成立を見た。参加の
+    平等と論拠だけによる説得を条件とするが、現実には誰が入れて誰が
+    入れないかが常に問題になる。アルゴリズムが可視性を配分する時代に、
+    条件そのものが問い直されている。
+  related: [arendt, communicative_competence, echo_chamber, panopticon, marx]
+  difficulty: 2
+
+- id: instrumental_reason
+  name_ja: 道具的理性
+  name_en: Instrumental Reason
+  domain: 社会哲学
+  thinkers: [マックス・ホルクハイマー, テオドール・アドルノ, マックス・ヴェーバー]
+  seed: |
+    目的の是非は問わず、手段の効率だけを計算する理性のあり方。
+    ホルクハイマーとアドルノは『啓蒙の弁証法』で、自然を支配するために
+    生まれた理性が人間自身をも対象化していく過程を描いた。「何のために」を
+    問わないまま「どうやって」だけが洗練されていく構造は、指標の最適化が
+    目的を侵食する現代の問題と地続きである。
+  related: [quantification, goodharts_law, mcdonaldization, device_paradigm, marx, foucault]
+  difficulty: 2
+
+- id: gift_economy
+  name_ja: 贈与論
+  name_en: The Gift / Gift Economy
+  domain: 文化人類学
+  thinkers: [マルセル・モース, ブロニスワフ・マリノフスキー, デヴィッド・グレーバー]
+  seed: |
+    与える・受け取る・返すの三つの義務が社会を編み上げるという見方。
+    モースはポトラッチやクラ交易を分析し、贈り物が純粋な無償ではなく、
+    返礼の義務を通じて関係を持続させる装置だと示した。等価交換で完結する
+    市場取引と違い、贈与は負債という形で時間の中に関係を残す。
+  related: [levi_strauss, tragedy_of_commons, care_ethics, i_thou, transaction_cost]
+  difficulty: 1
+
+- id: rite_of_passage
+  name_ja: 通過儀礼
+  name_en: Rite of Passage
+  domain: 文化人類学
+  thinkers: [アルノルト・ファン・ヘネップ, ヴィクター・ターナー]
+  seed: |
+    分離・過渡・再統合の三段階を経て、人が社会的な位置を移る儀礼。
+    ターナーは中間の過渡期を「リミナリティ」と呼び、それ以前でも以後でも
+    ない宙吊りの状態に、通常の秩序が緩んで新しいものが生まれる余地を見た。
+    入社や昇進、事業承継を「手続き」ではなく移行として設計する視点を与える。
+  related: [educational_anthropology, legitimate_peripheral_participation, levi_strauss, ma, career_anchor]
+  difficulty: 1
+
+- id: body_schema
+  name_ja: 身体図式
+  name_en: Body Schema
+  domain: 現象学
+  thinkers: [モーリス・メルロ＝ポンティ, シャウン・ギャラガー]
+  seed: |
+    意識して思い描く身体像（body image）とは別に、行為の中で暗黙に働いて
+    いる身体の編成。杖を使い慣れた人にとって杖の先が触覚の端になるように、
+    図式は道具や環境を取り込んで伸縮する。身体で覚えるとは、この図式が
+    書き換わることにほかならない。
+  related: [merleau_ponty, embodiment, embodied_cognition, extended_mind, affordance, interoception]
+  difficulty: 2
+
+- id: transaction_cost
+  name_ja: 取引コスト
+  name_en: Transaction Cost
+  domain: 経済学
+  thinkers: [ロナルド・コース, オリバー・ウィリアムソン]
+  seed: |
+    探索・交渉・監視といった、取引そのものに付随する費用。コースは
+    「なぜ企業が存在するのか」をこの概念で説明した——市場で都度取引するより
+    組織内に抱えた方が安いとき、企業の境界が引かれる。何を内製し何を外に
+    出すか、どこまでを一つの組織とするかという判断の理論的な背骨。
+  related: [drucker, human_capital, gift_economy, organizational_learning, ambidexterity]
+  difficulty: 1
+
+- id: narrative_identity
+  name_ja: ナラティブ・アイデンティティ
+  name_en: Narrative Identity
+  domain: 心理学
+  thinkers: [ポール・リクール, ダン・マクアダムス, ジェローム・ブルーナー]
+  seed: |
+    自己とは実体ではなく、出来事を筋立てて語り直し続けることで保たれる
+    物語である、という捉え方。リクールは時間の中の同一性をこの語りの働きに
+    見た。同じ経歴でも語り方が変われば別の人生になるため、対話は他者の
+    物語の書き換えに立ち会う営みになる。傾聴が単なる情報収集ではない理由。
+  related: [dialogical_self, active_listening, hermeneutic_dialogue, gadamer, generativity]
+  difficulty: 2
+
+- id: generativity
+  name_ja: 世代継承性
+  name_en: Generativity
+  domain: 発達心理学
+  thinkers: [エリク・エリクソン, ダン・マクアダムス]
+  seed: |
+    次の世代を育て、自分の後に残るものに関わろうとする志向。エリクソンは
+    成人期中期の発達課題として、これが果たされないときに停滞が生じると
+    論じた。何かを教える・遺す・引き継ぐという行為が、受け手のためだけで
+    なく担い手自身の発達条件でもある、という双方向性が要点。事業承継や
+    シニアの対話事業の心理学的な土台になる。
+  related: [berlin_wisdom_paradigm, narrative_identity, care_ethics, knowledge_transfer, teire]
+  difficulty: 1
+
+- id: alienation
+  name_ja: 疎外
+  name_en: Alienation
+  domain: 社会哲学
+  thinkers: [カール・マルクス, ゲオルク・ヴィルヘルム・フリードリヒ・ヘーゲル]
+  seed: |
+    自分が生み出したものが自分から離れ、よそよそしい力として立ち現れること。
+    マルクスは労働において、生産物・労働過程・類的存在・他者の四つの水準で
+    これが起きるとした。ハンの自己搾取論は、疎外の担い手が資本家から
+    自分自身へ移った形態と読める。誰にも強制されていないのに疲れる、という
+    現代的な症状を古典的な枠で捉え直す補助線。
+  related: [marx, hegel, positive_violence, instrumental_reason, habitus]
+  difficulty: 2

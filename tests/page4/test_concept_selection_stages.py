@@ -211,7 +211,7 @@ def _load_pool():
 def test_pool_integrity():
     pool = _load_pool()
     ids = [c["id"] for c in pool]
-    _check("e1 概念数が 249 件以上", len(pool) >= 249, str(len(pool)))
+    _check("e1 概念数が 267 件以上", len(pool) >= 267, str(len(pool)))
     _check("e2 id に重複がない", len(ids) == len(set(ids)),
            str(len(ids) - len(set(ids))))
     idset = set(ids)
@@ -228,6 +228,44 @@ def test_pool_integrity():
              if re.search(r"[а-яА-Я가-힯]",
                           f"{c['name_ja']}{c['seed']}{' '.join(c['thinkers'])}")]
     _check("e5 キリル文字・ハングルの混入がない", not stray, str(stray))
+
+
+def test_c189_additions_present():
+    """C189: C188 の抽出漏れを再走査して補充した分。
+
+    C188 は既収録判定に **seed 本文まで含めていた**ため、seed で言及されて
+    いるだけで見出しとしては存在しない概念を「既収録」と誤判定していた。
+    実践知がその実例（wild_knowledge の seed に語があったため漏れた）。
+    """
+    pool = {c["id"]: c for c in _load_pool()}
+    expected = ["phronesis", "theoria", "poiesis", "techne", "episteme",
+                "metis", "legitimate_peripheral_participation", "antifragility",
+                "redundancy", "public_sphere", "instrumental_reason",
+                "gift_economy", "rite_of_passage", "body_schema",
+                "transaction_cost", "narrative_identity", "generativity",
+                "alienation"]
+    missing = [i for i in expected if i not in pool]
+    _check(f"f3 C189 の補充 {len(expected)} 件がすべて入っている", not missing,
+           str(missing))
+
+
+def test_aristotle_knowledge_types_complete():
+    """アリストテレスの知の分類が見出しとして揃っていること。
+
+    seed 内の言及だけでは足りない —— concept_writer が本文を書く対象は
+    見出しのある entry だけなので、言及されるだけの概念は紙面に出ない。
+    """
+    pool = {c["id"]: c for c in _load_pool()}
+    for cid, ja in (("theoria", "観想知"), ("phronesis", "実践知"),
+                    ("poiesis", "制作知"), ("techne", "テクネー"),
+                    ("episteme", "エピステーメー")):
+        ok = cid in pool and ja in pool[cid]["name_ja"]
+        _check(f"f4 {cid} が見出しとして存在（{ja}）", ok,
+               pool.get(cid, {}).get("name_ja", "—"))
+    # 相互にリンクしていること
+    linked = all("phronesis" in (pool[c].get("related") or [])
+                 for c in ("theoria", "techne", "episteme"))
+    _check("f5 三分が phronesis と相互リンクしている", linked)
 
 
 def test_c188_additions_present():
@@ -271,6 +309,8 @@ def main() -> int:
     print("(e)(f) 概念プール:")
     test_pool_integrity()
     test_c188_additions_present()
+    test_c189_additions_present()
+    test_aristotle_knowledge_types_complete()
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")
     return 0 if FAIL == 0 else 1
