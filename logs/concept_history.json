@@ -624,6 +624,12 @@
       "concept_id": "kuhn",
       "name_ja": "クーン",
       "displayed_on": "2026-08-30"
+    },
+    {
+      "concept_id": "apophatic_theology",
+      "name_ja": "否定神学",
+      "displayed_on": "2026-08-31",
+      "stage": "unseen"
     }
   ]
 }
