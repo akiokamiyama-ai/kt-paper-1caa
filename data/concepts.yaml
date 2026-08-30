@@ -3491,3 +3491,23 @@
     現代的な症状を古典的な枠で捉え直す補助線。
   related: [marx, hegel, positive_violence, instrumental_reason, habitus]
   difficulty: 2
+
+# C189-2 (2026-08-30): 神山さん指定で追加。C189 の再走査で見出し未収録と
+# 判明した 20 件のうち、見送っていた 1 件。
+
+- id: untranslatability
+  name_ja: 翻訳不可能性
+  name_en: Untranslatability
+  domain: 言語哲学
+  thinkers: [バーバラ・カッサン, ヴァルター・ベンヤミン, 九鬼周造]
+  seed: |
+    ある語が別の言語に移し替えられないこと。ただしカッサンが
+    『ヨーロッパ哲学語彙集』で強調したのは「訳せない」ではなく
+    「訳し続けるしかない」——翻訳不可能とは、翻訳をやめさせるものではなく、
+    やり直しを終わらせないものである。ベンヤミンは翻訳を原作の似姿を作る
+    作業ではなく、両言語の背後にある「純粋言語」を垣間見せる働きとした。
+    「いき」も Freundlichkeit も、置き換えた瞬間に何かが落ちる。落ちるものの
+    輪郭を測ることでしか近づけない領域があり、そこは暗黙知と地続きである。
+    朝刊が海外記事を日本語で読み直す営みそのものに関わる概念。
+  related: [linguistic_relativity, kuki_shuzo, differance, gadamer, hermeneutic_dialogue, freundlichkeit, tacit_knowledge, mono_no_aware]
+  difficulty: 2

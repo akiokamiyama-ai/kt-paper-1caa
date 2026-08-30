@@ -211,7 +211,7 @@ def _load_pool():
 def test_pool_integrity():
     pool = _load_pool()
     ids = [c["id"] for c in pool]
-    _check("e1 概念数が 267 件以上", len(pool) >= 267, str(len(pool)))
+    _check("e1 概念数が 268 件以上", len(pool) >= 268, str(len(pool)))
     _check("e2 id に重複がない", len(ids) == len(set(ids)),
            str(len(ids) - len(set(ids))))
     idset = set(ids)
@@ -243,7 +243,7 @@ def test_c189_additions_present():
                 "redundancy", "public_sphere", "instrumental_reason",
                 "gift_economy", "rite_of_passage", "body_schema",
                 "transaction_cost", "narrative_identity", "generativity",
-                "alienation"]
+                "alienation", "untranslatability"]
     missing = [i for i in expected if i not in pool]
     _check(f"f3 C189 の補充 {len(expected)} 件がすべて入っている", not missing,
            str(missing))
