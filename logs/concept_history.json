@@ -630,6 +630,12 @@
       "name_ja": "否定神学",
       "displayed_on": "2026-08-31",
       "stage": "unseen"
+    },
+    {
+      "concept_id": "career_anchor",
+      "name_ja": "キャリア・アンカー",
+      "displayed_on": "2026-09-01",
+      "stage": "unseen"
     }
   ]
 }

@@ -1,0 +1,25 @@
+{
+  "date": "2026-09-01",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://japan.zdnet.com/article/35252093/",
+    "human_energy": "https://jinjibu.jp/news/detl/26754/",
+    "web_repo": "https://www.bc01.net/topinterview/g-7holdings_202608_01/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/chinese-marxist-economists-believe-ai-can-avoid-capitalist-rent-trap-by-yanis-varoufakis-2026-08",
+    "https://foreignpolicy.com/2026/08/31/china-us-safety-ai-artificial-intelligence-summit-regulation/",
+    "https://www.mckinsey.com/industries/life-sciences/our-insights/astrazenecas-bob-li-on-the-mars-mission-to-eliminate-cancer",
+    "https://www.theparisreview.org/blog/2026/08/06/no-more-missionaries-shiva-naipauls-jonestown/",
+    "https://nautil.us/how-a-psychic-horse-named-clever-hans-changed-the-way-we-do-science-1284622/",
+    "https://www.atlasobscura.com/places/timothy-dexters-william-pitt-statue"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://warontherocks.com/the-divine-calculus-of-the-ukraine-wars-end/",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-08/abyss-and-rupture-halber-zaleska/",
+    "music": "https://stereogum.com/2509880/a-week-at-mutek-made-montreal-feel-too-good-to-be-true/columns/crossing-wires/",
+    "outdoor": "https://www.cleverhiker.com/backpacking/soto-new-river-pot-review/"
+  },
+  "headlines_urls": []
+}
