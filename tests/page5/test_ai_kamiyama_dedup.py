@@ -217,8 +217,13 @@ def test_constant_and_wiring():
 
     _check("e1 PAGE5_DEDUP_DAYS が実用値", 1 <= PAGE5_DEDUP_DAYS <= 60,
            f"got {PAGE5_DEDUP_DAYS}")
-    _check("e2 3 面の窓（7 日）と揃えてある", PAGE5_DEDUP_DAYS == 7,
-           f"got {PAGE5_DEDUP_DAYS}")
+    # C190 (2026-08-31): ここは元々「3 面の窓（7 日）と揃えてある」を固定して
+    # いたが、**その設計判断こそが再発の原因**だった。5 面の候補プール
+    # （3 面 runner-up）は 3 面より狭いため、同じ窓では足りない。実際に
+    # 8/26（99% 記事の 3 回目）と 8/31（自殺の記事）がどちらも 9 日間隔で
+    # 7 日窓のすぐ外を通った。7 に戻さないための回帰にする。
+    _check("e2 窓が 9 日間隔の再発を覆える（7 に戻していない）",
+           PAGE5_DEDUP_DAYS > 9, f"got {PAGE5_DEDUP_DAYS}")
     src = inspect.getsource(build_page_five_v2)
     _check("e3 build_page_five_v2 が page5 の過去 URL を読む",
            'page="page5"' in src and "PAGE5_DEDUP_DAYS" in src)

@@ -200,6 +200,7 @@ def select_ai_kamiyama_article(
     page3_selections: Any | None = None,
     page3_runner_ups: list[dict] | None = None,
     exclude_urls: set[str] | None = None,
+    ever_used_urls: set[str] | None = None,
     registry: SourceRegistry | None = None,
     eligible_categories: tuple[str, ...] | None = None,
     rng: random.Random | None = None,
@@ -226,6 +227,10 @@ def select_ai_kamiyama_article(
         ``Page3Result.runner_up_candidates``。C161 以降はこれが主候補。
     exclude_urls :
         C168: 過去 ``PAGE5_DEDUP_DAYS`` 日に 5 面で採用した URL の集合。
+    ever_used_urls :
+        C190: **全期間**で一度でも 5 面に採用した URL の集合。未出優先
+        （段 2）の判定に使う。None なら段 2 を飛ばして従来どおり全候補から
+        選ぶ（後方互換）。
         候補から除外して日跨ぎ重複を防ぐ。除外後に候補が 0 件になる場合は
         **除外を諦めて元の候補に戻す**（白紙より重複、C161 の fallback と
         同じ思想）。呼出側が ``load_recently_displayed_urls(page="page5")``
@@ -273,6 +278,37 @@ def select_ai_kamiyama_article(
                 f"[ai_kamiyama] WARN: 過去日 dedup で候補が 0 件になったため "
                 f"除外を諦めます（候補 {len(pool)} 件すべてが過去 5 面に既出）。"
                 "日跨ぎ重複が発生します。runner-up の供給状況を確認してください。",
+                file=sys.stderr,
+            )
+
+    # ------------------------------------------------------------------
+    # C190 (2026-08-31): 段 2 = 未出優先 / 段 3 = 再訪
+    #
+    # 段 1（上の exclude_urls）だけでは、窓を抜けた高スコア記事がすぐ戻って
+    # くる。実際 thepointmag /we-were-the-99-percent/ は 8/14・8/17・8/26 と
+    # **3 回**選ばれた。スコアが高い記事は窓の外に出た瞬間また top_n 圏内に
+    # 入るためで、窓を伸ばしても「31 日目に再登場」は起こりうる。
+    #
+    # そこで 4 面の概念選出（C188）と同じ構えにする。未出があるうちは未出
+    # だけから選び、尽きたら既出に戻る。既出を永久に封印しないのは、候補が
+    # 3 面 runner-up という狭い供給に依存していて在庫切れが現実的にありうる
+    # ため（4 面は 268 件のプールがあるが、こちらは日々 20 件前後）。
+    # ------------------------------------------------------------------
+    if ever_used_urls:
+        unseen = [a for a in pool if a.get("url") not in ever_used_urls]
+        if unseen:
+            if len(unseen) < len(pool):
+                print(
+                    f"[ai_kamiyama] 未出優先: {len(pool)} 件中 {len(unseen)} 件が"
+                    "未出。ここから選びます",
+                    file=sys.stderr,
+                )
+            pool = unseen
+        else:
+            print(
+                f"[ai_kamiyama] 未出の候補が尽きました（{len(pool)} 件すべて"
+                "過去に 5 面で採用済み）。既出からの再訪に切り替えます"
+                "—— runner-up の供給状況を確認してください",
                 file=sys.stderr,
             )
 

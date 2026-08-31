@@ -104,7 +104,21 @@ PAGE2_DEDUP_DAYS = 3
 # 7 日だから——「3 面に 7 日出ていない & 5 面に 7 日出ていない」で意味が揃う。
 # 実測では 30 日窓でも残候補 17-20 件（top_n=5 に必要な 5 件を大きく上回る）
 # ため枯渇リスクは実質ゼロ。強めたければこの 1 行を伸ばせばよい。
-PAGE5_DEDUP_DAYS = 7
+# C190 (2026-08-31): 7 → 30。C168 が 7 にしたのは「3 面の dedup 窓が 7 日だから
+# 意味が揃う」という概念的な対称性が理由だったが、5 面の候補プール（3 面
+# runner-up）は 3 面より狭いため同じ窓では足りなかった。実際、C168 以降の重複
+# 2 件はどちらも **ちょうど 9 日間隔**で、7 日窓のすぐ外を通っていた:
+#
+#   2026-08-26 ← 08-17 (9 日)  thepointmag /we-were-the-99-percent/（3 回目）
+#   2026-08-31 ← 08-22 (9 日)  publicbooks /literature-in-the-time-of-suicide/
+#
+# 30 日窓の安全性は C168 が既に実測していた（残候補 17-20 件、必要なのは
+# top_n=5）。当時のコミットに「強めたければ定数 1 行を伸ばせばよい」とある。
+PAGE5_DEDUP_DAYS = 30
+
+# C190: 未出優先（段 2）の判定に使う全期間の既出集合を取るための遡り日数。
+# 運用開始 2026-04-25 を余裕をもってカバーする。log が無い日は単に skip される。
+PAGE5_UNSEEN_LOOKBACK_DAYS = 400
 
 # 逆引き：companies.md の Source.category → page2 短縮キー
 PAGE2_CATEGORY_TO_KEY: dict[str, str] = {
@@ -862,11 +876,16 @@ def build_page_five_v2(
     recent_page5_urls = load_recently_displayed_urls(
         PAGE5_DEDUP_DAYS, page="page5", until_date=target_date,
     )
+    # C190: 全期間で一度でも 5 面に出た URL。未出優先（段 2）の判定に使う。
+    ever_page5_urls = load_recently_displayed_urls(
+        PAGE5_UNSEEN_LOOKBACK_DAYS, page="page5", until_date=target_date,
+    )
     ai_article = page5_ai_selector.select_ai_kamiyama_article(
         target_date=target_date,
         page3_selections=page3_selections,
         page3_runner_ups=page3_runner_ups,
         exclude_urls=recent_page5_urls,
+        ever_used_urls=ever_page5_urls,
         registry=None,
         eligible_categories=None,
     )
