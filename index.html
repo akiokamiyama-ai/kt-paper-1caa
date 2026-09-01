@@ -4,6 +4,19 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="robots" content="noindex, nofollow" />
+<!-- C193 (2026-09-01): ファビコン（高尾山の稜線モチーフ）。
+     パスは "../" 始まりの相対にしてある。理由:
+       この HTML は archive/<日付>.html として生成され、同じ内容が cp で
+       index.html にも置かれる。つまり**同一の HTML が 2 つの深さで配信される**。
+       絶対パス "/favicon.svg" は Vercel（ドメイン直下配信）では通るが、
+       GitHub Pages はプロジェクトサイトで /kt-paper-1caa/ 配下に置かれるため
+       404 になる。"../" なら archive 階層で正しく解決され、root に置かれた
+       index.html でもブラウザが先頭の ".." を root で丸めるので通る。
+       既存の "../assets/logos/..." と同じ作法。 -->
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="manifest" href="../site.webmanifest">
 <title>Kamiyama Tribune — Tuesday, September 1, 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
