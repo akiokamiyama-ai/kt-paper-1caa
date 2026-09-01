@@ -1,0 +1,25 @@
+{
+  "date": "2026-09-02",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2609/01/2000001044/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2609/01/news025.html",
+    "web_repo": "https://www.bc01.net/topinterview/tullys_202608_02/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/cogs-of-war/a-rulebook-for-surprises-commanding-autonomous-aircraft/",
+    "https://www.mckinsey.com/industries/semiconductors/our-insights/revolutionizing-semiconductor-fab-operations-with-ai",
+    "https://www.mckinsey.com/industries/financial-services/our-insights/asias-75-point-gap-moving-consumers-from-retirement-angst-to-action",
+    "https://wordswithoutborders.org/read/article/2026-08/the-city-and-the-writer-in-jakarta-with-khairani-barokka-nathalie-handal/",
+    "https://3quarksdaily.com/3quarksdaily/2026/09/steven-pinker-on-why-authoritarians-fear-common-knowledge.html",
+    "https://nautil.us/schizophrenias-cruel-roulette-wheel-1284681/"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://3quarksdaily.com/3quarksdaily/2026/09/how-kudzu-was-supposed-to-save-the-south.html",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-09/when-crimea-was-still-a-place-of-light-khersonska-kaminsky-farris/",
+    "music": "https://stereogum.com/2509424/album-of-the-week-lily-seabird-lightspheres-on-their-way/reviews/album-of-the-week/",
+    "outdoor": "https://www.atlasobscura.com/places/timothy-dexters-william-pitt-statue"
+  },
+  "headlines_urls": []
+}
