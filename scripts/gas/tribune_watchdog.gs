@@ -54,8 +54,32 @@
   * GAS の時間トリガーは指定時刻から ±15 分のブレがある（仕様）。05:30 指定なら
   * 実際の発火は 05:15〜05:45。上の余裕はこのブレを吸収できる幅にしてある。
   */
-  var CHECK_HOUR = 5;
-  var CHECK_MINUTE = 30;
+  //
+  // C191 (2026-09-01): 09-01 05:30 に初の実戦発火。ただし run は遅れて起動中
+  // （07:00 起動 / 07:25 着弾）で、実際には待てばよい状況だった。archive の
+  // 有無しか見ていないと「遅延中」と「本当に止まった」を区別できず、誤検知が
+  // 続けばメールを無視するようになる。fetchRunState_ で run 状態を見て文面を
+  // 出し分ける。
+  //
+  // 検知時刻は配列。複数入れるとその数だけトリガーが作られる。
+  //   [[5, 30]]          … 1 日 1 回（既定）
+  //   [[5, 30], [8, 0]]  … 早期警戒 + 確定の 2 段
+  var CHECK_TIMES = [[5, 30]];
+
+  // 後方互換（ログ表示用）。CHECK_TIMES の先頭を指す。
+  var CHECK_HOUR = CHECK_TIMES[0][0];
+  var CHECK_MINUTE = CHECK_TIMES[0][1];
+
+  // daily.yml の cron 予定時刻（UTC）。`37 17 * * *`。遅延の算出に使う。
+  var CRON_UTC_HOUR = 17;
+  var CRON_UTC_MINUTE = 37;
+
+  // 通常ランの所要時間（分）。「あと何分くらい」の目安。
+  var TYPICAL_RUN_MINUTES = 30;
+
+  // 監視対象のワークフローファイル名。runs 一覧には
+  // "pages build and deployment" も混ざるため、workflow 指定で取る。
+  var WORKFLOW_FILE = 'daily.yml';
 
   /** GitHub リポジトリ（PUBLIC）。 */
   var GH_OWNER = 'akiokamiyama-ai';
@@ -95,6 +119,9 @@
     if (result.generated && result.published) {
       return; // 正常。無通知。
     }
+    // C191: 未生成のときだけ run 状態を取りにいく（正常時は API を叩かない）。
+    result.run = fetchRunState_(today);
+    Logger.log('run: ' + JSON.stringify(result.run));
     notifyOnce_(today, result);
   }
 
@@ -129,6 +156,90 @@
       }
     }
     return out;
+  }
+
+  /**
+  * 当日ぶんの Daily Tribune Generation の run 状態を取る（C191）。
+  *
+  * リポジトリが PUBLIC なので未認証で読める（60 req/時/IP の制限があるが
+  * 1 日 1-2 回なので当たらない）。取得に失敗したら state='unknown' を返し、
+  * 呼び出し側は従来の文面にフォールバックする。
+  *
+  * 「当日ぶん」の判定: workflow は実行時に JST の当日を紙面日付にするので、
+  * run の created_at を JST に直した日付が today と一致するものを探す。
+  *
+  * @return {{state: string, startedJst: string, elapsedMin: number,
+  *           url: string, event: string, recentDelayMin: number, error: string}}
+  *   state は 'in_progress' | 'queued' | 'failed' | 'success' | 'none' | 'unknown'
+  */
+  function fetchRunState_(today) {
+    var out = {state: 'unknown', startedJst: '', elapsedMin: 0, url: '',
+               event: '', recentDelayMin: 0, error: ''};
+    var url = 'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO +
+              '/actions/workflows/' + WORKFLOW_FILE + '/runs?per_page=20';
+    var res = fetchWithRetry_(url);
+    if (res.status !== 200 || !res.body) {
+      out.error = res.error || ('HTTP ' + res.status);
+      return out;
+    }
+    var data;
+    try {
+      data = JSON.parse(res.body);
+    } catch (e) {
+      out.error = 'JSON parse: ' + String(e);
+      return out;
+    }
+    var runs = (data && data.workflow_runs) || [];
+
+    // 直近の schedule 起動の遅延（中央値）を出す。まだ起動していないときに
+    // 「最近はこれくらい遅れている」を示すため。
+    out.recentDelayMin = medianScheduleDelay_(runs);
+
+    var mine = null;
+    for (var i = 0; i < runs.length; i++) {
+      var created = new Date(runs[i].created_at);
+      if (Utilities.formatDate(created, 'Asia/Tokyo', 'yyyy-MM-dd') === today) {
+        mine = runs[i];   // 一覧は新しい順。最初に当たったものが最新。
+        break;
+      }
+    }
+    if (!mine) {
+      out.state = 'none';
+      return out;
+    }
+
+    var started = new Date(mine.created_at);
+    out.startedJst = Utilities.formatDate(started, 'Asia/Tokyo', 'HH:mm');
+    out.elapsedMin = Math.round((new Date().getTime() - started.getTime()) / 60000);
+    out.url = mine.html_url || '';
+    out.event = mine.event || '';
+
+    if (mine.status !== 'completed') {
+      out.state = (mine.status === 'queued' || mine.status === 'waiting')
+                  ? 'queued' : 'in_progress';
+    } else if (mine.conclusion === 'success') {
+      out.state = 'success';
+    } else {
+      out.state = 'failed';
+      out.conclusion = mine.conclusion;
+    }
+    return out;
+  }
+
+  /** 直近の schedule 起動が cron 予定からどれだけ遅れたかの中央値（分）。 */
+  function medianScheduleDelay_(runs) {
+    var delays = [];
+    for (var i = 0; i < runs.length && delays.length < 7; i++) {
+      if (runs[i].event !== 'schedule') continue;
+      var c = new Date(runs[i].created_at);
+      var sched = new Date(Date.UTC(c.getUTCFullYear(), c.getUTCMonth(),
+                                    c.getUTCDate(), CRON_UTC_HOUR, CRON_UTC_MINUTE));
+      if (c.getTime() < sched.getTime()) sched.setUTCDate(sched.getUTCDate() - 1);
+      delays.push(Math.round((c.getTime() - sched.getTime()) / 60000));
+    }
+    if (!delays.length) return 0;
+    delays.sort(function (a, b) { return a - b; });
+    return delays[Math.floor(delays.length / 2)];
   }
 
   /**
@@ -175,8 +286,51 @@
   }
 
   function buildSubject_(today, result) {
-    if (!result.generated) return '[Tribune] ' + today + ' の朝刊が未生成です';
-    return '[Tribune] ' + today + ' の朝刊が未反映です（生成は済）';
+    if (result.generated) {
+      return '[Tribune] ' + today + ' の朝刊が未反映です（生成は済）';
+    }
+    // C191: run 状態で件名を変える。「実行中」は行動不要なので区別する。
+    var st = result.run && result.run.state;
+    if (st === 'in_progress' || st === 'queued') {
+      return '[Tribune] ' + today + ' の朝刊は実行中です（対応不要）';
+    }
+    if (st === 'failed') {
+      return '[Tribune] ' + today + ' の朝刊の生成が失敗しました';
+    }
+    if (st === 'none') {
+      return '[Tribune] ' + today + ' の朝刊がまだ起動していません';
+    }
+    return '[Tribune] ' + today + ' の朝刊が未生成です';
+  }
+
+  /** run 状態を 1 行の日本語にする（C191）。 */
+  function describeRun_(run) {
+    switch (run.state) {
+      case 'in_progress':
+        return '実行中（' + run.startedJst + ' 開始、経過 ' + run.elapsedMin + ' 分' +
+               (run.event === 'workflow_dispatch' ? '、手動起動' : '') + '）';
+      case 'queued':
+        return '順番待ち（' + run.startedJst + ' 作成、経過 ' + run.elapsedMin + ' 分）';
+      case 'failed':
+        return '失敗（' + run.startedJst + ' 開始、' + (run.conclusion || 'failure') + '）';
+      case 'success':
+        return '完了済み（' + run.startedJst + ' 開始）。反映待ちの可能性があります';
+      case 'none':
+        return '本日ぶんの実行がまだありません';
+      default:
+        return '取得できませんでした' + (run.error ? '（' + run.error + '）' : '');
+    }
+  }
+
+  /** 手動実行の手順（C191 で共通化）。 */
+  function pushManualSteps_(L) {
+    L.push('【対処】手動で実行してください');
+    L.push('  1. https://github.com/' + GH_OWNER + '/' + GH_REPO + '/actions');
+    L.push('  2. 左メニューの「Daily Tribune Generation」を選ぶ');
+    L.push('  3. 右上の「Run workflow」→ Branch: ' + GH_BRANCH + ' → Run workflow');
+    L.push('     ※ 既に当日分が出ている場合は二重実行ガード（C185）が働いて');
+    L.push('       skip されます。意図的に作り直すときだけ force を true に。');
+    L.push('  4. 完走まで約 ' + TYPICAL_RUN_MINUTES + ' 分です。');
   }
 
   function buildBody_(today, result) {
@@ -193,17 +347,51 @@
     L.push('');
 
     if (!result.generated) {
-      L.push('【原因の見当】');
-      L.push('  GitHub Actions の schedule が発火しなかった、または大幅に遅延している');
-      L.push('  可能性があります（2026-08 は +107 分の遅延や +8 時間の遅延が発生）。');
+      var run = result.run || {state: 'unknown'};
+      L.push('【Actions の状態】' + describeRun_(run));
       L.push('');
-      L.push('【対処】手動で実行してください');
-      L.push('  1. https://github.com/' + GH_OWNER + '/' + GH_REPO + '/actions');
-      L.push('  2. 左メニューの「Daily Tribune Generation」を選ぶ');
-      L.push('  3. 右上の「Run workflow」→ Branch: ' + GH_BRANCH + ' → Run workflow');
-      L.push('     ※ 既に当日分が出ている場合は二重実行ガード（C185）が働いて');
-      L.push('       skip されます。意図的に作り直すときだけ force を true に。');
-      L.push('  4. 完走まで約 30 分です。');
+
+      if (run.state === 'in_progress' || run.state === 'queued') {
+        // 待てば済む。手動実行を促さない（誤って二重実行させないため）。
+        var remain = Math.max(0, TYPICAL_RUN_MINUTES - (run.elapsedMin || 0));
+        L.push('【対処】不要です。しばらく待ってください');
+        L.push('  通常 ' + TYPICAL_RUN_MINUTES + ' 分ほどで完了します' +
+               (remain > 0 ? '（残り目安 ' + remain + ' 分）' : '（まもなく完了見込み）') + '。');
+        L.push('  完了すると公開サイトに反映されます。');
+        if (run.url) L.push('  実行状況: ' + run.url);
+        L.push('');
+        L.push('  ※ この時点で手動実行しても、二重実行ガード（C185）が働いて');
+        L.push('    skip されます。作り直したいとき以外は不要です。');
+      } else if (run.state === 'failed') {
+        L.push('【原因の見当】');
+        L.push('  生成そのものが失敗しています（' + (run.conclusion || 'failure') + '）。');
+        L.push('  ログを見て原因を確認してください。');
+        L.push('');
+        if (run.url) L.push('  失敗した実行: ' + run.url);
+        L.push('');
+        pushManualSteps_(L);
+      } else if (run.state === 'none') {
+        L.push('【原因の見当】');
+        L.push('  本日ぶんの実行がまだ作成されていません。GitHub Actions の');
+        L.push('  schedule は実行が保証されず、負荷時は遅延またはスキップされます。');
+        if (run.recentDelayMin) {
+          L.push('  直近の起動は cron 予定から中央値 +' + run.recentDelayMin + ' 分ずれています。');
+          L.push('  この傾向なら、まだ後から起動する可能性があります。');
+        }
+        L.push('');
+        L.push('  ※ 2026-08 下旬から遅延が常態化しています（+141 分 / +143 分 /');
+        L.push('    +264 分）。しばらく待って再確認する方が安全な場合があります。');
+        L.push('');
+        pushManualSteps_(L);
+      } else {
+        // API が読めなかった等。従来どおり手動実行を促す。
+        L.push('【原因の見当】');
+        L.push('  Actions の状態を取得できませんでした' +
+               (run.error ? '（' + run.error + '）' : '') + '。');
+        L.push('  schedule が発火しなかった可能性があります。');
+        L.push('');
+        pushManualSteps_(L);
+      }
     } else {
       L.push('【原因の見当】');
       L.push('  紙面は生成・commit されていますが、公開サイトに反映されていません。');
@@ -241,13 +429,19 @@
         ScriptApp.deleteTrigger(existing[i]);
       }
     }
-    ScriptApp.newTrigger('checkTribune')
-      .timeBased()
-      .atHour(CHECK_HOUR)
-      .nearMinute(CHECK_MINUTE)
-      .everyDays(1)
-      .create();
-    Logger.log('trigger set: daily around ' + CHECK_HOUR + ':' + CHECK_MINUTE +
+    // C191: CHECK_TIMES の要素数だけトリガーを作る。
+    var labels = [];
+    for (var t = 0; t < CHECK_TIMES.length; t++) {
+      ScriptApp.newTrigger('checkTribune')
+        .timeBased()
+        .atHour(CHECK_TIMES[t][0])
+        .nearMinute(CHECK_TIMES[t][1])
+        .everyDays(1)
+        .create();
+      labels.push(CHECK_TIMES[t][0] + ':' +
+                  (CHECK_TIMES[t][1] < 10 ? '0' : '') + CHECK_TIMES[t][1]);
+    }
+    Logger.log('trigger set: daily around ' + labels.join(' / ') +
               ' (' + Session.getScriptTimeZone() + ')');
   }
 
