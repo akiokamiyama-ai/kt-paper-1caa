@@ -13,6 +13,10 @@ on:
         description: '当日分が既に存在しても強制的に再生成する（C185 の二重実行ガードを無効化）'
         type: boolean
         default: false
+      date:
+        description: '対象日 YYYY-MM-DD（空なら実行時の JST 当日）。過去日の作り直し用'
+        type: string
+        default: ''
 
 jobs:
   # ===========================================================================
@@ -55,9 +59,26 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      # C192 (2026-09-01): workflow_dispatch の date input を優先する。
+      # 空（schedule 起動を含む）なら従来どおり実行時の JST 当日。
+      # 過去日の作り直し（C174 のようなケース）を可能にするため。
+      # 形式が不正なら誤った日付で紙面を上書きしないよう即座に失敗させる。
       - name: Compute target date (JST)
         id: date
-        run: echo "DATE=$(TZ='Asia/Tokyo' date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+        env:
+          INPUT_DATE: ${{ github.event.inputs.date }}
+        run: |
+          if [ -n "$INPUT_DATE" ]; then
+            if ! printf '%s' "$INPUT_DATE" | grep -Eq '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'; then
+              echo "::error::date input が YYYY-MM-DD 形式ではありません: $INPUT_DATE"
+              exit 1
+            fi
+            DATE="$INPUT_DATE"
+            echo "::notice title=C192 explicit date::date input で $DATE を対象にします。"
+          else
+            DATE="$(TZ='Asia/Tokyo' date +%Y-%m-%d)"
+          fi
+          echo "DATE=$DATE" >> "$GITHUB_OUTPUT"
 
       # =====================================================================
       # C185 (2026-08-29): 二重実行ガード

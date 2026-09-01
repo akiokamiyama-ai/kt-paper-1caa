@@ -64,7 +64,11 @@
   // 検知時刻は配列。複数入れるとその数だけトリガーが作られる。
   //   [[5, 30]]          … 1 日 1 回（既定）
   //   [[5, 30], [8, 0]]  … 早期警戒 + 確定の 2 段
-  var CHECK_TIMES = [[5, 30]];
+  // C192 (2026-09-01): 2 段構えを既定にした。05:30 は早期警戒（多くは
+  // 「実行中」か「まだ起動していない」）、08:00 は確定（この時刻に出ていな
+  // ければ本当に手を打つ）。神山さんの方針は「知らせてほしい」なので、
+  // in_progress でも 05:30 に送る。
+  var CHECK_TIMES = [[5, 30], [8, 0]];
 
   // 後方互換（ログ表示用）。CHECK_TIMES の先頭を指す。
   var CHECK_HOUR = CHECK_TIMES[0][0];
@@ -76,6 +80,28 @@
 
   // 通常ランの所要時間（分）。「あと何分くらい」の目安。
   var TYPICAL_RUN_MINUTES = 30;
+
+  // ---------------------------------------------------------------------
+  // C192 (2026-09-01): 起動も GAS から行う（Phase 2）
+  //
+  // 2026-08 後半から GitHub Actions の schedule 遅延が +107〜+480 分に悪化し
+  // （9/1 は +264 分 / 07:25 着弾）、検知を精緻にするより起動を外部へ移す方が
+  // 根本的と判断した。daily.yml の schedule は**残す**——GAS / Google 側が
+  // 落ちたときの保険になり、二重に起動しても C185 のガードが skip するため。
+  // ---------------------------------------------------------------------
+
+  // 起動時刻（JST）。daily.yml の cron と同じ 02:37 に合わせる。
+  var DISPATCH_TIME = [2, 37];
+
+  // Script Properties のキー名。**PAT はコードに書かない**（PUBLIC リポジトリ）。
+  //   GITHUB_PAT     … fine-grained PAT（対象リポジトリのみ / Actions: write）
+  //   PAT_EXPIRY     … 有効期限 YYYY-MM-DD（任意。期限前に警告を出すため）
+  var PROP_PAT = 'GITHUB_PAT';
+  var PROP_PAT_EXPIRY = 'PAT_EXPIRY';
+
+  // 有効期限の何日前から警告するか。PAT 切れは「静かに止まる」典型
+  // （C173 パターン）なので、切れる前に気づけるようにする。
+  var PAT_EXPIRY_WARN_DAYS = 14;
 
   // 監視対象のワークフローファイル名。runs 一覧には
   // "pages build and deployment" も混ざるため、workflow 指定で取る。
@@ -413,6 +439,140 @@
     return L.join('\n');
   }
 
+  // ==========================================================================
+  // C192: 起動（workflow_dispatch）
+  // ==========================================================================
+
+  /**
+  * トリガーから呼ばれる起動エントリポイント。
+  *
+  * schedule と併存させる。二重に起動しても daily.yml の二重実行ガード
+  * （C185）が「当日の archive が既にある」を見て skip するので、紙面が
+  * 二重に作られることはない。
+  */
+  function dispatchTribune() {
+    var today = Utilities.formatDate(new Date(), 'Asia/Tokyo', 'yyyy-MM-dd');
+
+    // 既に出来ていれば起動しない（無駄なランを増やさない）。
+    var state = inspect_(today);
+    if (state.generated) {
+      Logger.log('already generated for ' + today + ', skip dispatch');
+      return;
+    }
+
+    warnIfPatExpiringSoon_();
+
+    var r = triggerWorkflow_();
+    Logger.log('dispatch: ' + JSON.stringify(r));
+    if (!r.ok) {
+      // 起動できなかったこと自体を必ず知らせる。黙って止まるのが最悪。
+      notifyDispatchFailure_(today, r);
+    }
+  }
+
+  /**
+  * workflow_dispatch を POST する。
+  * @return {{ok: boolean, status: number, error: string}}
+  */
+  function triggerWorkflow_() {
+    var pat = PropertiesService.getScriptProperties().getProperty(PROP_PAT);
+    if (!pat) {
+      return {ok: false, status: 0,
+              error: 'Script Properties に ' + PROP_PAT + ' がありません'};
+    }
+    var url = 'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO +
+              '/actions/workflows/' + WORKFLOW_FILE + '/dispatches';
+    try {
+      var res = UrlFetchApp.fetch(url, {
+        method: 'post',
+        contentType: 'application/json',
+        muteHttpExceptions: true,
+        headers: {
+          'Authorization': 'Bearer ' + pat,
+          'Accept': 'application/vnd.github+json',
+          'X-GitHub-Api-Version': '2022-11-28'
+        },
+        // date は空 = 実行時の JST 当日（C192 で daily.yml に追加した input）。
+        payload: JSON.stringify({ref: GH_BRANCH, inputs: {}})
+      });
+      var code = res.getResponseCode();
+      if (code === 204) return {ok: true, status: 204, error: ''};
+      var body = (res.getContentText() || '').slice(0, 200);
+      var hint = '';
+      if (code === 401) hint = ' — PAT が無効か期限切れの可能性';
+      if (code === 403) hint = ' — PAT の権限不足（Actions: write が要る）';
+      if (code === 404) hint = ' — リポジトリ名 / workflow 名 / PAT のスコープを確認';
+      return {ok: false, status: code, error: 'HTTP ' + code + hint + ': ' + body};
+    } catch (e) {
+      return {ok: false, status: 0, error: String(e)};
+    }
+  }
+
+  /** PAT の有効期限が近ければ知らせる（切れてから気づくのを避ける）。 */
+  function warnIfPatExpiringSoon_() {
+    var props = PropertiesService.getScriptProperties();
+    var expiry = props.getProperty(PROP_PAT_EXPIRY);
+    if (!expiry) return;                       // 未設定なら何もしない
+    var days = Math.floor(
+      (new Date(expiry + 'T00:00:00+09:00').getTime() - new Date().getTime())
+      / 86400000);
+    if (days > PAT_EXPIRY_WARN_DAYS) return;
+    var today = Utilities.formatDate(new Date(), 'Asia/Tokyo', 'yyyy-MM-dd');
+    if (props.getProperty('lastPatWarn') === today) return;   // 1 日 1 通
+    MailApp.sendEmail({
+      to: resolveRecipient_(),
+      subject: '[Tribune] GitHub PAT の有効期限が近づいています（残り ' + days + ' 日）',
+      body: [
+        'Tribune の朝刊起動に使っている GitHub PAT が ' + expiry + ' に期限切れになります。',
+        '',
+        '期限が切れると **朝刊が静かに起動しなくなります**（daily.yml の schedule は',
+        '残してあるので完全に止まりはしませんが、遅延の大きい schedule 頼みに戻ります）。',
+        '',
+        '【更新手順】',
+        '  1. https://github.com/settings/personal-access-tokens で新しい',
+        '     fine-grained PAT を発行',
+        '     - Repository access: ' + GH_OWNER + '/' + GH_REPO + ' のみ',
+        '     - Permissions: Actions = Read and write（他は不要）',
+        '  2. GAS の プロジェクトの設定 → スクリプト プロパティ で',
+        '     ' + PROP_PAT + ' を新しい値に更新',
+        '  3. ' + PROP_PAT_EXPIRY + ' も新しい期限（YYYY-MM-DD）に更新',
+        '  4. testDispatch を実行して 204 が返ることを確認',
+        '',
+        '-- Tribune watchdog (C192)'
+      ].join('\n')
+    });
+    props.setProperty('lastPatWarn', today);
+  }
+
+  /** 起動に失敗したことを知らせる。 */
+  function notifyDispatchFailure_(today, r) {
+    var props = PropertiesService.getScriptProperties();
+    if (props.getProperty('lastDispatchFail') === today) return;
+    MailApp.sendEmail({
+      to: resolveRecipient_(),
+      subject: '[Tribune] ' + today + ' の朝刊を起動できませんでした',
+      body: [
+        'GAS からの workflow_dispatch が失敗しました。',
+        '',
+        '  ' + r.error,
+        '',
+        'daily.yml の schedule は残してあるので、遅れて自動起動する可能性は',
+        'あります（2026-08 下旬以降は +140〜+480 分の遅延が発生しています）。',
+        '05:30 / 08:00 の検知メールもあわせて確認してください。',
+        '',
+        '【確認すること】',
+        '  1. GAS の スクリプト プロパティ に ' + PROP_PAT + ' があるか',
+        '  2. PAT が期限切れでないか（401 なら期限切れの可能性）',
+        '  3. PAT の権限が Actions: Read and write か（403 なら権限不足）',
+        '  4. 直らないときは手動実行:',
+        '     https://github.com/' + GH_OWNER + '/' + GH_REPO + '/actions',
+        '',
+        '-- Tribune watchdog (C192)'
+      ].join('\n')
+    });
+    props.setProperty('lastDispatchFail', today);
+  }
+
   // ============================================================================
   // セットアップ / 動作確認
   // ============================================================================
@@ -425,7 +585,8 @@
   function setupTrigger() {
     var existing = ScriptApp.getProjectTriggers();
     for (var i = 0; i < existing.length; i++) {
-      if (existing[i].getHandlerFunction() === 'checkTribune') {
+      var fn = existing[i].getHandlerFunction();
+      if (fn === 'checkTribune' || fn === 'dispatchTribune') {
         ScriptApp.deleteTrigger(existing[i]);
       }
     }
@@ -441,7 +602,20 @@
       labels.push(CHECK_TIMES[t][0] + ':' +
                   (CHECK_TIMES[t][1] < 10 ? '0' : '') + CHECK_TIMES[t][1]);
     }
-    Logger.log('trigger set: daily around ' + labels.join(' / ') +
+    // C192: 起動トリガー。PAT が未設定なら作らない（検知だけで運用できる）。
+    var hasPat = !!PropertiesService.getScriptProperties().getProperty(PROP_PAT);
+    if (hasPat) {
+      ScriptApp.newTrigger('dispatchTribune')
+        .timeBased()
+        .atHour(DISPATCH_TIME[0])
+        .nearMinute(DISPATCH_TIME[1])
+        .everyDays(1)
+        .create();
+    }
+    Logger.log('check trigger: daily around ' + labels.join(' / ') +
+              ' / dispatch trigger: ' +
+              (hasPat ? DISPATCH_TIME[0] + ':' + DISPATCH_TIME[1]
+                      : '未作成（' + PROP_PAT + ' が未設定）') +
               ' (' + Session.getScriptTimeZone() + ')');
   }
 
@@ -477,4 +651,34 @@
   function dryRunToday() {
     var today = Utilities.formatDate(new Date(), 'Asia/Tokyo', 'yyyy-MM-dd');
     Logger.log(today + ' → ' + JSON.stringify(inspect_(today)));
+  }
+
+  /**
+  * 動作確認 4（C192）：実際に workflow_dispatch を 1 回投げる。
+  * **本当にランが走る**ので、当日分が既にある状態で試すこと
+  * （C185 のガードで skip されるため紙面は変わらない）。
+  */
+  function testDispatch() {
+    var r = triggerWorkflow_();
+    Logger.log(JSON.stringify(r));
+    if (r.ok) {
+      Logger.log('OK: 204 が返りました。Actions に新しい run が現れます。');
+    } else {
+      Logger.log('NG: ' + r.error);
+    }
+  }
+
+  /** 動作確認 5（C192）：PAT と期限の設定状況を確認する（値は表示しない）。 */
+  function checkPatSetup() {
+    var props = PropertiesService.getScriptProperties();
+    var pat = props.getProperty(PROP_PAT);
+    var expiry = props.getProperty(PROP_PAT_EXPIRY);
+    Logger.log(PROP_PAT + ': ' + (pat ? '設定あり（長さ ' + pat.length + '）' : '未設定'));
+    Logger.log(PROP_PAT_EXPIRY + ': ' + (expiry || '未設定'));
+    if (expiry) {
+      var days = Math.floor(
+        (new Date(expiry + 'T00:00:00+09:00').getTime() - new Date().getTime())
+        / 86400000);
+      Logger.log('残り ' + days + ' 日（' + PAT_EXPIRY_WARN_DAYS + ' 日前から警告）');
+    }
   }

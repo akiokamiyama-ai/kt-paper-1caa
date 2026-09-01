@@ -1,8 +1,14 @@
 # Tribune watchdog（GAS）— 朝刊未発行の検知
 
-C186 (2026-08-29)。GitHub Actions の schedule 不発・遅延で朝刊が欠けたとき、
-神山さんが気づく前にメールで知らせる。**認証情報を一切持たない**（リポジトリが
-PUBLIC なので読み取りだけで済む）。
+C186 (2026-08-29) で**検知**を、C191 で run 状態の判別を、C192 で**起動**を
+追加した。1 つの GAS プロジェクトで両方を担う。
+
+  02:37  起動   workflow_dispatch を投げる（C192、PAT が要る）
+  05:30  検知   早期警戒。多くは「実行中」か「まだ起動していない」
+  08:00  検知   確定。この時刻に出ていなければ本当に手を打つ
+
+検知だけなら**認証情報は不要**（PUBLIC リポジトリの読み取りのみ）。起動を使う
+場合だけ PAT が要る。
 
 対象ファイル：[`tribune_watchdog.gs`](tribune_watchdog.gs)
 
@@ -58,6 +64,80 @@ GAS は Google の共有 IP から出るため 403 を踏みうる。
 
 別の宛先にしたい場合は「プロジェクトの設定」→「スクリプト プロパティ」に
 `NOTIFY_EMAIL` を追加する。
+
+## 起動（C192）— PAT の準備
+
+2026-08 後半から schedule の遅延が +107〜+480 分に悪化した（9/1 は +264 分 /
+07:25 着弾）。検知を精緻にするより起動を外部へ移す方が根本的なので、GAS から
+`workflow_dispatch` を投げる。
+
+**daily.yml の schedule は残してある。** GAS / Google 側が落ちたときの保険で、
+二重に起動しても C185 の二重実行ガードが「当日の archive が既にある」を見て
+skip するため紙面は二重にならない。
+
+### 1. Fine-grained PAT を発行する（神山さんの手作業）
+
+<https://github.com/settings/personal-access-tokens> →「Generate new token」
+
+| 項目 | 設定 |
+|---|---|
+| Token name | `tribune-dispatch` など |
+| Expiration | 任意。**設定した日付を後で `PAT_EXPIRY` に入れる** |
+| Repository access | **Only select repositories** → `akiokamiyama-ai/kt-paper-1caa` |
+| Permissions → Repository | **Actions: Read and write** のみ |
+
+`Metadata: Read-only` は自動で付く。それ以外は何も要らない。**Contents への
+書き込み権限は不要**（起動するだけで、リポジトリを書き換えるのは Actions 側）。
+
+発行後に表示される `github_pat_...` をコピーする（この画面を離れると二度と
+見られない）。
+
+### 2. GAS に登録する
+
+「プロジェクトの設定」→「スクリプト プロパティ」で 2 つ追加:
+
+| プロパティ | 値 |
+|---|---|
+| `GITHUB_PAT` | 発行した `github_pat_...` |
+| `PAT_EXPIRY` | PAT の有効期限 `YYYY-MM-DD`（任意だが**強く推奨**） |
+
+**PAT をコードに書かないこと。** このリポジトリは PUBLIC。
+
+### 3. 疎通確認
+
+- `checkPatSetup` — PAT と期限の設定状況を出す（**値は表示しない**）
+- `testDispatch` — 実際に 1 回投げる。204 が返れば成功。当日分が既にある状態で
+  試せば C185 のガードで skip されるので紙面は変わらない
+
+### 4. トリガー登録
+
+`setupTrigger` を実行する。`GITHUB_PAT` があれば起動トリガー（02:37）も一緒に
+作られる。**未設定なら検知トリガーだけ作られる**ので、PAT を用意しないまま
+検知だけで運用することもできる。
+
+### PAT の期限切れ対策
+
+PAT 切れは「静かに止まる」典型（observations.md のパターン「実装されているはずの
+仕組みが実際には無い」）。3 段で守っている:
+
+1. `PAT_EXPIRY` を設定しておくと、**期限の 14 日前から毎日 1 通**警告メールが届く
+2. 起動に失敗したら**その日のうちに**「起動できませんでした」メールが届く。
+   401 なら「期限切れの可能性」、403 なら「権限不足」とヒントを出す
+3. 起動が失敗しても schedule が残っているので完全には止まらない。加えて
+   05:30 / 08:00 の検知が「まだ起動していません」を拾う
+
+### 二重実行が起きないことの確認
+
+C185 のガードで守られている。実際に確かめるなら:
+
+1. 当日分が既に出ている状態で `testDispatch` を実行
+2. Actions で新しい run を開く
+3. `Guard against duplicate run for the same date` ステップに
+   `archive/YYYY-MM-DD.html は既に存在します…skip しました` の警告が出て、
+   `Generate Tribune` 以降が skip されていれば正しい
+
+意図的に作り直したいときだけ、Actions の「Run workflow」で `force` を true に
+する（GAS からの自動起動は常に force なし）。
 
 ## 検知時刻をなぜ 05:30 にしたか
 
@@ -155,9 +235,13 @@ cron の遅延が桁違いに悪化している（run 作成時刻の cron 予�
 同じ日に重複してメールを送らないよう、スクリプト プロパティの `lastNotified` に
 通知済みの日付を記録している。
 
-## Phase 2（未実装）
+## 動作確認用の関数（一覧）
 
-起動側（`workflow_dispatch` を GAS から叩く）は C184 Phase 2 として保留中。
-同じプロジェクトに追加できるが、GitHub の fine-grained PAT
-（対象リポジトリのみ・`Actions: write`）が必要になるため、資格情報の管理方針を
-決めてから着手する。
+| 関数 | 動作 |
+|---|---|
+| `dryRunToday` | 今日の状態をログに出す。メールは送らない |
+| `dryRunMissing` | 存在しない日付で検査し、件名と本文をログに出す |
+| `sendTestMail` | `[TEST]` 付きのメールを 1 通送る |
+| `checkPatSetup` | PAT と期限の設定状況（値は表示しない） |
+| `testDispatch` | 実際に 1 回 workflow_dispatch を投げる |
+| `setupTrigger` | トリガーを作り直す（検知 2 本 + 起動 1 本） |
