@@ -1,0 +1,25 @@
+{
+  "date": "2026-09-03",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://www.ppc.go.jp/news/press/2026/260826",
+    "human_energy": "https://jinjibu.jp/news/detl/26810/",
+    "web_repo": "https://www.bc01.net/back-number/2026%e5%b9%b410%e6%9c%88%e5%8f%b7/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/is-taiwanese-society-prepared-for-a-china-contingency/",
+    "http://www3.nhk.or.jp/news/html/20260807/k10015199591000.html",
+    "https://www.mckinsey.com/featured-insights/insights-on-europe/podcasts-and-videos/europe-on-the-move-a-conversation-with-boerse-stuttgart-groups-ceo",
+    "https://wordswithoutborders.org/read/article/2026-09/creole-languages-of-the-caribbean-a-maroon-monument-ludmila-ferrari/",
+    "https://thepointmag.com/literature/the-fifth-syllable/",
+    "https://aeon.co/videos/repulsion-at-the-core-of-attraction-on-the-paradox-of-touch"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://nautil.us/why-do-male-chimpanzees-throw-rocks-at-the-same-trees-for-more-than-a-decade-1284704/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/09/02/laugh-i-thought-id-die-richard-yatess-unpublished-letters/",
+    "music": "https://stereogum.com/2510153/david-byrne-wrote-a-song-using-only-elon-musk-quotes-for-scathing-new-documentary/news/",
+    "outdoor": "https://www.atlasobscura.com/places/antimonumentas-and-antimonumentos"
+  },
+  "headlines_urls": []
+}
