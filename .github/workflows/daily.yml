@@ -46,10 +46,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Python 3.12
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.12'
           cache: pip
@@ -161,7 +161,7 @@ jobs:
       - name: Upload audit logs as artifact
         # 神山さんが gh run download で取得 → 採用構造の確認用。
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: audit-logs-${{ steps.date.outputs.DATE }}
         # C172 (2026-08-19): page1_v3_fallback_raw_*.txt を追加。C24
@@ -310,10 +310,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Python 3.12
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.12'
           cache: pip
@@ -343,7 +343,7 @@ jobs:
       - name: Upload shadow logs as artifact
         # 神山さん artifact レビュー: layered vs legacy の採用パターン / cost 比較。
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: shadow-logs-${{ steps.date.outputs.DATE }}
           path: |
