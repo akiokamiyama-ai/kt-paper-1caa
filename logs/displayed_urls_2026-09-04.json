@@ -1,0 +1,25 @@
+{
+  "date": "2026-09-04",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/enterprise/articles/2609/03/news041.html",
+    "human_energy": "https://jinjibu.jp/news/detl/26784/",
+    "web_repo": "https://www.bc01.net/article/ns-works_202608/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/where-does-ai-escalation-come-from-we-dont-know-we-should-find-out/",
+    "https://www.asahi.com/articles/ASV9332SDV93ULFA010M.html?ref=rss",
+    "https://www.mckinsey.com/mgi/our-research/made-in-america-again-rethinking-us-manufacturing-resilience",
+    "https://www.theparisreview.org/blog/2026/09/03/the-conformation-show-and-the-pursuit-of-the-ideal-dog/",
+    "https://3quarksdaily.com/3quarksdaily/2026/09/we-can-already-eradicate-mosquitoes-if-we-want-why-dont-we.html",
+    "https://rockinon.com/news/detail/215751"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://nautil.us/envy-at-the-ballot-box-1284752/",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-09/creole-languages-of-the-caribbean-a-maroon-monument-ludmila-ferrari/",
+    "music": "https://stereogum.com/2510250/blatant-sk8er-boi-life-is-a-highway-ai-ripoffs-cited-in-socans-lawsuit-against-suno/news/",
+    "outdoor": "https://www.atlasobscura.com/places/the-prince-of-the-lilies-fresco"
+  },
+  "headlines_urls": []
+}

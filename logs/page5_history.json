@@ -2168,6 +2168,20 @@
       "ai_kamiyama_failed": false,
       "fallback_used": false,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-09-04",
+      "article_url": "https://rockinon.com/news/detail/215751",
+      "article_title": "ニュース - 【JAPAN最新号】解き放たれたその声は、世界と何を分かち合う？ 「超・個人的」を「超・普遍的」に変える、「うた」と「ロック」の新世代SSW・いまみれん、登場！",
+      "article_category": "music",
+      "tie_candidates": [
+        "music"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": false,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
     }
   ]
 }

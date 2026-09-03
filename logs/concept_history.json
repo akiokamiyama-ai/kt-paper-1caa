@@ -648,6 +648,12 @@
       "name_ja": "レヴィナス",
       "displayed_on": "2026-09-03",
       "stage": "unseen"
+    },
+    {
+      "concept_id": "poiesis",
+      "name_ja": "制作知（ポイエーシス）",
+      "displayed_on": "2026-09-04",
+      "stage": "unseen"
     }
   ]
 }
