@@ -1,0 +1,25 @@
+{
+  "date": "2026-09-05",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2609/04/2000001166/",
+    "human_energy": "https://jinjibu.jp/news/detl/26819/",
+    "web_repo": "https://www.bc01.net/topinterview/g-7holdings_202608_01/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/the-fruit-of-patience-how-regional-shifts-ripened-turkeys-path-to-kurdish-reconciliation/",
+    "https://toyokeizai.net/articles/-/957035?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://www.mckinsey.com/industries/public-sector/our-insights/the-power-of-purpose-culture-and-grit-an-interview-with-joanne-bass",
+    "https://www.theparisreview.org/blog/2026/08/17/james-joycess-baby-impressions-and-other-awkward-pleasures-of-literary-biography/",
+    "https://3quarksdaily.com/3quarksdaily/2026/09/check-your-head.html",
+    "https://www.axismag.jp/posts/2026/09/722112.html"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://warontherocks.com/the-future-of-combat-medicine/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/09/03/the-conformation-show-and-the-pursuit-of-the-ideal-dog/",
+    "music": "https://stereogum.com/2510403/downtown-boys-flock-of-dimes-pissed-jeans-more-sub-pop-artists-cover-minnesota-musicians-on-new-benefit-comp-maximum-mn/music/",
+    "outdoor": "https://sectionhiker.com/review-rei-co-op-traverse-modular-bear-canister/"
+  },
+  "headlines_urls": []
+}

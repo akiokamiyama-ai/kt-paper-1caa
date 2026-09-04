@@ -654,6 +654,12 @@
       "name_ja": "制作知（ポイエーシス）",
       "displayed_on": "2026-09-04",
       "stage": "unseen"
+    },
+    {
+      "concept_id": "cognitive_linguistics",
+      "name_ja": "認知言語学",
+      "displayed_on": "2026-09-05",
+      "stage": "unseen"
     }
   ]
 }

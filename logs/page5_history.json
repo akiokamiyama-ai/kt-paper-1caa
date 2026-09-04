@@ -2182,6 +2182,20 @@
       "ai_kamiyama_failed": false,
       "fallback_used": false,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-09-05",
+      "article_url": "https://www.axismag.jp/posts/2026/09/722112.html",
+      "article_title": "日本のコンテンポラリーデザインと工芸を扱う、MA STORE店主・松尾 翼の「伴走」の仕事",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": false,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
     }
   ]
 }
