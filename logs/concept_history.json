@@ -660,6 +660,12 @@
       "name_ja": "認知言語学",
       "displayed_on": "2026-09-05",
       "stage": "unseen"
+    },
+    {
+      "concept_id": "metacognition",
+      "name_ja": "メタ認知",
+      "displayed_on": "2026-09-06",
+      "stage": "unseen"
     }
   ]
 }

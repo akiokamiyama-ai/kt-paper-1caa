@@ -1,0 +1,25 @@
+{
+  "date": "2026-09-06",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/news/article/2609/04/2000001161/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2609/05/news020.html",
+    "web_repo": "http://www.jfa-fc.or.jp/particle/320.html"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/rising-gold-demand-sign-of-shift-to-multipolar-monetary-order-by-hippolyte-fofack-2026-09",
+    null,
+    "https://www.mckinsey.com/featured-insights/future-of-asia/future-of-asia-podcasts/shapers-and-founders-the-traits-behind-outsized-value-creation-in-asia",
+    "https://wordswithoutborders.org/read/article/2026-09/when-crimea-was-still-a-place-of-light-khersonska-kaminsky-farris/",
+    "https://nautil.us/your-boss-is-watching-you-1284806/",
+    "https://www.bepal.net/archives/719575"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://3quarksdaily.com/3quarksdaily/2026/09/jeff-jarvis-on-mark-twain-americas-first-celebrity-author-and-publisher.html",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/09/04/a-poem-is-full-of-meat-dorothea-lasky-on-mother/",
+    "music": "https://stereogum.com/2510444/2-chainz-cash-cobain-young-nudy-reign/music/",
+    "outdoor": "https://www.backpacker.com/news-and-events/news/a-massive-coalition-just-sued-to-save-bears-ears-and-grand-staircase-and-the-outcome-could-decide-the-future-of-u-s-public-lands/"
+  },
+  "headlines_urls": []
+}
