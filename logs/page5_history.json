@@ -2210,6 +2210,20 @@
       "ai_kamiyama_failed": false,
       "fallback_used": false,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-09-07",
+      "article_url": "https://www.axismag.jp/posts/2026/08/722023.html",
+      "article_title": "Osaka Metroで「ヒューマノイド駅員」の実証実験を実施。Gemini搭載ヒューマノイドが駅構内や観光情報を案内",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": false,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
     }
   ]
 }

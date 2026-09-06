@@ -666,6 +666,12 @@
       "name_ja": "メタ認知",
       "displayed_on": "2026-09-06",
       "stage": "unseen"
+    },
+    {
+      "concept_id": "selfish_gene",
+      "name_ja": "利己的遺伝子",
+      "displayed_on": "2026-09-07",
+      "stage": "unseen"
     }
   ]
 }

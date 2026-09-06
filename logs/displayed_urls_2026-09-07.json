@@ -1,0 +1,25 @@
+{
+  "date": "2026-09-07",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/news/article/2609/05/2000001200/",
+    "human_energy": "https://jinjibu.jp/news/detl/26810/",
+    "web_repo": "https://www.bc01.net/back-number/2026%e5%b9%b410%e6%9c%88%e5%8f%b7/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/the-future-of-combat-medicine/",
+    null,
+    "https://www.mckinsey.com/featured-insights/mckinsey-on-books/author-talks-what-the-worlds-best-owner-ceos-get-right",
+    "https://wordswithoutborders.org/read/article/2026-08/heracleocene-krasilnikova-gushchin/",
+    "https://3quarksdaily.com/3quarksdaily/2026/09/edward-said-between-worlds.html",
+    "https://www.axismag.jp/posts/2026/08/722023.html"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://thepointmag.com/examined-life/my-lavender-marriage/",
+  "page6_urls": {
+    "books": "https://www.nybooks.com/articles/2026/09/24/wishing-it-so-meghan-ogieblyn/",
+    "music": "https://stereogum.com/2510534/alex-van-halen-gets-knighted-reunites-with-david-lee-roth-calls-sammy-hagar-a-complete-idiot/news/",
+    "outdoor": "https://sectionhiker.com/review-cnoc-thru-bottle/"
+  },
+  "headlines_urls": []
+}
