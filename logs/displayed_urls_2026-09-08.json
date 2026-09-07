@@ -1,0 +1,25 @@
+{
+  "date": "2026-09-08",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://japan.zdnet.com/article/35252138/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2609/07/news013.html",
+    "web_repo": "https://www.jfa-fc.or.jp/particle/320.html"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/health-apps-are-getting-between-women-and-their-doctors-by-danielle-keats-citron-et-al-2026-09",
+    "https://www.asahi.com/articles/ASV973FLVV97UHBI01NM.html?ref=rss",
+    "https://www.mckinsey.com/industries/financial-services/our-insights/at-last-customers-first-ai-powered-personalization-can-help-banks-create-value",
+    "https://www.theparisreview.org/blog/2026/08/21/if-you-build-it-will-they-come-on-the-sperm-racing-world-cup/",
+    "https://www.publicbooks.org/our-guns-make-the-violence-that-people-are-fleeing-ieva-jusionyte-on-guns-violence-in-mexico/",
+    "https://rockinon.com/news/detail/215750"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://www.nplusonemag.com/issue-54/politics/the-disappearance-machine/",
+  "page6_urls": {
+    "books": "https://locusmag.com/2026/09/david-kopaska-merkel-1957-2026/",
+    "music": "https://stereogum.com/2510593/heavy-lifter-backyard/music/",
+    "outdoor": "https://www.cleverhiker.com/more-gear/outdoor-retailer-2026/"
+  },
+  "headlines_urls": []
+}

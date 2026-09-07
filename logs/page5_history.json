@@ -2224,6 +2224,20 @@
       "ai_kamiyama_failed": false,
       "fallback_used": false,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-09-08",
+      "article_url": "https://rockinon.com/news/detail/215750",
+      "article_title": "ニュース - 【JAPAN最新号】バンドって、やっぱり奇跡──ヤングスキニー、しおん脱退前ラストインタビュー!!!! バチバチな季節も経て、4人が選んだ笑顔の別れ",
+      "article_category": "music",
+      "tie_candidates": [
+        "music"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": false,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
     }
   ]
 }
