@@ -2238,6 +2238,20 @@
       "ai_kamiyama_failed": false,
       "fallback_used": false,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-09-09",
+      "article_url": "https://sectionhiker.com/gossamer-gear-the-free-freestanding-tent-review/",
+      "article_title": "Gossamer Gear “The Free” Freestanding Tent Review",
+      "article_category": "outdoor",
+      "tie_candidates": [
+        "outdoor"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": false,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
     }
   ]
 }

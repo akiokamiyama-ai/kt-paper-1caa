@@ -678,6 +678,12 @@
       "name_ja": "唯識",
       "displayed_on": "2026-09-08",
       "stage": "unseen"
+    },
+    {
+      "concept_id": "homeostasis",
+      "name_ja": "ホメオスタシス",
+      "displayed_on": "2026-09-09",
+      "stage": "unseen"
     }
   ]
 }
