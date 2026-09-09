@@ -15,6 +15,8 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 # ============================================================================
 # 1. 論考（日-金、Sonnet 1 call で JSON）
 # ============================================================================
@@ -121,6 +123,61 @@ Kamiyama Tribune は読者・神山晃男氏（経営者）に最適化された
   "quote_excerpt": "主軸記事から論考と接続する箇所を日本語訳で 300-500 字（厳守）。下記ルール参照"
 }"""
 
+# ---------------------------------------------------------------------------
+# C197 (2026-09-10): 3 社の事業定義は config/companies_context.md の §0 が正。
+#
+# 2026-09-10 の W16 Day 5（木曜 practitioner）で、事業内容が実態とずれて論考に
+# 書かれた（「こころみが担うケアの現場」「Human Energy が関わる組織開発」
+# 「人材紹介の現場」）。原因は practitioner の指示文に事業ドメインが**別途
+# ハードコード**されていて、2 面が読む companies_context.md と同期していな
+# かったこと。定義が 2 箇所にあれば片方だけずれる。
+#
+# 以後、事業定義はここに書かない。実行時に §0 を読んで注入する。
+# ---------------------------------------------------------------------------
+
+COMPANIES_CONTEXT_PATH = (
+    Path(__file__).resolve().parent.parent.parent / "config" / "companies_context.md"
+)
+
+# §0 の見出し。companies_context.md 側を変えたらここも直す。
+_COMPANY_DEFS_HEADER = "## 0. 3社の事業定義"
+
+# 読めなかったときに使う最小限の定義。プロンプトを空にするより、
+# 正しい定義を出すほうが安全（ずれた推測を書かせない）。
+_COMPANY_DEFS_FALLBACK = """【グループ 3 社の事業内容】★ 推測で書かず、この定義に厳密に従うこと
+- こころみ（Cocolomi）：自分史作成 / 企業向け経営支援 / AI 開発支援
+- ヒューマンエナジー（Human Energy）：企業向け研修（メイン）
+- ウェブリポ（Web-Repo）：フランチャイズマッチングビジネス
+※「ケア」「組織開発」「人材紹介」と書かないこと（いずれも実態と異なる）"""
+
+
+def load_company_definitions() -> str:
+    """config/companies_context.md の §0 から事業定義ブロックを取り出す。
+
+    見つからない / 読めない場合は ``_COMPANY_DEFS_FALLBACK`` を返す。
+    """
+    try:
+        text = COMPANIES_CONTEXT_PATH.read_text(encoding="utf-8")
+    except OSError:
+        return _COMPANY_DEFS_FALLBACK
+    start = text.find(_COMPANY_DEFS_HEADER)
+    if start < 0:
+        return _COMPANY_DEFS_FALLBACK
+    end = text.find("\n## ", start + len(_COMPANY_DEFS_HEADER))
+    section = text[start:end] if end > 0 else text[start:]
+
+    lines = ["【グループ 3 社の事業内容】"
+             "★ config/companies_context.md §0 が正。推測で書かないこと"]
+    for line in section.splitlines():
+        t = line.strip()
+        # 「- **こころみ**：…」と「✗ …」の行だけを拾う（表や散文は落とす）
+        if t.startswith("- **") or t.startswith("- ✗"):
+            lines.append(t)
+    if len(lines) == 1:
+        return _COMPANY_DEFS_FALLBACK
+    return "\n".join(lines)
+
+
 # 6 角度別の指針（日-金、土曜は別系統）。
 ANGLE_INSTRUCTIONS: dict[str, str] = {
     "overview": (
@@ -150,13 +207,15 @@ ANGLE_INSTRUCTIONS: dict[str, str] = {
         "- 「主軸記事の主張は誤り」ではなく「主軸記事が見えていない側面」を示す"
     ),
     "practitioner": (
-        "【角度: 実践者】神山氏の経営現場（人材紹介・組織開発・経営者支援）から見たとき、"
+        "【角度: 実践者】神山氏が経営するグループ 3 社の現場から見たとき、"
         "主軸記事の論点がどう実装されるかを論じる。具体的な経営判断・組織設計の示唆を含める。"
-        "annotation_label は『関連企業・事例』、論点と接続する企業・組織事例を 2-3 件。"
+        "annotation_label は『関連企業・事例』、論点と接続する企業・組織事例を 2-3 件。\n"
+        "{{COMPANY_DEFINITIONS}}"
         "\n\n"
         "【独自の視座】経営者が今すぐ手をつけられる具体性を提示する\n"
         "- 抽象論ではなく『3 つ程度の実装ポイント』を文章のリズムで提示する\n"
-        "- 関連企業の事例を引きつつ、神山氏の事業ドメイン（こころみ / Human Energy / ウェブリポ）へ接続\n"
+        "- 関連企業の事例を引きつつ、神山氏の事業ドメイン（上の 3 社）へ接続する。\n"
+        "  **事業内容は上の定義に厳密に従うこと。推測で書かない**\n"
         "- 「○○すべき」の説教ではなく、「○○という選択肢が今ある」「○○という設計が現に成立する」と書く\n"
         "- 思想・歴史そのものには深入りせず、『現場の意思決定』に閉じる\n"
         "- ★ C187 (2026-08-29) で practitioner が木曜に後ろ倒しされ、水曜 thinker の\n"

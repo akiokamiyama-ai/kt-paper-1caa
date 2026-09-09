@@ -24,6 +24,7 @@ from .prompts import (
     ESSAY_SYSTEM_PROMPT,
     ESSAY_USER_TEMPLATE,
     format_full_text_section,
+    load_company_definitions,
 )
 
 ESSAY_MODEL = "claude-sonnet-4-6"
@@ -149,7 +150,12 @@ def _build_user_message(
         day_label=week.day_label,
         angle_label_jp=week.angle_label_jp,
         angle_key=week.angle_key,
-        angle_instruction=ANGLE_INSTRUCTIONS.get(week.angle_key, ""),
+        # C197: practitioner の指示文にある {{COMPANY_DEFINITIONS}} を、
+        # config/companies_context.md §0 から読んだ定義で置換する。
+        # 他の角度には placeholder が無いので no-op。
+        angle_instruction=ANGLE_INSTRUCTIONS.get(week.angle_key, "").replace(
+            "{{COMPANY_DEFINITIONS}}", load_company_definitions()
+        ),
         past_essays_block=_format_past_essays(past_essays),
     )
 

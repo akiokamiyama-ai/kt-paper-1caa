@@ -127,10 +127,13 @@ PAGE2_CATEGORY_TO_KEY: dict[str, str] = {
 
 # 第2面の3社表示メタデータ：display_name + 業種ラベル。
 # archive/2026-04-25.html Page II の <div class="company"> 構造を踏襲。
+# 紙面に出す社名ラベルと事業の一言。
+# ★ 事業定義の正は config/companies_context.md §0。変更時はそちらを先に直し、
+#   ここは紙面に収まる短縮形として同期させる（C197, 2026-09-10）。
 COMPANY_DISPLAY_META: dict[str, tuple[str, str]] = {
-    "cocolomi":     ("Cocolomi",     "生成AI導入支援"),
+    "cocolomi":     ("Cocolomi",     "自分史・経営支援・AI開発支援"),
     "human_energy": ("Human Energy", "企業向け研修"),
-    "web_repo":     ("Web-Repo",     "フランチャイズ業界"),
+    "web_repo":     ("Web-Repo",     "フランチャイズマッチング"),
 }
 
 # C155 (Sprint 13, 2026-08-10): 以下は v2 Page I パイプラインと共に廃止。
