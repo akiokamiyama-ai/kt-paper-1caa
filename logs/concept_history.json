@@ -690,6 +690,12 @@
       "name_ja": "EPRパラドックス",
       "displayed_on": "2026-09-10",
       "stage": "unseen"
+    },
+    {
+      "concept_id": "deleuze",
+      "name_ja": "ドゥルーズ",
+      "displayed_on": "2026-09-11",
+      "stage": "unseen"
     }
   ]
 }

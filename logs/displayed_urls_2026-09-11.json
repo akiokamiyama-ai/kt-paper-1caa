@@ -1,0 +1,25 @@
+{
+  "date": "2026-09-11",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2609/10/2000001352/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2609/10/news017.html",
+    "web_repo": null
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/western-leaders-obsession-with-declinist-narratives-could-become-self-fulfilling-prophecy-by-carl-johan-dalgaard-and-mark-medish-2026-09",
+    "http://www3.nhk.or.jp/news/html/20260807/k10015199591000.html",
+    "https://www.mckinsey.com/mgi/our-research/the-ai-economy-interconnected-forces-feedback-loops-and-speeds-of-change",
+    "https://wordswithoutborders.org/read/article/2026-08/the-city-and-the-writer-in-jakarta-with-khairani-barokka-nathalie-handal/",
+    "https://nautil.us/does-consciousness-require-a-body-1284886/",
+    "https://3quarksdaily.com/3quarksdaily/2026/09/hyena-ethics-when-harming-others-feels-righteous-and-pleasing.html"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://3quarksdaily.com/3quarksdaily/2026/09/plants-and-their-ants-when-flora-and-fauna-team-up.html",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-09/the-creole-continuum-of-the-greater-caribbean-maglia-perrotta/",
+    "music": "https://rockinon.com/news/detail/215751",
+    "outdoor": "https://www.outsideonline.com/outdoor-adventure/exploration-survival/sweat-lodge-deaths/"
+  },
+  "headlines_urls": []
+}
