@@ -696,6 +696,12 @@
       "name_ja": "ドゥルーズ",
       "displayed_on": "2026-09-11",
       "stage": "unseen"
+    },
+    {
+      "concept_id": "gdp",
+      "name_ja": "国内総生産（GDP）",
+      "displayed_on": "2026-09-12",
+      "stage": "unseen"
     }
   ]
 }

@@ -1,0 +1,25 @@
+{
+  "date": "2026-09-12",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/business/articles/2609/11/news043.html",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2609/11/news017.html",
+    "web_repo": "https://www.jfa-fc.or.jp/particle/320.html"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/global-development-crisis-of-agency-requires-grassroots-organizing-by-gordon-whitman-2026-09",
+    "https://toyokeizai.net/articles/-/957549?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://www.mckinsey.com/capabilities/risk-and-resilience/our-insights/the-speed-problem-how-frontier-ai-exposes-weakness-in-enterprise-cybersecurity",
+    "https://www.theparisreview.org/blog/2026/09/03/the-conformation-show-and-the-pursuit-of-the-ideal-dog/",
+    "https://3quarksdaily.com/3quarksdaily/2026/09/a-civil-war-a-bestseller-and-the-trial-that-divided-france.html",
+    "https://rockinon.com/news/detail/215752"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://warontherocks.com/the-wars-last-generation-is-still-holding-americas-moral-debt/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/09/11/richard-wagners-opera-festival-in-the-age-of-ai/",
+    "music": "https://stereogum.com/2511152/dolly-parton-airport-approved-dolly-parton-hotel-and-dolly-parton-museum-coming-this-month/news/",
+    "outdoor": "https://www.bepal.net/archives/703598"
+  },
+  "headlines_urls": []
+}
