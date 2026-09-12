@@ -702,6 +702,12 @@
       "name_ja": "国内総生産（GDP）",
       "displayed_on": "2026-09-12",
       "stage": "unseen"
+    },
+    {
+      "concept_id": "piaget",
+      "name_ja": "ピアジェ",
+      "displayed_on": "2026-09-13",
+      "stage": "unseen"
     }
   ]
 }

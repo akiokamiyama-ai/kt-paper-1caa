@@ -2294,6 +2294,20 @@
       "ai_kamiyama_failed": false,
       "fallback_used": false,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-09-13",
+      "article_url": "https://www.axismag.jp/posts/2026/09/721130.html",
+      "article_title": "ゼンリンミュージアムで「魅せる地図」展。古地図の装飾と印刷技術から、地図の表現を読み解く",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": false,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
     }
   ]
 }

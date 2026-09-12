@@ -1,0 +1,25 @@
+{
+  "date": "2026-09-13",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2609/11/2000001400/",
+    "human_energy": "https://jinjibu.jp/news/detl/26835/",
+    "web_repo": "https://www.bc01.net/new_fc/tokuraya_202610/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/the-wars-last-generation-is-still-holding-americas-moral-debt/",
+    null,
+    "https://www.mckinsey.com/industries/automotive-and-assembly/our-insights/competing-against-chinese-innovation-speed-in-european-trucking",
+    "https://www.theparisreview.org/blog/2026/09/11/richard-wagners-opera-festival-in-the-age-of-ai/",
+    "https://www.publicbooks.org/my-job-is-to-fulfill-your-infantile-desire/",
+    "https://www.axismag.jp/posts/2026/09/721130.html"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://www.project-syndicate.org/commentary/by-speeding-up-routine-tasks-ai-may-end-up-overwhelming-human-decision-makers-by-sami-mahroum-2026-09",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-09/creole-languages-of-the-caribbean-galfete-is-dead-confiant-alexander/",
+    "music": "https://stereogum.com/2511224/hear-bon-ivers-new-jingle-for-minnesota-bars-meatloaf-dippers/news/",
+    "outdoor": "https://sectionhiker.com/review-lems-trail-thrasher-pro-gtx-shoes/"
+  },
+  "headlines_urls": []
+}
