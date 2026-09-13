@@ -2308,6 +2308,20 @@
       "ai_kamiyama_failed": false,
       "fallback_used": false,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-09-14",
+      "article_url": "https://thetrek.co/appalachian-trail/my-top-5-tips-for-having-visitors-on-the-at/",
+      "article_title": "My Top 5 Tips for Having Visitors on the AT",
+      "article_category": "outdoor",
+      "tie_candidates": [
+        "outdoor"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": false,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
     }
   ]
 }

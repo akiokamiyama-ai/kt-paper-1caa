@@ -1,0 +1,25 @@
+{
+  "date": "2026-09-14",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/news/article/2609/13/2000001432/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2609/11/news043.html",
+    "web_repo": "https://www.recycle-tsushin.com/news/detail_13219.php"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/onpoint/iran-war-fossil-fuel-scramble-could-leave-long-lasting-environmental-damage-by-robert-muggah-et-al-2026-09",
+    "https://toyokeizai.net/articles/-/957902?utm_source=rss&utm_medium=http&utm_campaign=link_back",
+    "https://www.mckinsey.com/capabilities/operations/our-insights/the-future-of-us-manufacturing",
+    "https://wordswithoutborders.org/read/article/2026-09/creole-languages-of-the-caribbean-a-maroon-monument-ludmila-ferrari/",
+    "https://3quarksdaily.com/3quarksdaily/2026/09/normativity-from-the-standpoint-of-its-victims.html",
+    "https://thetrek.co/appalachian-trail/my-top-5-tips-for-having-visitors-on-the-at/"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://3quarksdaily.com/3quarksdaily/2026/09/the-state-and-its-workers-chinas-class-politics-after-1989.html",
+  "page6_urls": {
+    "books": "https://lithub.com/the-war-on-terror-through-the-eyes-of-queer-afghan-refugees/",
+    "music": "https://rockinon.com/news/detail/215752",
+    "outdoor": "https://www.outsideonline.com/outdoor-adventure/environment/judge-order-montana-bison-american-prairie/"
+  },
+  "headlines_urls": []
+}
