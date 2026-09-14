@@ -714,6 +714,12 @@
       "name_ja": "メルロ＝ポンティ",
       "displayed_on": "2026-09-14",
       "stage": "unseen"
+    },
+    {
+      "concept_id": "nudge",
+      "name_ja": "ナッジ",
+      "displayed_on": "2026-09-15",
+      "stage": "unseen"
     }
   ]
 }
