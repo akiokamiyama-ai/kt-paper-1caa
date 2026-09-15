@@ -2336,6 +2336,20 @@
       "ai_kamiyama_failed": false,
       "fallback_used": false,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-09-16",
+      "article_url": "https://rockinon.com/news/detail/215953",
+      "article_title": "ニュース - くるり・岸田繁、単行本『石、転がっといたらええやん。』第2巻の書影解禁。9月18日（金）発売！",
+      "article_category": "music",
+      "tie_candidates": [
+        "music"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": false,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
     }
   ]
 }

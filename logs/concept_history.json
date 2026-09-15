@@ -720,6 +720,12 @@
       "name_ja": "ナッジ",
       "displayed_on": "2026-09-15",
       "stage": "unseen"
+    },
+    {
+      "concept_id": "heuristics",
+      "name_ja": "ヒューリスティック",
+      "displayed_on": "2026-09-16",
+      "stage": "unseen"
     }
   ]
 }

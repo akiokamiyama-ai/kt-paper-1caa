@@ -1,0 +1,25 @@
+{
+  "date": "2026-09-16",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2609/15/2000001478/",
+    "human_energy": "https://jinjibu.jp/news/detl/26854/",
+    "web_repo": "https://www.jfa-fc.or.jp/particle/320.html"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/ai-data-center-politics-fear-of-future-with-no-place-for-natives-immigrants-alike-by-stephen-holmes-2026-09",
+    "https://www.bbc.co.uk/news/articles/cw980n0nd0qjo?at_medium=RSS&at_campaign=rss",
+    "https://www.mckinsey.com/featured-insights/mckinsey-on-books/author-talks-read-the-room-before-you-lead-it",
+    "https://www.theparisreview.org/blog/2026/09/14/you-have-to-ask-questions-svetlana-alexievich-unlocked/",
+    "https://3quarksdaily.com/3quarksdaily/2026/09/ai-will-transform-capitalism-but-how.html",
+    "https://rockinon.com/news/detail/215953"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://3quarksdaily.com/3quarksdaily/2026/09/stephen-hawking-the-dark-side-of-genius.html",
+  "page6_urls": {
+    "books": "https://lithub.com/trying-to-look-into-the-mirror-of-my-past-as-a-korean-adoptee-in-the-united-states/",
+    "music": "https://stereogum.com/2511462/gift-announce-new-album-frenzy-for-the-thrill-hear-hand-to-the-flame/music/",
+    "outdoor": "https://www.atlasobscura.com/places/pyramide-de-verlee"
+  },
+  "headlines_urls": []
+}
