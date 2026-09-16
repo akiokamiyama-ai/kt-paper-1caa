@@ -1,0 +1,25 @@
+{
+  "date": "2026-09-17",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://japan.zdnet.com/article/35252697/",
+    "human_energy": "https://jinjibu.jp/news/detl/26834/",
+    "web_repo": "https://www.bc01.net/article/notime_avend_202610/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/ai-policymakers-must-focus-rebuilding-bottom-rung-of-career-ladder-by-eric-hazan-2026-09",
+    "https://foreignpolicy.com/2026/09/15/china-us-ai-safety-trump-xi-summit-diplomacy/",
+    "https://www.mckinsey.com/capabilities/tech-and-ai/our-insights/the-top-trends-in-tech",
+    "https://wordswithoutborders.org/read/article/2026-09/creole-languages-of-the-caribbean-galfete-is-dead-confiant-alexander/",
+    "https://3quarksdaily.com/3quarksdaily/2026/09/scientists-map-massive-layer-of-life-just-beneath-our-feet.html",
+    "https://thetrek.co/grand-teton-says-poor-decisions-by-park-visitors-led-to-a-bears-death-this-weekend/"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://nautil.us/did-wildfires-spark-the-invention-of-pottery-1285052/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/09/14/you-have-to-ask-questions-svetlana-alexievich-unlocked/",
+    "music": "https://stereogum.com/2511611/wednesday-address-concerns-over-houston-show-at-venue-that-booked-ken-paxton/news/",
+    "outdoor": "https://www.atlasobscura.com/places/cafe-tito"
+  },
+  "headlines_urls": []
+}

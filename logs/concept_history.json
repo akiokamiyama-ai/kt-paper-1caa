@@ -726,6 +726,12 @@
       "name_ja": "ヒューリスティック",
       "displayed_on": "2026-09-16",
       "stage": "unseen"
+    },
+    {
+      "concept_id": "innovators_dilemma",
+      "name_ja": "イノベーションのジレンマ",
+      "displayed_on": "2026-09-17",
+      "stage": "unseen"
     }
   ]
 }
