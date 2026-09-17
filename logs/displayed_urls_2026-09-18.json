@@ -1,0 +1,25 @@
+{
+  "date": "2026-09-18",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/news/article/2609/17/2000001570/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2609/17/news009.html",
+    "web_repo": null
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/sanders-proposed-ban-on-ai-superintelligence-misses-the-point-by-tariq-malik-2026-09?utm_source=rss&utm_medium=feed&utm_campaign=main&utm_content=en",
+    "https://www.asahi.com/articles/ASV9K3GJMV9KULFA01ZM.html?ref=rss",
+    "https://www.mckinsey.com/mgi/our-research/aftershocks-energy-security-beyond-the-strait-of-hormuz-crisis",
+    "https://wordswithoutborders.org/read/article/2026-09/the-creole-continuum-of-the-greater-caribbean-maglia-perrotta/",
+    "https://www.publicbooks.org/the-saddest-cattle-in-the-world-atahualpa-yupanqui-empire-and-the-sound-of-stolen-land/",
+    "https://nautil.us/chimps-hand-down-tools-across-generations-1285081/"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://3quarksdaily.com/3quarksdaily/2026/09/remembering-richard-wright-outsider.html",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/09/16/on-the-chattanooga-choo-choo/",
+    "music": "https://stereogum.com/2511754/peelingflesh-announce-new-self-titled-album-hear-murderous-intent-feat-missing-links-mike-ryan/music/",
+    "outdoor": "https://sectionhiker.com/wild-thing-canister-stove-windscreen/"
+  },
+  "headlines_urls": []
+}

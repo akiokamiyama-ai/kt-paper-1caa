@@ -732,6 +732,12 @@
       "name_ja": "イノベーションのジレンマ",
       "displayed_on": "2026-09-17",
       "stage": "unseen"
+    },
+    {
+      "concept_id": "job_crafting",
+      "name_ja": "ジョブ・クラフティング",
+      "displayed_on": "2026-09-18",
+      "stage": "unseen"
     }
   ]
 }
