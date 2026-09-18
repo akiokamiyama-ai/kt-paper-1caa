@@ -738,6 +738,12 @@
       "name_ja": "ジョブ・クラフティング",
       "displayed_on": "2026-09-18",
       "stage": "unseen"
+    },
+    {
+      "concept_id": "kintsugi",
+      "name_ja": "金継ぎ",
+      "displayed_on": "2026-09-19",
+      "stage": "unseen"
     }
   ]
 }

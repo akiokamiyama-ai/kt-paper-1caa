@@ -1,0 +1,25 @@
+{
+  "date": "2026-09-19",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/enterprise/articles/2609/18/news020.html",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2609/18/news021.html",
+    "web_repo": "https://www.bc01.net/new_fc/tsubomi-33_202610/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/onpoint/anthropic-training-claude-to-believe-it-may-have-rights-by-mustafa-suleyman-2026-09?utm_source=rss&utm_medium=feed&utm_campaign=main&utm_content=en",
+    "http://www3.nhk.or.jp/news/html/20260807/k10015199591000.html",
+    "https://www.mckinsey.com/featured-insights/mckinsey-on-books/author-talks-how-to-turn-hope-into-action",
+    "https://www.theparisreview.org/blog/2026/09/18/my-larval-roommates-sarah-nicole-prickett/",
+    "https://nautil.us/seeking-a-trippy-placebo-1285089/",
+    "https://www.publicbooks.org/the-uninhabitable-front/"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://www.publicbooks.org/being-undocumented-is-already-a-chronic-stress-then-add-in-blackness-talking-with-dr-felecia-russell-on-the-experience-of-black-undocumented-folks/",
+  "page6_urls": {
+    "books": "https://www.nybooks.com/articles/2026/10/08/i-taste-ashes-in-the-wind-nuclear-weapons-jerry-brown/",
+    "music": "https://stereogum.com/2511885/straw-man-army-announce-new-album-true-north-hear-striking-home/music/",
+    "outdoor": "https://www.atlasobscura.com/places/holy-trinity-oak-tree-chapel"
+  },
+  "headlines_urls": []
+}
