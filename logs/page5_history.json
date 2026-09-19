@@ -2392,6 +2392,20 @@
       "ai_kamiyama_failed": false,
       "fallback_used": false,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-09-20",
+      "article_url": "https://stereogum.com/2511919/brew-ha-ha-details-first-punk-festival-since-cancellations-over-owners-trump-support/news/",
+      "article_title": "Brew Ha Ha Details First Punk Festival Since Cancellations Over Owner’s Trump Support",
+      "article_category": "music",
+      "tie_candidates": [
+        "music"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": false,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
     }
   ]
 }

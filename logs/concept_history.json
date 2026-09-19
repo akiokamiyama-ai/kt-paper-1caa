@@ -744,6 +744,12 @@
       "name_ja": "金継ぎ",
       "displayed_on": "2026-09-19",
       "stage": "unseen"
+    },
+    {
+      "concept_id": "coevolution",
+      "name_ja": "共進化",
+      "displayed_on": "2026-09-20",
+      "stage": "unseen"
     }
   ]
 }
