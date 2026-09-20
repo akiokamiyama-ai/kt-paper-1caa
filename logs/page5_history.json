@@ -2406,6 +2406,20 @@
       "ai_kamiyama_failed": false,
       "fallback_used": false,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-09-21",
+      "article_url": "https://www.houyhnhnm.jp/news/1169217/",
+      "article_title": "『ジュンについて』。ひとり出版社「夏葉社」の島田潤一郎の580日を描いた作品が、石巻と『下北沢映画祭』で上映です。",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "ai_kamiyama_called": false,
+      "ai_kamiyama_failed": false,
+      "fallback_used": false,
+      "is_placeholder": false
     }
   ]
 }
