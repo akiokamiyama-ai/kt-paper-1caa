@@ -42,7 +42,25 @@ from ..lib.jst import jst_today
 
 DEFAULT_MODEL = "claude-sonnet-4-6"
 DEFAULT_BATCH_SIZE = 10
-DEFAULT_MAX_TOKENS = 4096
+# C205 (2026-09-21): 4096 → 8192。
+#
+# 90 日 (2026-06-24〜09-21) の実測で、layer2/layer3 の sonnet バッチが
+# 恒常的に上限へ張り付いていた:
+#
+#   stage2.batch.layer3.sonnet.page4   p99 4096 / 183 回中 19 回 (10.4%) が上限
+#   stage2.batch.layer3.sonnet.page3   p99 4096 / 438 回中 23 回 ( 5.3%)
+#   stage2.batch (旧タグ)               p99 4096 / 553 回中 27 回 ( 4.9%)
+#
+# 切り詰められると JSON が途中で終わり、下の 2 回目リトライが発火する。
+# 90 日で 67 回発火し、うち 4 回は 2 回目も切れてバッチ全体が
+# ``_fallback_eval``（全美意識スコア 3）に落ちた。リトライ分の追加コストは
+# 90 日で $4.18（月 $1.41）。
+#
+# max_tokens は課金額ではなく上限なので、引き上げても出力が伸びない限り
+# コストは増えない。layer1/prefilter は p99 1500 前後で余裕があり、
+# 張り付いていたのは sonnet 層だけ。8192 で約 2 倍の余裕を取る。
+# （出力が実際に伸びていないかは llm.py の TRUNCATED ログと合わせて観察する）
+DEFAULT_MAX_TOKENS = 8192
 
 # C85 Sub-Step 2 (Sprint 10, 2026-06-14, Phase B Step 4): layered モードで
 # 使う Haiku model id。Sub-Step 4 で実装する layered モードが参照する。
@@ -518,9 +536,31 @@ def evaluate_batch(
     # Up to 2 tries: first the original message, second a sharpened "JSON only"
     # nudge if parse or array-length fails. API-level retries (5xx, rate, etc.)
     # are handled inside call_claude_with_retry.
+    # C205 (2026-09-21): 2 回目の max_tokens。切り詰めが原因のときは
+    # 「JSON だけ返せ」という nudge では直らない——応答が長すぎて入り切って
+    # いないのだから、上限のほうを上げる必要がある。90 日の実測では nudge
+    # リトライ 67 回のうち 4 回は 2 回目も切れてバッチ全体が fallback に
+    # 落ちていた。切り詰め時は上限を倍にして引き直す。
+    attempt_max_tokens = max_tokens
+    truncated_first = False
+
     for attempt in range(2):
         if attempt == 0:
             attempt_user = user_msg
+        elif truncated_first:
+            # 切り詰め由来。文面は変えず、収まる余地を与える。
+            nudge = (
+                "\n\n前回の応答は最後まで出力される前に打ち切られました。"
+                "各 reason を簡潔にし、JSON 単体だけを返答してください。"
+                f"evaluations の長さは正確に {len(articles)} としてください。"
+            )
+            attempt_user = user_msg + nudge
+            attempt_max_tokens = max_tokens * 2
+            print(
+                f"[stage2] tag={tag} 切り詰めを検知。max_tokens を "
+                f"{max_tokens} → {attempt_max_tokens} にして再試行します。",
+                file=sys.stderr,
+            )
         else:
             nudge = (
                 "\n\n前回の応答は JSON として解析できないか、evaluations 配列の "
@@ -535,10 +575,11 @@ def evaluate_batch(
             system=SYSTEM_PROMPT,
             user=attempt_user,
             model=model,
-            max_tokens=max_tokens,
+            max_tokens=attempt_max_tokens,
             cache_system=True,
             tag=tag,
         )
+        truncated_first = last_response.stop_reason == "max_tokens"
         raw_excerpt = llm.redact_key((last_response.text or "")[:400])
         parsed, parse_err = _parse_response_json(last_response.text)
 

@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import os
 import re
+import sys
 import time
 from dataclasses import dataclass
 
@@ -196,6 +197,27 @@ def call_claude(
     )
     cache_read_tokens = int(getattr(usage, "cache_read_input_tokens", 0) or 0)
 
+    # 5.5) C205 (2026-09-21): max_tokens で切り詰められたことを必ず記録する。
+    #
+    # stop_reason は ClaudeResponse に前から入っていたが、**読む側が居なかった**
+    # （editorial_writer が debug dict に入れるだけ）。そのため 90 日で 76 件
+    # （0.96%）の切り詰めが誰にも気づかれていなかった。実害も出ている:
+    #   - stage2 では JSON が途中で切れ → parse 失敗 → nudge リトライ。
+    #     90 日で 67 回発火し、うち 4 回は 2 回目も切れてバッチ全体が
+    #     「全美意識スコア 3」の fallback に落ちた
+    #   - 2026-09-21 の 6 面料理は切り詰めで parse に失敗し、static fallback
+    #     「鮭の塩焼き定食」が紙面に出た（履歴にも追記されなかった）
+    #
+    # 紙面は成立してしまうので、ログに出さないと永久に見えない。
+    stop_reason = getattr(response, "stop_reason", None)
+    if stop_reason == "max_tokens":
+        print(
+            f"[llm] TRUNCATED: tag={tag} model={model} "
+            f"max_tokens={max_tokens} に到達して出力が切れました。"
+            f"出力 {output_tokens} tok。後段のパース失敗・fallback の原因になります。",
+            file=sys.stderr,
+        )
+
     # 6) Record usage so the daily totals stay current.
     llm_usage.record_call(
         model,
@@ -222,7 +244,7 @@ def call_claude(
         cache_creation_tokens=cache_creation_tokens,
         cache_read_tokens=cache_read_tokens,
         cost_usd=cost,
-        stop_reason=getattr(response, "stop_reason", None),
+        stop_reason=stop_reason,
         raw_id=getattr(response, "id", None),
     )
 

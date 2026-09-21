@@ -28,7 +28,15 @@ LOG_DIR = PROJECT_ROOT / "logs"
 HISTORY_PATH = LOG_DIR / "cooking_history.json"
 
 DEFAULT_MODEL = llm.DEFAULT_MODEL
-DEFAULT_MAX_TOKENS = 1500
+# C205 (2026-09-21): 1500 → 3000。
+#
+# 2026-09-21 の 6 面料理が出力 1500 tok ちょうどで切り詰められ、JSON parse に
+# 失敗して static fallback「鮭の塩焼き定食」が紙面に出た
+# （logs/cooking_history.json にも 09-21 の entry が無い）。
+# 90 日の実測は p50 450 / p95 954 / p99 1500（＝上限で頭打ち）。
+# cooking には stage2 のようなリトライが無く、一度切れると即 fallback なので
+# 余裕を厚めに取る。
+DEFAULT_MAX_TOKENS = 3000
 DEFAULT_TEMPERATURE = 0.8
 
 EXCLUSION_DAYS: int = 30

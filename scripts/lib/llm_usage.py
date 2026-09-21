@@ -42,6 +42,7 @@ or a new model is adopted.
 from __future__ import annotations
 
 import json
+import sys
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
@@ -67,8 +68,11 @@ from .jst import jst_now_iso as _jst_now_iso, jst_today as _jst_today  # noqa: F
 DAILY_COST_CAP_USD = 10.00
 DAILY_CALLS_CAP = 200        # design predicts ~10-20 calls/day; 10x cushion
 
-# Model pricing (USD per 1M tokens). Snapshot of 2026-04 published rates;
-# update when Anthropic revises pricing or a new model is adopted.
+# Model pricing (USD per 1M tokens).
+#
+# 出典: Anthropic 公式の料金表（claude-api skill の Current Models 表）。
+# 最終確認日: 2026-09-21 (C205)。
+# **価格は改定される。モデルを足すときと、半年に一度は必ず出典で突き合わせること。**
 #
 # cache_write_per_mtok / cache_read_per_mtok cover the 5-minute ephemeral
 # prompt caching used by Stage 2. Anthropic charges:
@@ -76,6 +80,11 @@ DAILY_CALLS_CAP = 200        # design predicts ~10-20 calls/day; 10x cushion
 #   cache read   = 0.10× base input rate
 # Models that don't surface cache token counts back to the SDK still work —
 # their cache_*_per_mtok entries simply go unused.
+#
+# C205 (2026-09-21) の是正:
+#   claude-haiku-4-5  $0.80/$4.00 → $1.00/$5.00（25% 過小だった）
+#   claude-opus-4-7   $15.0/$75.0 → $5.00/$25.0（旧世代の値。Tribune 未使用）
+# Haiku の過小計上により、C200 で報告した月 $37.28 は実際には約 $39.5 だった。
 MODEL_PRICING: dict[str, dict[str, float]] = {
     "claude-sonnet-4-6": {
         "input_per_mtok": 3.0,
@@ -83,19 +92,37 @@ MODEL_PRICING: dict[str, dict[str, float]] = {
         "cache_write_per_mtok": 3.75,
         "cache_read_per_mtok": 0.30,
     },
+    # C204 の移行検討に備えて先に入れておく（現時点では未使用）。
+    # 単価は 4.6 より安いが、トークナイザが変わり同じテキストで約 30% 多く
+    # カウントされるため、実効の下げ幅は -13% 程度である点に注意。
+    "claude-sonnet-5": {
+        "input_per_mtok": 2.0,
+        "output_per_mtok": 10.0,
+        "cache_write_per_mtok": 2.50,
+        "cache_read_per_mtok": 0.20,
+    },
     "claude-opus-4-7": {
-        "input_per_mtok": 15.0,
-        "output_per_mtok": 75.0,
-        "cache_write_per_mtok": 18.75,
-        "cache_read_per_mtok": 1.50,
+        "input_per_mtok": 5.0,
+        "output_per_mtok": 25.0,
+        "cache_write_per_mtok": 6.25,
+        "cache_read_per_mtok": 0.50,
     },
     "claude-haiku-4-5": {
-        "input_per_mtok": 0.80,
-        "output_per_mtok": 4.0,
-        "cache_write_per_mtok": 1.0,
-        "cache_read_per_mtok": 0.08,
+        "input_per_mtok": 1.0,
+        "output_per_mtok": 5.0,
+        "cache_write_per_mtok": 1.25,
+        "cache_read_per_mtok": 0.10,
     },
 }
+
+# 未知モデルに適用する保守的な単価（= 表中で最も高いモデル）。
+#
+# C205 以前は未知モデルのコストを 0 として扱っていた。これは
+# DAILY_COST_CAP_USD という**安全装置を黙って無効化する**挙動である
+# （モデル ID を差し替えてテーブルへの追加を忘れると、全呼び出しが $0 で
+# 記録され、日次キャップが永久に発動しなくなる）。
+# 0 ではなく最高単価で計上し、同時に WARN を出す。紙面生成は止めない。
+_UNKNOWN_MODEL_WARNED: set[str] = set()
 
 
 @dataclass
@@ -153,7 +180,20 @@ def estimate_cost(
     """
     rates = MODEL_PRICING.get(model)
     if not rates:
-        return 0.0
+        # C205: 0 を返すと日次コストキャップが効かなくなる。既知の最高単価で
+        # 見積もり、1 プロセス 1 回だけ WARN を出す（毎回出すとログが埋まる）。
+        rates = max(
+            MODEL_PRICING.values(), key=lambda r: r["output_per_mtok"]
+        )
+        if model not in _UNKNOWN_MODEL_WARNED:
+            _UNKNOWN_MODEL_WARNED.add(model)
+            print(
+                f"[llm_usage] WARN: 未知のモデル {model!r} です。"
+                f"MODEL_PRICING に追加してください。"
+                f"当面は最高単価（in ${rates['input_per_mtok']}/Mtok, "
+                f"out ${rates['output_per_mtok']}/Mtok）で保守的に計上します。",
+                file=sys.stderr,
+            )
     return (
         (input_tokens / 1_000_000) * rates["input_per_mtok"]
         + (output_tokens / 1_000_000) * rates["output_per_mtok"]
