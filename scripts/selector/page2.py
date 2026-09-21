@@ -82,6 +82,36 @@ SHORT_TO_CATEGORY: dict[str, str] = {
     "web_repo":     "companies:Web-Repo",
 }
 
+# C203 (2026-09-21): High 通過後も Medium を毎日 union する社.
+#
+# 段階選定は「High で決まれば Medium を見ない」（_STAGE_ORDER）。これは
+# High のほうが質が高いという前提に立つが、C202 の実測でウェブリポでは
+# **成り立っていなかった**（2026-08-23〜09-21 の 30 日）:
+#
+#   High 採用 19 日  平均 40.51 / 中央 39.83  ——— 19 日すべてビジネスチャンス
+#   Med  採用  7 日  平均 43.23 / 中央 44.10
+#
+# Medium が回ってくるのは High が threshold に一本も届かなかった日だけ、
+# つまり High に不利な日に限られる。それでも Medium のほうが +2.7 点高い。
+# High が実質ビジネスチャンス 1 本に痩せている（他 3 本のうち公取委は
+# runner IP ブロック、PR TIMES / 日経MJ は 30 日で無勝利）ことが原因。
+#
+# 他 2 社を巻き込まないため、社を明示して限定する:
+#   - Cocolomi     … High 0 勝で既に毎日 Medium 運用。変更不要
+#   - Human Energy … High 17 / Medium 11 でバランスが取れている。触らない
+#
+# threshold は 3 社共通値（PAGE2_THRESHOLD = 35.0）なので引き上げない
+# （C202 案 C 却下の理由）。
+MEDIUM_UNION_COMPANY_KEYS: frozenset[str] = frozenset({"web_repo"})
+
+# C203: 非採用候補ログに残す上限（社 × stage あたり）。
+#
+# 全件だと Web-Repo の Medium だけで 21〜28 件、3 社合計で 1 日 30〜90 件に
+# なる。threshold 近傍の競合が分かれば判断には足りるので、スコア降順で
+# 上位 N 件に絞る。N=15 なら現状の Medium プール（最大 28）の過半をカバー
+# しつつ、page2_scores_*.json は 4.6KB → 20KB 程度に収まる。
+CANDIDATE_LOG_TOP_N = 15
+
 # Stage 4 cross-industry pre-filter: business.md / geopolitics.md の High+Medium
 # から取得した記事のうち、各社の事業文脈と接続するキーワードを title または
 # description に含むものだけを Step 1 評価対象に絞る。
@@ -304,6 +334,9 @@ class Page2Result:
     threshold: float = DEFAULT_THRESHOLD
     cost_usd: float = 0.0
     today: date | None = None
+    # C203: 非採用を含む候補のスコア。{company_key: [candidate, ...]}
+    # 採用記事しか残っていなかったため「何点で負けたか」が測れなかった。
+    candidates: dict[str, list[dict]] = field(default_factory=dict)
 
 
 # ---------------------------------------------------------------------------
@@ -846,6 +879,77 @@ def _cross_industry_filter(
     return filtered
 
 
+def _fetch_medium_pool(
+    category: str,
+    company_key: str,
+    fetcher_fn,
+    registry,
+    all_errors: list,
+) -> list[dict]:
+    """C203: Medium プールの fetch を 1 箇所にまとめる.
+
+    union 経路（High 通過後も引く）と従来の Stage 2 経路の両方から呼ぶ。
+    同じ fetch を 2 箇所に書くと片方だけ直る——C197 で事業定義が 2 箇所に
+    あってずれたのと同じ形なので、最初から 1 箇所にしておく。
+    """
+    pool: list[dict] = []
+    if fetcher_fn:
+        try:
+            pool = list(fetcher_fn(category=category, priority="medium"))
+        except Exception as e:
+            all_errors.append(EvaluationError(
+                stage="select", article_id="<fetch>", url=None,
+                error_type=f"fetcher_error_medium: {type(e).__name__}",
+                raw_response_excerpt=llm.redact_key(str(e))[:200],
+                occurred_at=_now_iso(),
+            ))
+    for art in pool:
+        _attach_category(art, registry)
+    return pool
+
+
+def _record_candidates(
+    sink: dict[str, list[dict]] | None,
+    company_key: str,
+    stage: str,
+    pool: list[dict],
+    *,
+    top_n: int = CANDIDATE_LOG_TOP_N,
+) -> None:
+    """C203: 候補プールのスコアを sink に積む（採用/非採用を問わず）.
+
+    ``selected_for_page2`` は後段（write_page2_log）で採用 URL と突合して
+    立てる。ここでは「何が候補で何点だったか」だけを残す。
+
+    観測のための記録なので、失敗しても選定を止めない。
+    """
+    if sink is None or not pool:
+        return
+    try:
+        rows = [a for a in pool if a.get("page2_final_score") is not None]
+        rows.sort(key=lambda a: a["page2_final_score"], reverse=True)
+        bucket = sink.setdefault(company_key, [])
+        seen = {r.get("url") for r in bucket}
+        for a in rows[:top_n]:
+            url = a.get("url")
+            if url in seen:
+                continue
+            seen.add(url)
+            bucket.append({
+                "url": url,
+                "title": a.get("title"),
+                "source_name": a.get("source_name"),
+                "stage": stage,
+                "page2_final_score": a.get("page2_final_score"),
+                "stage3_final_score": a.get("final_score"),
+                "managerial_implication": a.get("managerial_implication"),
+                "regulatory_signal": a.get("regulatory_signal"),
+            })
+    except Exception as e:  # noqa: BLE001 — 観測で紙面を落とさない
+        print(f"[page2] candidate log failed (non-fatal): {type(e).__name__}: {e}",
+              file=sys.stderr)
+
+
 def _pick_best_above_threshold(
     candidates: list[dict],
     threshold: float,
@@ -936,6 +1040,7 @@ def select_page2_articles(
     fetcher_fn: FetcherFn | None = None,
     threshold: float = DEFAULT_THRESHOLD,
     cross_industry_articles: list[dict] | None = None,
+    candidate_sink: dict[str, list[dict]] | None = None,
 ) -> tuple[dict[str, CompanySelection], list[EvaluationError], float]:
     """Run the 5-stage fallback selection per company.
 
@@ -950,6 +1055,14 @@ def select_page2_articles(
 
     各社で同一記事が選定されないよう ``selections`` 累積を見た URL exclude
     も併用（dedup）。
+
+    C203 (2026-09-21): ``candidate_sink`` に dict を渡すと、非採用を含む
+    候補のスコアを ``{company_key: [candidate, ...]}`` で積む（観測用、
+    選定には影響しない）。戻り値の形は変えていない——既存の呼び出し 9 箇所
+    が 3-tuple 展開しているため。
+
+    C203: ``MEDIUM_UNION_COMPANY_KEYS`` の社は High 通過後も Medium を
+    fetch して pool を union する（定数の docstring に実測の根拠）。
     """
     registry = _get_registry()
     # Ensure all input articles have category attached.
@@ -984,41 +1097,86 @@ def select_page2_articles(
             all_errors.extend(errors)
             total_cost += cost
 
+        _record_candidates(candidate_sink, company_key, "high", high_pool)
+
+        # C203: この社は High 通過後も Medium を union する。
+        # 「High が通ったら Medium を見ない」が成り立たない社への対処
+        # （根拠は MEDIUM_UNION_COMPANY_KEYS の docstring）。
+        medium_pool: list[dict] = []
+        medium_already_fetched = False
+        if company_key in MEDIUM_UNION_COMPANY_KEYS:
+            medium_pool = _fetch_medium_pool(
+                category, company_key, fetcher_fn, registry, all_errors,
+            )
+            medium_already_fetched = True
+            # High 経路と同じく、Step 1 が未実行のものだけ評価する
+            # （cross-day cache でスコア済みのものを再評価しない）。
+            med_needs_step1 = [
+                a for a in medium_pool
+                if a.get("page2_final_score") is None
+                or a.get("managerial_implication") is None
+            ]
+            if med_needs_step1:
+                _, errors, cost = _enrich_with_step1(med_needs_step1, company_key)
+                all_errors.extend(errors)
+                total_cost += cost
+            _record_candidates(candidate_sink, company_key, "medium", medium_pool)
+
         # Refresh page2_final_score on entries that may have had only
         # final_score (Stage 3) before but no Step 1.
-        pick = _pick_best_above_threshold(
-            high_pool, threshold, exclude_urls=already_selected_urls,
-        )
-        if pick is not None:
-            selections[company_key] = CompanySelection(
-                company_key=company_key, article=pick,
-                page2_final_score=pick["page2_final_score"],
-                morning_question=None, stage_used="high",
-                threshold_passed=True, fallback_reason=None,
+        if medium_already_fetched and medium_pool:
+            # union して一度に選ぶ。どちらから来たかは URL で判定する
+            # （stage_used を実態に合わせるため）。
+            high_urls = {a.get("url") for a in high_pool}
+            pick = _pick_best_above_threshold(
+                high_pool + medium_pool, threshold,
+                exclude_urls=already_selected_urls,
             )
-            continue
+            if pick is not None:
+                from_high = pick.get("url") in high_urls
+                selections[company_key] = CompanySelection(
+                    company_key=company_key, article=pick,
+                    page2_final_score=pick["page2_final_score"],
+                    morning_question=None,
+                    stage_used="high" if from_high else "medium",
+                    threshold_passed=True,
+                    fallback_reason=(
+                        None if from_high else
+                        "C203: High と Medium を union して選定（Medium が勝った）"
+                    ),
+                )
+                continue
+        else:
+            pick = _pick_best_above_threshold(
+                high_pool, threshold, exclude_urls=already_selected_urls,
+            )
+            if pick is not None:
+                selections[company_key] = CompanySelection(
+                    company_key=company_key, article=pick,
+                    page2_final_score=pick["page2_final_score"],
+                    morning_question=None, stage_used="high",
+                    threshold_passed=True, fallback_reason=None,
+                )
+                continue
 
         # ---------------- Stage 2 (medium) ---------------------------------
-        medium_pool: list[dict] = []
-        if fetcher_fn:
-            try:
-                medium_pool = list(fetcher_fn(category=category, priority="medium"))
-            except Exception as e:
-                all_errors.append(EvaluationError(
-                    stage="select", article_id="<fetch>", url=None,
-                    error_type=f"fetcher_error_medium: {type(e).__name__}",
-                    raw_response_excerpt=llm.redact_key(str(e))[:200],
-                    occurred_at=_now_iso(),
-                ))
-        for art in medium_pool:
-            _attach_category(art, registry)
-        if medium_pool:
-            _, errors, cost = _enrich_with_step1(medium_pool, company_key)
-            all_errors.extend(errors)
-            total_cost += cost
-        pick = _pick_best_above_threshold(
-            medium_pool, threshold, exclude_urls=already_selected_urls,
-        )
+        # C203: union 社は上で fetch + enrich 済み。再 fetch すると
+        # 二重課金になるので skip する。
+        if not medium_already_fetched:
+            medium_pool = _fetch_medium_pool(
+                category, company_key, fetcher_fn, registry, all_errors,
+            )
+            if medium_pool:
+                _, errors, cost = _enrich_with_step1(medium_pool, company_key)
+                all_errors.extend(errors)
+                total_cost += cost
+            _record_candidates(candidate_sink, company_key, "medium", medium_pool)
+            pick = _pick_best_above_threshold(
+                medium_pool, threshold, exclude_urls=already_selected_urls,
+            )
+        else:
+            # union で既に落選している。Stage 3 へ落とす。
+            pick = None
         if pick is not None:
             selections[company_key] = CompanySelection(
                 company_key=company_key, article=pick,
@@ -1050,6 +1208,7 @@ def select_page2_articles(
             _, errors, cost = _enrich_with_step1(ref_pool, company_key)
             all_errors.extend(errors)
             total_cost += cost
+        _record_candidates(candidate_sink, company_key, "reference", ref_pool)
         pick = _pick_best_above_threshold(
             ref_pool, threshold, exclude_urls=already_selected_urls,
         )
@@ -1369,10 +1528,13 @@ def run_page2_pipeline(
         return result
 
     # Selection (Step 1 内蔵 + 5段階フォールバック).
+    candidate_sink: dict[str, list[dict]] = {}
     selections, sel_errors, sel_cost = select_page2_articles(
         scored_articles, fetcher_fn=fetcher_fn, threshold=threshold,
         cross_industry_articles=cross_industry_articles,
+        candidate_sink=candidate_sink,
     )
+    result.candidates = candidate_sink
     result.errors.extend(sel_errors)
     result.cost_usd += sel_cost
 
@@ -1470,11 +1632,29 @@ def write_page2_log(result: Page2Result) -> Path:
             "company_key": k,
         }
 
+    # C203: 非採用を含む候補。採用記事しか残っていなかったため
+    # 「ビジネスチャンスが何点で負けたか」が測れなかった（C202）。
+    selected_urls = {
+        sel.article.get("url")
+        for sel in result.selections.values()
+        if sel.article and sel.article.get("url")
+    }
+    candidate_log: dict[str, list[dict]] = {}
+    for k, rows in (result.candidates or {}).items():
+        out = []
+        for r in rows:
+            r = dict(r)
+            r["selected_for_page2"] = r.get("url") in selected_urls
+            out.append(r)
+        out.sort(key=lambda r: r.get("page2_final_score") or -1, reverse=True)
+        candidate_log[SHORT_TO_DISPLAY.get(k, k)] = out
+
     data = {
         "date": today.isoformat(),
         "threshold": result.threshold,
         "evaluations": evaluations,
         "selection_log": selection_log,
+        "candidate_log": candidate_log,
         "evaluation_errors": [
             {
                 "stage": e.stage,
