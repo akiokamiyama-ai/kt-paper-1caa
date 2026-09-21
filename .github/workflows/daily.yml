@@ -225,6 +225,10 @@ jobs:
           git add logs/concept_history.json logs/cooking_history.json
           git add logs/displayed_urls_*.json logs/market_history.json
           git add logs/page4_rotation.json logs/page5_history.json
+          # C201 (2026-09-21): 一筆（miibo）の成否を日次で残す。miibo は
+          # Tribune で唯一 Anthropic API 外の経路で、落ちても固定文 fallback
+          # で紙面が成立してしまう。永続化しないと静かな劣化に気づけない。
+          git add logs/page5_column_history.json 2>/dev/null || true
           # C137 (Sprint 12, 2026-07-10): scores_*.json を追跡対象化して
           # C135 cross-day score cache の永続化を実現。今日書かれた新しい
           # log をここで add（prune step で削除された古い log は既に stage

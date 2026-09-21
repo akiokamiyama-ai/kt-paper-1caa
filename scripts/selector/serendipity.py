@@ -181,96 +181,21 @@ def append_history_entry(entry: dict, *, path: Path | None = None) -> None:
     save_history(h, path=path)
 
 
-def update_history_column_fields(
-    *,
-    target_date: date,
-    article_url: str,
-    ai_kamiyama_called: bool,
-    ai_kamiyama_failed: bool,
-    fallback_used: bool,
-    history_path: Path | None = None,
-    ai_kamiyama_url: str | None = None,
-    ai_kamiyama_title: str | None = None,
-    ai_kamiyama_category: str | None = None,
-    ai_kamiyama_source_name: str | None = None,
-) -> bool:
-    """Update the most recent matching history entry with column-gen status.
-
-    selector が select_for_today で history に書く時点では column 生成が
-    まだ走っていないため、3 つのステータスフィールドは placeholder の False で
-    記録される。caller (build_page_five_v2) が column 生成後に本関数を呼んで
-    実際のステータス値で上書きする設計（責務分離：history I/O は selector 内に
-    閉じ込める、caller は column status を渡すのみ）。
-
-    Sprint 5 task #5 (2026-05-04 修正): 過去の history (5/2, 5/3 の 6 entries) は
-    bug 期間データとして false のまま放置。本修正以降のデータから有効。
-
-    Sprint 7 Phase 1 Step 2 (2026-05-19): AIかみやま が serendipity 記事から
-    独立した記事に論評する構造に変更。AIかみやま が言及した記事のメタ情報
-    （url / title / category / source_name）を ai_kamiyama_* フィールドとして
-    同じ entry に追加。article_url は引き続き serendipity 記事の URL
-    (後方互換、_apply_history_penalty 等の既存ロジックは無修正)。
-
-    Parameters
-    ----------
-    target_date :
-        対象記事が表示された日（history entry の displayed_on に一致）
-    article_url :
-        serendipity 記事の URL（history entry の article_url に一致、matching key）
-    ai_kamiyama_called :
-        column 生成 API が呼ばれたか
-    ai_kamiyama_failed :
-        column 生成が失敗したか（API 接続失敗 / 空応答）
-    fallback_used :
-        fallback テキストが使われたか
-    history_path :
-        テスト用に history JSON のパスを上書き可能。None で本番 HISTORY_PATH
-    ai_kamiyama_url / ai_kamiyama_title / ai_kamiyama_category /
-    ai_kamiyama_source_name :
-        Sprint 7 Phase 1 Step 2 追加。AIかみやま が論評した記事のメタ。
-        None の場合は entry に書き込まない（既存呼び出しの後方互換）。
-
-    Returns
-    -------
-    bool
-        True if an entry was updated, False otherwise. False の場合は
-        stderr に warning を出力するが、caller の処理は継続される
-        （紙面生成本体への影響なし、ログの不整合のみ残る）。
-    """
-    h = load_history(path=history_path)
-    entries = h.get("history") or []
-    target_iso = target_date.isoformat()
-    # 同じ (displayed_on, article_url) が複数あれば「最新（末尾）」を更新する。
-    matched_idx = -1
-    for i, entry in enumerate(entries):
-        if (
-            entry.get("displayed_on") == target_iso
-            and entry.get("article_url") == article_url
-        ):
-            matched_idx = i  # keep the latest (last) match
-    if matched_idx < 0:
-        print(
-            f"[serendipity] history update: entry not found for "
-            f"{article_url!r} on {target_iso}",
-            file=sys.stderr,
-        )
-        return False
-    entries[matched_idx]["ai_kamiyama_called"] = ai_kamiyama_called
-    entries[matched_idx]["ai_kamiyama_failed"] = ai_kamiyama_failed
-    entries[matched_idx]["fallback_used"] = fallback_used
-    # Sprint 7 Phase 1 Step 2: AIかみやま 記事メタ（None なら書込み skip）
-    if ai_kamiyama_url is not None:
-        entries[matched_idx]["ai_kamiyama_url"] = ai_kamiyama_url
-    if ai_kamiyama_title is not None:
-        entries[matched_idx]["ai_kamiyama_title"] = ai_kamiyama_title
-    if ai_kamiyama_category is not None:
-        entries[matched_idx]["ai_kamiyama_category"] = ai_kamiyama_category
-    if ai_kamiyama_source_name is not None:
-        entries[matched_idx]["ai_kamiyama_source_name"] = ai_kamiyama_source_name
-    h["history"] = entries
-    save_history(h, path=history_path)
-    return True
-
+# C201 (2026-09-21): ``update_history_column_fields`` をここから削除した。
+#
+# 経緯: この関数は c7e1047 (2026-05-04) で「ai_kamiyama_called の history
+# 整合性問題を修正」として導入され、build_page_five_v2 が column 生成後に
+# 呼んでいた。C155-2 (c3d0c81, 2026-08-10) の紙面再構成で **呼び出しだけが
+# 落ち**、関数とテストは残った。テストが関数を直接呼ぶ形だったため通り続け、
+# 42 日間気づかれなかった（C200 で発覚）。
+#
+# 単に呼び直さなかったのは、C155 で意味自体が失われたため。C155 以降、
+# 一筆は ``page5/ai_kamiyama_selector`` が選ぶ **別の記事** を論評しており、
+# このファイルが書く履歴（第3面セレンディピティ枠）とは対応しない。
+# 呼び戻しても「別の記事のエントリ」に成否を書くことにしかならない。
+#
+# 一筆の観測は ``scripts/page5/column_history.py`` が担う（論評対象の記事と
+# 成否が 1 対 1 で対応する）。
 
 # ---------------------------------------------------------------------------
 # Step 1〜2: walk past 30 days' displayed_urls_*.json across all pages
@@ -640,9 +565,6 @@ def select_for_today(
                 "article_category": chosen_cat,
                 "tie_candidates": tie_candidates,
                 "selected_from_pool_size": 0,
-                "ai_kamiyama_called": False,
-                "ai_kamiyama_failed": False,
-                "fallback_used": False,
                 "is_placeholder": True,
             }, path=history_path)
         return {
@@ -658,9 +580,11 @@ def select_for_today(
     article = select_from_pool(scored, rng=rng)
     pool_size = min(SELECTION_POOL_SIZE, len(scored))
 
-    # Persist (ai_kamiyama_called/failed/fallback are filled by caller after column gen)
-    # Here we just record the article selection itself; the caller will
-    # update the entry after column generation runs.
+    # C201: 旧 ai_kamiyama_called / ai_kamiyama_failed / fallback_used は
+    # 書かない。C155 以降このファイルは第3面セレンディピティ枠の履歴であり、
+    # 一筆（第5面）とは別の記事を指すため、ここに一筆の成否を持たせる意味が
+    # ない。一筆の観測は scripts/page5/column_history.py が持つ。
+    # 過去エントリには旧フィールドが残るが、読む側はいない。
     if persist:
         append_history_entry({
             "displayed_on": target_date.isoformat(),
@@ -669,10 +593,6 @@ def select_for_today(
             "article_category": chosen_cat,
             "tie_candidates": tie_candidates,
             "selected_from_pool_size": pool_size,
-            # placeholders for column-gen status — caller may overwrite
-            "ai_kamiyama_called": False,
-            "ai_kamiyama_failed": False,
-            "fallback_used": False,
             "is_placeholder": False,
         }, path=history_path)
 

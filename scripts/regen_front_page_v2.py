@@ -864,6 +864,7 @@ def build_page_five_v2(
     """
     from .page5 import ai_kamiyama_selector as page5_ai_selector
     from .page5 import article_summarizer as page5_summarizer
+    from .page5 import column_history as page5_column_history
 
     # 1) 一筆の対象記事を選ぶ。
     #    候補プール = Page III 確定 6 枠 + Page III 不採用の評価済み上位候補。
@@ -895,6 +896,11 @@ def build_page_five_v2(
 
     # 2) 候補ゼロなら面ごと休載（miibo も要約 API も呼ばない）
     if ai_article is None:
+        # C201: 休載も観測ログに残す。「今日は出なかった」が履歴から
+        # 見えないと、静かな劣化と区別がつかない。
+        page5_column_history.record_column_result(
+            target_date=target_date, article=None, column=None,
+        )
         return _render_page_five_placeholder(), {
             "ai_article": None,
             "summary": None,
@@ -906,6 +912,14 @@ def build_page_five_v2(
 
     # 4) 一筆本文（miibo）
     column = page5_ai_kamiyama.write_column(ai_article)
+
+    # C201: miibo は Tribune で唯一 Anthropic API 外の経路で、失敗しても
+    # 固定文 fallback で紙面が成立してしまう。成否をここで必ず記録する。
+    # 本番経路（build_page_five_v2）に置くこと自体が要件
+    # ——「関数はあるが誰も呼ばない」（C180 / 本件）を繰り返さないため。
+    page5_column_history.record_column_result(
+        target_date=target_date, article=ai_article, column=column,
+    )
 
     html = _render_page_five(ai_article, summary, column)
     return html, {

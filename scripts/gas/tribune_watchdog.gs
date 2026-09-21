@@ -453,20 +453,44 @@
   function dispatchTribune() {
     var today = Utilities.formatDate(new Date(), 'Asia/Tokyo', 'yyyy-MM-dd');
 
-    // 既に出来ていれば起動しない（無駄なランを増やさない）。
-    var state = inspect_(today);
-    if (state.generated) {
-      Logger.log('already generated for ' + today + ', skip dispatch');
-      return;
-    }
+    // C201 (2026-09-21): 起動前の処理で例外が出ても、**起動そのものは必ず
+    // 試す**。以前は inspect_ / warnIfPatExpiringSoon_ が投げると
+    // triggerWorkflow_ に到達せず、朝刊が起動しないうえ通知も出なかった。
+    //
+    // とくに warnIfPatExpiringSoon_ は MailApp.sendEmail を呼ぶ。GAS の
+    // 1 日あたりメール送信上限に当たると sendEmail は例外を投げるので、
+    // **「期限警告メールが送れない」ことが「朝刊が出ない」に化けていた**。
+    // 通知は best-effort、起動は必達。順序をこの原則で組み直す。
 
-    warnIfPatExpiringSoon_();
+    // 既に出来ていれば起動しない（無駄なランを増やさない）。
+    try {
+      var state = inspect_(today);
+      if (state.generated) {
+        Logger.log('already generated for ' + today + ', skip dispatch');
+        return;
+      }
+    } catch (e) {
+      // 確認できないなら「無い」側に倒す。二重起動は C185 のガードが吸収
+      // するので、取りこぼすより投げたほうが安全。
+      Logger.log('inspect_ failed, dispatching anyway: ' + String(e));
+    }
 
     var r = triggerWorkflow_();
     Logger.log('dispatch: ' + JSON.stringify(r));
     if (!r.ok) {
       // 起動できなかったこと自体を必ず知らせる。黙って止まるのが最悪。
-      notifyDispatchFailure_(today, r);
+      try {
+        notifyDispatchFailure_(today, r);
+      } catch (e2) {
+        Logger.log('notifyDispatchFailure_ failed: ' + String(e2));
+      }
+    }
+
+    // PAT 期限の警告は起動の**後**に回す（送信失敗が起動を巻き添えにしない）。
+    try {
+      warnIfPatExpiringSoon_();
+    } catch (e3) {
+      Logger.log('warnIfPatExpiringSoon_ failed: ' + String(e3));
     }
   }
 
@@ -665,6 +689,63 @@
       Logger.log('OK: 204 が返りました。Actions に新しい run が現れます。');
     } else {
       Logger.log('NG: ' + r.error);
+    }
+  }
+
+  /**
+  * 動作確認 6（C201）：**起動失敗の通知が本当に届くか**を確かめる。
+  *
+  * なぜ要るか：C200 で「実装されているはずの仕組みが実際には無い」
+  * パターンが 6 件目になった。testDispatch は成功経路しか試しておらず、
+  * 「失敗したら通知が飛ぶ」ほうは一度も発火を確認していなかった。
+  * コードがあることと発火することは別なので、ここで実際に送る。
+  *
+  * 実行すると **本物のメールが 1 通届く**（件名に [動作確認] が付く）。
+  * workflow_dispatch は投げないので朝刊には影響しない。
+  */
+  function testDispatchFailureNotification() {
+    var today = Utilities.formatDate(new Date(), 'Asia/Tokyo', 'yyyy-MM-dd');
+    var props = PropertiesService.getScriptProperties();
+
+    // 当日分の抑止フラグを一時的に外す（本番の 1 日 1 通制限を壊さない）。
+    var saved = props.getProperty('lastDispatchFail');
+    props.deleteProperty('lastDispatchFail');
+    try {
+      notifyDispatchFailure_('[動作確認] ' + today, {
+        ok: false, status: 401,
+        error: 'これは動作確認です。実際の障害ではありません（testDispatchFailureNotification）。'
+      });
+      Logger.log('OK: ' + resolveRecipient_() + ' 宛に通知を送りました。受信を確認してください。');
+    } finally {
+      // 元に戻す（今日すでに本物の失敗通知が出ていた場合の二重送信を防ぐ）。
+      if (saved) { props.setProperty('lastDispatchFail', saved); }
+      else { props.deleteProperty('lastDispatchFail'); }
+    }
+  }
+
+  /**
+  * 動作確認 7（C201）：PAT 期限警告メールが届くかを確かめる。
+  * 実行すると **本物のメールが 1 通届く**。設定値は変更しない。
+  */
+  function testPatExpiryNotification() {
+    var props = PropertiesService.getScriptProperties();
+    var savedExpiry = props.getProperty(PROP_PAT_EXPIRY);
+    var savedWarn = props.getProperty('lastPatWarn');
+    try {
+      // 「3 日後に切れる」状態を一時的に作って発火させる。
+      var d = new Date(new Date().getTime() + 3 * 86400000);
+      props.setProperty(PROP_PAT_EXPIRY,
+                        Utilities.formatDate(d, 'Asia/Tokyo', 'yyyy-MM-dd'));
+      props.deleteProperty('lastPatWarn');
+      warnIfPatExpiringSoon_();
+      Logger.log('OK: ' + resolveRecipient_() + ' 宛に期限警告を送りました。');
+    } finally {
+      if (savedExpiry) { props.setProperty(PROP_PAT_EXPIRY, savedExpiry); }
+      else { props.deleteProperty(PROP_PAT_EXPIRY); }
+      if (savedWarn) { props.setProperty('lastPatWarn', savedWarn); }
+      else { props.deleteProperty('lastPatWarn'); }
+      Logger.log('設定は元に戻しました（' + PROP_PAT_EXPIRY + ' = ' +
+                 (savedExpiry || '未設定') + '）');
     }
   }
 

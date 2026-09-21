@@ -243,5 +243,31 @@ cron の遅延が桁違いに悪化している（run 作成時刻の cron 予�
 | `dryRunMissing` | 存在しない日付で検査し、件名と本文をログに出す |
 | `sendTestMail` | `[TEST]` 付きのメールを 1 通送る |
 | `checkPatSetup` | PAT と期限の設定状況（値は表示しない） |
-| `testDispatch` | 実際に 1 回 workflow_dispatch を投げる |
+| `testDispatch` | 実際に 1 回 workflow_dispatch を投げる（**成功経路のみ**） |
+| `testDispatchFailureNotification` | **起動失敗の通知が届くか**を確かめる。本物のメールが 1 通届く（件名に `[動作確認]`）。dispatch は投げない |
+| `testPatExpiryNotification` | **PAT 期限警告が届くか**を確かめる。本物のメールが 1 通届く。設定は自動で元に戻す |
 | `setupTrigger` | トリガーを作り直す（検知 2 本 + 起動 1 本） |
+
+### なぜ失敗側の動作確認があるか（C201, 2026-09-21）
+
+`testDispatch` は成功経路しか試しておらず、「失敗したら通知が飛ぶ」ほうは
+一度も発火を確認していなかった。**コードがあることと、実際に発火することは
+別**である（C200 で「実装されているはずの仕組みが実際には無い」パターンが
+6 件目になった）。
+
+PAT を更新したときは `testDispatch`（成功）と
+`testDispatchFailureNotification`（失敗通知）の**両方**を実行して、
+届くことを目で確認すること。
+
+### C201 で直した実バグ
+
+`dispatchTribune` は `warnIfPatExpiringSoon_()` を `triggerWorkflow_()` の
+**前**に呼んでいた。`warnIfPatExpiringSoon_` は `MailApp.sendEmail` を呼ぶため、
+GAS の 1 日あたりメール送信上限に当たると例外を投げる。すると
+`triggerWorkflow_` に到達せず、**「期限警告メールが送れない」が「朝刊が
+起動しない」に化ける**状態だった。
+
+いまは順序を入れ替え（起動 → 通知）、`inspect_` / 各通知をそれぞれ
+try/catch で隔離している。**通知は best-effort、起動は必達**。
+`inspect_` が失敗したときは「紙面は無い」側に倒して起動する
+（二重起動は daily.yml の C185 ガードが吸収する）。

@@ -405,230 +405,20 @@ def test_reference_articles_reach_pipeline_input():
 
 
 # ---------------------------------------------------------------------------
-# (h) Sprint 5 task #5: update_history_column_fields (2026-05-04)
+# (h) C201 (2026-09-21): update_history_column_fields のテストを削除
 # ---------------------------------------------------------------------------
-
-def _seed_history(path: Path, entries: list[dict]) -> None:
-    """Helper: seed a history file with given entries."""
-    serendipity_selector.save_history({"history": entries}, path=path)
-
-
-def test_update_history_match_found_returns_true_and_updates():
-    """h1: 該当 entry が見つかれば 3 fields を更新、True return。"""
-    with tempfile.TemporaryDirectory() as tmpdir:
-        path = Path(tmpdir) / "h.json"
-        _seed_history(path, [
-            {
-                "displayed_on": "2026-05-04",
-                "article_url": "https://x.test/a",
-                "article_title": "T",
-                "article_category": "culture",
-                "tie_candidates": ["culture"],
-                "selected_from_pool_size": 5,
-                "ai_kamiyama_called": False,
-                "ai_kamiyama_failed": False,
-                "fallback_used": False,
-                "is_placeholder": False,
-            },
-        ])
-        ok = serendipity_selector.update_history_column_fields(
-            target_date=date(2026, 5, 4),
-            article_url="https://x.test/a",
-            ai_kamiyama_called=True,
-            ai_kamiyama_failed=False,
-            fallback_used=False,
-            history_path=path,
-        )
-        loaded = serendipity_selector.load_history(path=path)
-    e = loaded["history"][0]
-    _check("h1 match: returns True and updates 3 fields",
-           ok is True
-           and e["ai_kamiyama_called"] is True
-           and e["ai_kamiyama_failed"] is False
-           and e["fallback_used"] is False,
-           f"ok={ok}, entry={e}")
-
-
-def test_update_history_no_match_returns_false():
-    """h2: 該当 entry が無ければ False return、history 不変。"""
-    with tempfile.TemporaryDirectory() as tmpdir:
-        path = Path(tmpdir) / "h.json"
-        _seed_history(path, [
-            {
-                "displayed_on": "2026-05-04",
-                "article_url": "https://x.test/different",
-                "ai_kamiyama_called": False,
-                "ai_kamiyama_failed": False,
-                "fallback_used": False,
-            },
-        ])
-        ok = serendipity_selector.update_history_column_fields(
-            target_date=date(2026, 5, 4),
-            article_url="https://x.test/no-such-url",
-            ai_kamiyama_called=True,
-            ai_kamiyama_failed=False,
-            fallback_used=False,
-            history_path=path,
-        )
-        loaded = serendipity_selector.load_history(path=path)
-    e = loaded["history"][0]
-    _check("h2 no match: returns False, history untouched",
-           ok is False
-           and e["ai_kamiyama_called"] is False
-           and e["ai_kamiyama_failed"] is False
-           and e["fallback_used"] is False,
-           f"ok={ok}, entry={e}")
-
-
-def test_update_history_multiple_match_updates_latest():
-    """h3: 同じ (date, url) が複数 entries にあれば最新（末尾）を更新。"""
-    with tempfile.TemporaryDirectory() as tmpdir:
-        path = Path(tmpdir) / "h.json"
-        _seed_history(path, [
-            {
-                "displayed_on": "2026-05-04",
-                "article_url": "https://x.test/dup",
-                "_tag": "old",
-                "ai_kamiyama_called": False,
-                "ai_kamiyama_failed": False,
-                "fallback_used": False,
-            },
-            {
-                "displayed_on": "2026-05-04",
-                "article_url": "https://x.test/dup",
-                "_tag": "new",
-                "ai_kamiyama_called": False,
-                "ai_kamiyama_failed": False,
-                "fallback_used": False,
-            },
-        ])
-        ok = serendipity_selector.update_history_column_fields(
-            target_date=date(2026, 5, 4),
-            article_url="https://x.test/dup",
-            ai_kamiyama_called=True,
-            ai_kamiyama_failed=False,
-            fallback_used=False,
-            history_path=path,
-        )
-        loaded = serendipity_selector.load_history(path=path)
-    old, new = loaded["history"]
-    _check("h3 duplicate match: only the latest (last) entry is updated",
-           ok is True
-           and old["_tag"] == "old"
-           and old["ai_kamiyama_called"] is False  # untouched
-           and new["_tag"] == "new"
-           and new["ai_kamiyama_called"] is True,  # updated
-           f"old.called={old['ai_kamiyama_called']}, "
-           f"new.called={new['ai_kamiyama_called']}")
-
-
-def test_update_history_normal_success_pattern():
-    """h4: ai_kamiyama_called=True, failed=False, fallback=False の正常パターン。"""
-    with tempfile.TemporaryDirectory() as tmpdir:
-        path = Path(tmpdir) / "h.json"
-        _seed_history(path, [{
-            "displayed_on": "2026-05-04",
-            "article_url": "https://x.test/ok",
-            "ai_kamiyama_called": False,
-            "ai_kamiyama_failed": False,
-            "fallback_used": False,
-        }])
-        serendipity_selector.update_history_column_fields(
-            target_date=date(2026, 5, 4),
-            article_url="https://x.test/ok",
-            ai_kamiyama_called=True,
-            ai_kamiyama_failed=False,
-            fallback_used=False,
-            history_path=path,
-        )
-        e = serendipity_selector.load_history(path=path)["history"][0]
-    _check("h4 normal column success → called=T, failed=F, fallback=F",
-           e["ai_kamiyama_called"] is True
-           and e["ai_kamiyama_failed"] is False
-           and e["fallback_used"] is False)
-
-
-def test_update_history_api_failure_pattern():
-    """h5: ai_kamiyama_called=True, failed=True, fallback=True の API 失敗パターン。"""
-    with tempfile.TemporaryDirectory() as tmpdir:
-        path = Path(tmpdir) / "h.json"
-        _seed_history(path, [{
-            "displayed_on": "2026-05-04",
-            "article_url": "https://x.test/fail",
-            "ai_kamiyama_called": False,
-            "ai_kamiyama_failed": False,
-            "fallback_used": False,
-        }])
-        serendipity_selector.update_history_column_fields(
-            target_date=date(2026, 5, 4),
-            article_url="https://x.test/fail",
-            ai_kamiyama_called=True,
-            ai_kamiyama_failed=True,
-            fallback_used=True,
-            history_path=path,
-        )
-        e = serendipity_selector.load_history(path=path)["history"][0]
-    _check("h5 API failure → called=T, failed=T, fallback=T",
-           e["ai_kamiyama_called"] is True
-           and e["ai_kamiyama_failed"] is True
-           and e["fallback_used"] is True)
-
-
-def test_update_history_atomic_json_intact():
-    """h6: history 書込後、JSON 構造が破壊されず他 entries も intact。"""
-    with tempfile.TemporaryDirectory() as tmpdir:
-        path = Path(tmpdir) / "h.json"
-        # 3 entries: one to update (middle), two siblings
-        _seed_history(path, [
-            {
-                "displayed_on": "2026-05-03",
-                "article_url": "https://x.test/sibling-old",
-                "_marker": "sibling_a",
-                "ai_kamiyama_called": False,
-                "ai_kamiyama_failed": False,
-                "fallback_used": False,
-            },
-            {
-                "displayed_on": "2026-05-04",
-                "article_url": "https://x.test/target",
-                "_marker": "target",
-                "ai_kamiyama_called": False,
-                "ai_kamiyama_failed": False,
-                "fallback_used": False,
-            },
-            {
-                "displayed_on": "2026-05-05",
-                "article_url": "https://x.test/sibling-new",
-                "_marker": "sibling_b",
-                "ai_kamiyama_called": False,
-                "ai_kamiyama_failed": False,
-                "fallback_used": False,
-            },
-        ])
-        serendipity_selector.update_history_column_fields(
-            target_date=date(2026, 5, 4),
-            article_url="https://x.test/target",
-            ai_kamiyama_called=True,
-            ai_kamiyama_failed=False,
-            fallback_used=False,
-            history_path=path,
-        )
-        # File still parseable (load_history doesn't throw)
-        loaded = serendipity_selector.load_history(path=path)
-    a, t, b = loaded["history"]
-    ok = (
-        len(loaded["history"]) == 3
-        and a["_marker"] == "sibling_a" and a["ai_kamiyama_called"] is False
-        and t["_marker"] == "target" and t["ai_kamiyama_called"] is True
-        and b["_marker"] == "sibling_b" and b["ai_kamiyama_called"] is False
-    )
-    _check("h6 JSON intact, only target updated, siblings untouched", ok,
-           f"a={a['ai_kamiyama_called']}, t={t['ai_kamiyama_called']}, b={b['ai_kamiyama_called']}")
-
-
-# ---------------------------------------------------------------------------
-# Test runner
-# ---------------------------------------------------------------------------
+#
+# 対象関数を serendipity.py から削除したため、テストも落とす。
+#
+# このテスト群こそが C200 で見つかった穴の本体だった。**関数を直接呼んで
+# 検証する形**だったので、C155-2 (2026-08-10) が build_page_five_v2 から
+# 呼び出しを落とした後も 6 本すべて通り続け、42 日間 green のまま
+# ai_kamiyama_called が false を書き続けた。
+#
+# 代替は tests/page5/test_column_history.py。そちらは **本番経路
+# (build_page_five_v2) を呼んで**記録されることを確認する。同じ穴を
+# 開けないための要件なので、production 経路を通さないテストに
+# 差し替えないこと。
 
 # ---------------------------------------------------------------------------
 # (i) C19 (2026-05-21): _get_serendipity_description_text
@@ -722,14 +512,6 @@ def main() -> int:
     print("(g) B1 改修：Reference priority も fetch:")
     test_fetch_calls_include_reference_priority()
     test_reference_articles_reach_pipeline_input()
-    print()
-    print("(h) Sprint 5 task #5: update_history_column_fields:")
-    test_update_history_match_found_returns_true_and_updates()
-    test_update_history_no_match_returns_false()
-    test_update_history_multiple_match_updates_latest()
-    test_update_history_normal_success_pattern()
-    test_update_history_api_failure_pattern()
-    test_update_history_atomic_json_intact()
     print()
     print("(i) C19: _get_serendipity_description_text:")
     test_desc_text_uses_content_encoded()

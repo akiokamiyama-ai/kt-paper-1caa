@@ -83,7 +83,22 @@ ANNOTATION_LABEL_BY_ANGLE: dict[str, str] = {
     "thinker":      "中心思想家と主著",
     "history":      "歴史的事象・年表",
     "integration":  "1 週間の論点総括",
-    "response":     "1 週間の問い一覧",  # 土曜のみ、参考用
+    # C201 (2026-09-21): "response" は **紙面に出ない**。土曜は
+    # renderer._render_saturday_section という別テンプレートで描画され、
+    # そこは _annotation_html を呼ばないため、用語解説 box-out 自体が無い
+    # （C200 で 3/3 の土曜に annotation-label が無いことを実測）。
+    #
+    # dead data と分かった上で残している理由:
+    #   - この dict は angle_key を網羅することをテスト 2 本が前提にしている
+    #     (test_monthly_pivotal f1 / test_angle_order)。消すと網羅テストが
+    #     意味を失う。
+    #   - essay_generator は ``.get(angle_key, "用語解説")`` で引くため、
+    #     将来 土曜が essay 経路に合流したとき、キーが無いと
+    #     「用語解説」という無意味なラベルに静かに落ちる。
+    # つまり「いま使われていない」だけで、消すと安全性が下がる。
+    # C180 の angles_hints（注入されないのに内容が書かれ続けていた）とは
+    # 種類が違う——あちらは中身が無駄になる、こちらは保険。
+    "response":     "1 週間の問い一覧",
 }
 
 
