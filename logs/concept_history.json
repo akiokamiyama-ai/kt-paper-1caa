@@ -756,6 +756,12 @@
       "name_ja": "ハリネズミと狐",
       "displayed_on": "2026-09-21",
       "stage": "unseen"
+    },
+    {
+      "concept_id": "legitimate_peripheral_participation",
+      "name_ja": "正統的周辺参加",
+      "displayed_on": "2026-09-22",
+      "stage": "unseen"
     }
   ]
 }
