@@ -11,6 +11,18 @@
       "column_title": "四つの手で書く耳",
       "column_body_chars": 705,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-09-23",
+      "article_url": "https://warontherocks.com/zelenskys-perception-problem-are-new-partnerships-a-solution/",
+      "article_title": "Zelensky’s Perception Problem: Are New Partnerships a Solution?",
+      "miibo_called": true,
+      "miibo_failed": false,
+      "fallback_used": false,
+      "elapsed_ms": 37809,
+      "column_title": "戦時の声を聴き分ける",
+      "column_body_chars": 719,
+      "is_placeholder": false
     }
   ]
 }

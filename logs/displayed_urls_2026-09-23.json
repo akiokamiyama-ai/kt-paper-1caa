@@ -1,0 +1,25 @@
+{
+  "date": "2026-09-23",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/news/article/2609/22/2000001670/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2609/22/news003.html",
+    "web_repo": "http://www.jfa-fc.or.jp/particle/320.html"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/us-china-agreement-on-ai-governance-must-include-mechanism-for-identifying-accidental-attacks-by-s-alex-yang-and-angela-huyue-zhang-2026-09?utm_source=rss&utm_medium=feed&utm_campaign=main&utm_content=en",
+    "https://foreignpolicy.com/2026/09/22/ai-safety-risk-united-nations-un-amandeep-singh-gill-interview/",
+    "https://www.mckinsey.com/industries/life-sciences/our-insights/ai-drug-discovery-focusing-on-what-matters-most",
+    "https://www.theparisreview.org/blog/2026/09/22/plan-b-is-extremely-dangerous-benjamin-moser-on-anti-zionism/",
+    "https://nautil.us/could-ai-have-consciousness-that-isnt-human-like-1285156/",
+    "https://www.axismag.jp/posts/2026/09/718793.html"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://warontherocks.com/zelenskys-perception-problem-are-new-partnerships-a-solution/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/09/21/on-derek-captain-ahabs-evil-half-brother/",
+    "music": "https://stereogum.com/2511951/on-militarie-guns-tour-and-the-alternative-rock-pivot/columns/let-the-roundup-begin/",
+    "outdoor": "https://www.atlasobscura.com/places/the-nick-weerts-memorial-phone-booth-nwmpb"
+  },
+  "headlines_urls": []
+}
