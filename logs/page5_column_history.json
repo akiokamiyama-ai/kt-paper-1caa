@@ -23,6 +23,18 @@
       "column_title": "戦時の声を聴き分ける",
       "column_body_chars": 719,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-09-24",
+      "article_url": "https://3quarksdaily.com/3quarksdaily/2026/09/cicero-and-probabilia.html",
+      "article_title": "Cicero And Probabilia",
+      "miibo_called": true,
+      "miibo_failed": false,
+      "fallback_used": false,
+      "elapsed_ms": 29678,
+      "column_title": "確からしさを抱く技法",
+      "column_body_chars": 886,
+      "is_placeholder": false
     }
   ]
 }

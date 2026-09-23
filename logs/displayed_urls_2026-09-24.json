@@ -1,0 +1,25 @@
+{
+  "date": "2026-09-24",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/news/article/2609/23/2000001673/",
+    "human_energy": "https://jinjibu.jp/news/detl/26854/",
+    "web_repo": "https://www.jfa-fc.or.jp/particle/320.html"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/zelenskys-perception-problem-are-new-partnerships-a-solution/",
+    null,
+    "https://www.mckinsey.com/industries/electric-power-and-natural-gas/our-insights/powering-through-uncertainty-a-talk-with-former-us-energy-secretary-ernest-moniz",
+    "https://www.theparisreview.org/blog/2026/09/14/you-have-to-ask-questions-svetlana-alexievich-unlocked/",
+    "https://nautil.us/can-ai-feel-pain-1285197/",
+    "https://stereogum.com/2512320/this-is-the-kit-announce-new-album-ghost-coat-hear-skim-a-stone/music/"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://3quarksdaily.com/3quarksdaily/2026/09/cicero-and-probabilia.html",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/09/22/plan-b-is-extremely-dangerous-benjamin-moser-on-anti-zionism/",
+    "music": "https://stereogum.com/2512308/show-me-the-body-cover-charli-xcxs-rock-music-for-spotify/music/",
+    "outdoor": "https://www.atlasobscura.com/places/sydneys-philanthropic-bronze-boar"
+  },
+  "headlines_urls": []
+}
