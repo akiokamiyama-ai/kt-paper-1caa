@@ -35,6 +35,18 @@
       "column_title": "確からしさを抱く技法",
       "column_body_chars": 886,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-09-25",
+      "article_url": "https://www.publicbooks.org/the-poetics-of-social-forms-remembering-fredric-jameson-1934-2024/",
+      "article_title": "“The Poetics of Social Forms”: Remembering Fredric Jameson (1934–2024)",
+      "miibo_called": true,
+      "miibo_failed": false,
+      "fallback_used": false,
+      "elapsed_ms": 33490,
+      "column_title": "形式に宿る声を聴く",
+      "column_body_chars": 976,
+      "is_placeholder": false
     }
   ]
 }

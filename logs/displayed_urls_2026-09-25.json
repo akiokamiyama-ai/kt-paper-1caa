@@ -1,0 +1,25 @@
+{
+  "date": "2026-09-25",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://atmarkit.itmedia.co.jp/ait/articles/2609/24/news024.html",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2609/24/news038.html",
+    "web_repo": null
+  },
+  "page3_urls": [
+    "https://warontherocks.com/the-new-signature-wounds-how-drone-warfare-is-reshaping-the-injuries-veterans-bring-home/",
+    null,
+    "https://www.mckinsey.com/industries/metals-and-mining/our-insights/harnessing-ai-to-make-mining-safer",
+    "https://www.theparisreview.org/blog/2026/09/24/john-berger-deaths-secretary-a-conversation-with-tom-overton/",
+    "https://nautil.us/how-a-horse-flu-outbreak-spurred-an-early-animal-rights-crusade-1285227/",
+    "https://www.bepal.net/archives/711877"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://www.publicbooks.org/the-poetics-of-social-forms-remembering-fredric-jameson-1934-2024/",
+  "page6_urls": {
+    "books": "https://www.nybooks.com/articles/2026/10/08/the-slaves-power-moving-toward-freedom-terrible-intimacy/",
+    "music": "https://stereogum.com/2512465/cameron-winter-debuts-new-songs-at-secret-new-orleans-show/music/",
+    "outdoor": "https://www.atlasobscura.com/places/the-press-mosaic"
+  },
+  "headlines_urls": []
+}
