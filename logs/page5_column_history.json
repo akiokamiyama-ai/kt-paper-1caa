@@ -47,6 +47,18 @@
       "column_title": "形式に宿る声を聴く",
       "column_body_chars": 976,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-09-26",
+      "article_url": "https://thepointmag.com/politics/no-country-for-tech-bros/",
+      "article_title": "No Country for Tech Bros",
+      "miibo_called": true,
+      "miibo_failed": false,
+      "fallback_used": false,
+      "elapsed_ms": 31989,
+      "column_title": "逃げる国家と聞く社会",
+      "column_body_chars": 845,
+      "is_placeholder": false
     }
   ]
 }

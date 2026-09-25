@@ -780,6 +780,12 @@
       "name_ja": "永劫回帰",
       "displayed_on": "2026-09-25",
       "stage": "unseen"
+    },
+    {
+      "concept_id": "transaction_cost",
+      "name_ja": "取引コスト",
+      "displayed_on": "2026-09-26",
+      "stage": "unseen"
     }
   ]
 }

@@ -1,0 +1,25 @@
+{
+  "date": "2026-09-26",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://kn.itmedia.co.jp/kn/article/2609/25/2000001724/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2609/25/news016.html",
+    "web_repo": "https://www.recycle-tsushin.com/news/detail_13266.php"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/power-prudence-and-restraint-in-fenelons-telemachus/",
+    null,
+    "https://www.mckinsey.com/capabilities/tech-and-ai/our-insights/democratized-superintelligence-is-coming-the-world-needs-to-get-ready",
+    "https://wordswithoutborders.org/read/article/2026-09/the-creole-continuum-of-the-greater-caribbean-maglia-perrotta/",
+    "https://www.publicbooks.org/the-treachery-of-machine-realism/",
+    "https://www.themarginalian.org/2026/09/25/nietzsche-find-yourself-schopenhauer-as-educator/"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://thepointmag.com/politics/no-country-for-tech-bros/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/09/24/john-berger-deaths-secretary-a-conversation-with-tom-overton/",
+    "music": "https://stereogum.com/2512581/dream-unending-announce-new-album-certain-uncertainties-hear-strained-sincerity/music/",
+    "outdoor": "https://www.cleverhiker.com/backpacking/gsi-bugaboo-camper-ceramic-review/"
+  },
+  "headlines_urls": []
+}
