@@ -786,6 +786,12 @@
       "name_ja": "取引コスト",
       "displayed_on": "2026-09-26",
       "stage": "unseen"
+    },
+    {
+      "concept_id": "many_worlds_interpretation",
+      "name_ja": "多世界解釈",
+      "displayed_on": "2026-09-27",
+      "stage": "unseen"
     }
   ]
 }

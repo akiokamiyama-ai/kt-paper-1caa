@@ -59,6 +59,18 @@
       "column_title": "逃げる国家と聞く社会",
       "column_body_chars": 845,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-09-27",
+      "article_url": "https://nautil.us/how-the-pro%e2%80%91nicotine-wellness-movement-rebranded-an-addictive-drug-1285282/",
+      "article_title": "How the Pro‑Nicotine “Wellness” Movement Rebranded an Addictive Drug",
+      "miibo_called": true,
+      "miibo_failed": false,
+      "fallback_used": false,
+      "elapsed_ms": 30832,
+      "column_title": "清潔な依存の語り",
+      "column_body_chars": 826,
+      "is_placeholder": false
     }
   ]
 }

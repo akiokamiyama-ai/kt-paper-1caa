@@ -2475,6 +2475,17 @@
       ],
       "selected_from_pool_size": 5,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-09-27",
+      "article_url": "https://3quarksdaily.com/3quarksdaily/2026/09/ai-hallucination-of-chinese-nuclear-components-almost-led-to-us-military-attack.html",
+      "article_title": "AI hallucination of Chinese nuclear components almost led to US military attack",
+      "article_category": "academic",
+      "tie_candidates": [
+        "academic"
+      ],
+      "selected_from_pool_size": 5,
+      "is_placeholder": false
     }
   ]
 }
