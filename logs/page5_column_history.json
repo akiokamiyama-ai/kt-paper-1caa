@@ -71,6 +71,18 @@
       "column_title": "清潔な依存の語り",
       "column_body_chars": 826,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-09-28",
+      "article_url": "https://thepointmag.com/examined-life/getting-good-effective-altruism/",
+      "article_title": "Getting Good",
+      "miibo_called": true,
+      "miibo_failed": false,
+      "fallback_used": false,
+      "elapsed_ms": 29888,
+      "column_title": "善くなることを聞く",
+      "column_body_chars": 786,
+      "is_placeholder": false
     }
   ]
 }
