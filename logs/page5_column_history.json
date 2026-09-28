@@ -83,6 +83,18 @@
       "column_title": "善くなることを聞く",
       "column_body_chars": 786,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-09-29",
+      "article_url": "https://3quarksdaily.com/3quarksdaily/2026/09/by-any-working-definition-that-draws-on-biology-rather-than-philosophy-or-religion-ai-is-alive.html",
+      "article_title": "By any working definition that draws on biology rather than philosophy or religion, AI is alive",
+      "miibo_called": true,
+      "miibo_failed": false,
+      "fallback_used": false,
+      "elapsed_ms": 31354,
+      "column_title": "AIという第二の生",
+      "column_body_chars": 897,
+      "is_placeholder": false
     }
   ]
 }

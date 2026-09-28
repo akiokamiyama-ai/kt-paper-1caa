@@ -798,6 +798,12 @@
       "name_ja": "ベルリン知恵パラダイム",
       "displayed_on": "2026-09-28",
       "stage": "unseen"
+    },
+    {
+      "concept_id": "foucault",
+      "name_ja": "フーコー",
+      "displayed_on": "2026-09-29",
+      "stage": "unseen"
     }
   ]
 }
