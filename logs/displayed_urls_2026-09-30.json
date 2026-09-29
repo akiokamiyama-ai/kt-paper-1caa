@@ -1,0 +1,25 @@
+{
+  "date": "2026-09-30",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2609/29/2000001855/",
+    "human_energy": "https://jinjibu.jp/news/detl/26867/",
+    "web_repo": "https://www.jfa-fc.or.jp/particle/5319.html"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/the-manhattan-project-mindset-how-nuclear-analogies-are-steering-ai-policy-off-course/",
+    "https://www.ft.com/content/a8c1d14d-97aa-4b09-8162-adbcac1d0029?syn-25a6b1a6=1",
+    "https://www.mckinsey.com/mgi/our-research/workforce-in-motion-skills-and-pathways-to-future-jobs-in-the-united-states",
+    "https://www.theparisreview.org/blog/2026/09/28/and-then-somebody-handed-me-a-story-gary-indiana-unlocked/",
+    "https://3quarksdaily.com/3quarksdaily/2026/09/book-review-to-taste-on-cooking-and-the-good-life-by-scott-samuelson.html",
+    "https://thetrek.co/day-29-over-the-camels-hump-and-down-in-the-dump/"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://nautil.us/famed-dancers-diary-offers-glimpse-into-psychosis-1285359/",
+  "page6_urls": {
+    "books": "https://lithub.com/personal-yet-systemic-on-antiblackness-as-a-social-historical-and-cultural-phenomenon/",
+    "music": "https://stereogum.com/2512953/saint-vitus-bar-dances-again/columns/breaking-the-oath/",
+    "outdoor": "https://www.cleverhiker.com/backpacking/bearvault-bv-one-review/"
+  },
+  "headlines_urls": []
+}

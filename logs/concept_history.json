@@ -804,6 +804,12 @@
       "name_ja": "フーコー",
       "displayed_on": "2026-09-29",
       "stage": "unseen"
+    },
+    {
+      "concept_id": "quine",
+      "name_ja": "クワイン",
+      "displayed_on": "2026-09-30",
+      "stage": "unseen"
     }
   ]
 }
