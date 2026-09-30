@@ -810,6 +810,12 @@
       "name_ja": "クワイン",
       "displayed_on": "2026-09-30",
       "stage": "unseen"
+    },
+    {
+      "concept_id": "business_anthropology",
+      "name_ja": "ビジネス人類学",
+      "displayed_on": "2026-10-01",
+      "stage": "unseen"
     }
   ]
 }

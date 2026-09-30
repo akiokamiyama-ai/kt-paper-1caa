@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-01",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/news/article/2609/30/2000001869/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2609/30/news044.html",
+    "web_repo": "http://www.jfa-fc.or.jp/particle/320.html"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/onpoint/surveillance-pricing-could-become-more-pernicious-with-ai-by-lindsay-owens-2026-09?utm_source=rss&utm_medium=feed&utm_campaign=main&utm_content=en",
+    null,
+    "https://www.mckinsey.com/featured-insights/mckinsey-on-books/author-talks-can-you-fulfill-your-ambition-and-compose-a-life",
+    "https://www.theparisreview.org/blog/2026/09/22/plan-b-is-extremely-dangerous-benjamin-moser-on-anti-zionism/",
+    "https://3quarksdaily.com/3quarksdaily/2026/09/a-contrarian-view-of-how-consciousness-evolved.html",
+    "https://www.axismag.jp/posts/2026/09/723799.html"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://www.project-syndicate.org/commentary/hillsborough-law-shows-how-human-rights-legislation-can-help-ordinary-people-by-murray-hunt-2026-09?utm_source=rss&utm_medium=feed&utm_campaign=main&utm_content=en",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/09/29/naked-at-last-a-conversation-with-f-keith-wahle/",
+    "music": "https://rockinon.com/news/detail/216025",
+    "outdoor": "https://sectionhiker.com/review-squak-classic-grid-fleece-mid-layer-hoodie/"
+  },
+  "headlines_urls": []
+}

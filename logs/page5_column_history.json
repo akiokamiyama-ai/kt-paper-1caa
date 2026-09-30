@@ -107,6 +107,18 @@
       "column_title": "狂気の手前で聞く",
       "column_body_chars": 806,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-10-01",
+      "article_url": "https://www.project-syndicate.org/commentary/hillsborough-law-shows-how-human-rights-legislation-can-help-ordinary-people-by-murray-hunt-2026-09?utm_source=rss&utm_medium=feed&utm_campaign=main&utm_content=en",
+      "article_title": "Human Rights and Populist Wrongs",
+      "miibo_called": true,
+      "miibo_failed": false,
+      "fallback_used": false,
+      "elapsed_ms": 32141,
+      "column_title": "権利は誰の声を聞くか",
+      "column_body_chars": 900,
+      "is_placeholder": false
     }
   ]
 }
