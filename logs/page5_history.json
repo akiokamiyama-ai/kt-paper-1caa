@@ -2530,6 +2530,17 @@
       ],
       "selected_from_pool_size": 5,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-10-02",
+      "article_url": "https://stereogum.com/2513269/snl-roasts-stella-leffy-in-cut-for-time-weekend-update-segment/news/",
+      "article_title": "SNL Roasts Stella Leffy In Cut-For-Time Weekend Update Segment",
+      "article_category": "music",
+      "tie_candidates": [
+        "music"
+      ],
+      "selected_from_pool_size": 5,
+      "is_placeholder": false
     }
   ]
 }

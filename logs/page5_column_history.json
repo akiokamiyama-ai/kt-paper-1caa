@@ -119,6 +119,18 @@
       "column_title": "権利は誰の声を聞くか",
       "column_body_chars": 900,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-10-02",
+      "article_url": "https://3quarksdaily.com/3quarksdaily/2026/10/john-berger-from-life.html",
+      "article_title": "John Berger: From Life",
+      "miibo_called": true,
+      "miibo_failed": false,
+      "fallback_used": false,
+      "elapsed_ms": 32758,
+      "column_title": "まだ増えるアーカイブ",
+      "column_body_chars": 778,
+      "is_placeholder": false
     }
   ]
 }

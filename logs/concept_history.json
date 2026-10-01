@@ -816,6 +816,12 @@
       "name_ja": "ビジネス人類学",
       "displayed_on": "2026-10-01",
       "stage": "unseen"
+    },
+    {
+      "concept_id": "motoori_norinaga",
+      "name_ja": "本居宣長",
+      "displayed_on": "2026-10-02",
+      "stage": "unseen"
     }
   ]
 }

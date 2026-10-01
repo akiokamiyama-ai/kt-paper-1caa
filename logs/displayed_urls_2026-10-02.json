@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-02",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/news/article/2610/01/2000001929/",
+    "human_energy": "https://jinjibu.jp/news/detl/26899/",
+    "web_repo": "https://www.jfa-fc.or.jp/particle/320.html"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/10/01/artificial-intelligence-existential-anxiety-extremism-violence-united-states-china-policy/",
+    "https://news.google.com/rss/articles/CBMixwFBVV95cUxNM3JpWDZwRi10cWgxdzlETFZGak5YeDNTSFZTSHE4RVNsNndhcEJzTjJGZG5rTnpmT0xxUE5uWnEySUJxWnprV2hoT3ZvcVdER3NKS084VUlFRWpuY2Y0V0RKcXh2UUdCbnpkMy1zWllGY191b2xxbjd6Mkw4UlNhRFg0Tk9kdlNpdkloWkszT2hnTEh2ODhLMkotVHAxRUhXcEZHMDUtenVVYnhqTk5aaWhLWVZpT2dOaEtqSXVIV2JpNnNRSXZN?oc=5",
+    "https://www.mckinsey.com/capabilities/strategy-and-corporate-finance/our-insights/the-ceos-singular-impact-on-the-success-or-failure-of-ai-in-organizations",
+    "https://www.theparisreview.org/blog/2026/09/29/naked-at-last-a-conversation-with-f-keith-wahle/",
+    "https://3quarksdaily.com/3quarksdaily/2026/10/the-original-bitch.html",
+    "https://stereogum.com/2513269/snl-roasts-stella-leffy-in-cut-for-time-weekend-update-segment/news/"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://3quarksdaily.com/3quarksdaily/2026/10/john-berger-from-life.html",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-10/the-national-book-award-interviews-maria-stepanova-and-sasha-dugdale-the-disappearing-act/",
+    "music": "https://stereogum.com/2513256/lil-nas-x-returns-to-music-with-worlds-greatest/music/",
+    "outdoor": "https://sectionhiker.com/backpacking-the-great-circle-trail/"
+  },
+  "headlines_urls": []
+}
