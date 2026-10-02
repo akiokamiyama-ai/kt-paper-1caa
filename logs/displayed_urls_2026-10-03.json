@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-03",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/aiplus/article/2610/02/2000001900/",
+    "human_energy": "https://sloanreview.mit.edu/article/why-design-thinking-needs-a-responsibility-reboot/",
+    "web_repo": "https://www.bc01.net/topinterview/watami_subway_202610/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/cyber-operators-are-deployed-in-place-the-pentagon-should-treat-them-that-way/",
+    null,
+    "https://www.mckinsey.com/industries/consumer-packaged-goods/our-insights/state-of-consumer-africa-2026-meeting-the-pragmatic-shopper",
+    "https://www.theparisreview.org/blog/2026/10/02/the-invisible-princess-faith-ringgold/",
+    "https://nautil.us/where-did-the-social-magic-go-1285451/",
+    "https://www.outsideonline.com/outdoor-adventure/exploration-survival/scopaesthesia-feeling-watched-outdoors-scary-story/"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://3quarksdaily.com/3quarksdaily/2026/10/the-talented-ms-highsmith.html",
+  "page6_urls": {
+    "books": "https://www.nybooks.com/articles/2026/10/22/building-a-real-man-bodybuilding/",
+    "music": "https://stereogum.com/2513448/diiv-trillions/music/",
+    "outdoor": "https://www.atlasobscura.com/places/18th-century-pirates-jolly-roger"
+  },
+  "headlines_urls": []
+}

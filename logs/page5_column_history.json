@@ -131,6 +131,18 @@
       "column_title": "まだ増えるアーカイブ",
       "column_body_chars": 778,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-10-03",
+      "article_url": "https://3quarksdaily.com/3quarksdaily/2026/10/the-talented-ms-highsmith.html",
+      "article_title": "The Talented Ms. Highsmith",
+      "miibo_called": true,
+      "miibo_failed": false,
+      "fallback_used": false,
+      "elapsed_ms": 31463,
+      "column_title": "不穏を聴く本棚の前で",
+      "column_body_chars": 751,
+      "is_placeholder": false
     }
   ]
 }
