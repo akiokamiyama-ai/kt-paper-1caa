@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-04",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/news/article/2610/03/2000001983/",
+    "human_energy": null,
+    "web_repo": "https://www.jfa-fc.or.jp/particle/5319.html"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/10/02/traumatized-catherine-liu-united-states-capitalism-exploitation-class-inequality/",
+    null,
+    "https://www.mckinsey.com/institute-for-economic-mobility/our-insights/americas-next-growth-opportunity-an-investment-ready-heartland",
+    "https://www.theparisreview.org/blog/2026/09/24/john-berger-deaths-secretary-a-conversation-with-tom-overton/",
+    "https://www.publicbooks.org/the-treachery-of-machine-realism/",
+    "https://www.themarginalian.org/2026/10/02/martha-nussbaum-loves-knowledge/"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://www.nplusonemag.com/online-only/online-only/the-freedom-of-the-weasel/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/10/02/the-invisible-princess-faith-ringgold/",
+    "music": "https://stereogum.com/2513494/french-oi-crew-squelette-release-extremely-cool-new-ep-soir-dorage/music/",
+    "outdoor": "https://www.outsideonline.com/outdoor-adventure/environment/border-wall-damages-ancient-arizona-geoglyph/"
+  },
+  "headlines_urls": []
+}

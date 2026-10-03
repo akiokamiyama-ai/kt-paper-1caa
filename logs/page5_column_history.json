@@ -143,6 +143,18 @@
       "column_title": "不穏を聴く本棚の前で",
       "column_body_chars": 751,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-10-04",
+      "article_url": "https://www.nplusonemag.com/online-only/online-only/the-freedom-of-the-weasel/",
+      "article_title": "The Freedom of the Weasel",
+      "miibo_called": true,
+      "miibo_failed": false,
+      "fallback_used": false,
+      "elapsed_ms": 31392,
+      "column_title": "いたちの自由と比喩",
+      "column_body_chars": 843,
+      "is_placeholder": false
     }
   ]
 }
