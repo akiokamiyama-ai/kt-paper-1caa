@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-05",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://japan.zdnet.com/article/35253181/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2610/02/news002.html",
+    "web_repo": "https://www.bc01.net/topinterview/c-united_202610/"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/10/02/sea-cucumbers-illicit-trade-crime-china-mexico-japan/",
+    "http://www3.nhk.or.jp/news/html/20260807/k10015199591000.html",
+    "https://www.mckinsey.com/capabilities/risk-and-resilience/our-insights/the-banks-digital-twin-the-future-of-nonfinancial-risk-management",
+    "https://www.nybooks.com/articles/2026/10/22/building-a-real-man-bodybuilding/",
+    "https://3quarksdaily.com/3quarksdaily/2026/10/universe-25-and-the-problem-of-utopia.html",
+    "https://3quarksdaily.com/3quarksdaily/2026/10/wenn-die-blatter-trieben-autumn-in-rilke.html"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://nautil.us/how-sugar-from-outer-space-became-one-of-the-backbones-of-life-on-earth-1285504/",
+  "page6_urls": {
+    "books": "https://www.nybooks.com/articles/2026/10/22/boxcar-to-nowhere-the-hobo-robert-suits/",
+    "music": "https://stereogum.com/2513501/zach-bryan-wears-free-palestine-shirt-at-robert-krafts-gillette-stadium/news/",
+    "outdoor": "https://www.atlasobscura.com/places/queer-arts-featured"
+  },
+  "headlines_urls": []
+}

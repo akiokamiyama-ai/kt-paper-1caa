@@ -2563,6 +2563,17 @@
       ],
       "selected_from_pool_size": 5,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-10-05",
+      "article_url": "https://3quarksdaily.com/3quarksdaily/2026/10/wenn-die-blatter-trieben-autumn-in-rilke.html",
+      "article_title": "“Wenn Die Blatter trieben:” Autumn in Rilke",
+      "article_category": "academic",
+      "tie_candidates": [
+        "academic"
+      ],
+      "selected_from_pool_size": 5,
+      "is_placeholder": false
     }
   ]
 }

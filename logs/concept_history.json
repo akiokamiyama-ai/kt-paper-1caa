@@ -834,6 +834,12 @@
       "name_ja": "可読性（国家の視線）",
       "displayed_on": "2026-10-04",
       "stage": "unseen"
+    },
+    {
+      "concept_id": "foundation_model",
+      "name_ja": "基盤モデル",
+      "displayed_on": "2026-10-05",
+      "stage": "unseen"
     }
   ]
 }

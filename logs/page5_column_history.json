@@ -155,6 +155,18 @@
       "column_title": "いたちの自由と比喩",
       "column_body_chars": 843,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-10-05",
+      "article_url": "https://nautil.us/how-sugar-from-outer-space-became-one-of-the-backbones-of-life-on-earth-1285504/",
+      "article_title": "How Sugar from Outer Space Became One of the Backbones of Life on Earth",
+      "miibo_called": true,
+      "miibo_failed": false,
+      "fallback_used": false,
+      "elapsed_ms": 28262,
+      "column_title": "壊れやすさが生命を結ぶ",
+      "column_body_chars": 725,
+      "is_placeholder": false
     }
   ]
 }
