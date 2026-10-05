@@ -840,6 +840,12 @@
       "name_ja": "基盤モデル",
       "displayed_on": "2026-10-05",
       "stage": "unseen"
+    },
+    {
+      "concept_id": "knowledge_informatics",
+      "name_ja": "知識情報学",
+      "displayed_on": "2026-10-06",
+      "stage": "unseen"
     }
   ]
 }

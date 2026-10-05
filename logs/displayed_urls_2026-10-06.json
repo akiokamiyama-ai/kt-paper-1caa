@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-06",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://atmarkit.itmedia.co.jp/ait/articles/2610/05/news017.html",
+    "human_energy": "https://jinjibu.jp/news/detl/26899/",
+    "web_repo": "https://www.bc01.net/article/matsuya-inc_202610_02/"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/how-closed-airspace-threatens-u-s-military-mobility-across-eurasia/",
+    null,
+    "https://www.mckinsey.com/industries/financial-services/our-insights/pause-pivot-or-accelerate-saas-in-the-age-of-agentic-ai",
+    "https://wordswithoutborders.org/read/article/2026-09/fire-strike-noodin/",
+    "https://www.publicbooks.org/the-hyphen-unites-avi-shlaim-on-arab-jewish-life/",
+    "https://rockinon.com/news/detail/216031"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://www.publicbooks.org/pied-noir-homesick-blues/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/10/01/submitting-to-the-paris-review/",
+    "music": "https://stereogum.com/2513572/how-to-save-a-life-singer-opens-for-ed-sheeran-says-people-need-to-see-both-sides/news/",
+    "outdoor": "https://www.atlasobscura.com/places/deep-silent-gaze"
+  },
+  "headlines_urls": []
+}
