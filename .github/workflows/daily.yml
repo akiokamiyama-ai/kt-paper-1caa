@@ -176,6 +176,7 @@ jobs:
             logs/page2_scores_*.json
             logs/page3_selection_*.json
             logs/page1_v3_fallback_raw_*.txt
+            logs/shadow_eval_*.json
           retention-days: 90
 
       - name: Refresh index.html with today's archive

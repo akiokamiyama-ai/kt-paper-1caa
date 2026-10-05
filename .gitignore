@@ -70,3 +70,6 @@ desktop.ini
 *~
 .vscode/
 .idea/
+
+# C211: shadow 評価ログ（比較実験用。artifact で取得する）
+logs/shadow_eval_*.json

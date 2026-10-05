@@ -1034,6 +1034,25 @@ def run_stage2(
     # C135 refactor: write_scores_log を top-level で 1 回だけ呼ぶ。
     # _run_stage2_layered / _run_stage2_legacy 内部の write_scores_log は削除。
     write_scores_log(result)
+
+    # C211 (2026-10-05): shadow 評価。既定で完全に無効
+    # （``TRIBUNE_SHADOW_SCORER`` が設定されたときだけ動く）。
+    #
+    # ここに置く理由: 層の統合とキャッシュヒットの反映が終わった**最終スコア**と
+    # 比べたいため。_accumulate_batch に置くと層ごと・バッチごとに発火して
+    # 呼び出し回数が膨らむ。
+    #
+    # maybe_run_shadow は例外を投げない契約だが、import 自体の失敗まで含めて
+    # ここでも囲む。shadow が紙面を落とすことは絶対に避ける
+    # （C201「通知は best-effort、起動は必達」と同じ原則）。
+    try:
+        from scripts.shadow.runner import maybe_run_shadow
+
+        maybe_run_shadow(articles, result.evaluations_by_url, caller=caller)
+    except Exception as e:  # noqa: BLE001
+        print(f"[stage2] shadow skipped (non-fatal): {type(e).__name__}: {e}",
+              file=sys.stderr)
+
     return result
 
 
