@@ -71,7 +71,7 @@ DAILY_CALLS_CAP = 200        # design predicts ~10-20 calls/day; 10x cushion
 # Model pricing (USD per 1M tokens).
 #
 # 出典: Anthropic 公式の料金表（claude-api skill の Current Models 表）。
-# 最終確認日: 2026-09-21 (C205)。
+# 最終確認日: 2026-10-05 (C208、platform.claude.com の Pricing ページで突合)。
 # **価格は改定される。モデルを足すときと、半年に一度は必ず出典で突き合わせること。**
 #
 # cache_write_per_mtok / cache_read_per_mtok cover the 5-minute ephemeral
@@ -91,6 +91,18 @@ MODEL_PRICING: dict[str, dict[str, float]] = {
         "output_per_mtok": 15.0,
         "cache_write_per_mtok": 3.75,
         "cache_read_per_mtok": 0.30,
+    },
+    # C208 (2026-10-05): Sonnet 5.5 (2026-09-28 リリース)。価格は Sonnet 5 と
+    # 同額、トークナイザも Sonnet 5 と同じ（4.6 比で同じテキストが約 30% 多く
+    # カウントされる）。公式は「1 タスクあたり最大 30% 安い」としているが、
+    # それは出力トークンが減ることによる効果で、実測の例示は
+    # 「offline Slackbot eval で出力トークン約 14% 減」。Tribune の stage2 は
+    # 単発・ツールなしの採点なので、「ツール呼び出しが減る」分は効かない。
+    "claude-sonnet-5-5": {
+        "input_per_mtok": 2.0,
+        "output_per_mtok": 10.0,
+        "cache_write_per_mtok": 2.50,
+        "cache_read_per_mtok": 0.20,
     },
     # C204 の移行検討に備えて先に入れておく（現時点では未使用）。
     # 単価は 4.6 より安いが、トークナイザが変わり同じテキストで約 30% 多く
