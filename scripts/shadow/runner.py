@@ -74,20 +74,39 @@ def maybe_run_shadow(
             baseline = {jp: ev.get(jp) for _eng, jp in AESTHETIC_KEYS}
             if any(not isinstance(v, (int, float)) for v in baseline.values()):
                 continue
-            pairs.append((art, baseline))
+            # C213 (2026-10-06): 層と「未採点の項目」を一緒に残す。
+            #
+            # layer 1 の Haiku は 3 項目しか採点せず、美意識5/6 は
+            # **0 + reason="haiku_unscored"** になる。これは「Sonnet が 0 と
+            # 判断した」のではなく「採点していない」。10/6 の初日データでは
+            # 美意識5/6 が 62/99 件で 0 だった（うち 122 項目が haiku_unscored）。
+            # Jev は代表値の都合で 1.0 未満を返せないので、この 0 と比べると
+            # 相関が偽の形に引っ張られる。compare 側で除外するために印を残す。
+            reasons = ev.get("evaluation_reason") or {}
+            unscored = [
+                jp for _eng, jp in AESTHETIC_KEYS
+                if reasons.get(jp.replace("美意識", "")) == "haiku_unscored"
+            ]
+            meta = {
+                "layer": ev.get("layer"),
+                "evaluation_mode": ev.get("evaluation_mode"),
+                "unscored": unscored,
+            }
+            pairs.append((art, baseline, meta))
             if len(pairs) >= limit:
                 break
         if not pairs:
             return 0
 
-        results = scorer.score_articles([a for a, _ in pairs])
+        results = scorer.score_articles([a for a, _b, _m in pairs])
         from . import store
         from scripts.lib.jst import jst_now_iso
 
         entries = []
-        for (art, baseline), r in zip(pairs, results):
+        for (art, baseline, meta), r in zip(pairs, results):
             e = r.to_entry()
             e["baseline"] = baseline
+            e["baseline_meta"] = meta
             e["caller"] = caller
             e["title"] = (art.get("title") or "")[:120]
             e["recorded_at"] = jst_now_iso()

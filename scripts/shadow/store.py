@@ -10,7 +10,7 @@
         "caller": "page3", "recorded_at": ...}
      ]}
 
-同一 ``(url, scorer)`` は **upsert**（C185 と同じ思想で二重記録を作らない）。
+同一 ``(url, scorer, caller)`` は **upsert**（C185 と同じ思想で二重記録を作らない）。
 """
 
 from __future__ import annotations
@@ -56,10 +56,17 @@ def record(entries: list[dict], *, path: Path | None = None) -> int:
     try:
         p = path or log_path()
         data = load(p)
-        index = {(e.get("url"), e.get("scorer")): i
+        # C213 (2026-10-06): キーに caller を含める。
+        #
+        # (url, scorer) だけだと **caller をまたいだ同一 URL が上書きされる**。
+        # 10/6 初日は 120 件書いて 99 件しか残らず、page3_serendipity の 10 件は
+        # すべて他 caller と URL が重複していたため丸ごと消えた
+        # （ログには「10 件記録」と出ているのに caller 別集計は 0 件）。
+        # 同じ記事を別の面が評価したら、それは別の観測として両方残す。
+        index = {(e.get("url"), e.get("scorer"), e.get("caller")): i
                  for i, e in enumerate(data["entries"])}
         for e in entries:
-            k = (e.get("url"), e.get("scorer"))
+            k = (e.get("url"), e.get("scorer"), e.get("caller"))
             if k in index:
                 data["entries"][index[k]] = e
             else:

@@ -60,8 +60,9 @@ DEFAULT_MODEL = "jev-latest"
 INPUT_PER_MTOK = 0.042
 OUTPUT_PER_MTOK = 0.0
 
-# 記事本文をこの長さで切る。入力長の上限が未公開なので保守的に。
-BODY_LIMIT = 2000
+# C213: 本文の切り方は本番 (stage2.BODY_EXCERPT_LIMIT = 800 字 + 句点で切り戻し)
+# に揃えたため、shadow 側で独自に切らない。入力長の上限が未公開である点は
+# 変わらないが、本番と同じ長さなら本番が通っている以上は通る。
 
 _BAND_RE = re.compile(r"^-\s*(\d+[–-]\d+)\s*[：:]\s*(.+)$", re.M)
 _SECTION_RE = re.compile(r"\n### 美意識(\d)[：:]")
@@ -144,14 +145,25 @@ class JevScorer(ShadowScorer):
         return questions
 
     @staticmethod
-    def build_state(article: dict) -> dict:
-        body = (article.get("body") or "").strip()
-        return {
-            "title": (article.get("title") or "").strip(),
-            "source": (article.get("source_name") or "").strip(),
-            "description": (article.get("description") or "").strip(),
-            "body": body[:BODY_LIMIT],
-        }
+    def build_state(article: dict) -> str:
+        """**本番 Sonnet に渡すのと同一の文字列**を state にする.
+
+        C213 (2026-10-06): 初版は title / description / body[:2000] を独自に
+        組んでいた。本番 (``stage2._format_article_block``) の規則は違う:
+
+        * ``body`` を付けるのは ``len(description) < 80`` のときだけ
+        * ``body`` は **800 字**で、しかも句点・改行で切り戻す
+
+        つまり description が長い英語論考では **Sonnet は body を見ず、Jev は
+        2,000 字の生本文を見ていた**。入力が違えばモデル比較にならない。
+
+        規則を写すのではなく**本番の関数をそのまま呼ぶ**。そうすれば本番の
+        整形が変わっても自動で追従する（rubric を原典からパースするのと
+        同じ考え方）。
+        """
+        from scripts.selector.stage2 import _format_article_block
+
+        return _format_article_block("art_shadow", article)
 
     def _post(self, payload: dict) -> dict:
         req = urllib.request.Request(

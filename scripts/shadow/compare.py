@@ -73,19 +73,47 @@ def _final(scores: dict) -> float | None:
         return None
 
 
-def summarize(entries: list[dict]) -> dict:
-    by_scorer = collections.defaultdict(list)
+def _layer_group(e: dict) -> str:
+    """baseline を層でまとめる。``haiku`` 群は美意識5/6 が未採点."""
+    m = e.get("baseline_meta") or {}
+    mode = m.get("evaluation_mode") or ""
+    if mode.startswith("haiku"):
+        return "haiku"
+    if mode.startswith("sonnet"):
+        return "sonnet_full"
+    return "unknown"
+
+
+def _usable(e: dict, jp: str) -> bool:
+    """この項目を相関計算に使えるか.
+
+    C213: ``haiku_unscored`` の項目は **Sonnet が 0 と判断したのではなく
+    採点していない**。除外する。理由文が残っている 0 は正当な 0 なので使う。
+    """
+    return jp not in ((e.get("baseline_meta") or {}).get("unscored") or [])
+
+
+def summarize(entries: list[dict], *, by_layer: bool = True) -> dict:
+    """shadow と本番の一致度をまとめる.
+
+    **Spearman（順位相関）を主指標にする。** Jev は代表値の都合で
+    1.0 未満を返せず（0–2 帯 = 1.0）、本番 Sonnet は 0 を返す。値域が
+    [1.0, 9.5] 対 [0, 10] で揃わないので、Pearson は系統的に圧縮される。
+    置き換えの可否を決めるのは「同じ記事を同じ順に並べられるか」なので
+    順位相関で見る。Pearson も参考として併記する。
+    """
+    groups: dict[tuple, list[dict]] = collections.defaultdict(list)
     for e in entries:
-        if e.get("error") or not e.get("scores") or not e.get("baseline"):
-            by_scorer[(e.get("scorer") or "?", "error")].append(e)
-            continue
-        by_scorer[(e.get("scorer") or "?", "ok")].append(e)
+        s = e.get("scorer") or "?"
+        g = _layer_group(e) if by_layer else "all"
+        key = (s, g)
+        groups[key].append(e)
 
     out: dict = {}
-    scorers = {k[0] for k in by_scorer}
-    for s in sorted(scorers):
-        ok = by_scorer[(s, "ok")]
-        ng = by_scorer[(s, "error")]
+    for (scorer, layer), rows in sorted(groups.items()):
+        ok = [e for e in rows
+              if not e.get("error") and e.get("scores") and e.get("baseline")]
+        ng = [e for e in rows if e not in ok]
         res: dict = {
             "n_ok": len(ok), "n_error": len(ng),
             "per_aesthetic": {}, "final_score": {},
@@ -95,40 +123,52 @@ def summarize(entries: list[dict]) -> dict:
             ).most_common(5),
         }
         for eng, jp in AESTHETIC_KEYS:
-            xs = [e["baseline"].get(jp) for e in ok]
-            ys = [e["scores"].get(eng) for e in ok]
-            pairs = [(x, y) for x, y in zip(xs, ys)
-                     if isinstance(x, (int, float)) and isinstance(y, (int, float))]
-            if len(pairs) < 3:
-                res["per_aesthetic"][jp] = {"n": len(pairs)}
-                continue
-            a = [p[0] for p in pairs]; b = [p[1] for p in pairs]
-            res["per_aesthetic"][jp] = {
-                "n": len(pairs),
-                "pearson": pearson(a, b),
-                "spearman": spearman(a, b),
-                "mean_baseline": round(sum(a) / len(a), 2),
-                "mean_shadow": round(sum(b) / len(b), 2),
-                "mean_confidence": (
-                    round(sum(e.get("confidence", {}).get(eng, 0) for e in ok) / len(ok), 3)
-                    if ok else None
-                ),
-            }
+            pairs = []
+            n_excluded = 0
+            for e in ok:
+                if not _usable(e, jp):
+                    n_excluded += 1
+                    continue
+                x = e["baseline"].get(jp)
+                y = e["scores"].get(eng)
+                if isinstance(x, (int, float)) and isinstance(y, (int, float)):
+                    pairs.append((x, y))
+            d: dict = {"n": len(pairs), "excluded_unscored": n_excluded}
+            if len(pairs) >= 3:
+                a = [p[0] for p in pairs]; b = [p[1] for p in pairs]
+                d.update({
+                    "spearman": spearman(a, b),       # ★主指標
+                    "pearson": pearson(a, b),         # 参考
+                    "mean_baseline": round(sum(a) / len(a), 2),
+                    "mean_shadow": round(sum(b) / len(b), 2),
+                    "mean_confidence": (
+                        round(sum(e.get("confidence", {}).get(eng, 0)
+                                  for e in ok) / len(ok), 3) if ok else None
+                    ),
+                })
+            res["per_aesthetic"][jp] = d
+
+        # final_score は **全 5 項目が採点済みの記事だけ**で出す。
         fb, fs = [], []
         for e in ok:
+            if (e.get("baseline_meta") or {}).get("unscored"):
+                continue
             a = _final({eng: e["baseline"].get(jp) for eng, jp in AESTHETIC_KEYS})
             b = _final(e["scores"])
             if a is not None and b is not None:
                 fb.append(a); fs.append(b)
         if len(fb) >= 3:
             res["final_score"] = {
-                "n": len(fb), "pearson": pearson(fb, fs), "spearman": spearman(fb, fs),
+                "n": len(fb), "spearman": spearman(fb, fs), "pearson": pearson(fb, fs),
             }
+        else:
+            res["final_score"] = {"n": len(fb)}
         if ok:
-            res["cost_per_article"] = round(sum(e.get("cost_usd", 0) for e in ok) / len(ok), 8)
+            res["cost_per_article"] = round(
+                sum(e.get("cost_usd", 0) for e in ok) / len(ok), 8)
             lat = sorted(e.get("elapsed_ms", 0) for e in ok)
             res["latency_ms_median"] = lat[len(lat) // 2]
-        out[s] = res
+        out[f"{scorer} / {layer}"] = res
     return out
 
 
@@ -144,28 +184,33 @@ def main() -> int:
               f"(logs/shadow_eval_*.json)", file=sys.stderr)
         return 1
     res = summarize(entries)
-    if args.json:
-        print(json.dumps(res, ensure_ascii=False, indent=2))
-        return 0
-    for s, r in res.items():
-        print(f"=== {s} — 成功 {r['n_ok']} 件 / 失敗 {r['n_error']} 件 ===")
-        if r["errors"]:
-            for msg, n in r["errors"]:
-                print(f"    失敗 {n:>3}: {msg}")
-        print(f"{'項目':<10}{'n':>5}{'Pearson':>9}{'Spearman':>10}"
-              f"{'本番平均':>9}{'shadow':>9}{'confidence':>12}")
+    print(f"対象 {len(entries)} 件 / 直近 {args.days} 日\n")
+    print("※ Jev は代表値の都合で 1.0 未満を返せない（0–2 帯 = 1.0）。")
+    print("  本番は 0 を返すため値域が [1.0, 9.5] 対 [0, 10] で揃わない。")
+    print("  判定は **Spearman（順位相関）** で行う。Pearson は参考。")
+    print("※ haiku_unscored（Haiku が採点していない美意識5/6）は除外している。\n")
+    for s_, r in res.items():
+        print(f"=== {s_} — 成功 {r['n_ok']} 件 / 失敗 {r['n_error']} 件 ===")
+        for msg, n in r["errors"]:
+            print(f"    失敗 {n:>3}: {msg}")
+        print(f"{'項目':<10}{'n':>5}{'除外':>5}{'Spearman':>10}{'Pearson':>9}"
+              f"{'本番平均':>9}{'shadow':>9}{'conf':>7}")
         for _eng, jp in AESTHETIC_KEYS:
             d = r["per_aesthetic"].get(jp, {})
             if d.get("n", 0) < 3:
-                print(f"{jp:<10}{d.get('n',0):>5}   （件数不足）")
+                print(f"{jp:<10}{d.get('n',0):>5}{d.get('excluded_unscored',0):>5}"
+                      f"   （件数不足）")
                 continue
-            print(f"{jp:<10}{d['n']:>5}{str(d['pearson']):>9}{str(d['spearman']):>10}"
+            print(f"{jp:<10}{d['n']:>5}{d['excluded_unscored']:>5}"
+                  f"{str(d['spearman']):>10}{str(d['pearson']):>9}"
                   f"{d['mean_baseline']:>9}{d['mean_shadow']:>9}"
-                  f"{str(d['mean_confidence']):>12}")
+                  f"{str(d['mean_confidence']):>7}")
         f = r["final_score"]
-        if f:
-            print(f"\n  final_score: n={f['n']} Pearson={f['pearson']} "
-                  f"Spearman={f['spearman']}")
+        if f.get("spearman") is not None:
+            print(f"\n  final_score（全項目採点済みのみ）: n={f['n']} "
+                  f"Spearman={f['spearman']} Pearson={f['pearson']}")
+        else:
+            print(f"\n  final_score: n={f.get('n', 0)}（件数不足）")
         print(f"  1 件あたり ${r['cost_per_article']} / レイテンシ中央 "
               f"{r['latency_ms_median']} ms\n")
     return 0

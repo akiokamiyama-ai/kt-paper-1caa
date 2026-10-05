@@ -181,8 +181,12 @@ def test_jev_happy_path():
            r.confidence["aesthetic_1_structure_detail"] == 0.8)
     _check("c5 コストは入力のみ（出力無料）",
            abs(r.cost_usd - 1200 / 1e6 * 0.042) < 1e-12, f"${r.cost_usd}")
-    _check("c6 本文は BODY_LIMIT で切る",
-           len(s.build_state(_ART)["body"]) == 2000)
+    # C213: build_state は本番の _format_article_block をそのまま使うので、
+    #       文字列を返す。切り方の検証は (g) に移した。
+    _check("c6 state は本番と同じ文字列形式",
+           isinstance(s.build_state(_ART), str)
+           and s.build_state(_ART).startswith("[art_shadow]"),
+           s.build_state(_ART)[:24])
 
 
 def test_jev_zero_score_regression():
@@ -277,22 +281,62 @@ def test_missing_key_is_skipped():
 
 
 def test_runner_never_raises():
-    """store が壊れていても例外を外に出さない."""
+    """store が壊れていても例外を外に出さない.
+
+    C213: scorer を fake に差し替える。以前は TYPESAFE_API_KEY=dummy で
+    **実際に api.typesafe.ai へ 401 を投げていた**（テストが毎回ネットワークを
+    叩くのは筋が悪い）。
+    """
+    import scripts.shadow.runner as runner_mod
+
     os.environ["TRIBUNE_SHADOW_SCORER"] = "jev"
-    os.environ["TYPESAFE_API_KEY"] = "dummy"
-    orig = store.log_path
+    orig_build = runner_mod._build_scorer
+    orig_path = store.log_path
     try:
+        runner_mod._build_scorer = lambda name: _FakeJev()
         store.log_path = lambda *a, **k: Path("/proc/does-not-exist/x.json")
         try:
-            n = maybe_run_shadow([_ART], _EVALS, caller="page3")
+            maybe_run_shadow([_ART], _EVALS, caller="page3")
             raised = False
         except Exception:  # noqa: BLE001
             raised = True
     finally:
-        store.log_path = orig
+        runner_mod._build_scorer = orig_build
+        store.log_path = orig_path
         del os.environ["TRIBUNE_SHADOW_SCORER"]
-        del os.environ["TYPESAFE_API_KEY"]
     _check("d4 ★書き込み不能でも投げない", not raised)
+
+
+def test_runner_records_baseline_meta():
+    """★layer / 未採点項目を記録する（compare が層別に出せるように）."""
+    import scripts.shadow.runner as runner_mod
+
+    evals = {"https://x.test/a": {
+        **{jp: 6 for _e, jp in AESTHETIC_KEYS},
+        "layer": 1, "evaluation_mode": "haiku_full",
+        "evaluation_reason": {"1": "r", "3": "r", "5": "haiku_unscored",
+                              "6": "haiku_unscored", "8": "r"},
+    }}
+    os.environ["TRIBUNE_SHADOW_SCORER"] = "jev"
+    orig_build = runner_mod._build_scorer
+    with tempfile.TemporaryDirectory() as td:
+        pth = Path(td) / "s.json"
+        orig_path = store.log_path
+        try:
+            runner_mod._build_scorer = lambda name: _FakeJev()
+            store.log_path = lambda *a, **k: pth
+            maybe_run_shadow([_ART], evals, caller="page6")
+            rows = store.load(pth)["entries"]
+        finally:
+            runner_mod._build_scorer = orig_build
+            store.log_path = orig_path
+            del os.environ["TRIBUNE_SHADOW_SCORER"]
+    _check("d9 記録される", len(rows) == 1, str(len(rows)))
+    m = rows[0].get("baseline_meta") or {} if rows else {}
+    _check("d10 ★未採点項目が印される",
+           m.get("unscored") == ["美意識5", "美意識6"], str(m.get("unscored")))
+    _check("d11 layer / mode が残る",
+           m.get("layer") == 1 and m.get("evaluation_mode") == "haiku_full", str(m))
 
 
 def test_stage2_hook_is_wrapped():
@@ -372,7 +416,7 @@ def test_summarize_uses_production_formula():
             "baseline": {jp: i + 1 for _eng, jp in AESTHETIC_KEYS},
             "cost_usd": 0.00005, "elapsed_ms": 300, "error": None,
         })
-    r = compare.summarize(entries)["jev"]
+    r = compare.summarize(entries)["jev / unknown"]
     _check("f7 成功 5 件", r["n_ok"] == 5, str(r["n_ok"]))
     _check("f8 一致していれば項目別 Pearson=1.0",
            r["per_aesthetic"]["美意識1"]["pearson"] == 1.0)
@@ -385,13 +429,120 @@ def test_summarize_uses_production_formula():
 def test_summarize_counts_errors():
     entries = [{"url": "u", "scorer": "jev", "scores": {}, "baseline": {},
                 "error": "HTTP 401: nope"}]
-    r = compare.summarize(entries)["jev"]
+    r = compare.summarize(entries)["jev / unknown"]
     _check("f11 失敗件数が出る", r["n_error"] == 1)
     _check("f12 失敗理由が集計される", r["errors"] and "401" in r["errors"][0][0])
 
 
+
+
+# ---------------------------------------------------------------------------
+# (g) C213: 初日データで見つかった 4 件
+# ---------------------------------------------------------------------------
+
+def test_upsert_key_includes_caller():
+    """★caller をまたいだ同一 URL が上書きされない（10/6 初日に 21 件消えた）."""
+    with tempfile.TemporaryDirectory() as td:
+        p = Path(td) / "s.json"
+        for caller in ("page3", "page3_serendipity"):
+            e = ShadowScore(url="same", scorer="jev", scores={"a": 1.0}).to_entry()
+            e["caller"] = caller
+            store.record([e], path=p)
+        rows = store.load(p)["entries"]
+    _check("g1 ★同一 URL でも caller が違えば両方残る", len(rows) == 2, str(len(rows)))
+    _check("g2 caller が保たれる",
+           sorted(r["caller"] for r in rows) == ["page3", "page3_serendipity"])
+
+
+def test_same_caller_still_upserts():
+    with tempfile.TemporaryDirectory() as td:
+        p = Path(td) / "s.json"
+        for v in (1.0, 9.0):
+            e = ShadowScore(url="u", scorer="jev", scores={"a": v}).to_entry()
+            e["caller"] = "page3"
+            store.record([e], path=p)
+        rows = store.load(p)["entries"]
+    _check("g3 同一 caller なら従来どおり upsert", len(rows) == 1, str(len(rows)))
+    _check("g4 後の値で上書き", rows[0]["scores"]["a"] == 9.0)
+
+
+def test_state_matches_production_exactly():
+    """★Jev の state が本番 Sonnet に渡すのと同一文字列であること."""
+    from scripts.selector.stage2 import _format_article_block
+
+    for label, art in [
+        ("description 長い", {"title": "T", "source_name": "S",
+                              "description": "d" * 300, "body": "B" * 5000}),
+        ("description 短い", {"title": "T", "source_name": "S",
+                              "description": "d" * 20, "body": "本文。" * 500}),
+        ("body なし", {"title": "T", "source_name": "S", "description": "d" * 10}),
+    ]:
+        want = _format_article_block("art_shadow", art)
+        got = JevScorer.build_state(art)
+        _check(f"g5 {label}: 本番と完全一致", got == want,
+               f"{len(got)} 字 vs {len(want)} 字")
+
+
+def test_long_description_excludes_body():
+    """★英語論考（description 長い）で body を渡さない（本番と同じ）."""
+    art = {"title": "The FY2017 Defense Budget", "source_name": "Foreign Affairs",
+           "description": "d" * 300, "body": "B" * 5000}
+    st = JevScorer.build_state(art)
+    _check("g6 ★body を含めない（Sonnet も見ていない）", "body:" not in st)
+    _check("g7 2,000 字の生本文が入らない", len(st) < 500, f"{len(st)} 字")
+
+
+def _entry(mode, unscored, base, shadow, caller="page3"):
+    return {"url": f"u{base}{shadow}{mode}", "scorer": "jev", "caller": caller,
+            "scores": {eng: float(shadow) for eng, _jp in AESTHETIC_KEYS},
+            "baseline": {jp: base for _eng, jp in AESTHETIC_KEYS},
+            "baseline_meta": {"layer": 1 if mode.startswith("haiku") else 3,
+                              "evaluation_mode": mode, "unscored": unscored},
+            "cost_usd": 0.00006, "elapsed_ms": 300, "error": None}
+
+
+def test_haiku_unscored_is_excluded():
+    """★haiku_unscored の項目は相関計算から外す."""
+    rows = [_entry("haiku_prefilter_only", ["美意識5", "美意識6"], i, i)
+            for i in range(1, 6)]
+    r = compare.summarize(rows)["jev / haiku"]
+    _check("g8 ★美意識5 は全件除外されて n=0",
+           r["per_aesthetic"]["美意識5"]["n"] == 0
+           and r["per_aesthetic"]["美意識5"]["excluded_unscored"] == 5,
+           str(r["per_aesthetic"]["美意識5"]))
+    _check("g9 採点済みの項目は計算される",
+           r["per_aesthetic"]["美意識1"]["n"] == 5)
+    _check("g10 未採点を含む記事は final_score から外す",
+           r["final_score"].get("n") == 0, str(r["final_score"]))
+
+
+def test_layer_split():
+    """★baseline を layer（haiku / sonnet）別に分けて出す."""
+    rows = ([_entry("haiku_full", ["美意識5", "美意識6"], i, i) for i in range(1, 5)]
+            + [_entry("sonnet_full", [], i, i) for i in range(1, 5)])
+    res = compare.summarize(rows)
+    _check("g11 ★haiku と sonnet_full が別グループになる",
+           sorted(res) == ["jev / haiku", "jev / sonnet_full"], str(sorted(res)))
+    _check("g12 sonnet_full では 5 項目すべて計算される",
+           all(res["jev / sonnet_full"]["per_aesthetic"][jp]["n"] == 4
+               for _e, jp in AESTHETIC_KEYS))
+
+
+def test_spearman_is_primary():
+    """★順位相関が主指標。値域が揃わなくても順位が合えば 1.0."""
+    # 本番 0..4、Jev は 1.0 未満を返せないので 1.0..5.0。順位は同じ。
+    rows = []
+    for i in range(5):
+        e = _entry("sonnet_full", [], i, i + 1.0)
+        rows.append(e)
+    r = compare.summarize(rows)["jev / sonnet_full"]
+    d = r["per_aesthetic"]["美意識1"]
+    _check("g13 ★床が違っても Spearman=1.0", d["spearman"] == 1.0, str(d["spearman"]))
+    _check("g14 Pearson も併記される", d["pearson"] is not None)
+
+
 def main() -> int:
-    print("C211: shadow 評価の枠組み（実 API は叩かない）\n")
+    print("C211/C213: shadow 評価の枠組み（実 API は叩かない）\n")
     print("(a) rubric は原典から:")
     test_criteria_from_production_prompt(); test_questions_shape()
     print()
@@ -408,6 +559,7 @@ def main() -> int:
     print("(d) ★既定で無効 / 紙面を落とさない:")
     test_disabled_by_default(); test_unknown_scorer_is_skipped()
     test_missing_key_is_skipped(); test_runner_never_raises()
+    test_runner_records_baseline_meta()
     test_stage2_hook_is_wrapped()
     print()
     print("(e) store:")
@@ -416,6 +568,12 @@ def main() -> int:
     print("(f) 相関:")
     test_correlation_math(); test_summarize_uses_production_formula()
     test_summarize_counts_errors()
+    print()
+    print("(g) C213 初日データの修正:")
+    test_upsert_key_includes_caller(); test_same_caller_still_upserts()
+    test_state_matches_production_exactly(); test_long_description_excludes_body()
+    test_haiku_unscored_is_excluded(); test_layer_split()
+    test_spearman_is_primary()
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")
     return 0 if FAIL == 0 else 1

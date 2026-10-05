@@ -287,11 +287,21 @@ def test_fetch_description_prefix_added():
     「個人情報保護委員会報道発表: 個人情報保護委員会 令和７年度年次...」
     のような 40+ 字になる。
     """
+    # C213 (2026-10-06): 日付を **相対**にする。
+    #
+    # 以前は datetime=" 2026-07-07 " を固定で書いていた。driver の
+    # max_age_days=90 を 2026-10-06 に跨いだ瞬間にこの記事が足切りされ、
+    # articles[0] が IndexError になってテストが落ちた（書いた時点では通る、
+    # 時間が経つと壊れる「時限式」のテスト）。
+    #
+    # このテストが見たいのは description の prefix なので、日付は「足切りに
+    # かからない最近の日付」であれば何でもよい。
+    recent = (date.today() - timedelta(days=3)).isoformat()
     real_title = "個人情報保護委員会 令和７年度年次報告の公表について（令和８年７月７日）"
     html = f"""
 <ul class="news-list">
 <li>
-<time datetime=" 2026-07-07 " class="news-date">JP</time>
+<time datetime=" {recent} " class="news-date">JP</time>
 <div class="news-text"><a href="/news/press/x/">{real_title}</a></div>
 </li>
 </ul>
