@@ -185,12 +185,23 @@ class JevScorer(ShadowScorer):
                 scores: dict[str, float] = {}
                 conf: dict[str, float] = {}
                 probs: dict[str, dict] = {}
+                raw: dict[str, float] = {}
+                answers = resp.get("answers") or {}
+                missing = [eng for eng, _jp in AESTHETIC_KEYS if eng not in answers]
+                if missing:
+                    raise ValueError(f"応答に無い質問: {missing}")
                 for eng, _jp in AESTHETIC_KEYS:
-                    a = (resp.get("answers") or {}).get(eng) or {}
-                    p = {_normalize_band(k): v for k, v in (a.get("probabilities") or {}).items()}
+                    a = answers.get(eng) or {}
+                    # C212: キーはそのまま保存する（段階番号 "0".."3"）。
+                    # 以前は _normalize_band で加工していたが、番号を
+                    # バンド名に寄せる処理が噛み合わず全項目 0 になった。
+                    p = dict(a.get("probabilities") or {})
                     probs[eng] = p
+                    if isinstance(a.get("score"), (int, float)):
+                        raw[eng] = float(a["score"])   # 突合用に生値も残す
                     # 期待値を使う。最頻値だと 4 段階の粗さが順位相関を潰す。
-                    scores[eng] = expected_score(p) if p else float(a.get("score") or 0)
+                    # 対応づけできなければ **0 ではなく例外**（C212）。
+                    scores[eng] = expected_score(p)
                     if isinstance(a.get("confidence"), (int, float)):
                         conf[eng] = float(a["confidence"])
                 u = resp.get("usage") or {}
@@ -198,7 +209,7 @@ class JevScorer(ShadowScorer):
                         + int(u.get("output_tokens") or 0) / 1e6 * OUTPUT_PER_MTOK)
                 out.append(ShadowScore(
                     url=url, scorer=self.name, scores=scores, confidence=conf,
-                    probabilities=probs, cost_usd=cost,
+                    probabilities=probs, raw_scores=raw, cost_usd=cost,
                     elapsed_ms=int((time.monotonic() - started) * 1000),
                 ))
             except urllib.error.HTTPError as e:

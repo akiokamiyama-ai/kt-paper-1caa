@@ -33,6 +33,7 @@ criteria として渡せる**。独自の rubric を書き起こすと「Jev の
 
 from __future__ import annotations
 
+import sys
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 
@@ -46,32 +47,93 @@ AESTHETIC_KEYS: tuple[tuple[str, str], ...] = (
 )
 
 # スコアバンド → 0–10 の代表値。本番プロンプトのバンド定義に対応する。
+#
+# ``criteria`` は低い順に並べて渡すので、段階番号 0,1,2,3 がこの並びに対応する。
+BAND_ORDER: tuple[str, ...] = ("0-2", "3-5", "6-8", "9-10")
 BAND_MIDPOINTS: dict[str, float] = {
     "0-2": 1.0,
     "3-5": 4.0,
     "6-8": 7.0,
     "9-10": 9.5,
 }
-BAND_ORDER: tuple[str, ...] = ("0-2", "3-5", "6-8", "9-10")
+# 段階番号（Jev が返すキー）→ 代表値
+INDEX_MIDPOINTS: tuple[float, ...] = tuple(BAND_MIDPOINTS[b] for b in BAND_ORDER)
 
 
-def expected_score(probabilities: dict[str, float]) -> float:
+class UnknownProbabilityKeys(ValueError):
+    """``probabilities`` のキーをどの代表値にも対応づけられなかった.
+
+    C212 (2026-10-06): **黙って 0 を返さないために例外にしている。**
+
+    C211 の初回実装は ``probabilities`` のキーがバンド名（``"6-8"`` など）で
+    返ると想定した対応表を書いた。実際の Jev は **段階番号**（``"0"``〜``"3"``、
+    ``criteria`` 配列の添字）で返す。一致するキーが無いので合計が 0 になり、
+    ``total <= 0`` の分岐で **0.0 を返していた**——確率は正常に返っているのに、
+    スコアだけが全項目 0 になる。
+
+    紙面には影響しないが、気づかずに 2 週間走らせたら shadow のデータが
+    丸ごと無駄になる。例外にして ``ShadowScore.error`` に載せ、
+    ``compare`` の失敗件数に出るようにする。
+    """
+
+
+def expected_score(
+    probabilities: dict[str, float],
+    *,
+    midpoints: tuple[float, ...] = INDEX_MIDPOINTS,
+) -> float:
     """バンド確率から 0–10 の期待値を出す.
 
-    ``probabilities`` のキーはバンド名（``"6-8"`` など）。未知のキーは無視する。
-    確率の合計が 1 でなければ正規化する（API 側の丸めへの保険）。
+    Jev は ``probabilities`` を **段階番号**で返す（``{"0": 0.51, "1": 0.17,
+    "2": 0.3, "3": 0.02}``）。``criteria`` を低い順に渡しているので、
+    番号がそのまま ``midpoints`` の添字になる。
+
+    保険としてバンド名キー（``"6-8"`` など）も受け付ける。将来 API が
+    表記を変えても落ちないようにするためで、現行の Jev は番号で返す。
+
+    Raises
+    ------
+    UnknownProbabilityKeys
+        どのキーも対応づけられなかったとき。**0.0 を返さない。**
     """
+    if not probabilities:
+        raise UnknownProbabilityKeys("probabilities が空")
+
     total = 0.0
     acc = 0.0
-    for band, p in (probabilities or {}).items():
-        mid = BAND_MIDPOINTS.get(str(band).strip())
-        if mid is None or not isinstance(p, (int, float)):
+    unmatched: list[str] = []
+    for key, p in probabilities.items():
+        if not isinstance(p, (int, float)):
+            unmatched.append(str(key))
+            continue
+        k = str(key).strip()
+        mid: float | None = None
+        if k.isdigit():                      # Jev の実際の形式（段階番号）
+            i = int(k)
+            if 0 <= i < len(midpoints):
+                mid = midpoints[i]
+        if mid is None:                      # 保険：バンド名
+            mid = BAND_MIDPOINTS.get(_normalize_band_name(k))
+        if mid is None:
+            unmatched.append(k)
             continue
         total += float(p)
         acc += float(p) * mid
+
     if total <= 0:
-        return 0.0
+        raise UnknownProbabilityKeys(
+            f"どのキーも代表値に対応づけられない: keys={sorted(probabilities)} "
+            f"（段階番号 0..{len(midpoints) - 1} か {sorted(BAND_MIDPOINTS)} を想定）"
+        )
+    if unmatched:
+        # 一部だけ対応できた場合。確率の一部を捨てているので黙らない。
+        print(f"[shadow] WARN: 対応づけできないキーを無視しました: {unmatched}",
+              file=sys.stderr)
     return round(acc / total, 3)
+
+
+def _normalize_band_name(b: str) -> str:
+    return b.replace("–", "-").replace("—", "-").strip()
 
 
 @dataclass
@@ -83,6 +145,8 @@ class ShadowScore:
     scores: dict[str, float]          # 美意識キー → 0–10（期待値なので小数）
     confidence: dict[str, float] = field(default_factory=dict)
     probabilities: dict[str, dict] = field(default_factory=dict)
+    # Jev が返す生の score（段階番号）。期待値と突合して写像の検算に使う。
+    raw_scores: dict[str, float] = field(default_factory=dict)
     cost_usd: float = 0.0
     elapsed_ms: int = 0
     error: str | None = None
@@ -94,6 +158,7 @@ class ShadowScore:
             "scores": self.scores,
             "confidence": self.confidence,
             "probabilities": self.probabilities,
+            "raw_scores": self.raw_scores,
             "cost_usd": round(self.cost_usd, 6),
             "elapsed_ms": self.elapsed_ms,
             "error": self.error,

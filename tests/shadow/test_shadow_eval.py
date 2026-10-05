@@ -28,7 +28,9 @@ import tempfile
 from pathlib import Path
 
 from scripts.shadow import compare, store
-from scripts.shadow.base import AESTHETIC_KEYS, ShadowScore, expected_score
+from scripts.shadow.base import (
+    AESTHETIC_KEYS, ShadowScore, UnknownProbabilityKeys, expected_score,
+)
 from scripts.shadow.jev import JevScorer, build_criteria
 from scripts.shadow.runner import maybe_run_shadow
 
@@ -79,21 +81,54 @@ def test_questions_shape():
 # (b) バンド確率 → 0–10
 # ---------------------------------------------------------------------------
 
-def test_expected_score():
-    _check("b1 9-10 に全確率 → 9.5",
-           expected_score({"9-10": 1.0}) == 9.5)
-    _check("b2 0-2 に全確率 → 1.0",
-           expected_score({"0-2": 1.0}) == 1.0)
-    _check("b3 6-8 と 9-10 で半々 → 8.25",
-           expected_score({"6-8": 0.5, "9-10": 0.5}) == 8.25)
-    _check("b4 合計が 1 でなくても正規化する",
-           expected_score({"6-8": 0.4, "9-10": 0.4}) == 8.25)
-    _check("b5 空なら 0", expected_score({}) == 0.0)
-    _check("b6 未知のバンドは無視",
-           expected_score({"9-10": 1.0, "99": 5.0}) == 9.5)
-    _check("b7 ★最頻値ではなく期待値（4 段階の粗さを潰さない）",
-           0 < expected_score({"3-5": 0.6, "6-8": 0.4}) - 4.0 < 2.0,
-           str(expected_score({"3-5": 0.6, "6-8": 0.4})))
+def test_expected_score_index_keys():
+    """★Jev は probabilities を段階番号で返す（C212 の真因）."""
+    _check("b1 段階 3 に全確率 → 9.5", expected_score({"3": 1.0}) == 9.5)
+    _check("b2 段階 0 に全確率 → 1.0", expected_score({"0": 1.0}) == 1.0)
+    _check("b3 段階 2 と 3 で半々 → 8.25",
+           expected_score({"2": 0.5, "3": 0.5}) == 8.25)
+    _check("b4 合計が 1 でなくても正規化",
+           expected_score({"2": 0.4, "3": 0.4}) == 8.25)
+    _check("b5 ★最頻値ではなく期待値（4 段階の粗さを潰さない）",
+           0 < expected_score({"1": 0.6, "2": 0.4}) - 4.0 < 2.0,
+           str(expected_score({"1": 0.6, "2": 0.4})))
+
+
+def test_expected_score_real_probe_values():
+    """★2026-10-06 の --probe 実測値を固定する（再現テスト）.
+
+    確率は正常に返っていたのに score が全項目 0 になった事故の現物。
+    """
+    observed = {
+        "美意識1": ({"0": 0.51, "1": 0.17, "2": 0.3, "3": 0.02}, 3.48),
+        "美意識3": ({"0": 0.0, "1": 0.01, "2": 0.57, "3": 0.42}, 8.02),
+        "美意識5": ({"0": 0.09, "1": 0.29, "2": 0.56, "3": 0.06}, 5.74),
+        "美意識6": ({"0": 0.31, "1": 0.26, "2": 0.22, "3": 0.21}, 4.885),
+        "美意識8": ({"0": 0.99, "1": 0.01, "2": 0.0, "3": 0.0}, 1.03),
+    }
+    for jp, (probs, want) in observed.items():
+        got = expected_score(probs)
+        _check(f"b6 {jp} の実測値 → {want}", abs(got - want) < 1e-9, str(got))
+        _check(f"b7 {jp} は 0 にならない", got > 0)
+
+
+def test_unknown_keys_raise_not_zero():
+    """★黙って 0 を返さない。2 週間分を無駄にしないための要件."""
+    for bad, label in [({"low": 0.5, "high": 0.5}, "バンド名でも番号でもない"),
+                       ({}, "空"),
+                       ({"9": 1.0}, "範囲外の段階番号")]:
+        try:
+            v = expected_score(bad)
+            raised = False
+        except UnknownProbabilityKeys:
+            raised = True; v = None
+        _check(f"b8 ★{label} → 0 ではなく例外", raised, f"返り値 {v}")
+
+
+def test_band_name_keys_still_work():
+    """保険：将来 API がバンド名で返しても落ちない."""
+    _check("b9 バンド名キーも受ける", expected_score({"6-8": 1.0}) == 7.0)
+    _check("b10 en dash も正規化", expected_score({"6–8": 1.0}) == 7.0)
 
 
 # ---------------------------------------------------------------------------
@@ -106,7 +141,7 @@ def _fake_response(conf=0.8):
         "usage": {"input_tokens": 1200, "output_tokens": 0},
         "answers": {
             eng: {"type": "score", "score": 7,
-                  "legend": {}, "probabilities": {"6–8": 0.7, "9–10": 0.3},
+                  "legend": {}, "probabilities": {"2": 0.7, "3": 0.3},
                   "confidence": conf}
             for eng, _jp in AESTHETIC_KEYS
         },
@@ -139,7 +174,7 @@ def test_jev_happy_path():
     [r] = s.score_articles([_ART])
     _check("c1 エラー無し", r.error is None, str(r.error))
     _check("c2 5 項目のスコアが入る", len(r.scores) == 5, str(r.scores))
-    _check("c3 en dash のバンド名も正規化される（6–8 → 6-8）",
+    _check("c3 段階番号から期待値になる（2:0.7 + 3:0.3 → 7.75）",
            abs(r.scores["aesthetic_1_structure_detail"] - 7.75) < 1e-6,
            str(r.scores["aesthetic_1_structure_detail"]))
     _check("c4 confidence が別に記録される",
@@ -148,6 +183,40 @@ def test_jev_happy_path():
            abs(r.cost_usd - 1200 / 1e6 * 0.042) < 1e-12, f"${r.cost_usd}")
     _check("c6 本文は BODY_LIMIT で切る",
            len(s.build_state(_ART)["body"]) == 2000)
+
+
+def test_jev_zero_score_regression():
+    """★確率が返っているのに score が 0 になる事故（C212）の回帰."""
+    s = _FakeJev()
+    [r] = s.score_articles([_ART])
+    zeros = [k for k, v in r.scores.items() if v == 0]
+    _check("c11 ★確率があるのに 0 の項目が無い", not zeros, str(zeros))
+    _check("c12 Jev の生 score も記録する（写像の検算用）",
+           len(r.raw_scores) == 5, str(r.raw_scores))
+
+
+def test_jev_unmappable_probs_become_error():
+    """★対応づけできないキーは 0 ではなく error 扱い."""
+    class _Bad(_FakeJev):
+        def _post(self, payload):
+            self.calls += 1
+            return {"usage": {}, "answers": {
+                eng: {"type": "score", "probabilities": {"low": 1.0}}
+                for eng, _jp in AESTHETIC_KEYS}}
+    [r] = _Bad().score_articles([_ART])
+    _check("c13 ★scores は空（0 を並べない）", r.scores == {}, str(r.scores))
+    _check("c14 error に理由が入る",
+           "UnknownProbabilityKeys" in (r.error or ""), (r.error or "")[:50])
+
+
+def test_jev_missing_answer_is_error():
+    class _Short(_FakeJev):
+        def _post(self, payload):
+            self.calls += 1
+            return {"usage": {}, "answers": {"aesthetic_1_structure_detail":
+                    {"type": "score", "probabilities": {"3": 1.0}}}}
+    [r] = _Short().score_articles([_ART])
+    _check("c15 項目が足りなければ error", bool(r.error), (r.error or "")[:50])
 
 
 def test_jev_errors_do_not_raise():
@@ -327,10 +396,13 @@ def main() -> int:
     test_criteria_from_production_prompt(); test_questions_shape()
     print()
     print("(b) バンド確率 → 0–10:")
-    test_expected_score()
+    test_expected_score_index_keys(); test_expected_score_real_probe_values()
+    test_unknown_keys_raise_not_zero(); test_band_name_keys_still_work()
     print()
     print("(c) Jev（HTTP 差し替え）:")
-    test_jev_happy_path(); test_jev_errors_do_not_raise()
+    test_jev_happy_path(); test_jev_zero_score_regression()
+    test_jev_unmappable_probs_become_error(); test_jev_missing_answer_is_error()
+    test_jev_errors_do_not_raise()
     test_jev_unavailable_without_key()
     print()
     print("(d) ★既定で無効 / 紙面を落とさない:")

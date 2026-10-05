@@ -155,6 +155,21 @@ jobs:
           MIIBO_API_KEY: ${{ secrets.MIIBO_API_KEY }}
           MIIBO_AGENT_ID: ${{ secrets.MIIBO_AGENT_ID }}
           TRIBUNE_STAGE2_MODE: layered
+          # C211/C212 (2026-10-06): Jev の shadow 評価。本番 Stage 2 の結果は
+          # 変えず、同じ記事を Jev にも投げて logs/shadow_eval_<date>.json に
+          # 記録するだけ。run_stage2 末尾のフックは try/except で隔離してあり、
+          # Jev が落ちても紙面は出る。
+          #
+          # 止めるときは TRIBUNE_SHADOW_SCORER の 1 行を消す（それだけで完全に
+          # 無効）。キーが無い・未知の scorer 名でも skip するだけ。
+          #
+          # TRIBUNE_SHADOW_LIMIT は 1 caller あたりの上限。caller は
+          # page1_master / page2 / page3 / page3_serendipity / page6 の 5 つで、
+          # 10 なら 1 日最大 50 リクエスト。入力 $0.042/1M・出力無料、
+          # 1 件 ≈ 1,400 tok なので 1 日 $0.003 程度。
+          TRIBUNE_SHADOW_SCORER: jev
+          TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
+          TRIBUNE_SHADOW_LIMIT: "10"
         run: |
           python -m scripts.regen_front_page_v3 --date "${{ steps.date.outputs.DATE }}"
 
