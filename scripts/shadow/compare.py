@@ -17,6 +17,7 @@ import argparse
 import collections
 import json
 import sys
+from pathlib import Path
 
 from .base import AESTHETIC_KEYS
 from . import store
@@ -264,12 +265,25 @@ def main() -> int:
     ap.add_argument("--divergent", type=int, default=0, metavar="N",
                     help="本番と最も割れた記事 N 件を出す（人が読んで判定する用）")
     ap.add_argument("--divergent-scorer", default="jev_fulltext")
+    ap.add_argument("--log-dir", type=Path, default=None,
+                    help="shadow ログの場所。GHA artifact を展開した先を指定する"
+                         "（既定は logs/。shadow ログは .gitignore 対象で"
+                         "artifact にしか残らない）")
     args = ap.parse_args()
 
-    entries = store.load_range(args.days)
+    entries = store.load_range(args.days, log_dir=args.log_dir)
     if not entries:
-        print(f"直近 {args.days} 日に shadow 評価ログがありません "
-              f"(logs/shadow_eval_*.json)", file=sys.stderr)
+        where = args.log_dir or "logs/"
+        print(f"直近 {args.days} 日に shadow 評価ログがありません（{where}）",
+              file=sys.stderr)
+        print("shadow ログは .gitignore 対象で GHA artifact にしか残りません。",
+              file=sys.stderr)
+        print("次のように展開してから --log-dir を指すか、logs/ に置いてください:",
+              file=sys.stderr)
+        print("  bash scripts/tools/fetch_shadow_logs.sh 14 /tmp/shadow",
+              file=sys.stderr)
+        print("  python3 -m scripts.shadow.compare --days 14 --log-dir /tmp/shadow",
+              file=sys.stderr)
         return 1
     if args.divergent:
         rows = divergent(entries, scorer=args.divergent_scorer, top=args.divergent)

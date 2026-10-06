@@ -522,9 +522,36 @@ Tribune の運用中に神山さんが発見した改善点・違和感・将来
   - B の上限は 40,000 字（入力 $0.042/1M なので 1 件 $0.002 程度）
   - `body == description` なら重複させない（JFA / PPC 対策）
 
-- **状態**: daily.yml で A/B 並走を有効化（2026-10-06）。C213/C214 の修正後の
-  データで 2 週間溜めて `compare --days 14` で報告。
-  **10/6 のデータは入力が違うため比較には使わない**（傾向の参考のみ）
+- **方針決定（神山さん, 2026-10-06）**: 案 1 で進める。A/B を 2 週間回し、
+  **10/20 の compare で乖離トップ 5 を URL つきで出す**。神山さんがブラウザで
+  本文を読み、どちらの評価が正しいかを判定する。その結果「本番が出典の印象で
+  高く採点している」傾向が見えたら、長い論考が多い数サイトに絞って本文取得
+  （案 2）を検討する。**それまで外部への新規アクセスは追加しない。**
+
+- **C215 10/20 の実行経路を先に通した（2026-10-06）**: `logs/shadow_eval_*.json`
+  は .gitignore 対象で **GHA artifact にしか残らない**。`compare --days 14` は
+  ローカルの `logs/` を読むので、**そのままでは 10/20 に 1 日分しか見えない**。
+  当日になって気づくと手戻りになるので先に塞いだ。
+
+  - `store.load_range(..., log_dir=)` と `compare --log-dir` を追加
+    （`llm_cost_breakdown --log-dir` と同じ事情・同じ形）
+  - `scripts/tools/fetch_shadow_logs.sh` で artifact を 14 日分まとめて回収。
+    **`gh run download` に `--repo` を明示**している（C200 の教訓。repo 外で
+    叩くと "not a git repository" で **exit 0** のまま終了し、C196 では
+    これを「2 分でタイムアウト」と誤診して誤った制約を 2 サイクル引き継いだ）
+  - 10/6 のデータで end-to-end に通して確認済み。10/4・10/5 は shadow 導入前
+    なので「なし」と出るのが正しい
+
+  10/20 の手順::
+
+      bash scripts/tools/fetch_shadow_logs.sh 14 /tmp/shadow
+      python3 -m scripts.shadow.compare --days 14 --log-dir /tmp/shadow
+      python3 -m scripts.shadow.compare --days 14 --log-dir /tmp/shadow --divergent 5
+
+- **状態**: daily.yml で A/B 並走を有効化（2026-10-06）。10/20 に報告。
+  **10/6 のデータは比較に使わない** — 入力が違う（C213 前）うえ、
+  `baseline_meta` が無いので層別も未採点除外も効かない（`jev / unknown`、
+  除外 0 と出る）。10/7 以降が有効なデータ
 
 ### Sprint 11 候補（既存・神山さん管理）
 

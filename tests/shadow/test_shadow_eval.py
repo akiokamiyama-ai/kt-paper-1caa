@@ -647,6 +647,60 @@ def test_divergent_excludes_unscored():
 
 
 
+# ---------------------------------------------------------------------------
+# (i) C215: 2 週間分を artifact から読む
+# ---------------------------------------------------------------------------
+
+def test_load_range_from_log_dir():
+    """★shadow ログは .gitignore 対象で artifact にしか残らない.
+
+    10/20 に `compare --days 14` を回すには artifact を展開した先を
+    直接読めないといけない。
+    """
+    import json as _json
+    from datetime import date as _date, timedelta as _td
+
+    with tempfile.TemporaryDirectory() as td:
+        d = Path(td)
+        today = _date.today()
+        for i, n in [(0, 2), (3, 1), (30, 5)]:      # 30 日前は範囲外
+            day = (today - _td(days=i)).isoformat()
+            (d / f"shadow_eval_{day}.json").write_text(_json.dumps({
+                "date": day,
+                "entries": [{"url": f"u{i}{k}", "scorer": "jev", "caller": "page3",
+                             "scores": {}, "baseline": {}} for k in range(n)],
+            }), encoding="utf-8")
+        rows = store.load_range(14, log_dir=d)
+    _check("i1 ★範囲内の日付だけ読む（2+1=3 件、30 日前は除く）",
+           len(rows) == 3, str(len(rows)))
+    _check("i2 date が補われる", all(r.get("date") for r in rows))
+
+
+def test_load_range_ignores_out_of_range():
+    import json as _json
+    from datetime import date as _date, timedelta as _td
+
+    with tempfile.TemporaryDirectory() as td:
+        d = Path(td)
+        old = (_date.today() - _td(days=100)).isoformat()
+        (d / f"shadow_eval_{old}.json").write_text(_json.dumps({
+            "date": old, "entries": [{"url": "u", "scorer": "jev"}]}),
+            encoding="utf-8")
+        rows = store.load_range(14, log_dir=d)
+    _check("i3 古いファイルは拾わない", rows == [], str(len(rows)))
+
+
+def test_fetch_script_uses_repo_flag():
+    """★C200 の教訓: gh run download は --repo が無いと repo 外で即終了する."""
+    sh = (Path(__file__).resolve().parents[2]
+          / "scripts" / "tools" / "fetch_shadow_logs.sh").read_text(encoding="utf-8")
+    _check("i4 ★gh run download に --repo がある",
+           'gh run download "$id" --repo' in sh)
+    _check("i5 gh run list にも --repo がある", "--repo \"$REPO\"" in sh)
+    _check("i6 C200 の経緯がコメントに残っている", "C200" in sh)
+
+
+
 def main() -> int:
     print("C211/C213: shadow 評価の枠組み（実 API は叩かない）\n")
     print("(a) rubric は原典から:")
@@ -687,6 +741,10 @@ def main() -> int:
     test_cross_compare(); test_cross_compare_needs_both()
     test_cross_compare_respects_caller()
     test_divergent_ranks_by_abs_diff(); test_divergent_excludes_unscored()
+    print()
+    print("(i) C215 artifact から 2 週間分を読む:")
+    test_load_range_from_log_dir(); test_load_range_ignores_out_of_range()
+    test_fetch_script_uses_repo_flag()
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")
     return 0 if FAIL == 0 else 1

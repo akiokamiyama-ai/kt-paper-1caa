@@ -80,21 +80,38 @@ def record(entries: list[dict], *, path: Path | None = None) -> int:
         return 0
 
 
-def load_range(days: int, *, until: date | None = None) -> list[dict]:
-    """直近 ``days`` 日ぶんのエントリをまとめて返す（比較用）."""
+def load_range(days: int, *, until: date | None = None,
+               log_dir: Path | None = None) -> list[dict]:
+    """直近 ``days`` 日ぶんのエントリをまとめて返す（比較用）.
+
+    C215 (2026-10-06): ``log_dir`` を取れるようにした。
+    ``logs/shadow_eval_*.json`` は .gitignore 対象で **GHA artifact にしか
+    残らない**ため、2 週間分を比べるには artifact を展開した先を直接
+    読む必要がある（``scripts/tools/llm_cost_breakdown.py --log-dir`` と同じ事情）。
+    日付でファイルを探すのではなく、ディレクトリ内の
+    ``shadow_eval_*.json`` を全部拾って日付で絞る。
+    """
     from datetime import timedelta
 
     from scripts.lib.jst import jst_today
 
     end = until or jst_today()
+    start = end - timedelta(days=days - 1)
     out: list[dict] = []
-    for i in range(days):
-        d = end - timedelta(days=i)
-        p = log_path(d)
-        if not p.exists():
+
+    if log_dir is not None:
+        files = sorted(Path(log_dir).rglob("shadow_eval_*.json"))
+    else:
+        files = [log_path(end - timedelta(days=i)) for i in range(days)]
+
+    for f in files:
+        if not f.exists():
             continue
-        for e in load(p)["entries"]:
+        day = f.stem.replace("shadow_eval_", "")
+        if log_dir is not None and not (start.isoformat() <= day <= end.isoformat()):
+            continue
+        for e in load(f)["entries"]:
             e = dict(e)
-            e.setdefault("date", d.isoformat())
+            e.setdefault("date", day)
             out.append(e)
     return out
