@@ -263,7 +263,7 @@ def test_retry_recovers():
            r["dish_name"] == _GOOD["dish_name"], r["dish_name"])
     _check("e3 static_fallback には落ちない", r["is_fallback"] is False)
     _check("f1 検知が WARN に出る", "不整合を検知" in log)
-    _check("f2 再生成の成功が記録される", "再生成で整合しました" in log, log.strip()[-90:])
+    _check("f2 再生成の成功が記録される", "再生成で解消しました" in log, log.strip()[-90:])
     _check("e4 コストが合算される", r["cost_usd"] > 0.02, str(r["cost_usd"]))
 
 
@@ -272,7 +272,7 @@ def test_retry_also_inconsistent_keeps_best():
     _check("e5 再生成も不整合なら採用して続行", r["is_fallback"] is False)
     _check("e6 static_fallback に落ちない（表示上の瑕疵で紙面は成立）",
            r["dish_name"] != "鮭の塩焼き定食", r["dish_name"])
-    _check("f3 諦めたことが WARN に出る", "再生成も不整合" in log, log.strip()[-90:])
+    _check("f3 諦めたことが WARN に出る", "再生成でも解消せず" in log, log.strip()[-90:])
 
 
 def test_retry_invalid_falls_back_to_first():
@@ -302,19 +302,34 @@ def test_below_threshold_logged_as_debug():
 # (g) プロンプト
 # ---------------------------------------------------------------------------
 
-def test_prompt_body_first():
+def test_prompt_dish_first():
+    """C216 (2026-10-07) で順序を **料理名先行** に戻した.
+
+    C178 は「本文を先に書き、そこから料理名を導出する」順にして 8/20 の
+    ずれ（料理名と本文が別の料理）を防ごうとした。このテストの g1/g2 は
+    その順序を固定していた。
+
+    ところが本文先行にすると、モデルが **本文を書きながら料理を選ぶ** 形に
+    なり、選定の試行錯誤が文章に漏れた（「里芋……ではなく」「先日済みなので」
+    「今朝の厨房が選んだのは」）。archive の実測で C178 前 0/110 日 → 後 5/49 日。
+
+    ずれは C178 のコード側の整合チェック（材料が本文に出るか → 1 回再生成）で
+    防げるので、順序は戻した。**回帰テストが副作用の原因を固定していた**
+    （C168 の「回帰テストが誤った値を固定していた」と同じ形）。
+    """
     t = COOKING_USER_TEMPLATE
     i_body = t.find('"column_body"')
     i_dish = t.find('"dish_name"')
-    _check("g1 出力スキーマで column_body が dish_name より先",
-           0 <= i_body < i_dish, f"body={i_body}, dish={i_dish}")
-    _check("g2 本文先行を明示している", "column_body を最初に書くこと" in t)
+    _check("g1 出力スキーマで dish_name が column_body より先（C216）",
+           0 <= i_dish < i_body, f"dish={i_dish}, body={i_body}")
+    _check("g2 料理を決めてから書く手順を明示している（C216）",
+           "料理を決めてから" in t)
     _check("g3 フィールド一致ルールの節がある", "フィールド間の一致" in t)
     _check("g4 完全に同一の料理を要求している", "完全に同一の料理" in t)
     _check("g5 8/20 の実例が ×/○ で載っている",
            "スパゲッティ" in t and "とうもろこし" in t and "×" in t and "○" in t)
-    _check("g6 本文を書いたあとで料理名だけ差し替える禁止を明示",
-           "料理名だけ差し替えて" in t)
+    _check("g6 料理名を決めたあと本文が別の料理に流れる禁止を明示（C216）",
+           "別の料理に流れて" in t)
     _check("g7 COOKING_SYSTEM 側は従来どおり（嗜好・ジャンル）",
            "薄味" in COOKING_SYSTEM)
 
@@ -344,7 +359,7 @@ def main() -> int:
     test_below_threshold_logged_as_debug()
     print()
     print("(g) プロンプト:")
-    test_prompt_body_first()
+    test_prompt_dish_first()
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")
     return 0 if FAIL == 0 else 1

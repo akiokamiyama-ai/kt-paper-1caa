@@ -279,6 +279,41 @@ def _appears_in_body(term: str, body: str) -> bool:
     return False
 
 
+# C216 (2026-10-07): 本文に「料理を選ぶ過程」が漏れていないかの検知。
+#
+# C178 で出力順を column_body 先行にしたところ、モデルが本文を書きながら
+# 料理を選ぶ形になり、選定の試行錯誤が文章に出るようになった::
+#
+#   「里芋……ではなく、今日はその隣に並ぶ『むかご』に目を向けてみたい。
+#    …さつまいもと舞茸の組み合わせは先日済みなので、今日の主役は秋の白菜と
+#    豆腐——ではなく、今朝の厨房が選んだのは『秋大根と油揚げの和風薄塩煮』だ」
+#
+# 「先日済み」はプロンプトに渡している過去 30 日の除外リストの読み上げ。
+#
+# archive 159 日の実測: C178 前 0/110 日、C178 後 5/49 日（10 月は 2/7）。
+# うち 8/22 の「麺はそうめんではなく、今回は平打ちの冷や麦で」は 1 品の中の
+# 対比で、選定の漏れではない。**「AではなくB」単独は正当な文**なので拾わず、
+# 候補→却下の「形」だけを見る。この 3 パターンで 4/4 検出・誤検知 0。
+SELECTION_LEAK_PATTERNS: dict[str, re.Pattern] = {
+    # 言い淀み（…… / ——）からの却下。「菊芋」……ではなく、
+    "hesitation_reject": re.compile(r"(……|…|——|―|─)\s*ではなく"),
+    # 除外リストの読み上げ。「先日済みなので」「提案済」
+    "exclusion_readout": re.compile(
+        r"先日[^。]{0,12}済|済みなので|は先日(作|紹介|提案|取り上げ)|提案済|過去30日"
+    ),
+    # 選ぶ行為そのものの語り。「今朝の厨房が選んだのは」
+    "choosing_narration": re.compile(r"厨房が選んだ|(今朝|今日)の厨房が|選んだのは"),
+}
+
+
+def _detect_selection_leak(parsed: dict | None) -> list[str]:
+    """本文に選定の過程が漏れていれば、該当したパターン名を返す."""
+    if not isinstance(parsed, dict):
+        return []
+    body = parsed.get("column_body") or ""
+    return [name for name, pat in SELECTION_LEAK_PATTERNS.items() if pat.search(body)]
+
+
 def _missing_terms(parsed: dict) -> list[str]:
     """材料欄のうち、本文に出てこない材料を返す（C178）.
 
@@ -383,8 +418,20 @@ def generate_cooking_column(
         )
         return static_fallback()
 
-    # C178: フィールド間整合チェック（存在チェックだけでは 8/20 を素通りさせた）
-    missing = _missing_terms(parsed)
+    # C178 + C216: 品質チェックを 1 箇所にまとめ、問題があれば **1 回だけ** 再生成。
+    #
+    # 見るのは 2 つ:
+    #   - C178 フィールド不整合（材料・料理名が本文に出てこない）
+    #   - C216 選定過程の漏れ（「……ではなく」「先日済み」「厨房が選んだ」）
+    # 別々に再生成すると最大 2 回呼ぶことになるので、まとめて 1 回にする。
+    def _problems(cand: dict) -> tuple[list[str], list[str]]:
+        return _missing_terms(cand), _detect_selection_leak(cand)
+
+    def _badness(missing: list[str], leak: list[str]) -> tuple[int, int]:
+        # 漏れは紙面に出る文章の瑕疵なので不整合より重く見る。
+        return (len(leak), len(missing))
+
+    missing, leak = _problems(parsed)
     if 0 < len(missing) < CONSISTENCY_MISSING_THRESHOLD:
         # 閾値未満でも残す。後から閾値の妥当性を検証できるようにするため。
         print(
@@ -392,13 +439,23 @@ def generate_cooking_column(
             f"{missing}（閾値 {CONSISTENCY_MISSING_THRESHOLD} 未満、そのまま採用）",
             file=sys.stderr,
         )
-    elif len(missing) >= CONSISTENCY_MISSING_THRESHOLD:
+    inconsistent = len(missing) >= CONSISTENCY_MISSING_THRESHOLD
+    if leak:
+        # C156 の教訓: 紙面は成立してしまうので、ログに出さないと見えない。
         print(
-            f"[cooking] WARN: フィールド不整合を検知 — 本文に出てこない要素 "
-            f"{len(missing)} 件 {missing}（料理名: {parsed['dish_name']}）。"
-            "1 回だけ再生成します",
+            f"[cooking] WARN: 本文に選定の過程が漏れています {leak}"
+            f"（料理名: {parsed['dish_name']}）",
             file=sys.stderr,
         )
+    if inconsistent:
+        print(
+            f"[cooking] WARN: フィールド不整合を検知 — 本文に出てこない要素 "
+            f"{len(missing)} 件 {missing}（料理名: {parsed['dish_name']}）",
+            file=sys.stderr,
+        )
+
+    if inconsistent or leak:
+        print("[cooking] 1 回だけ再生成します", file=sys.stderr)
         try:
             retry_resp = llm.call_claude_with_retry(
                 system=COOKING_SYSTEM,
@@ -418,23 +475,28 @@ def generate_cooking_column(
                     file=sys.stderr,
                 )
             else:
-                retry_missing = _missing_terms(retry_parsed)
-                if len(retry_missing) < CONSISTENCY_MISSING_THRESHOLD:
+                r_missing, r_leak = _problems(retry_parsed)
+                r_bad = _badness(r_missing, r_leak)
+                bad = _badness(missing, leak)
+                r_ok = (not r_leak) and len(r_missing) < CONSISTENCY_MISSING_THRESHOLD
+                if r_ok:
                     print(
-                        f"[cooking] 再生成で整合しました（未出現 {len(missing)} → "
-                        f"{len(retry_missing)} 件、料理名: {retry_parsed['dish_name']}）",
+                        f"[cooking] 再生成で解消しました（漏れ {leak} → なし / "
+                        f"未出現 {len(missing)} → {len(r_missing)} 件、"
+                        f"料理名: {retry_parsed['dish_name']}）",
                         file=sys.stderr,
                     )
                     parsed = retry_parsed
                 else:
-                    # 静的 fallback には落とさない。不整合は表示上の瑕疵であって
-                    # 紙面は成立しており、「鮭の塩焼き定食」に落ちる方が損失が大きい。
+                    # 静的 fallback には落とさない（C178 と同じ判断）。漏れも不整合も
+                    # 表示上の瑕疵であって紙面は成立しており、「鮭の塩焼き定食」に
+                    # 落ちる方が損失が大きい。問題の少ない方を採る。
                     print(
-                        f"[cooking] WARN: 再生成も不整合（未出現 {len(retry_missing)} 件 "
-                        f"{retry_missing}）— 未出現が少ない方を採用します",
+                        f"[cooking] WARN: 再生成でも解消せず（漏れ {r_leak} / 未出現 "
+                        f"{len(r_missing)} 件）— 問題の少ない方を採用します",
                         file=sys.stderr,
                     )
-                    if len(retry_missing) < len(missing):
+                    if r_bad < bad:
                         parsed = retry_parsed
         except Exception as e:  # noqa: BLE001
             print(
