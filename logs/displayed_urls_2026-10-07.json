@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-07",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/news/article/2610/06/2000002010/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2610/06/news034.html",
+    "web_repo": "https://www.bc01.net/serialize/sasaki_027/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/stablecoins-are-not-the-key-to-financial-inclusion-by-michael-wiegand-2-2026-10?utm_source=rss&utm_medium=feed&utm_campaign=main&utm_content=en",
+    "https://www.mckinsey.com/industries/semiconductors/our-insights/scaling-ai-inference",
+    "https://www.mckinsey.com/featured-insights/mckinsey-on-books/author-talks-rana-foroohar-on-a-new-great-game-in-the-arctic",
+    "https://www.theparisreview.org/blog/2026/10/06/yan-lianke-memoir-the-women-matchmaking/",
+    "https://www.publicbooks.org/american-metamorphoses/",
+    "https://www.axismag.jp/posts/2026/09/723308.html"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://nautil.us/david-byrne-awakens-the-story-of-dark-matter-1285530/",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-10/the-national-book-award-interviews-ping-lu-and-jeremy-tiang-to-the-east-of-the-east/",
+    "music": "https://stereogum.com/2513749/tom-morello-clarifies-he-does-vote-just-not-for-corporate-democrats/news/",
+    "outdoor": "https://www.atlasobscura.com/places/susannah-place"
+  },
+  "headlines_urls": []
+}

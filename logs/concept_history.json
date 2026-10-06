@@ -846,6 +846,12 @@
       "name_ja": "知識情報学",
       "displayed_on": "2026-10-06",
       "stage": "unseen"
+    },
+    {
+      "concept_id": "incompleteness_theorem",
+      "name_ja": "不完全性定理",
+      "displayed_on": "2026-10-07",
+      "stage": "unseen"
     }
   ]
 }

@@ -179,6 +179,18 @@
       "column_title": "本日の一筆",
       "column_body_chars": 62,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-10-07",
+      "article_url": "https://nautil.us/david-byrne-awakens-the-story-of-dark-matter-1285530/",
+      "article_title": "David Byrne Awakens the Story of Dark Matter",
+      "miibo_called": true,
+      "miibo_failed": false,
+      "fallback_used": false,
+      "elapsed_ms": 37577,
+      "column_title": "見えないものを聴く",
+      "column_body_chars": 973,
+      "is_placeholder": false
     }
   ]
 }
