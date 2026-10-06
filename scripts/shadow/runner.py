@@ -28,7 +28,29 @@ def _build_scorer(name: str) -> ShadowScorer | None:
     if name in ("jev", "jev-latest"):
         from .jev import JevScorer
         return JevScorer()
+    if name in ("jev_fulltext", "jev-fulltext"):
+        from .jev import JevFullTextScorer
+        return JevFullTextScorer()
     return None
+
+
+def _build_scorers(spec: str) -> list[ShadowScorer]:
+    """C214: カンマ区切りで複数の scorer を並走させる.
+
+    ``TRIBUNE_SHADOW_SCORER: jev,jev_fulltext`` で A/B 両方を走らせる。
+    未知の名前は skip して残りを走らせる（1 つの typo で全部止めない）。
+    """
+    out: list[ShadowScorer] = []
+    for part in (spec or "").split(","):
+        part = part.strip()
+        if not part:
+            continue
+        sc = _build_scorer(part)
+        if sc is None:
+            print(f"[shadow] 未知の scorer {part!r}。skip", file=sys.stderr)
+            continue
+        out.append(sc)
+    return out
 
 
 def maybe_run_shadow(
@@ -50,13 +72,14 @@ def maybe_run_shadow(
         name = os.environ.get(ENV_SCORER)
         if not name:
             return 0            # 既定で無効
-        scorer = _build_scorer(name)
-        if scorer is None:
-            print(f"[shadow] 未知の scorer {name!r}。skip", file=sys.stderr)
-            return 0
-        ok, why = scorer.available()
-        if not ok:
-            print(f"[shadow] {scorer.name} は使えません: {why}", file=sys.stderr)
+        scorers = []
+        for sc in _build_scorers(name):
+            ok, why = sc.available()
+            if ok:
+                scorers.append(sc)
+            else:
+                print(f"[shadow] {sc.name} は使えません: {why}", file=sys.stderr)
+        if not scorers:
             return 0
 
         try:
@@ -98,28 +121,37 @@ def maybe_run_shadow(
         if not pairs:
             return 0
 
-        results = scorer.score_articles([a for a, _b, _m in pairs])
         from . import store
         from scripts.lib.jst import jst_now_iso
 
-        entries = []
-        for (art, baseline, meta), r in zip(pairs, results):
-            e = r.to_entry()
-            e["baseline"] = baseline
-            e["baseline_meta"] = meta
-            e["caller"] = caller
-            e["title"] = (art.get("title") or "")[:120]
-            e["recorded_at"] = jst_now_iso()
-            entries.append(e)
-        n = store.record(entries)
-        n_err = sum(1 for r in results if r.error)
-        cost = sum(r.cost_usd for r in results)
-        print(f"[shadow] {scorer.name}: {n} 件記録（失敗 {n_err}）"
-              f" caller={caller} cost=${cost:.6f}", file=sys.stderr)
-        if n_err and n_err == len(results):
-            # 全滅は設定ミスの可能性が高い。最初の理由を出す。
-            print(f"[shadow] 全件失敗。最初の理由: {results[0].error}", file=sys.stderr)
-        return n
+        total = 0
+        for scorer in scorers:
+            results = scorer.score_articles([a for a, _b, _m in pairs])
+            entries = []
+            for (art, baseline, meta), r in zip(pairs, results):
+                e = r.to_entry()
+                e["baseline"] = baseline
+                e["baseline_meta"] = meta
+                e["caller"] = caller
+                e["title"] = (art.get("title") or "")[:120]
+                # C214: 入力の規模を残す。A と B の差がどこから来たかを
+                # 後から説明できるようにする（本文が無ければ差は出ない）。
+                try:
+                    e["state_chars"] = len(scorer.build_state(art))
+                except Exception:  # noqa: BLE001
+                    e["state_chars"] = None
+                e["recorded_at"] = jst_now_iso()
+                entries.append(e)
+            n = store.record(entries)
+            total += n
+            n_err = sum(1 for r in results if r.error)
+            cost = sum(r.cost_usd for r in results)
+            print(f"[shadow] {scorer.name}: {n} 件記録（失敗 {n_err}）"
+                  f" caller={caller} cost=${cost:.6f}", file=sys.stderr)
+            if n_err and n_err == len(results):
+                print(f"[shadow] {scorer.name} 全件失敗。最初の理由: "
+                      f"{results[0].error}", file=sys.stderr)
+        return total
     except Exception as e:  # noqa: BLE001 — shadow は絶対に紙面を落とさない
         print(f"[shadow] 失敗 (non-fatal): {type(e).__name__}: {e}", file=sys.stderr)
         return 0

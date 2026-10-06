@@ -167,7 +167,13 @@ jobs:
           # page1_master / page2 / page3 / page3_serendipity / page6 の 5 つで、
           # 10 なら 1 日最大 50 リクエスト。入力 $0.042/1M・出力無料、
           # 1 件 ≈ 1,400 tok なので 1 日 $0.003 程度。
-          TRIBUNE_SHADOW_SCORER: jev
+          # C214 (2026-10-06): A（本番と同一入力）と B（手元の本文を全部）を
+          # 並走させる。カンマ区切りで複数指定できる。
+          #
+          # ※ 実測では全 131 ソースのうち body を持つのは 4 件だけで、うち 2 件は
+          #    description のコピー。現状 B は A とほぼ同じ入力になる
+          #    （compare の state_chars で「B のほうが大きい組」を見れば分かる）。
+          TRIBUNE_SHADOW_SCORER: jev,jev_fulltext
           TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
           TRIBUNE_SHADOW_LIMIT: "10"
         run: |

@@ -541,6 +541,112 @@ def test_spearman_is_primary():
     _check("g14 Pearson も併記される", d["pearson"] is not None)
 
 
+# ---------------------------------------------------------------------------
+# (h) C214: Jev-B（全文）の並走
+# ---------------------------------------------------------------------------
+
+def test_multi_scorer_spec():
+    from scripts.shadow.runner import _build_scorers
+    _check("h1 カンマ区切りで 2 つ並走",
+           [s.name for s in _build_scorers("jev,jev_fulltext")]
+           == ["jev", "jev_fulltext"])
+    _check("h2 ★typo が混ざっても残りは走る",
+           [s.name for s in _build_scorers("jev,nope,jev_fulltext")]
+           == ["jev", "jev_fulltext"])
+    _check("h3 空なら 0 件", _build_scorers("") == [])
+
+
+def test_fulltext_state_differs():
+    from scripts.shadow.jev import JevFullTextScorer as B
+
+    art = {"title": "T", "source_name": "S",
+           "description": "d" * 300, "body": "B" * 50000}
+    a = JevScorer.build_state(art)
+    b = B.build_state(art)
+    _check("h4 ★A は本番規則で body を落とす", "body:" not in a)
+    _check("h5 ★B は description が長くても body を入れる", "body:" in b)
+    _check("h6 B は上限で切る", len(b) <= B.FULLTEXT_LIMIT + 500, f"{len(b)} 字")
+
+
+def test_fulltext_skips_duplicate_body():
+    """★JFA / PPC の driver は body_paragraphs=[description] を入れてくる."""
+    from scripts.shadow.jev import JevFullTextScorer as B
+
+    art = {"title": "T", "source_name": "S", "description": "同じ本文",
+           "body": "同じ本文"}
+    st = B.build_state(art)
+    _check("h7 ★body==description なら重複させない", "body:" not in st, st[:60])
+
+
+def test_fulltext_equals_a_when_no_body():
+    """★body が無ければ A と B は実質同じ（131 ソース中 127 がこれ）."""
+    from scripts.shadow.jev import JevFullTextScorer as B
+
+    art = {"title": "T", "source_name": "S", "description": "d" * 20, "body": ""}
+    a = JevScorer.build_state(art)
+    b = B.build_state(art)
+    _check("h8 ★本文が無ければ中身は同じ",
+           a.split("\n")[1:] == b.split("\n")[1:],
+           f"A {len(a)} 字 / B {len(b)} 字")
+
+
+def _pair(url, caller, scorer, vals, unscored=()):
+    return {"url": url, "caller": caller, "scorer": scorer,
+            "scores": {eng: float(v) for (eng, _jp), v in zip(AESTHETIC_KEYS, vals)},
+            "baseline": {jp: 5 for _e, jp in AESTHETIC_KEYS},
+            "baseline_meta": {"layer": 3, "evaluation_mode": "sonnet_full",
+                              "unscored": list(unscored)},
+            "state_chars": 400 if scorer == "jev" else 4000,
+            "error": None, "cost_usd": 0.00006, "elapsed_ms": 200}
+
+
+def test_cross_compare():
+    rows = []
+    for i in range(5):
+        rows.append(_pair(f"u{i}", "page3", "jev", [i + 1] * 5))
+        rows.append(_pair(f"u{i}", "page3", "jev_fulltext", [i + 1] * 5))
+    x = compare.cross_compare(rows)
+    _check("h9 ★A/B が同一記事で組になる", x["n_pairs"] == 5, str(x["n_pairs"]))
+    _check("h10 一致していれば Spearman=1.0",
+           x["per_aesthetic"]["美意識1"]["spearman"] == 1.0)
+    _check("h11 入力規模の差が出る",
+           x["state_chars"]["b_larger"] == 5, str(x.get("state_chars")))
+
+
+def test_cross_compare_needs_both():
+    rows = [_pair("u1", "page3", "jev", [5] * 5)]
+    _check("h12 片方だけなら組にならない",
+           compare.cross_compare(rows)["n_pairs"] == 0)
+
+
+def test_cross_compare_respects_caller():
+    """同じ URL でも caller が違えば別の組（C213 の upsert と整合）."""
+    rows = [_pair("u1", "page3", "jev", [5] * 5),
+            _pair("u1", "page6", "jev_fulltext", [5] * 5)]
+    _check("h13 caller が違う組は組まない",
+           compare.cross_compare(rows)["n_pairs"] == 0)
+
+
+def test_divergent_ranks_by_abs_diff():
+    rows = []
+    for i, v in enumerate([5, 1, 9]):     # baseline 5 固定に対し差 0 / -4 / +4
+        rows.append(_pair(f"u{i}", "page3", "jev_fulltext", [v] * 5))
+    out = compare.divergent(rows, top=3)
+    _check("h14 ★差の絶対値で並ぶ",
+           abs(out[0]["diff"]) >= abs(out[-1]["diff"]),
+           str([r["diff"] for r in out]))
+    _check("h15 差 0 は最後", out[-1]["diff"] == 0.0, str(out[-1]["diff"]))
+
+
+def test_divergent_excludes_unscored():
+    """★未採点を含む記事は除く（差が項目欠落に由来してしまう）."""
+    rows = [_pair("u1", "page3", "jev_fulltext", [1] * 5,
+                  unscored=["美意識5", "美意識6"])]
+    _check("h16 ★未採点を含む記事は乖離一覧に出さない",
+           compare.divergent(rows, top=5) == [])
+
+
+
 def main() -> int:
     print("C211/C213: shadow 評価の枠組み（実 API は叩かない）\n")
     print("(a) rubric は原典から:")
@@ -574,6 +680,13 @@ def main() -> int:
     test_state_matches_production_exactly(); test_long_description_excludes_body()
     test_haiku_unscored_is_excluded(); test_layer_split()
     test_spearman_is_primary()
+    print()
+    print("(h) C214 Jev-B（全文）の並走:")
+    test_multi_scorer_spec(); test_fulltext_state_differs()
+    test_fulltext_skips_duplicate_body(); test_fulltext_equals_a_when_no_body()
+    test_cross_compare(); test_cross_compare_needs_both()
+    test_cross_compare_respects_caller()
+    test_divergent_ranks_by_abs_diff(); test_divergent_excludes_unscored()
     print()
     print(f"=== {PASS} passed, {FAIL} failed ===")
     return 0 if FAIL == 0 else 1

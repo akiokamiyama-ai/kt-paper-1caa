@@ -172,10 +172,98 @@ def summarize(entries: list[dict], *, by_layer: bool = True) -> dict:
     return out
 
 
+def cross_compare(entries: list[dict], a: str = "jev",
+                  b: str = "jev_fulltext") -> dict:
+    """C214: scorer 同士の相関（本番を介さない A vs B）.
+
+    同じ ``(url, caller)`` で両方の scorer が成功している組だけを使う。
+    ``haiku_unscored`` の項目は除外する（baseline と同じ扱い）。
+    """
+    by_key: dict[tuple, dict[str, dict]] = collections.defaultdict(dict)
+    for e in entries:
+        if e.get("error") or not e.get("scores"):
+            continue
+        by_key[(e.get("url"), e.get("caller"))][e.get("scorer")] = e
+
+    both = [(v[a], v[b]) for v in by_key.values() if a in v and b in v]
+    out: dict = {"n_pairs": len(both), "per_aesthetic": {}, "final_score": {}}
+    if not both:
+        return out
+    for eng, jp in AESTHETIC_KEYS:
+        xs, ys = [], []
+        for ea, eb in both:
+            if not _usable(ea, jp):      # baseline の未採点印は共通
+                continue
+            x, y = ea["scores"].get(eng), eb["scores"].get(eng)
+            if isinstance(x, (int, float)) and isinstance(y, (int, float)):
+                xs.append(x); ys.append(y)
+        d = {"n": len(xs)}
+        if len(xs) >= 3:
+            d.update({"spearman": spearman(xs, ys), "pearson": pearson(xs, ys),
+                      "mean_a": round(sum(xs) / len(xs), 2),
+                      "mean_b": round(sum(ys) / len(ys), 2)})
+        out["per_aesthetic"][jp] = d
+    fa, fb = [], []
+    for ea, eb in both:
+        if (ea.get("baseline_meta") or {}).get("unscored"):
+            continue
+        x, y = _final(ea["scores"]), _final(eb["scores"])
+        if x is not None and y is not None:
+            fa.append(x); fb.append(y)
+    if len(fa) >= 3:
+        out["final_score"] = {"n": len(fa), "spearman": spearman(fa, fb),
+                              "pearson": pearson(fa, fb)}
+    # 入力規模の差（B が実際に多く読めているか）
+    sa = [e.get("state_chars") for e, _ in both if e.get("state_chars")]
+    sb = [e.get("state_chars") for _, e in both if e.get("state_chars")]
+    if sa and sb:
+        out["state_chars"] = {
+            "a_median": sorted(sa)[len(sa) // 2],
+            "b_median": sorted(sb)[len(sb) // 2],
+            "b_larger": sum(1 for x, y in zip(sa, sb) if y > x),
+            "n": len(sa),
+        }
+    return out
+
+
+def divergent(entries: list[dict], *, scorer: str = "jev_fulltext",
+              top: int = 5) -> list[dict]:
+    """C214: 本番と ``scorer`` が最も割れた記事を返す（人が読んで判定する用）.
+
+    判定材料なので **final_score の差**で並べる。全 5 項目が採点済みの記事
+    だけを対象にする（未採点があると差が項目欠落に由来してしまう）。
+    """
+    rows = []
+    for e in entries:
+        if e.get("scorer") != scorer or e.get("error") or not e.get("scores"):
+            continue
+        if (e.get("baseline_meta") or {}).get("unscored"):
+            continue
+        base = _final({eng: e["baseline"].get(jp) for eng, jp in AESTHETIC_KEYS})
+        shad = _final(e["scores"])
+        if base is None or shad is None:
+            continue
+        rows.append({
+            "date": e.get("date"), "caller": e.get("caller"),
+            "title": e.get("title"), "url": e.get("url"),
+            "baseline_final": round(base, 1), "shadow_final": round(shad, 1),
+            "diff": round(shad - base, 1),
+            "baseline": e.get("baseline"),
+            "shadow": {jp: e["scores"].get(eng) for eng, jp in AESTHETIC_KEYS},
+            "confidence": e.get("confidence"),
+            "state_chars": e.get("state_chars"),
+        })
+    rows.sort(key=lambda r: -abs(r["diff"]))
+    return rows[:top]
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="shadow 評価と本番の一致度を出す")
     ap.add_argument("--days", type=int, default=14)
     ap.add_argument("--json", action="store_true", help="JSON で出す")
+    ap.add_argument("--divergent", type=int, default=0, metavar="N",
+                    help="本番と最も割れた記事 N 件を出す（人が読んで判定する用）")
+    ap.add_argument("--divergent-scorer", default="jev_fulltext")
     args = ap.parse_args()
 
     entries = store.load_range(args.days)
@@ -183,6 +271,25 @@ def main() -> int:
         print(f"直近 {args.days} 日に shadow 評価ログがありません "
               f"(logs/shadow_eval_*.json)", file=sys.stderr)
         return 1
+    if args.divergent:
+        rows = divergent(entries, scorer=args.divergent_scorer, top=args.divergent)
+        print(f"# 本番 vs {args.divergent_scorer} が最も割れた {len(rows)} 件\n")
+        print("final_score の差の大きい順。神山さんが読んで、どちらの評価が")
+        print("妥当かを判定してください。\n")
+        for i, r in enumerate(rows, 1):
+            print(f"## {i}. {r['title']}")
+            print(f"- {r['date']} / {r['caller']} / {r['url']}")
+            print(f"- final_score: 本番 {r['baseline_final']} → "
+                  f"shadow {r['shadow_final']}  （差 {r['diff']:+}）")
+            print(f"- 入力の規模: {r['state_chars']} 字")
+            print(f"  {'項目':<10}{'本番':>6}{'shadow':>8}{'conf':>7}")
+            for _eng, jp in AESTHETIC_KEYS:
+                print(f"  {jp:<10}{r['baseline'].get(jp):>6}"
+                      f"{r['shadow'].get(jp):>8}"
+                      f"{str((r.get('confidence') or {}).get(_eng, '-')):>7}")
+            print()
+        return 0
+
     res = summarize(entries)
     print(f"対象 {len(entries)} 件 / 直近 {args.days} 日\n")
     print("※ Jev は代表値の都合で 1.0 未満を返せない（0–2 帯 = 1.0）。")
@@ -213,6 +320,29 @@ def main() -> int:
             print(f"\n  final_score: n={f.get('n', 0)}（件数不足）")
         print(f"  1 件あたり ${r['cost_per_article']} / レイテンシ中央 "
               f"{r['latency_ms_median']} ms\n")
+
+    # C214: scorer 同士（本番を介さない）
+    x = cross_compare(entries)
+    if x["n_pairs"]:
+        print(f"=== jev vs jev_fulltext（同一記事で両方成功 {x['n_pairs']} 組）===")
+        print(f"{'項目':<10}{'n':>5}{'Spearman':>10}{'Pearson':>9}{'A平均':>8}{'B平均':>8}")
+        for _eng, jp in AESTHETIC_KEYS:
+            d = x["per_aesthetic"].get(jp, {})
+            if d.get("n", 0) < 3:
+                print(f"{jp:<10}{d.get('n',0):>5}   （件数不足）"); continue
+            print(f"{jp:<10}{d['n']:>5}{str(d['spearman']):>10}"
+                  f"{str(d['pearson']):>9}{d['mean_a']:>8}{d['mean_b']:>8}")
+        f = x["final_score"]
+        if f:
+            print(f"\n  final_score: n={f['n']} Spearman={f['spearman']}")
+        sc = x.get("state_chars")
+        if sc:
+            print(f"  入力規模の中央値: A {sc['a_median']} 字 / B {sc['b_median']} 字"
+                  f"  （B のほうが大きい組 {sc['b_larger']}/{sc['n']}）")
+            if sc["b_larger"] == 0:
+                print("  ★ B が A より大きい組が 0。本文が取れていないので"
+                      "A と B は同じ入力になっている。")
+        print()
     return 0
 
 

@@ -244,6 +244,61 @@ class JevScorer(ShadowScorer):
         return out
 
 
+class JevFullTextScorer(JevScorer):
+    """本番の整形規則を無視して、**手元にある本文を全部**入れる Jev (C214).
+
+    狙い（神山さん, 2026-10-06）::
+
+        本番の「description < 80 字のときだけ本文」規則は Sonnet のコスト
+        抑制のためと思われる。Jev は入力が極めて安いので全文評価が現実的で、
+        「全文を読んだ評価の方が正しい」可能性がある（本番 Sonnet は出典の
+        印象で高く採点しているかもしれない）。
+
+    ``JevScorer``（= Jev-A、本番と同一入力）と並走させて、
+    本番 vs A / 本番 vs B / A vs B の 3 通りを比べる。
+
+    **射程についての注意（C214 実測, 2026-10-06）**:
+    全 131 ソースのうち ``body_paragraphs`` を埋める driver を持つのは **4 件**
+    だけで、うち JFA / PPC は description のコピー。実質的に本文を抽出して
+    いるのは JFTC（runner IP ブロック中）と Fitness Business の 2 件。
+    RSS 経路の 94 ソースは ``body`` が空。
+
+    つまり **現状では B は A とほぼ同じ入力になる**。本当に全文で評価するには
+    記事ページを取得する仕組みが別に必要（未実装）。その判断がつくまで、
+    B は「本文があるときは全部使う」という定義で走らせる——本文が入った
+    ソースだけでも差が見えるなら、仕組みを作る価値の判断材料になる。
+    """
+
+    name = "jev_fulltext"
+
+    # 入力長の上限が非公開なので、保守的に切る。1 件あたり入力 $0.042/1M なので
+    # 40,000 字でも 1 件 $0.002 程度。
+    FULLTEXT_LIMIT = 40000
+
+    @staticmethod
+    def build_state(article: dict) -> str:
+        """description の長さに関わらず body を入れ、切り詰めも最小にする."""
+        title = (article.get("title") or "").strip()
+        source = (article.get("source_name") or "").strip()
+        description = (article.get("description") or "").strip()
+        body = (article.get("body") or "").strip()
+
+        lines = ["[art_shadow_fulltext]", f"title: {title}", f"source: {source}"]
+        if description:
+            lines.append(f"description: {description}")
+        if body:
+            # description のコピーなら重複させない（JFA / PPC の driver が
+            # body_paragraphs=[description] を入れてくる）。
+            if body != description:
+                lines.append(
+                    f"body: {body[:JevFullTextScorer.FULLTEXT_LIMIT]}")
+        return "\n".join(lines)
+
+    def state_chars(self, article: dict) -> int:
+        return len(self.build_state(article))
+
+
+
 # ---------------------------------------------------------------------------
 # 疎通確認（--probe）
 # ---------------------------------------------------------------------------
