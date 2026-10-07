@@ -2596,6 +2596,17 @@
       ],
       "selected_from_pool_size": 5,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-10-08",
+      "article_url": "https://thetrek.co/appalachian-trail/is-the-appalachian-trail-too-crowded-heres-what-hikers-actually-report/",
+      "article_title": "Is the Appalachian Trail Too Crowded? Here’s What Hikers Actually Report",
+      "article_category": "outdoor",
+      "tie_candidates": [
+        "outdoor"
+      ],
+      "selected_from_pool_size": 5,
+      "is_placeholder": false
     }
   ]
 }

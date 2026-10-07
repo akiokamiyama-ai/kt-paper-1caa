@@ -852,6 +852,12 @@
       "name_ja": "不完全性定理",
       "displayed_on": "2026-10-07",
       "stage": "unseen"
+    },
+    {
+      "concept_id": "seasonal_calendar",
+      "name_ja": "二十四節気・七十二候",
+      "displayed_on": "2026-10-08",
+      "stage": "unseen"
     }
   ]
 }

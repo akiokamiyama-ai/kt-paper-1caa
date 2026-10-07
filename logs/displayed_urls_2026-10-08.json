@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-08",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/news/article/2610/07/2000002055/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2610/07/news012.html",
+    "web_repo": "https://www.jfa-fc.or.jp/particle/5319.html"
+  },
+  "page3_urls": [
+    "https://warontherocks.com/kindling-catalyst-and-containment-will-the-west-bank-ignite/",
+    "https://www.asahi.com/articles/ASVB73GDCVB7ULFA024M.html?ref=rss",
+    "https://www.mckinsey.com/industries/industrials/our-insights/siemens-next-reinvention-an-interview-with-cedrik-neike",
+    "https://www.theparisreview.org/blog/2026/10/07/jh-prynnes-last-poem-ryan-ruby/",
+    "https://3quarksdaily.com/3quarksdaily/2026/10/review-of-on-the-equality-of-all-things-by-carlo-rovelli.html",
+    "https://thetrek.co/appalachian-trail/is-the-appalachian-trail-too-crowded-heres-what-hikers-actually-report/"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://www.nplusonemag.com/online-only/gooooaaal/away-game/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/10/06/yan-lianke-memoir-the-women-matchmaking/",
+    "music": "https://stereogum.com/2513837/star-moles-signs-with-dead-oceans-shares-new-song-born-again/music/",
+    "outdoor": "https://www.atlasobscura.com/places/bear-with-me"
+  },
+  "headlines_urls": []
+}
