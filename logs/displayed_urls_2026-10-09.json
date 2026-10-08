@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-09",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://atmarkit.itmedia.co.jp/ait/articles/2610/08/news022.html",
+    "human_energy": "https://jinjibu.jp/news/detl/26964/",
+    "web_repo": "https://www.bc01.net/serialize/asano_006/"
+  },
+  "page3_urls": [
+    "https://www.project-syndicate.org/commentary/imf-must-center-african-women-recognize-social-reproduction-by-crystal-simeoni-2026-10?utm_source=rss&utm_medium=feed&utm_campaign=main&utm_content=en",
+    null,
+    "https://www.mckinsey.com/capabilities/geopolitics/our-insights/the-playbook-for-seeing-around-geopolitical-corners",
+    "https://wordswithoutborders.org/read/article/2026-10/the-national-book-award-interviews-ping-lu-and-jeremy-tiang-to-the-east-of-the-east/",
+    "https://nautil.us/why-forgive-and-forget-is-bad-advice-1285629/",
+    "https://www.axismag.jp/posts/2026/10/725353.html"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://www.publicbooks.org/can-the-river-debate-the-suburb/",
+  "page6_urls": {
+    "books": "https://www.theparisreview.org/blog/2026/10/07/jh-prynnes-last-poem-ryan-ruby/",
+    "music": "https://stereogum.com/2513909/turnstile-announce-free-benefit-show-at-the-washington-monument/news/",
+    "outdoor": "https://www.outsideonline.com/culture/essays-culture/cemetery-hiking-outdoor-trend-explained/"
+  },
+  "headlines_urls": []
+}

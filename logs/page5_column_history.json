@@ -203,6 +203,18 @@
       "column_title": "ユニフォームの聞き耳",
       "column_body_chars": 964,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-10-09",
+      "article_url": "https://www.publicbooks.org/can-the-river-debate-the-suburb/",
+      "article_title": "Can the River Debate the Suburb?",
+      "miibo_called": true,
+      "miibo_failed": false,
+      "fallback_used": false,
+      "elapsed_ms": 30240,
+      "column_title": "川は誰の声で語るのか",
+      "column_body_chars": 734,
+      "is_placeholder": false
     }
   ]
 }

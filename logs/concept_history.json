@@ -858,6 +858,12 @@
       "name_ja": "二十四節気・七十二候",
       "displayed_on": "2026-10-08",
       "stage": "unseen"
+    },
+    {
+      "concept_id": "godel",
+      "name_ja": "ゲーデル",
+      "displayed_on": "2026-10-09",
+      "stage": "unseen"
     }
   ]
 }

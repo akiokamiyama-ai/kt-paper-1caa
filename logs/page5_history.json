@@ -2607,6 +2607,17 @@
       ],
       "selected_from_pool_size": 5,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-10-09",
+      "article_url": "https://www.axismag.jp/posts/2026/10/725353.html",
+      "article_title": "高輪築堤の歴史と技術をたどる「THE FIRST RAILWAY」展。点群データと出土品で日本初の鉄道を読み解く",
+      "article_category": "culture",
+      "tie_candidates": [
+        "culture"
+      ],
+      "selected_from_pool_size": 5,
+      "is_placeholder": false
     }
   ]
 }
