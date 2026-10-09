@@ -215,6 +215,18 @@
       "column_title": "川は誰の声で語るのか",
       "column_body_chars": 734,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-10-10",
+      "article_url": "https://3quarksdaily.com/3quarksdaily/2026/10/when-compassion-becomes-capital-the-economics-of-a-dead-mouse.html",
+      "article_title": "When Compassion Becomes Capital: The Economics of a Dead Mouse",
+      "miibo_called": true,
+      "miibo_failed": false,
+      "fallback_used": false,
+      "elapsed_ms": 32300,
+      "column_title": "慈悲が資本に変わる時",
+      "column_body_chars": 761,
+      "is_placeholder": false
     }
   ]
 }

@@ -864,6 +864,12 @@
       "name_ja": "ゲーデル",
       "displayed_on": "2026-10-09",
       "stage": "unseen"
+    },
+    {
+      "concept_id": "dual_process_theory",
+      "name_ja": "デュアルプロセス理論",
+      "displayed_on": "2026-10-10",
+      "stage": "unseen"
     }
   ]
 }

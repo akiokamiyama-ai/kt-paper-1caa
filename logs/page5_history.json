@@ -2618,6 +2618,17 @@
       ],
       "selected_from_pool_size": 5,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-10-10",
+      "article_url": "https://stereogum.com/2514112/grimes-releases-accelerando-from-new-ai-inspired-but-not-ai-generated-album-psy-opera/music/",
+      "article_title": "Grimes Releases “Accelerando” From New AI-Inspired (But Not AI-Generated) Album Psy Opera",
+      "article_category": "music",
+      "tie_candidates": [
+        "music"
+      ],
+      "selected_from_pool_size": 5,
+      "is_placeholder": false
     }
   ]
 }

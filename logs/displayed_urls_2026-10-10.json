@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-10",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/news/article/2610/09/2000002157/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2610/09/news011.html",
+    "web_repo": "https://www.bc01.net/article/matsuya-inc_202610_02/"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/10/08/africa-credit-rating-agency-borrowing-debt/",
+    null,
+    "https://www.mckinsey.com/capabilities/geopolitics/our-insights/as-the-world-order-turns-leading-companies-are-keeping-pace-heres-how",
+    "https://wordswithoutborders.org/read/article/2026-10/the-national-book-award-interviews-maria-stepanova-and-sasha-dugdale-the-disappearing-act/",
+    "https://www.publicbooks.org/can-the-river-debate-the-suburb/",
+    "https://stereogum.com/2514112/grimes-releases-accelerando-from-new-ai-inspired-but-not-ai-generated-album-psy-opera/music/"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://3quarksdaily.com/3quarksdaily/2026/10/when-compassion-becomes-capital-the-economics-of-a-dead-mouse.html",
+  "page6_urls": {
+    "books": "https://lithub.com/queer-recognition-estrangement-and-the-great-grey-area-in-between/",
+    "music": "https://stereogum.com/2514156/stream-plague-skaters-revved-up-bashed-out-all-over-the-place-finale-plague-skater-iii/music/",
+    "outdoor": "https://sectionhiker.com/understanding-giardia-tinidazole/"
+  },
+  "headlines_urls": []
+}
