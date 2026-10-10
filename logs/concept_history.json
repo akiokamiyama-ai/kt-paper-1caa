@@ -870,6 +870,12 @@
       "name_ja": "デュアルプロセス理論",
       "displayed_on": "2026-10-10",
       "stage": "unseen"
+    },
+    {
+      "concept_id": "maintenance_studies",
+      "name_ja": "メンテナンス研究",
+      "displayed_on": "2026-10-11",
+      "stage": "unseen"
     }
   ]
 }

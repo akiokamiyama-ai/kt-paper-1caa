@@ -227,6 +227,18 @@
       "column_title": "慈悲が資本に変わる時",
       "column_body_chars": 761,
       "is_placeholder": false
+    },
+    {
+      "displayed_on": "2026-10-11",
+      "article_url": "https://foreignpolicy.com/2026/10/09/international-fiction-releases-yiyun-li-music-against-night-rebecca-birrell-venus-vanishing/",
+      "article_title": "What Life Was Like for a Jewish Artist in 1930s Berlin",
+      "miibo_called": true,
+      "miibo_failed": false,
+      "fallback_used": false,
+      "elapsed_ms": 29552,
+      "column_title": "消えるヴィーナスを聴く",
+      "column_body_chars": 899,
+      "is_placeholder": false
     }
   ]
 }

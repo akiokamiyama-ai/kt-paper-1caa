@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-11",
+  "page1_urls": [],
+  "page2_urls": {
+    "cocolomi": "https://www.itmedia.co.jp/news/article/2610/09/2000002102/",
+    "human_energy": "https://www.itmedia.co.jp/business/articles/2610/09/news021.html",
+    "web_repo": "https://www.bc01.net/serialize/sasaki_027/"
+  },
+  "page3_urls": [
+    "https://foreignpolicy.com/2026/10/09/china-history-decline-toynbee-spengler/",
+    null,
+    "https://www.mckinsey.com/capabilities/operations/our-insights/using-production-rates-to-excel-at-executing-construction-projects",
+    "https://warontherocks.com/cogs-of-war/ten-wartime-technologies-at-americas-250th/",
+    "https://3quarksdaily.com/3quarksdaily/2026/10/inventing-pad-thai.html",
+    "https://thetrek.co/day-40-nearing-the-end-of-a-thru-hike-is-a-complex-emotion/"
+  ],
+  "page4_urls": [],
+  "page5_url": "https://foreignpolicy.com/2026/10/09/international-fiction-releases-yiyun-li-music-against-night-rebecca-birrell-venus-vanishing/",
+  "page6_urls": {
+    "books": "https://wordswithoutborders.org/read/article/2026-10/the-national-book-award-interviews-vicente-luis-mora-and-rahul-bery-centroeuropa/",
+    "music": "https://stereogum.com/2514191/rocketship-announce-new-album-hurt-feelings-hear-new-threats/music/",
+    "outdoor": "https://sectionhiker.com/paddling-green-river-reservoir-state-park/"
+  },
+  "headlines_urls": []
+}
